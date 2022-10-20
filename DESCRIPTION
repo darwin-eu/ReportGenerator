@@ -1,12 +1,14 @@
 Package: IncidencePrevalenceReport
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Reporte generator for IncidencePrevalence package
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: CE BARBOZA
+Maintainer: CE BARBOZA <c.barbozagutierrez@erasmusmc.nl>
+Description: This package creates a report in RMD and an output in HTML format.
+License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.1
+Imports: 
+    CDMConnector,
+    dplyr
