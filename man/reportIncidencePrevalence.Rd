@@ -2,16 +2,25 @@
 % Please edit documentation in R/reportIncidencePrevalence.R
 \name{reportIncidencePrevalence}
 \alias{reportIncidencePrevalence}
-\title{Report generator for IncidencePrevalence package}
+\title{Creates an HTML report taking the prevalence and incidence estimates from IncidencePrevalence.}
 \usage{
-reportIncidencePrevalence(titleParam)
+reportIncidencePrevalence(
+  studyTitle,
+  studyAuthor,
+  prevalenceData,
+  incidenceData
+)
 }
 \arguments{
-\item{x}{A tibble}
+\item{studyTitle}{A character title of the study.}
+
+\item{studyAuthor}{A character name of the author.}
+
+\item{prevalenceData}{A tibble from IncidencePrevalence.}
 }
 \value{
 An HTML document
 }
 \description{
-Report generator for IncidencePrevalence package
+Creates an HTML report taking the prevalence and incidence estimates from IncidencePrevalence.
 }
