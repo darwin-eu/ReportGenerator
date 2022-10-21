@@ -1,9 +1,24 @@
-#' Report generator for IncidencePrevalence package
+#' Creates an HTML report taking the prevalence and incidence estimates from IncidencePrevalence.
 #'
-#' @param x A tibble
+#' @param studyTitle A character title of the study.
+#' @param studyAuthor A character name of the author.
+#' @param prevalenceData A tibble from IncidencePrevalence.
+#' @param prevalenceData A tibble from IncidencePrevalence.
 #' @export
-#' @import dplyr CDMConnector
+#' @import dplyr CDMConnector rmarkdown here
 #' @return An HTML document
-reportIncidencePrevalence <- function(x) {
-  print("Hello, world!")
+reportIncidencePrevalence <- function(studyTitle,
+                                      studyAuthor,
+                                      prevalenceData,
+                                      incidenceData) {
+  rmarkdown::render(
+    input = paste0(system.file(package = "IncidencePrevalenceReport"), "/rmarkdown/templates/IncidencePrevalenceReport.Rmd"),
+    output_format = "html_document",
+    output_file = here("Reports/IncidencePrevalenceReport"),
+    params = list(titleParam = studyTitle,
+                  authorParam = studyAuthor,
+                  prevalenceParam = prevalenceData,
+                  incidenceParam = incidenceData),
+    encoding = 'UTF-8'
+  )
 }

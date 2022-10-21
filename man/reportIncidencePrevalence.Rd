@@ -4,7 +4,7 @@
 \alias{reportIncidencePrevalence}
 \title{Report generator for IncidencePrevalence package}
 \usage{
-reportIncidencePrevalence(x)
+reportIncidencePrevalence(titleParam)
 }
 \arguments{
 \item{x}{A tibble}

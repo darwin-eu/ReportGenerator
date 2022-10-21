@@ -3,3 +3,5 @@
 export(reportIncidencePrevalence)
 import(CDMConnector)
 import(dplyr)
+import(here)
+import(rmarkdown)
