@@ -10,23 +10,30 @@
 reportIncidencePrevalence <- function(studyTitle,
                                       studyAuthor,
                                       prevalenceData,
-                                      incidenceData) {
+                                      incidenceData,
+                                      word = TRUE) {
 
   if (word == TRUE) {
+    if (!file.exists(here("Reports/"))) {
+      dir.create("Reports/")
+    }
     rmarkdown::render(
       input = paste0(system.file(package = "IncidencePrevalenceReport"),
-                     "/rmarkdown/templates/IncidencePrevalenceReport.Rmd"),
-      output_format = word_document(reference_docx = paste0(system.file(package = "IncidencePrevalenceReport"),
-                                                            "/rmarkdown/templates/IncidencePrevalenceReport.docx")),
-      output_file = here("Reports/IncidencePrevalenceReport"),
+                     "/rmarkdown/templates/IncidencePrevalenceReportWord.Rmd"),
+      # output_format = word_document(reference_docx = paste0(system.file(package = "IncidencePrevalenceReport"),
+      #                                                       "/rmarkdown/templates/IncidencePrevalenceReport.docx")),
+      output_file = here("Reports/"),
       encoding = 'UTF-8'
     )
   } else {
+    if (!file.exists(here("Reports/"))) {
+      dir.create("Reports")
+    }
     rmarkdown::render(
       input = paste0(system.file(package = "IncidencePrevalenceReport"),
                      "/rmarkdown/templates/IncidencePrevalenceReport.Rmd"),
       output_format = "html_document",
-      output_file = here("Reports/IncidencePrevalenceReport"),
+      output_file = here("Reports/"),
       # params = list(titleParam = studyTitle,
       #               authorParam = studyAuthor,
       #               prevalenceParam = prevalenceData,

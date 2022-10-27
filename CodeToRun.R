@@ -1,4 +1,5 @@
 library(IncidencePrevalence)
+library(IncidencePrevalenceReport)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -47,8 +48,8 @@ incidence <- collect_pop_incidence(
 
 ##### STUDY REPORT LAUNCH
 
-title <- "..."
-author <- "..."
+title <- "Incidence Prevalence Report"
+author <- "CESAR BARBOZA"
 prevalence <- prevalence$prevalence_estimates
 incidence <- incidence$incidence_estimates
 
@@ -58,3 +59,4 @@ reportIncidencePrevalence(title,
                           author,
                           prevalence,
                           incidence)
+
