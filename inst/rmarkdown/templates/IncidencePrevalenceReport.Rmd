@@ -3,18 +3,28 @@ title: "`r studyTitle`"
 author: "`r studyAuthor`"  
 ---
 
+```{r,echo=FALSE, out.width="80%"}
+knitr::include_graphics(paste0(system.file(package = "IncidencePrevalenceReport"),
+                     "/rmarkdown/templates/darwin-logo.png"))
+```
+
 This is an automated report with incidence and prevalence results for the study "`r studyTitle`". 
 
-Here is a table with the results for prevalence. 
+# Here is a table with the results for prevalence. 
 
 ```{r prevalenceData, echo=FALSE}
 
+library(knitr)
 
+prevalenceTable <- prevalenceData %>% select(time, 
+                                             numerator, 
+                                             denominator, 
+                                             prev)
 
-print(prevalenceData)
+knitr::kable(prevalenceTable)
 ```
 
-Here is a table showing the results for prevalence. 
+# Here is a table showing the results for prevalence. 
 
 ```{r echo=FALSE}
 
@@ -26,16 +36,21 @@ prevalenceData %>%
   theme_minimal()
 ```
 
-Here is a table with the results for incidence. 
+# Here is a table with the results for incidence. 
 
 ```{r incidenceData, echo=FALSE}
 
+incidenceTable <- incidenceData %>% select(time,
+                                           n_persons, 
+                                           person_days, 
+                                           n_events, 
+                                           person_years, 
+                                           ir_100000_pys) 
 
-
-print(incidenceData)
+knitr::kable(incidenceTable)
 ```
 
-Here is a graph showing the results for incidence. 
+# Here is a graph showing the results for incidence. 
 
 ```{r echo=FALSE}
 
