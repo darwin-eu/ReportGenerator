@@ -44,7 +44,7 @@ prevalenceData$prevalence_estimates %>%
             by = c("cohort_id_denominator_pop" = "cohort_definition_id")) %>% 
   ggplot(aes(start_time, prev))+
   facet_grid(age_strata ~ sex_strata)+
-  geom_point()+
+  geom_bar(stat='identity') +
   scale_y_continuous(labels = scales::percent,
                      limits = c(0,NA))+
   theme_bw()
