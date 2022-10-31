@@ -7,7 +7,7 @@
 #' @param prevalenceData A tibble from IncidencePrevalence.
 #' @param word If TRUE generates a Word document report.
 #' @export
-#' @import dplyr CDMConnector rmarkdown here
+#' @import dplyr CDMConnector rmarkdown here officer
 #' @return An HTML document
 reportIncidencePrevalence <- function(studyTitle,
                                       studyAuthor,
