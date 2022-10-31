@@ -2,15 +2,17 @@
 #'
 #' @param studyTitle A character title of the study.
 #' @param studyAuthor A character name of the author.
+#' @param denominatorData A tibble from IncidencePrevalence.
 #' @param prevalenceData A tibble from IncidencePrevalence.
 #' @param prevalenceData A tibble from IncidencePrevalence.
+#' @param word If TRUE generates a Word document report.
 #' @export
 #' @import dplyr CDMConnector rmarkdown here
 #' @return An HTML document
 reportIncidencePrevalence <- function(studyTitle,
                                       studyAuthor,
+                                      denominatorData,
                                       prevalenceData,
-                                      incidenceData,
                                       word = TRUE) {
 
   if (word == TRUE) {

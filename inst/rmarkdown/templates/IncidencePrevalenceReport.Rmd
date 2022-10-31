@@ -1,9 +1,10 @@
 ---
-title: "`r studyTitle`" 
-author: "`r studyAuthor`"  
+title: "`r studyTitle`"
+author: "`r studyAuthor`"
+output: word_document
 ---
 
-```{r,echo=FALSE, out.width="80%"}
+```{r,echo=FALSE }
 knitr::include_graphics(paste0(system.file(package = "IncidencePrevalenceReport"),
                      "/rmarkdown/templates/darwin-logo.png"))
 ```
@@ -16,7 +17,7 @@ This is an automated report with incidence and prevalence results for the study 
 
 library(knitr)
 
-prevalenceTable <- prevalenceData %>% select(time, 
+prevalenceTable <- prevalenceData$prevalence_estimates %>% select(time, 
                                              numerator, 
                                              denominator, 
                                              prev)
@@ -28,35 +29,49 @@ knitr::kable(prevalenceTable)
 
 ```{r echo=FALSE}
 
-prevalenceData %>%
-  ggplot(aes(start_time, prev)) +
-  geom_point() +
+# prevalenceData %>%
+#   ggplot(aes(start_time, prev)) +
+#   geom_point() +
+#   scale_y_continuous(labels = scales::percent,
+#                      limits = c(0,NA)) +
+#   theme_minimal()
+
+
+prevalenceData$prevalence_estimates %>% 
+  left_join(prevalenceData$analysis_settings,
+            by = "prevalence_analysis_id") %>% 
+  left_join(denominator$denominator_settings,
+            by = c("cohort_id_denominator_pop" = "cohort_definition_id")) %>% 
+  ggplot(aes(start_time, prev))+
+  facet_grid(age_strata ~ sex_strata)+
+  geom_point()+
   scale_y_continuous(labels = scales::percent,
-                     limits = c(0,NA)) +
-  theme_minimal()
+                     limits = c(0,NA))+
+  theme_bw()
+
 ```
 
 # Here is a table with the results for incidence. 
 
-```{r incidenceData, echo=FALSE}
-
-incidenceTable <- incidenceData %>% select(time,
-                                           n_persons, 
-                                           person_days, 
-                                           n_events, 
-                                           person_years, 
-                                           ir_100000_pys) 
-
-knitr::kable(incidenceTable)
-```
+<!-- # ```{r incidenceData, echo=FALSE} -->
+<!-- #  -->
+<!-- # incidenceTable <- incidenceData$incidence_estimates %>% select(time, -->
+<!-- #                                            n_persons,  -->
+<!-- #                                            person_days,  -->
+<!-- #                                            n_events,  -->
+<!-- #                                            person_years,  -->
+<!-- #                                            ir_100000_pys)  -->
+<!-- #  -->
+<!-- # knitr::kable(incidenceTable) -->
+<!-- # ``` -->
 
 # Here is a graph showing the results for incidence. 
 
-```{r echo=FALSE}
-
-incidenceData %>%
-  ggplot(aes(start_time, ir_100000_pys)) +
-  geom_point() +
-  scale_y_continuous(limits = c(0,NA)) +
-  theme_minimal()
-```
+<!-- # ```{r echo=FALSE} -->
+<!-- # -->
+<!-- # incidenceData$incidence_estimates %>% -->
+<!-- #   ggplot(aes(start_time, ir_100000_pys)) + -->
+<!-- #   geom_point() + -->
+<!-- #   scale_y_continuous(limits = c(0,NA)) + -->
+<!-- #   theme_minimal() -->
+<!-- # ``` -->

@@ -50,13 +50,15 @@ incidence <- collect_pop_incidence(
 
 title <- "Incidence Prevalence Report"
 author <- "CESAR BARBOZA"
-prevalence <- prevalence$prevalence_estimates
-incidence <- incidence$incidence_estimates
+denominator <- dpop
+prevalence <- prevalence
+incidence <- incidence
 
 ## RUN
 
 reportIncidencePrevalence(title,
                           author,
+                          denominator,
                           prevalence,
                           incidence)
 

@@ -7,8 +7,9 @@
 reportIncidencePrevalence(
   studyTitle,
   studyAuthor,
+  denominatorData,
   prevalenceData,
-  incidenceData
+  word = TRUE
 )
 }
 \arguments{
@@ -16,7 +17,11 @@ reportIncidencePrevalence(
 
 \item{studyAuthor}{A character name of the author.}
 
+\item{denominatorData}{A tibble from IncidencePrevalence.}
+
 \item{prevalenceData}{A tibble from IncidencePrevalence.}
+
+\item{word}{If TRUE generates a Word document report.}
 }
 \value{
 An HTML document
