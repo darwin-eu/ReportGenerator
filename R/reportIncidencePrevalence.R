@@ -15,6 +15,9 @@ reportIncidencePrevalence <- function(studyTitle,
                                       prevalenceData,
                                       word = TRUE) {
 
+  titleTablePrevalence1 <- "Prevalence table"
+  titleFigurePrevalence1 <- "Prevalence figure 1"
+
   prevalenceTable <- prevalenceData$prevalence_estimates %>% select(time,
                                                                     numerator,
                                                                     denominator,
@@ -29,13 +32,16 @@ reportIncidencePrevalence <- function(studyTitle,
     facet_grid(age_strata ~ sex_strata)+
     geom_bar(stat='identity') +
     scale_y_continuous(labels = scales::percent,
-                       limits = c(0,NA))+
+                       limits = c(0,NA)) +
     theme_bw()
 
   prevalenceDoc <- read_docx(path = paste0(system.file(package = "IncidencePrevalenceReport"),
                                        "/rmarkdown/templates/IncidencePrevalenceReport.docx")) %>%
-    body_add_table(head(prevalenceTable, n = 20), style = "Normal Table") %>%
-    body_add_break() %>%
+    body_add(value = studyTitle, style = "Title") %>%
+    body_add(value = studyAuthor, style = "heading 1") %>%
+    body_add(value = titleTablePrevalence1, style = "heading 2") %>%
+    body_add_table(head(prevalenceTable, n = 20), style = "Table Grid") %>%
+    body_add(value = titleFigurePrevalence1, style = "heading 1") %>%
     body_add_gg(value = prevalenceGraph, style = "Normal")
 
 
