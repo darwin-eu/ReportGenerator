@@ -26,16 +26,16 @@ reportIncidencePrevalence <- function(studyTitle,
                                                      denominator = "denominator",
                                                      prev = "prev")
 
-  prevalenceGraph <- prevalence_estimates %>%
-    left_join(prevalenceData$analysis_settings,
+  prevalenceGraph <- prevalence$prevalence_estimates %>%
+    left_join(prevalence$analysis_settings,
               by = "prevalence_analysis_id") %>%
-    left_join(denominatorData$denominator_settings,
-              by = c("cohort_id_denominator_pop" = "cohort_definition_id")) %>%
-    ggplot(aes(prevalence_estimates$start_time, prevalence_estimates$prev))+
-    facet_grid(age_strata ~ sex_strata)+
-    geom_bar(stat='identity') +
+    left_join(dpop$denominator_settings,
+              by=c("denominator_id" = "cohort_definition_id")) %>%
+    ggplot(aes(start_date , prev))+
+    facet_grid(start_date ~ sex_strata)+
+    geom_bar(stat = "identity") +
     scale_y_continuous(labels = scales::percent,
-                       limits = c(0,NA)) +
+                       limits = c(0,NA))+
     theme_bw()
 
   if (format == "word") {
