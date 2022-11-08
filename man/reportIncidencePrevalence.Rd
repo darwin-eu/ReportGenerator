@@ -9,22 +9,22 @@ reportIncidencePrevalence(
   studyAuthor,
   denominatorData,
   prevalenceData,
-  word = TRUE
+  format = "word"
 )
 }
 \arguments{
-\item{studyTitle}{A character title of the study.}
+\item{studyTitle}{Title of the study.}
 
-\item{studyAuthor}{A character name of the author.}
+\item{studyAuthor}{Name of the author.}
 
 \item{denominatorData}{A tibble from IncidencePrevalence.}
 
 \item{prevalenceData}{A tibble from IncidencePrevalence.}
 
-\item{word}{If TRUE generates a Word document report.}
+\item{format}{Output options are "word", "pdf" or "html".}
 }
 \value{
-An HTML document
+A WORD, PDF or HTML document.
 }
 \description{
 Creates an HTML report taking the prevalence and incidence estimates from IncidencePrevalence.

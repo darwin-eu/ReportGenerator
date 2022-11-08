@@ -1,57 +1,61 @@
 #' Creates an HTML report taking the prevalence and incidence estimates from IncidencePrevalence.
 #'
-#' @param studyTitle A character title of the study.
-#' @param studyAuthor A character name of the author.
+#' @param studyTitle Title of the study.
+#' @param studyAuthor Name of the author.
 #' @param denominatorData A tibble from IncidencePrevalence.
 #' @param prevalenceData A tibble from IncidencePrevalence.
 #' @param prevalenceData A tibble from IncidencePrevalence.
-#' @param word If TRUE generates a Word document report.
+#' @param format Output options are "word", "pdf" or "html".
 #' @export
-#' @import dplyr CDMConnector rmarkdown here officer
-#' @return An HTML document
+#' @import dplyr CDMConnector rmarkdown here officer scales
+#' @importFrom utils head
+#' @return A WORD, PDF or HTML document.
 reportIncidencePrevalence <- function(studyTitle,
                                       studyAuthor,
                                       denominatorData,
                                       prevalenceData,
-                                      word = TRUE) {
+                                      format = "word") {
 
   titleTablePrevalence1 <- "Prevalence table"
   titleFigurePrevalence1 <- "Prevalence figure 1"
 
-  prevalenceTable <- prevalenceData$prevalence_estimates %>% select(time,
-                                                                    numerator,
-                                                                    denominator,
-                                                                    prev)
+  prevalence_estimates <- prevalenceData$prevalence_estimates
 
-  prevalenceGraph <- prevalenceData$prevalence_estimates %>%
+  prevalenceTable <- prevalence_estimates %>% select(time = "time",
+                                                     numerator = "numerator",
+                                                     denominator = "denominator",
+                                                     prev = "prev")
+
+  prevalenceGraph <- prevalence_estimates %>%
     left_join(prevalenceData$analysis_settings,
               by = "prevalence_analysis_id") %>%
-    left_join(denominator$denominator_settings,
+    left_join(denominatorData$denominator_settings,
               by = c("cohort_id_denominator_pop" = "cohort_definition_id")) %>%
-    ggplot(aes(start_time, prev))+
+    ggplot(aes(prevalence_estimates$start_time, prevalence_estimates$prev))+
     facet_grid(age_strata ~ sex_strata)+
     geom_bar(stat='identity') +
     scale_y_continuous(labels = scales::percent,
                        limits = c(0,NA)) +
     theme_bw()
 
-  prevalenceDoc <- read_docx(path = paste0(system.file(package = "IncidencePrevalenceReport"),
-                                       "/rmarkdown/templates/IncidencePrevalenceReport.docx")) %>%
-    body_add(value = studyTitle, style = "Title") %>%
-    body_add(value = studyAuthor, style = "heading 1") %>%
-    body_add(value = titleTablePrevalence1, style = "heading 2") %>%
-    body_add_table(head(prevalenceTable, n = 20), style = "Table Grid") %>%
-    body_add(value = titleFigurePrevalence1, style = "heading 1") %>%
-    body_add_gg(value = prevalenceGraph, style = "Normal")
-
-
-  print(prevalenceDoc, target = here("Reports/IncidencePrevalenceReport.docx"))
-
-  if (word == TRUE) {
+  if (format == "word") {
     if (!file.exists(here("Reports/"))) {
       dir.create("Reports/")
     }
+
     ## Renders docx with officeR
+
+    prevalenceDoc <- read_docx(path = paste0(system.file(package = "IncidencePrevalenceReport"),
+                                             "/rmarkdown/templates/IncidencePrevalenceReport.docx")) %>%
+      body_add(value = studyTitle, style = "Title") %>%
+      body_add(value = studyAuthor, style = "heading 1") %>%
+      body_add(value = titleTablePrevalence1, style = "heading 2") %>%
+      body_add_table(head(prevalenceTable, n = 20), style = "Table Grid") %>%
+      body_add(value = titleFigurePrevalence1, style = "heading 1") %>%
+      body_add_gg(value = prevalenceGraph, style = "Normal")
+
+
+    print(prevalenceDoc, target = here("Reports/IncidencePrevalenceReport.docx"))
 
     ## Renders docx with rmarkdown function
     # rmarkdown::render(

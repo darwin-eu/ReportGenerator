@@ -10,13 +10,6 @@ An object of class \code{shiny.tag.list} (inherits from \code{list}) of length 4
 \usage{
 ui
 }
-\arguments{
-\item{studyTitle}{A character title of the study.}
-
-\item{studyAuthor}{A character name of the author.}
-
-\item{prevalenceData}{A tibble from IncidencePrevalence.}
-}
 \value{
 An HTML document
 }

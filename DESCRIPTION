@@ -17,4 +17,5 @@ Imports:
     officer,
     quarto,
     rmarkdown,
+    scales,
     shiny

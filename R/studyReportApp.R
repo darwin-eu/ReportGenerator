@@ -1,9 +1,5 @@
 #' This application displays an automated and interactive report of the results from the IncidencePrevalence package.
 #'
-#' @param studyTitle A character title of the study.
-#' @param studyAuthor A character name of the author.
-#' @param prevalenceData A tibble from IncidencePrevalence.
-#' @param prevalenceData A tibble from IncidencePrevalence.
 #' @export
 #' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny
 #' @return An HTML document
