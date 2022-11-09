@@ -1,18 +1,18 @@
-library(reportGenerator)
-library(IncidencePrevalenceReport)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(devtools)
-library(duckdb)
+# Installation
 
-# Instaling new development version
+library(devtools)
 
 document()
 check()
 install()
 
-load_all()
+# Example
+library(IncidencePrevalence)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(devtools)
+library(duckdb)
 
 # Example with mock data
 
@@ -26,7 +26,8 @@ dpop <- collectDenominator(cdm = cdm,
                            ageStrata  = list(c(18,65)),
                            sexStrata  = "Female",
                            daysPriorHistory  = 365)
-glimpse(dpop)
+# glimpse(dpop)
+
 # Adding denominator population to cdm object
 
 cdm$denominator <- dpop$denominator_population
@@ -35,12 +36,12 @@ cdm$denominator <- dpop$denominator_population
 
 incidence <- computeIncidence(
   cdm = cdm,
-  table_name_denominator = "denominator",
-  table_name_outcomes = "outcome",
-  cohort_ids_outcomes = "1",
-  cohort_ids_denominator_pops = "1",
-  time_interval = c("Years"),
-  outcome_washout_windows = 180
+  denominatorTable = "denominator",
+  outcomeTable = "outcome",
+  outcomeId = "1",
+  denominatorId  = "1",
+  interval = c("Years"),
+  outcomeWashout = 180
 )
 
 incidence %>%
@@ -104,19 +105,20 @@ title <- "Incidence Prevalence Report"
 author <- "Cesar Barboza Gutierrez"
 abstract <- "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 denominator <- dpop
-prevalence <- prevalence
 incidence <- incidence
+prevalence <- prevalence
+
 
 
 load_all()
 
 ## RUN
 
-reportIncidencePrevalence(title,
+incidencePrevalenceReport(title,
                           author,
                           abstract,
                           denominator,
                           incidence,
                           prevalence,
                           format = "word")
-#
+

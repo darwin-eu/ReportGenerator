@@ -15,6 +15,7 @@ incidencePrevalenceReport <- function(studyTitle,
                                       studyAuthor,
                                       abstractText,
                                       denominatorData,
+                                      incidenceData,
                                       prevalenceData,
                                       format = "word") {
 
@@ -34,8 +35,8 @@ incidencePrevalenceReport <- function(studyTitle,
               by = "prevalence_analysis_id") %>%
     left_join(dpop$denominator_settings,
               by=c("denominator_id" = "cohort_definition_id")) %>%
-    ggplot(aes(start_date , prev))+
-    facet_grid(start_date ~ sex_strata)+
+    ggplot(aes(time, prev))+
+    facet_grid(age_strata ~ sex_strata)+
     geom_bar(stat = "identity") +
     scale_y_continuous(labels = scales::percent,
                        limits = c(0,NA))+
