@@ -1,10 +1,10 @@
-Package: IncidencePrevalenceReport
+Package: reportGenerator
 Type: Package
-Title: Reporte generator for IncidencePrevalence package
+Title: Automatic report generator of the Darwin EU studies
 Version: 0.1.0
 Author: CE BARBOZA
 Maintainer: CE BARBOZA <c.barbozagutierrez@erasmusmc.nl>
-Description: This package creates a report in RMD and an output in HTML format.
+Description: This package creates a report in docx, html and pdf formats.
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true

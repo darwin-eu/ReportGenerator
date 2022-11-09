@@ -1,4 +1,4 @@
-library(IncidencePrevalence)
+library(reportGenerator)
 library(IncidencePrevalenceReport)
 library(dplyr)
 library(tidyr)
@@ -11,6 +11,7 @@ library(duckdb)
 document()
 check()
 install()
+
 load_all()
 
 # Example with mock data
@@ -29,6 +30,21 @@ glimpse(dpop)
 # Adding denominator population to cdm object
 
 cdm$denominator <- dpop$denominator_population
+
+# Incidence calculation
+
+incidence <- computeIncidence(
+  cdm = cdm,
+  table_name_denominator = "denominator",
+  table_name_outcomes = "outcome",
+  cohort_ids_outcomes = "1",
+  cohort_ids_denominator_pops = "1",
+  time_interval = c("Years"),
+  outcome_washout_windows = 180
+)
+
+incidence %>%
+  glimpse()
 
 # Prevalence calculation
 
@@ -80,35 +96,27 @@ prevalence <- computePrevalence(
 #   minimum_cell_count = 0
 # )
 
-# Incidence calculation
 
-# incidence <- collect_pop_incidence(
-#   cdm = cdm,
-#   table_name_denominator = "denominator",
-#   table_name_outcomes = "outcome",
-#   cohort_ids_outcomes = "1",
-#   cohort_ids_denominator_pops = "1",
-#   time_interval = c("Years"),
-#   outcome_washout_windows = 180
-# )
-#
-# incidence %>%
-#   glimpse()
 
 ##### STUDY REPORT LAUNCH
 
 title <- "Incidence Prevalence Report"
 author <- "Cesar Barboza Gutierrez"
+abstract <- "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 denominator <- dpop
 prevalence <- prevalence
-# incidence <- incidence
+incidence <- incidence
 
+
+load_all()
 
 ## RUN
 
 reportIncidencePrevalence(title,
                           author,
+                          abstract,
                           denominator,
+                          incidence,
                           prevalence,
                           format = "word")
 #

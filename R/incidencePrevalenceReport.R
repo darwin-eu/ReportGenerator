@@ -2,23 +2,26 @@
 #'
 #' @param studyTitle Title of the study.
 #' @param studyAuthor Name of the author.
+#' @param abstractText Abstract in character.
 #' @param denominatorData A tibble from IncidencePrevalence.
-#' @param prevalenceData A tibble from IncidencePrevalence.
+#' @param incidenceData A tibble from IncidencePrevalence.
 #' @param prevalenceData A tibble from IncidencePrevalence.
 #' @param format Output options are "word", "pdf" or "html".
 #' @export
 #' @import dplyr CDMConnector rmarkdown here officer scales
 #' @importFrom utils head
 #' @return A WORD, PDF or HTML document.
-reportIncidencePrevalence <- function(studyTitle,
+incidencePrevalenceReport <- function(studyTitle,
                                       studyAuthor,
+                                      abstractText,
                                       denominatorData,
                                       prevalenceData,
                                       format = "word") {
 
+  titleFigurePrevalence1 <- "Figure 1. Incidence over time"
   titleTablePrevalence1 <- "Prevalence table"
-  titleFigurePrevalence1 <- "Prevalence figure 1"
 
+  textPrevalenceTable <- "Automatic text"
   prevalence_estimates <- prevalenceData$prevalence_estimates
 
   prevalenceTable <- prevalence_estimates %>% select(time = "time",
@@ -45,12 +48,14 @@ reportIncidencePrevalence <- function(studyTitle,
 
     ## Renders docx with officeR
 
-    prevalenceDoc <- read_docx(path = paste0(system.file(package = "IncidencePrevalenceReport"),
-                                             "/rmarkdown/templates/IncidencePrevalenceReport.docx")) %>%
+    prevalenceDoc <- read_docx(path = paste0(system.file(package = "reportGenerator"),
+                                             "/rmarkdown/templates/IncidencePrevalenceReportM.docx")) %>%
       body_add(value = studyTitle, style = "Title") %>%
-      body_add(value = studyAuthor, style = "heading 1") %>%
-      body_add(value = titleTablePrevalence1, style = "heading 2") %>%
+      body_add(value = studyAuthor, style = "Normal") %>%
+      body_add(value = abstractText, style = "heading 1") %>%
+      body_add(value = titleTablePrevalence1, style = "caption") %>%
       body_add_table(head(prevalenceTable, n = 20), style = "Table Grid") %>%
+      body_add(textPrevalenceTable, style = "Normal") %>%
       body_add(value = titleFigurePrevalence1, style = "heading 1") %>%
       body_add_gg(value = prevalenceGraph, style = "Normal")
 

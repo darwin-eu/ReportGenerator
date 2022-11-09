@@ -1,21 +1,20 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# IncidencePrevalenceReport
+# reportGenerator
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-Report generator of the estimates from the IncidencePrevalence package.
+Automatic report generator of the Darwin EU studies.
 
 ## Installation
 
-You can install the development version of IncidencePrevalenceReport
-like so:
+You can install the development version of reportGenerator like so:
 
 ``` r
 install.packages("remotes")
-remotes::install_github("cbarbozaerasmus/IncidencePrevalenceReport")
+remotes::install_github("cbarbozaerasmus/reportGenerator")
 ```
 
 ## Example
@@ -25,7 +24,7 @@ title and author. Then a tibble for incidence and prevalence from
 IncidencePrevalence package.
 
 ``` r
-library(IncidencePrevalenceReport)
+library(reportGenerator)
 library(IncidencePrevalence)
 
 title <- "..."
