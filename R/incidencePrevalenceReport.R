@@ -19,18 +19,45 @@ incidencePrevalenceReport <- function(studyTitle,
                                       prevalenceData,
                                       format = "word") {
 
-  titleFigurePrevalence1 <- "Figure 1. Incidence over time"
-  titleTablePrevalence1 <- "Prevalence table"
+  # Incidence report data
 
+  titleFigureIncidence <- "Figure 1. Incidence over time"
+  titleTableIncidence <- "Incidence table"
+  textIncidenceTable <- "Automatic text"
+
+  incidenceEstimates <- incidenceData$incidence_estimates
+
+  incidenceTable <- incidenceEstimates %>% select(Time = "time",
+                                                  `Number of persons` = "n_persons",
+                                                  `Person days`  = "person_days",
+                                                  `Incidence rate / 100000` = "ir_100000_pys")
+
+  incidenceGraph <- incidenceEstimates %>%
+    left_join(incidence$analysis_settings,
+              by = "incidence_analysis_id") %>%
+    left_join(dpop$denominator_settings,
+              by=c("denominator_id" = "cohort_definition_id")) %>%
+    ggplot(aes(time, ir_100000_pys))+
+    facet_grid(age_strata ~ sex_strata)+
+    geom_bar(stat = "identity") +
+    scale_y_continuous(labels = scales::percent,
+                       limits = c(0,NA))+
+    theme_bw()
+
+  # Prevalence report data
+
+  titleFigurePrevalence <- "Figure 1. Prevalence over time"
+  titleTablePrevalence <- "Prevalence table"
   textPrevalenceTable <- "Automatic text"
-  prevalence_estimates <- prevalenceData$prevalence_estimates
 
-  prevalenceTable <- prevalence_estimates %>% select(time = "time",
-                                                     numerator = "numerator",
-                                                     denominator = "denominator",
-                                                     prev = "prev")
+  prevalenceEstimates <- prevalenceData$prevalence_estimates
 
-  prevalenceGraph <- prevalence$prevalence_estimates %>%
+  prevalenceTable <- prevalenceEstimates %>% select(time = "time",
+                                                    numerator = "numerator",
+                                                    denominator = "denominator",
+                                                    prev = "prev")
+
+  prevalenceGraph <- prevalenceEstimates %>%
     left_join(prevalence$analysis_settings,
               by = "prevalence_analysis_id") %>%
     left_join(dpop$denominator_settings,
@@ -49,19 +76,32 @@ incidencePrevalenceReport <- function(studyTitle,
 
     ## Renders docx with officeR
 
-    prevalenceDoc <- read_docx(path = paste0(system.file(package = "reportGenerator"),
+    incidencePrevalenceDocx <- read_docx(path = paste0(system.file(package = "reportGenerator"),
                                              "/rmarkdown/templates/IncidencePrevalenceReportM.docx")) %>%
+      # Introduction section
+
+
       body_add(value = studyTitle, style = "Title") %>%
       body_add(value = studyAuthor, style = "Normal") %>%
       body_add(value = abstractText, style = "heading 1") %>%
-      body_add(value = titleTablePrevalence1, style = "caption") %>%
+
+      # Incidence section
+
+      body_add(value = titleTableIncidence, style = "caption") %>%
+      body_add_table(head(incidenceTable, n = 20), style = "Table Grid") %>%
+      body_add(textIncidenceTable, style = "Normal") %>%
+      body_add(value = titleFigureIncidence, style = "heading 1") %>%
+      body_add_gg(value = incidenceGraph, style = "Normal") %>%
+
+      # Prevalence section
+      body_add(value = titleTablePrevalence, style = "caption") %>%
       body_add_table(head(prevalenceTable, n = 20), style = "Table Grid") %>%
       body_add(textPrevalenceTable, style = "Normal") %>%
-      body_add(value = titleFigurePrevalence1, style = "heading 1") %>%
+      body_add(value = titleFigurePrevalence, style = "heading 1") %>%
       body_add_gg(value = prevalenceGraph, style = "Normal")
 
 
-    print(prevalenceDoc, target = here("Reports/IncidencePrevalenceReport.docx"))
+    print(incidencePrevalenceDocx, target = here("Reports/IncidencePrevalenceReport.docx"))
 
     ## Renders docx with rmarkdown function
     # rmarkdown::render(

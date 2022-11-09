@@ -9,6 +9,7 @@ incidencePrevalenceReport(
   studyAuthor,
   abstractText,
   denominatorData,
+  incidenceData,
   prevalenceData,
   format = "word"
 )
@@ -22,11 +23,11 @@ incidencePrevalenceReport(
 
 \item{denominatorData}{A tibble from IncidencePrevalence.}
 
+\item{incidenceData}{A tibble from IncidencePrevalence.}
+
 \item{prevalenceData}{A tibble from IncidencePrevalence.}
 
 \item{format}{Output options are "word", "pdf" or "html".}
-
-\item{incidenceData}{A tibble from IncidencePrevalence.}
 }
 \value{
 A WORD, PDF or HTML document.

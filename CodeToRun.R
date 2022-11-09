@@ -47,6 +47,26 @@ incidence <- computeIncidence(
 incidence %>%
   glimpse()
 
+# incidenceEstimates <- incidence$incidence_estimates
+#
+# prevalenceTable <- incidenceEstimates %>% select(Time = "time",
+#                                                  `Number of persons` = "n_persons",
+#                                                  `Person days`  = "person_days",
+#                                                  `Incidence rate / 100000` = "ir_100000_pys")
+#
+# incidenceGraph <- incidenceEstimates %>%
+#   left_join(incidence$analysis_settings,
+#           by = "incidence_analysis_id") %>%
+#   left_join(dpop$denominator_settings,
+#             by=c("denominator_id" = "cohort_definition_id")) %>%
+#   ggplot(aes(time, ir_100000_pys))+
+#   facet_grid(age_strata ~ sex_strata)+
+#   geom_bar(stat = "identity") +
+#   scale_y_continuous(labels = scales::percent,
+#                      limits = c(0,NA))+
+#   theme_bw()
+
+
 # Prevalence calculation
 
 prevalence <- computePrevalence(
