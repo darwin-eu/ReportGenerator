@@ -2,7 +2,7 @@
 % Please edit documentation in R/mockSampleCSV.R
 \name{mockSampleCSV}
 \alias{mockSampleCSV}
-\title{Creates mock data that simulates an array of databases in CSV format to test the reportGenerator}
+\title{This function uses data mockIncidencePrevalenceRef function to simulate three databases in CSV format to test the reportGenerator}
 \usage{
 mockSampleCSV(cdm = NULL, databaseName = c("Synthea", "IPCI", "CPRD"))
 }
@@ -15,5 +15,5 @@ mockSampleCSV(cdm = NULL, databaseName = c("Synthea", "IPCI", "CPRD"))
 CSV files inside inst/csv
 }
 \description{
-Creates mock data that simulates an array of databases in CSV format to test the reportGenerator
+This function uses data mockIncidencePrevalenceRef function to simulate three databases in CSV format to test the reportGenerator
 }

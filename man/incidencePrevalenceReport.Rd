@@ -8,9 +8,6 @@ incidencePrevalenceReport(
   studyTitle = "...",
   studyAuthor = "...",
   abstractText = "...",
-  denominatorData = NULL,
-  incidenceData = NULL,
-  prevalenceData = NULL,
   format = "word"
 )
 }
@@ -20,12 +17,6 @@ incidencePrevalenceReport(
 \item{studyAuthor}{Name of the author.}
 
 \item{abstractText}{Abstract in character.}
-
-\item{denominatorData}{A tibble from IncidencePrevalence.}
-
-\item{incidenceData}{A tibble from IncidencePrevalence.}
-
-\item{prevalenceData}{A tibble from IncidencePrevalence.}
 
 \item{format}{Output options are "word", "pdf" or "html".}
 }

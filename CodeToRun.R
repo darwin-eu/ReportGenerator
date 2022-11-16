@@ -43,20 +43,20 @@ prevalenceData <- bind_rows(
 # New drug users / patients
 colnames(incidenceData)
 incidenceTable1 <- incidenceData %>%
-  group_by(database_name) %>%
+  group_by(incidenceData$database_name) %>%
   summarise(`Number of new <Drug users / Patients with condition X>` = sum(n_persons))
 
 # Total number of drug users / patients
 
 prevalenceTable1 <- prevalenceData %>%
-  group_by(database_name) %>%
+  group_by(prevalenceData$database_name) %>%
   summarise(`Total number of <Drug users / Patients with condition X>` = sum(numerator))
 
 # For publication in report
 
 table1 <- left_join(incidenceTable1,
                     prevalenceTable1,
-                    by = "database_name")
+                    by=c("incidenceData$database_name" = "prevalenceData$database_name"))
 
 table1
 
@@ -474,12 +474,12 @@ incidenceFigure2c
 
 ##### STUDY REPORT LAUNCH
 
-title <- "Incidence Prevalence Report"
-author <- "Cesar Barboza Gutierrez"
-abstract <- "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-denominator <- dpop
-incidence <- incidence
-prevalence <- prevalence
+studyTitle <- "Incidence Prevalence Report"
+studyAuthor <- "Cesar Barboza Gutierrez"
+abstractText <- "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+# denominator <- dpop
+# incidence <- incidence
+# prevalence <- prevalence
 
 
 
@@ -487,11 +487,11 @@ load_all()
 
 ## RUN
 
-incidencePrevalenceReport(title,
-                          author,
-                          abstract,
-                          denominator,
-                          incidence,
-                          prevalence,
+incidencePrevalenceReport(studyTitle,
+                          studyAuthor,
+                          abstractText,
+                          # denominator,
+                          # incidence,
+                          # prevalence,
                           format = "word")
 
