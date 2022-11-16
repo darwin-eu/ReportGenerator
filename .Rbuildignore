@@ -5,3 +5,5 @@
 ^Reports$
 CodeToRun.R
 ^CodeToRun\.R$
+^Reports\csv\.csv$
+^Reports\csv$

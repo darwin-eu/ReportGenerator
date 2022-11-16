@@ -5,12 +5,12 @@
 \title{Creates an HTML report taking the prevalence and incidence estimates from IncidencePrevalence.}
 \usage{
 incidencePrevalenceReport(
-  studyTitle,
-  studyAuthor,
-  abstractText,
-  denominatorData,
-  incidenceData,
-  prevalenceData,
+  studyTitle = "...",
+  studyAuthor = "...",
+  abstractText = "...",
+  denominatorData = NULL,
+  incidenceData = NULL,
+  prevalenceData = NULL,
   format = "word"
 )
 }

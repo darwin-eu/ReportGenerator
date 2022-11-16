@@ -1,5 +1,4 @@
 #' Creates an HTML report taking the prevalence and incidence estimates from IncidencePrevalence.
-#'
 #' @param studyTitle Title of the study.
 #' @param studyAuthor Name of the author.
 #' @param abstractText Abstract in character.
@@ -10,13 +9,14 @@
 #' @export
 #' @import dplyr CDMConnector rmarkdown here officer scales
 #' @importFrom utils head
+#' @importFrom stats time
 #' @return A WORD, PDF or HTML document.
-incidencePrevalenceReport <- function(studyTitle,
-                                      studyAuthor,
-                                      abstractText,
-                                      denominatorData,
-                                      incidenceData,
-                                      prevalenceData,
+incidencePrevalenceReport <- function(studyTitle = "...",
+                                      studyAuthor = "...",
+                                      abstractText = "...",
+                                      denominatorData = NULL,
+                                      incidenceData = NULL,
+                                      prevalenceData = NULL,
                                       format = "word") {
 
   # Incidence report data
@@ -31,18 +31,35 @@ incidencePrevalenceReport <- function(studyTitle,
                                                   `Number of persons` = "n_persons",
                                                   `Person days`  = "person_days",
                                                   `Incidence rate / 100000` = "ir_100000_pys")
+  # line
 
   incidenceGraph <- incidenceEstimates %>%
     left_join(incidence$analysis_settings,
               by = "incidence_analysis_id") %>%
     left_join(dpop$denominator_settings,
               by=c("denominator_id" = "cohort_definition_id")) %>%
-    ggplot(aes(time, ir_100000_pys))+
-    facet_grid(age_strata ~ sex_strata)+
-    geom_bar(stat = "identity") +
+    ggplot(aes(x = time, y = ir_100000_pys, group = sex_strata, col = sex_strata)) +
+    facet_grid(cols = vars(age_strata)) +
     scale_y_continuous(labels = scales::percent,
-                       limits = c(0,NA))+
+                       limits = c(0,NA)) +
+    geom_line() +
+    geom_point() +
     theme_bw()
+
+
+  # bar
+
+  # incidenceGraph <- incidenceEstimates %>%
+  #   left_join(incidence$analysis_settings,
+  #             by = "incidence_analysis_id") %>%
+  #   left_join(dpop$denominator_settings,
+  #             by=c("denominator_id" = "cohort_definition_id")) %>%
+  #   ggplot(aes(time, ir_100000_pys))+
+  #   facet_grid(age_strata ~ sex_strata)+
+  #   geom_bar(stat = "identity") +
+  #   scale_y_continuous(labels = scales::percent,
+  #                      limits = c(0,NA))+
+  #   theme_bw()
 
   # Prevalence report data
 

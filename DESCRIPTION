@@ -14,8 +14,11 @@ Imports:
     dplyr,
     ggplot2,
     here,
+    IncidencePrevalence,
     officer,
     quarto,
+    readr,
     rmarkdown,
     scales,
-    shiny
+    shiny,
+    tidyr
