@@ -7,8 +7,10 @@
 # @param prevalenceData A tibble from IncidencePrevalence.
 #' @param format Output options are "word", "pdf" or "html".
 #' @export
-#' @import dplyr CDMConnector rmarkdown here officer scales
-#' @importFrom utils head
+#' @import dplyr CDMConnector rmarkdown here officer
+#' @importFrom utils head globalVariables
+#' @importFrom scales percent
+#' @importFrom readr read_csv
 #' @importFrom stats time
 #' @return A WORD, PDF or HTML document.
 incidencePrevalenceReport <- function(studyTitle = "...",
@@ -43,6 +45,9 @@ incidencePrevalenceReport <- function(studyTitle = "...",
     )
   )
 
+  utils::globalVariables(c(names(incidenceData),
+                         names(prevalenceData)))
+
   # Incidence objects
 
   # Table 1. <Drug users / Patients with condition X> in <list all data sources> during <stud period>
@@ -50,35 +55,35 @@ incidencePrevalenceReport <- function(studyTitle = "...",
   # New drug users / patients
 
   incidenceTable1 <- incidenceData %>%
-    group_by(incidenceData$database_name) %>%
-    summarise(`Number of new <Drug users / Patients with condition X>` = sum(incidenceData$n_persons))
+    group_by(database_name) %>%
+    summarise(`Number of new cases` = sum(n_persons))
 
   # Total number of drug users / patients
 
   prevalenceTable1 <- prevalenceData %>%
-    group_by(prevalenceData$database_name) %>%
-    summarise(`Total number of <Drug users / Patients with condition X>` = sum(prevalenceData$numerator))
+    group_by(database_name) %>%
+    summarise(`Total number of cases` = sum(numerator))
 
   # For publication in report
 
   table1 <- left_join(incidenceTable1,
                       prevalenceTable1,
-                      by=c("incidenceData$database_name" = "prevalenceData$database_name"))
+                      by = "database_name")
 
   # Figure 1. Incidence rate/s of drug/s use over calendar time (per month/year) overall
 
   incidenceFigure1 <- incidenceData %>%
-    filter(incidenceData$sex_strata == "Both",
-           incidenceData$age_strata == "0;99") %>%
-    ggplot(aes(x = incidenceData$time,
-               y = incidenceData$ir_100000_pys,
-               col = incidenceData$database_name)) +
+    filter(sex_strata == "Both",
+           age_strata == "0;99") %>%
+    ggplot(aes(x = time,
+               y = ir_100000_pys,
+               col = database_name)) +
     # scale_y_continuous(labels = scales::percent,
     #                    limits = c(0,NA)) +
     geom_line(aes(group = 1)) +
     geom_point() +
-    geom_errorbar(aes(ymin = incidenceData$ir_100000_pys_low,
-                      ymax = incidenceData$ir_100000_pys_high)) +
+    geom_errorbar(aes(ymin = ir_100000_pys_low,
+                      ymax = ir_100000_pys_high)) +
     theme_bw() +
     labs(x = "Calendar year",
          y = "Incidence rate per 100000 person-years",
@@ -88,13 +93,13 @@ incidencePrevalenceReport <- function(studyTitle = "...",
 
 
   incidenceFigure2 <- incidenceData %>%
-    filter(incidenceData$age_strata == "0;99",
-           incidenceData$sex_strata != "Both") %>%
-    ggplot(aes(x = incidenceData$time,
-               y = incidenceData$ir_100000_pys,
-               group = incidenceData$sex_strata,
-               col = incidenceData$database_name)) +
-    facet_grid(cols = vars(incidenceData$sex_strata)) +
+    filter(age_strata == "0;99",
+           sex_strata != "Both") %>%
+    ggplot(aes(x = time,
+               y = ir_100000_pys,
+               group = sex_strata,
+               col = database_name)) +
+    facet_grid(cols = vars(sex_strata)) +
     # scale_y_continuous(labels = scales::percent,
     #                    limits = c(0,NA)) +
     geom_line() +
@@ -107,14 +112,14 @@ incidencePrevalenceReport <- function(studyTitle = "...",
   # Figure 2b . by year/month: plot for each database, diff lines per age group
 
   incidenceFigure2b <- incidenceData %>%
-    filter(incidenceData$age_strata != "0;99",
-           incidenceData$sex_strata == "Both") %>%
-    ggplot(aes(x = incidenceData$time,
-               y = incidenceData$ir_100000_pys)) +
-    facet_grid(rows = vars(incidenceData$database_name)) +
+    filter(age_strata != "0;99",
+           sex_strata == "Both") %>%
+    ggplot(aes(x = time,
+               y = ir_100000_pys)) +
+    facet_grid(rows = vars(database_name)) +
     # scale_y_continuous(labels = scales::percent,
     #                    limits = c(0,NA)) +
-    geom_line(aes(colour = incidenceData$age_strata)) +
+    geom_line(aes(colour = age_strata)) +
     geom_point() +
     theme_bw() +
     labs(x = "Calendar year",
@@ -124,16 +129,16 @@ incidencePrevalenceReport <- function(studyTitle = "...",
   # Figure 2c . by age group (x-axis) for databases (color) and sex (dashed/line)
 
   incidenceFigure2c <- incidenceData %>%
-    filter(incidenceData$age_strata != "0;99",
-           incidenceData$sex_strata != "Both") %>%
-    ggplot(aes(x = incidenceData$time,
-               y = incidenceData$ir_100000_pys,
-               col = incidenceData$database_name)) +
-    facet_grid(rows = vars(incidenceData$database_name),
-               cols = vars(incidenceData$age_strata)) +
+    filter(age_strata != "0;99",
+           sex_strata != "Both") %>%
+    ggplot(aes(x = time,
+               y = ir_100000_pys,
+               col = database_name)) +
+    facet_grid(rows = vars(database_name),
+               cols = vars(age_strata)) +
     # scale_y_continuous(labels = scales::percent,
     #                    limits = c(0,NA)) +
-    geom_line(aes(linetype = incidenceData$sex_strata)) +
+    geom_line(aes(linetype = sex_strata)) +
     geom_point() +
     theme_bw() +
     labs(x = "Calendar year",
@@ -141,22 +146,47 @@ incidencePrevalenceReport <- function(studyTitle = "...",
          col = "Database name",
          linetype = "Sex")
 
+  # Table 2. Incidence data according to figures 1 and 2
+
+  table2Incidence <- incidenceData %>%
+    select(database_name,
+           time,
+           sex_strata,
+           age_strata,
+           n_persons,
+           person_years,
+           ir_100000_pys)
+
+  table2Incidence <- table2Incidence[with(table2Incidence,
+                                          order(database_name,
+                                                time,
+                                                sex_strata,
+                                                age_strata)),]
+
+  colnames(table2Incidence) <- c("Database",
+                                 "Time",
+                                 "Sex",
+                                 "Age group",
+                                 "N persons",
+                                 "Person years",
+                                 "IR 10000 pys")
+
   # Prevalence objects
 
   # Figure 1. Prevalence of drug/s use over calendar time (per month/year) overall
 
   prevalenceFigure1 <- prevalenceData %>%
-    filter(prevalenceData$sex_strata == "Both",
-           prevalenceData$age_strata == "0;99") %>%
-    ggplot(aes(x = prevalenceData$time,
-               y = prevalenceData$prev,
-               col = prevalenceData$database_name)) +
+    filter(sex_strata == "Both",
+           age_strata == "0;99") %>%
+    ggplot(aes(x = time,
+               y = prev,
+               col = database_name)) +
     scale_y_continuous(labels = scales::percent,
                        limits = c(0, 1)) +
     geom_line(aes(group = 1)) +
     geom_point() +
-    geom_errorbar(aes(ymin = prevalenceData$prev_low,
-                      ymax = prevalenceData$prev_high)) +
+    geom_errorbar(aes(ymin = prev_low,
+                      ymax = prev_high)) +
     theme_bw() +
     labs(x = "Calendar year",
          y = "Prevalence",
@@ -164,15 +194,14 @@ incidencePrevalenceReport <- function(studyTitle = "...",
 
   # Figure 2. by year/month: two plots – males/females, all databases
 
-
   prevalenceFigure2 <- prevalenceData %>%
-    filter(prevalenceData$age_strata == "0;99",
-           prevalenceData$sex_strata != "Both") %>%
-    ggplot(aes(x = prevalenceData$time,
-               y = prevalenceData$prev,
-               group = prevalenceData$sex_strata,
-               col = prevalenceData$database_name)) +
-    facet_grid(cols = vars(prevalenceData$sex_strata)) +
+    filter(age_strata == "0;99",
+           sex_strata != "Both") %>%
+    ggplot(aes(x = time,
+               y = prev,
+               group = sex_strata,
+               col = database_name)) +
+    facet_grid(cols = vars(sex_strata)) +
     scale_y_continuous(labels = scales::percent,
                        limits = c(0, 1)) +
     geom_line() +
@@ -185,14 +214,14 @@ incidencePrevalenceReport <- function(studyTitle = "...",
   # Figure 2b . by year/month: plot for each database, diff lines per age group
 
   prevalenceFigure2b <- prevalenceData %>%
-    filter(prevalenceData$age_strata != "0;99",
-           prevalenceData$sex_strata == "Both") %>%
-    ggplot(aes(x = prevalenceData$time,
-               y = prevalenceData$prev)) +
-    facet_grid(rows = vars(prevalenceData$database_name)) +
+    filter(age_strata != "0;99",
+           sex_strata == "Both") %>%
+    ggplot(aes(x = time,
+               y = prev)) +
+    facet_grid(rows = vars(database_name)) +
     scale_y_continuous(labels = scales::percent,
                        limits = c(0, 1)) +
-    geom_line(aes(colour = prevalenceData$age_strata)) +
+    geom_line(aes(colour = age_strata)) +
     geom_point() +
     theme_bw() +
     labs(x = "Calendar year",
@@ -202,22 +231,52 @@ incidencePrevalenceReport <- function(studyTitle = "...",
   # Figure 2c . by age group (x-axis) for databases (color) and sex (dashed/line)
 
   prevalenceFigure2c <- prevalenceData %>%
-    filter(prevalenceData$age_strata != "0;99",
-           prevalenceData$sex_strata != "Both") %>%
-    ggplot(aes(x = prevalenceData$time,
-               y = prevalenceData$prev,
-               col = prevalenceData$database_name)) +
-    facet_grid(rows = vars(prevalenceData$database_name),
-               cols = vars(prevalenceData$age_strata)) +
+    filter(age_strata != "0;99",
+           sex_strata != "Both") %>%
+    ggplot(aes(x = time,
+               y = prev,
+               col = database_name)) +
+    facet_grid(rows = vars(database_name),
+               cols = vars(age_strata)) +
     scale_y_continuous(labels = scales::percent,
                        limits = c(0, 1)) +
-    geom_line(aes(linetype = prevalenceData$sex_strata)) +
+    geom_line(aes(linetype = sex_strata)) +
     geom_point() +
     theme_bw() +
     labs(x = "Calendar year",
          y = "Prevalence",
          col = "Database name",
          linetype = "Sex")
+
+  # Table 2. Prevalence data according to figures 1 and 2
+
+  table2Prevalence <- prevalenceData %>%
+    select(database_name,
+           time,
+           sex_strata,
+           age_strata,
+           numerator,
+           denominator,
+           prev)
+
+  table2Prevalence <- table2Prevalence[with(table2Prevalence,
+                                            order(database_name,
+                                                  time,
+                                                  sex_strata,
+                                                  age_strata)),]
+
+  colnames(table2Prevalence) <- c("Database",
+                                  "Time",
+                                  "Sex",
+                                  "Age group",
+                                  "Numerator",
+                                  "Denominator",
+                                  "Prevalence")
+
+
+
+
+
 
   # line
 
@@ -249,7 +308,7 @@ incidencePrevalenceReport <- function(studyTitle = "...",
   #                      limits = c(0,NA))+
   #   theme_bw()
 
-  # prevalenceEstimates <- prevalenceData$prevalence_estimates
+  # prevalenceEstimates <- prevalence_estimates
   #
   # prevalenceTable <- prevalenceEstimates %>% select(time = "time",
   #                                                   numerator = "numerator",
@@ -291,6 +350,7 @@ incidencePrevalenceReport <- function(studyTitle = "...",
                                              "/rmarkdown/templates/IncidencePrevalenceReportM.docx")) %>%
 
       # Sections
+
       # Introduction
 
       body_add(value = studyTitle,
@@ -318,6 +378,8 @@ incidencePrevalenceReport <- function(studyTitle = "...",
                   style = "Normal") %>%
       body_add_gg(value = incidenceFigure2c,
                   style = "Normal") %>%
+      body_add_table(table2Incidence,
+                     style = "Table Grid") %>%
 
       # Prevalence
 
@@ -337,8 +399,8 @@ incidencePrevalenceReport <- function(studyTitle = "...",
                   style = "Normal") %>%
       body_add_gg(value = prevalenceFigure2c,
                   style = "Normal") %>%
-
-
+      body_add_table(table2Prevalence,
+                     style = "Table Grid") %>%
     print(incidencePrevalenceDocx,
           target = here("Reports/IncidencePrevalenceReport.docx"))
 
@@ -368,6 +430,18 @@ incidencePrevalenceReport <- function(studyTitle = "...",
     )
   }
 }
-
+if(getRversion() >= "2.15.1")    utils::globalVariables(c("age_strata",
+                                                          "database_name",
+                                                          "denominator",
+                                                          "ir_100000_pys",
+                                                          "ir_100000_pys_high",
+                                                          "ir_100000_pys_low",
+                                                          "n_persons",
+                                                          "numerator",
+                                                          "person_years",
+                                                          "sex_strata",
+                                                          "prev",
+                                                          "prev_high",
+                                                          "prev_low"))
 
 
