@@ -2,9 +2,8 @@
 #' @param cdm A cdm object from mockIncidencePrevalenceRef
 #' @param databaseName A vector that specifies the name of each database.
 #' @export
-#' @import dplyr readr rmarkdown here tidyr IncidencePrevalence
-#' @importFrom utils head
-#' @importFrom utils write.csv
+#' @import dplyr rmarkdown here tidyr IncidencePrevalence
+#' @importFrom utils head write.csv
 #' @importFrom stats time
 #' @return CSV files inside inst/csv
 mockSampleCSV <- function(cdm = NULL,

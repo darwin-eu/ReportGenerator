@@ -45,9 +45,6 @@ incidencePrevalenceReport <- function(studyTitle = "...",
     )
   )
 
-  utils::globalVariables(c(names(incidenceData),
-                         names(prevalenceData)))
-
   # Incidence objects
 
   # Table 1. <Drug users / Patients with condition X> in <list all data sources> during <stud period>
@@ -109,9 +106,9 @@ incidencePrevalenceReport <- function(studyTitle = "...",
          y = "Incidence rate per 100000 person-years",
          col = "Database name")
 
-  # Figure 2b . by year/month: plot for each database, diff lines per age group
+  # Figure 3 . by year/month: plot for each database, diff lines per age group
 
-  incidenceFigure2b <- incidenceData %>%
+  incidenceFigure3 <- incidenceData %>%
     filter(age_strata != "0;99",
            sex_strata == "Both") %>%
     ggplot(aes(x = time,
@@ -126,9 +123,9 @@ incidencePrevalenceReport <- function(studyTitle = "...",
          y = "Incidence rate per 100000 person-years",
          colour = "Age group")
 
-  # Figure 2c . by age group (x-axis) for databases (color) and sex (dashed/line)
+  # Figure 4 . by age group (x-axis) for databases (color) and sex (dashed/line)
 
-  incidenceFigure2c <- incidenceData %>%
+  incidenceFigure4 <- incidenceData %>%
     filter(age_strata != "0;99",
            sex_strata != "Both") %>%
     ggplot(aes(x = time,
@@ -211,9 +208,9 @@ incidencePrevalenceReport <- function(studyTitle = "...",
          y = "Prevalence ",
          col = "Database name")
 
-  # Figure 2b . by year/month: plot for each database, diff lines per age group
+  # Figure 3 . by year/month: plot for each database, diff lines per age group
 
-  prevalenceFigure2b <- prevalenceData %>%
+  prevalenceFigure3 <- prevalenceData %>%
     filter(age_strata != "0;99",
            sex_strata == "Both") %>%
     ggplot(aes(x = time,
@@ -228,9 +225,9 @@ incidencePrevalenceReport <- function(studyTitle = "...",
          y = "Prevalence",
          colour = "Age group")
 
-  # Figure 2c . by age group (x-axis) for databases (color) and sex (dashed/line)
+  # Figure 4 . by age group (x-axis) for databases (color) and sex (dashed/line)
 
-  prevalenceFigure2c <- prevalenceData %>%
+  prevalenceFigure4 <- prevalenceData %>%
     filter(age_strata != "0;99",
            sex_strata != "Both") %>%
     ggplot(aes(x = time,
@@ -329,15 +326,35 @@ incidencePrevalenceReport <- function(studyTitle = "...",
 
   # Incidence report data
 
-  titleFigureIncidence <- "Figure 1. Incidence over time"
-  titleTableIncidence <- "Incidence table"
-  textIncidenceTable <- "Automatic text"
+  # Table 1
+
+  titleTable1Incidence <- "Table 1. Incidence"
+  textTable1Incidence <- "Table 1. Automatic text"
+
+  # Figures
+
+  titleFigure1Incidence <- "Figure 1. Incidence over time"
+  titleFigure2Incidence <- "Figure 2. Incidence over time"
+  titleFigure3Incidence <- "Figure 3. Incidence over time"
+  titleFigure4Incidence <- "Figure 4. Incidence over time"
+
+  # Table 2
+
+  titleTable2Incidence <- "Table 2. Incidence table"
+  textTable2Incidence <- "Table 2. Automatic text"
 
   # Prevalence report data
 
-  titleFigurePrevalence <- "Figure 1. Prevalence over time"
-  titleTablePrevalence <- "Prevalence table"
-  textPrevalenceTable <- "Automatic text"
+  titleTable1Prevalence <- "Table 1. Prevalence"
+  textTable1Prevalence <- "Table 2. Automatic text"
+
+  titleFigure1Prevalence <- "Figure 1. Prevalence over time"
+  titleFigure2Prevalence <- "Figure 2. Prevalence over time"
+  titleFigure3Prevalence <- "Figure 3. Prevalence over time"
+  titleFigure4Prevalence <- "Figure 4. Prevalence over time"
+
+  titleTable2Prevalence <- "Prevalence table 2"
+  textTable2Prevalence <- "Table 2. Automatic text"
 
   # Report generation with OfficeR
 
@@ -362,26 +379,55 @@ incidencePrevalenceReport <- function(studyTitle = "...",
 
       # Incidence
 
-      body_add(value = titleTableIncidence,
+      # Table 1 Incidence
+
+      body_add(value = titleTable1Incidence,
                style = "caption") %>%
       body_add_table(table1,
                      style = "Table Grid") %>%
-      body_add(textIncidenceTable,
+      body_add(textTable1Incidence,
                style = "Normal") %>%
-      body_add(value = titleFigureIncidence,
+
+      # Figure 1 Incidence
+
+      body_add(value = titleFigure1Incidence,
                style = "heading 1") %>%
       body_add_gg(value = incidenceFigure1,
                   style = "Normal") %>%
+
+      # Figure 2 Incidence
+
+      body_add(value = titleFigure2Incidence,
+               style = "heading 1") %>%
       body_add_gg(value = incidenceFigure2,
                   style = "Normal") %>%
-      body_add_gg(value = incidenceFigure2b,
+
+      # Figure 3 Incidence
+
+      body_add(value = titleFigure3Incidence,
+               style = "heading 1") %>%
+      body_add_gg(value = incidenceFigure3,
                   style = "Normal") %>%
-      body_add_gg(value = incidenceFigure2c,
+
+      # Figure 4 Incidence
+
+      body_add(value = titleFigure4Incidence,
+               style = "heading 1") %>%
+      body_add_gg(value = incidenceFigure4,
                   style = "Normal") %>%
+
+      # Table 2 Incidence
+
+      body_add(value = titleTable2Incidence,
+               style = "caption") %>%
       body_add_table(table2Incidence,
                      style = "Table Grid") %>%
+      body_add(textTable2Incidence,
+               style = "Normal") %>%
 
       # Prevalence
+
+      # Table 1 Prevalence
 
       body_add(value = titleTablePrevalence,
                style = "caption") %>%
@@ -389,19 +435,44 @@ incidencePrevalenceReport <- function(studyTitle = "...",
                      style = "Table Grid") %>%
       body_add(textPrevalenceTable,
                style = "Normal") %>%
-      body_add(value = titleFigurePrevalence,
+
+      # Figure 1 Prevalence
+
+      body_add(value = titleFigure1Prevalence,
                style = "heading 1") %>%
       body_add_gg(value = prevalenceFigure1,
                   style = "Normal") %>%
+
+      # Figure 2 Prevalence
+
+      body_add(value = titleFigure2Prevalence,
+               style = "heading 1") %>%
       body_add_gg(value = prevalenceFigure2,
                   style = "Normal") %>%
-      body_add_gg(value = prevalenceFigure2b,
+
+      # Figure 3 Prevalence
+
+      body_add(value = titleFigure3Prevalence,
+               style = "heading 1") %>%
+      body_add_gg(value = prevalenceFigure3,
                   style = "Normal") %>%
-      body_add_gg(value = prevalenceFigure2c,
+
+      # Figure 4 Prevalence
+
+      body_add(value = titleFigure4Prevalence,
+               style = "heading 1") %>%
+      body_add_gg(value = prevalenceFigure4,
                   style = "Normal") %>%
+
+      # Table 2 Prevalence
+      body_add(value = titleTable2Prevalence,
+               style = "caption") %>%
       body_add_table(table2Prevalence,
                      style = "Table Grid") %>%
-    print(incidencePrevalenceDocx,
+      body_add(textTable2Prevalence,
+               style = "Normal") %>%
+
+      print(incidencePrevalenceDocx,
           target = here("Reports/IncidencePrevalenceReport.docx"))
 
     ## Renders docx with rmarkdown function
