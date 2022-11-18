@@ -2,7 +2,7 @@
 
 library(devtools)
 
-document()
+lodocument()
 check()
 install()
 
@@ -198,7 +198,7 @@ install()
 
 # Example with mock data
 
-# cdm <- mockIncidencePrevalenceRef(sampleSize = 50000)
+cdm <- mockIncidencePrevalenceRef(sampleSize = 50000)
 #
 # personCDM <- cdm$person
 #
@@ -210,12 +210,22 @@ install()
 
 # Figure 1: All databases, by year and month
 
-# dpop <- collectDenominator(cdm = cdm,
-#                            startDate  = as.Date("2000-01-01"),
-#                            endDate  = as.Date("2012-01-01"),
-#                            daysPriorHistory  = 365)
-#
-# cdm$denominator <- dpop$denominator_population
+dpop <- collectDenominator(cdm = cdm,
+                           startDate  = as.Date("2000-01-01"),
+                           endDate  = as.Date("2012-01-01"),
+                           daysPriorHistory  = 365)
+
+glimpse(cdm)
+
+cdm$denominator <- dpop$denominator_population
+
+denominator <- cdm$denominator
+denominator <- as_tibble(denominator)
+
+denominator$subject_id<-as.numeric(denominator$subject_id)
+length(unique(denominator$subject_id))
+
+
 #
 # incidence <- computeIncidence(
 #   cdm = cdm,

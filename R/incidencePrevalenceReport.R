@@ -23,6 +23,17 @@ incidencePrevalenceReport <- function(studyTitle = "...",
 
   # Loading data from CSV files
 
+  denominatorData <- bind_rows(
+    lapply(
+      list.files(
+        here("inst/csv/denominatorMockData"),
+        pattern = ".csv",
+        full.names = TRUE
+      ),
+      read_csv
+    )
+  )
+
   incidenceData <- bind_rows(
     lapply(
       list.files(

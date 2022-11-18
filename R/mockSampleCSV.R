@@ -14,57 +14,84 @@ mockSampleCSV <- function(cdm = NULL,
 
 cdm <- mockIncidencePrevalenceRef(sampleSize = 50000)
 #
-# databaseName <- c("Synthea", "IPCI", "CPRD")
+databaseName <- c("Synthea", "IPCI", "CPRD")
 
-dpop <- collectDenominator(cdm = cdm,
-                           startDate  = as.Date("2000-01-01"),
-                           endDate  = as.Date("2022-01-01"),
-                           ageStrata  = list(c(20, 29),
-                                             c(30, 39),
-                                             c(40, 49),
-                                             c(50, 59),
-                                             c(60, 69),
-                                             c(0,99)),
-                           sexStrata  = c("Female", "Male", "Both"),
-                           daysPriorHistory  = 365)
-
-cdm$denominator <- dpop$denominator_population
-
-for (i in databaseName) {
-  print(i)
-# }
-
-# i <- "IPCI"
-
-incidence <- computeIncidence(
-  cdm = cdm,
-  denominatorTable = "denominator",
-  outcomeTable = "outcome",
-  outcomeId = "1",
-  denominatorId  = c("1", "2", "3", "4", "5",
-                     "6", "7", "8", "9", "10",
-                     "11", "12", "13", "14",
-                     "15", "16", "17", "18"),
-  interval = c("Years"),
-  outcomeWashout = 180
-)
-
-incidenceEstimates <- incidence$incidence_estimates %>%
-  left_join(incidence$analysis_settings,
-            by = "incidence_analysis_id") %>%
-  left_join(dpop$denominator_settings,
-            by=c("denominator_id" = "cohort_definition_id")) %>%
-  mutate(database_name = i)
-
-write.csv(incidenceEstimates,
-          paste(here("inst/csv/incidenceMockResults/mockDataIncidence"), i, ".csv", sep = ""),
-          row.names = FALSE)
-
-}
+# dpop <- collectDenominator(cdm = cdm,
+#                            startDate  = as.Date("2000-01-01"),
+#                            endDate  = as.Date("2022-01-01"),
+#                            ageStrata  = list(c(20, 29),
+#                                              c(30, 39),
+#                                              c(40, 49),
+#                                              c(50, 59),
+#                                              c(60, 69),
+#                                              c(0,99)),
+#                            sexStrata  = c("Female", "Male", "Both"),
+#                            daysPriorHistory  = 365)
+#
+# cdm$denominator <- dpop$denominator_population
 
 for (i in databaseName) {
   print(i)
-  # }
+
+  # i <- "IPCI"
+
+  dpop <- collectDenominator(cdm = cdm,
+                             startDate  = as.Date("2000-01-01"),
+                             endDate  = as.Date("2022-01-01"),
+                             ageStrata  = list(c(20, 29),
+                                               c(30, 39),
+                                               c(40, 49),
+                                               c(50, 59),
+                                               c(60, 69),
+                                               c(0,99)),
+                             sexStrata  = c("Female", "Male", "Both"),
+                             daysPriorHistory  = 365)
+
+  cdm$denominator <- dpop$denominator_population
+
+  if (!file.exists(here("inst/csv/denominatorMockData"))) {
+    dir.create("inst/csv/denominatorMockData")
+  }
+
+  write.csv(incidenceEstimates,
+            paste(here("inst/csv/denominatorMockData/denominatorMockData"),
+                  i,
+                  ".csv",
+                  sep = ""),
+            row.names = FALSE)
+
+
+
+  incidence <- computeIncidence(
+    cdm = cdm,
+    denominatorTable = "denominator",
+    outcomeTable = "outcome",
+    outcomeId = "1",
+    denominatorId  = c("1", "2", "3", "4", "5",
+                       "6", "7", "8", "9", "10",
+                       "11", "12", "13", "14",
+                       "15", "16", "17", "18"),
+    interval = c("Years"),
+    outcomeWashout = 180
+  )
+
+  incidenceEstimates <- incidence$incidence_estimates %>%
+    left_join(incidence$analysis_settings,
+              by = "incidence_analysis_id") %>%
+    left_join(dpop$denominator_settings,
+              by=c("denominator_id" = "cohort_definition_id")) %>%
+    mutate(database_name = i)
+
+  if (!file.exists(here("inst/csv/incidenceMockResults"))) {
+    dir.create("inst/csv/incidenceMockResults")
+  }
+
+  write.csv(incidenceEstimates,
+            paste(here("inst/csv/incidenceMockResults/incidenceMockResults"),
+                  i,
+                  ".csv",
+                  sep = ""),
+            row.names = FALSE)
 
   # i <- "IPCI"
 
@@ -89,8 +116,15 @@ for (i in databaseName) {
               by=c("denominator_id" = "cohort_definition_id")) %>%
     mutate(database_name = i)
 
+  if (!file.exists(here("inst/csv/prevalenceMockResults"))) {
+    dir.create("inst/csv/prevalenceMockResults")
+  }
+
   write.csv(prevalenceEstimates,
-            paste(here("inst/csv/prevalenceMockResults/mockDataPrevalence"), i, ".csv", sep = ""),
+            paste(here("inst/csv/prevalenceMockResults/prevalenceMockResults"),
+                  i,
+                  ".csv",
+                  sep = ""),
             row.names = FALSE)
 
 }
