@@ -1,39 +1,22 @@
 #' This function uses data mockIncidencePrevalenceRef function to simulate three databases in CSV format to test the reportGenerator
-#' @param cdm A cdm object from mockIncidencePrevalenceRef
 #' @param databaseName A vector that specifies the name of each database.
 #' @export
 #' @import dplyr rmarkdown here tidyr IncidencePrevalence
 #' @importFrom utils head write.csv
 #' @importFrom stats time
 #' @return CSV files inside inst/csv
-mockSampleCSV <- function(cdm = NULL,
-                          databaseName = c("Synthea",
+mockSampleCSV <- function(databaseName = c("Synthea",
                                            "IPCI",
                                            "CPRD")) {
 
-
 cdm <- mockIncidencePrevalenceRef(sampleSize = 50000)
-#
-databaseName <- c("Synthea", "IPCI", "CPRD")
 
-# dpop <- collectDenominator(cdm = cdm,
-#                            startDate  = as.Date("2000-01-01"),
-#                            endDate  = as.Date("2022-01-01"),
-#                            ageStrata  = list(c(20, 29),
-#                                              c(30, 39),
-#                                              c(40, 49),
-#                                              c(50, 59),
-#                                              c(60, 69),
-#                                              c(0,99)),
-#                            sexStrata  = c("Female", "Male", "Both"),
-#                            daysPriorHistory  = 365)
-#
-# cdm$denominator <- dpop$denominator_population
+# databaseName <- c("Synthea", "IPCI", "CPRD")
 
 for (i in databaseName) {
   print(i)
 
-  # i <- "IPCI"
+#   i <- "IPCI"
 
   dpop <- collectDenominator(cdm = cdm,
                              startDate  = as.Date("2000-01-01"),
@@ -47,13 +30,14 @@ for (i in databaseName) {
                              sexStrata  = c("Female", "Male", "Both"),
                              daysPriorHistory  = 365)
 
-  cdm$denominator <- dpop$denominator_population
+  cdm$denominator <- dpop$denominator_population %>%
+    mutate(database_name = i)
 
   if (!file.exists(here("inst/csv/denominatorMockData"))) {
     dir.create("inst/csv/denominatorMockData")
   }
 
-  write.csv(incidenceEstimates,
+  write.csv(cdm$denominator,
             paste(here("inst/csv/denominatorMockData/denominatorMockData"),
                   i,
                   ".csv",

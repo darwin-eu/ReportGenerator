@@ -5,20 +5,32 @@
 \title{Creates an HTML report taking the prevalence and incidence estimates from IncidencePrevalence.}
 \usage{
 incidencePrevalenceReport(
-  studyTitle = "...",
-  studyAuthor = "...",
-  abstractText = "...",
+  title = NULL,
+  authors = NULL,
+  authorsInstitution = NULL,
+  date = NULL,
+  countries = NULL,
+  abstractText = NULL,
+  byCondition = TRUE,
   format = "word"
 )
 }
 \arguments{
-\item{studyTitle}{Title of the study.}
+\item{title}{Title of the study in <chr>.}
 
-\item{studyAuthor}{Name of the author.}
+\item{authors}{Name of the author in <chr>.}
+
+\item{authorsInstitution}{Name of the institution performing the study in <chr>.}
+
+\item{date}{Date relevant to the study in <chr>.}
+
+\item{countries}{Country or countries that participated in the study.}
 
 \item{abstractText}{Abstract in character.}
 
-\item{format}{Output options are "word", "pdf" or "html".}
+\item{byCondition}{TRUE if study is related to a condition, FALSE if it is related to drug utilisation.}
+
+\item{format}{A string. Options are "word", "pdf" or "html".}
 }
 \value{
 A WORD, PDF or HTML document.

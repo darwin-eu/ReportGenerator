@@ -4,11 +4,9 @@
 \alias{mockSampleCSV}
 \title{This function uses data mockIncidencePrevalenceRef function to simulate three databases in CSV format to test the reportGenerator}
 \usage{
-mockSampleCSV(cdm = NULL, databaseName = c("Synthea", "IPCI", "CPRD"))
+mockSampleCSV(databaseName = c("Synthea", "IPCI", "CPRD"))
 }
 \arguments{
-\item{cdm}{A cdm object from mockIncidencePrevalenceRef}
-
 \item{databaseName}{A vector that specifies the name of each database.}
 }
 \value{
