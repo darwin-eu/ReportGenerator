@@ -437,30 +437,44 @@ incidencePrevalenceReport <- function(title = NULL,
 
       body_add(value = tableContentsTitle,
                style = "tableContents") %>%
-      body_add(value = incidenceTitleTable1,
+      body_add(value = c(tableContentsTitle,
+                         incidenceTitleTable1,
+                         titleFigure1Incidence,
+                         titleFigure2Incidence,
+                         titleFigure3Incidence,
+                         titleFigure4Incidence,
+                         titleTable2Incidence,
+                         prevalenceTitleTable3,
+                         titleFigure5Prevalence,
+                         titleFigure6Prevalence,
+                         titleFigure7Prevalence,
+                         titleFigure8Prevalence,
+                         titletable4Prevalence),
                style = "Normal") %>%
-      body_add(value = titleFigure1Incidence,
-               style = "Normal") %>%
-      body_add(value = titleFigure2Incidence,
-               style = "Normal") %>%
-      body_add(value = titleFigure3Incidence,
-               style = "Normal") %>%
-      body_add(value = titleFigure4Incidence,
-               style = "Normal") %>%
-      body_add(value = titleTable2Incidence,
-               style = "Normal") %>%
-      body_add(value = prevalenceTitleTable3,
-               style = "Normal") %>%
-      body_add(value = titleFigure5Prevalence,
-               style = "Normal") %>%
-      body_add(value = titleFigure6Prevalence,
-               style = "Normal") %>%
-      body_add(value = titleFigure7Prevalence,
-               style = "Normal") %>%
-      body_add(value = titleFigure8Prevalence,
-               style = "Normal") %>%
-      body_add(value = titletable4Prevalence,
-               style = "Normal") %>%
+      # body_add(value = incidenceTitleTable1,
+      #          style = "Normal") %>%
+      # body_add(value = titleFigure1Incidence,
+      #          style = "Normal") %>%
+      # body_add(value = titleFigure2Incidence,
+      #          style = "Normal") %>%
+      # body_add(value = titleFigure3Incidence,
+      #          style = "Normal") %>%
+      # body_add(value = titleFigure4Incidence,
+      #          style = "Normal") %>%
+      # body_add(value = titleTable2Incidence,
+      #          style = "Normal") %>%
+      # body_add(value = prevalenceTitleTable3,
+      #          style = "Normal") %>%
+      # body_add(value = titleFigure5Prevalence,
+      #          style = "Normal") %>%
+      # body_add(value = titleFigure6Prevalence,
+      #          style = "Normal") %>%
+      # body_add(value = titleFigure7Prevalence,
+      #          style = "Normal") %>%
+      # body_add(value = titleFigure8Prevalence,
+      #          style = "Normal") %>%
+      # body_add(value = titletable4Prevalence,
+      #          style = "Normal") %>%
 
       ## Incidence
 

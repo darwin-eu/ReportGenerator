@@ -2,7 +2,7 @@
 
 export(incidencePrevalenceReport)
 export(mockSampleCSV)
-export(ui)
+export(studyReportApp)
 import(CDMConnector)
 import(IncidencePrevalence)
 import(dplyr)
