@@ -419,7 +419,7 @@ incidencePrevalenceReport <- function(title = NULL,
       dir.create("Reports/")
     }
 
-    incidencePrevalenceDocx <- read_docx(path = paste0(system.file(package = "reportGenerator"),
+    incidencePrevalenceDocx <- read_docx(path = paste0(system.file(package = "ReportGenerator"),
                                              "/rmarkdown/templates/IncidencePrevalenceReport.docx")) %>%
 
       ## Sections

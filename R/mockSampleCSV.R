@@ -1,4 +1,4 @@
-#' This function uses data mockIncidencePrevalenceRef function to simulate three databases in CSV format to test the reportGenerator
+#' This function uses data mockIncidencePrevalenceRef function to simulate three databases in CSV format to test the ReportGenerator
 #' @param databaseName A vector that specifies the name of each database.
 #' @export
 #' @import dplyr rmarkdown here tidyr IncidencePrevalence

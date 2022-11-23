@@ -1,4 +1,4 @@
-Package: reportGenerator
+Package: ReportGenerator
 Type: Package
 Title: Automatic report generator of the Darwin EU studies
 Version: 0.1.0
