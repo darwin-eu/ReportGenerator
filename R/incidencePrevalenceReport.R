@@ -641,5 +641,47 @@ if(getRversion() >= "2.15.1")    utils::globalVariables(c("age_strata",
                                                           "prev_low",
                                                           "subject_id",
                                                           "n_events"))
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
+extractionCSV <- function () {
+  denominatorData <- bind_rows(
+    lapply(
+      list.files(
+        here("inst/csv/denominatorMockData"),
+        pattern = ".csv",
+        full.names = TRUE
+      ),
+      read_csv
+    )
+  )
+
+  incidenceData <- bind_rows(
+    lapply(
+      list.files(
+        here("inst/csv/incidenceMockResults"),
+        pattern = ".csv",
+        full.names = TRUE
+      ),
+      read_csv
+    )
+  ) %>%
+    mutate(age_strata = gsub(";", "-", age_strata))
+
+  prevalenceData <- bind_rows(
+    lapply(
+      list.files(
+        here("inst/csv/prevalenceMockResults"),
+        pattern = ".csv",
+        full.names = TRUE
+      ),
+      read_csv
+    )
+  ) %>%
+    mutate(age_strata = gsub(";", "-", age_strata))
+}
 
 
