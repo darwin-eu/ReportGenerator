@@ -30,42 +30,11 @@ incidencePrevalenceReport <- function(title = NULL,
                                       format = "word") {
 
 
-  ### Loading data from CSV files
+  ### Data extraction functions
 
-  denominatorData <- bind_rows(
-    lapply(
-      list.files(
-        here("inst/csv/denominatorMockData"),
-        pattern = ".csv",
-        full.names = TRUE
-      ),
-      read_csv
-    )
-  )
-
-  incidenceData <- bind_rows(
-    lapply(
-      list.files(
-        here("inst/csv/incidenceMockResults"),
-        pattern = ".csv",
-        full.names = TRUE
-      ),
-      read_csv
-    )
-  ) %>%
-    mutate(age_strata = gsub(";", "-", age_strata))
-
-  prevalenceData <- bind_rows(
-    lapply(
-      list.files(
-        here("inst/csv/prevalenceMockResults"),
-        pattern = ".csv",
-        full.names = TRUE
-      ),
-      read_csv
-    )
-  ) %>%
-    mutate(age_strata = gsub(";", "-", age_strata))
+  denominatorData <- denominatorData()
+  incidenceData <- incidenceData()
+  prevalenceData <- prevalenceData()
 
 
   ### OBJECTS
@@ -451,30 +420,6 @@ incidencePrevalenceReport <- function(title = NULL,
                          titleFigure8Prevalence,
                          titletable4Prevalence),
                style = "Normal") %>%
-      # body_add(value = incidenceTitleTable1,
-      #          style = "Normal") %>%
-      # body_add(value = titleFigure1Incidence,
-      #          style = "Normal") %>%
-      # body_add(value = titleFigure2Incidence,
-      #          style = "Normal") %>%
-      # body_add(value = titleFigure3Incidence,
-      #          style = "Normal") %>%
-      # body_add(value = titleFigure4Incidence,
-      #          style = "Normal") %>%
-      # body_add(value = titleTable2Incidence,
-      #          style = "Normal") %>%
-      # body_add(value = prevalenceTitleTable3,
-      #          style = "Normal") %>%
-      # body_add(value = titleFigure5Prevalence,
-      #          style = "Normal") %>%
-      # body_add(value = titleFigure6Prevalence,
-      #          style = "Normal") %>%
-      # body_add(value = titleFigure7Prevalence,
-      #          style = "Normal") %>%
-      # body_add(value = titleFigure8Prevalence,
-      #          style = "Normal") %>%
-      # body_add(value = titletable4Prevalence,
-      #          style = "Normal") %>%
 
       ## Incidence
 
@@ -641,47 +586,8 @@ if(getRversion() >= "2.15.1")    utils::globalVariables(c("age_strata",
                                                           "prev_low",
                                                           "subject_id",
                                                           "n_events"))
-#' Title
-#'
-#' @return
-#' @export
-#'
-#' @examples
-extractionCSV <- function () {
-  denominatorData <- bind_rows(
-    lapply(
-      list.files(
-        here("inst/csv/denominatorMockData"),
-        pattern = ".csv",
-        full.names = TRUE
-      ),
-      read_csv
-    )
-  )
 
-  incidenceData <- bind_rows(
-    lapply(
-      list.files(
-        here("inst/csv/incidenceMockResults"),
-        pattern = ".csv",
-        full.names = TRUE
-      ),
-      read_csv
-    )
-  ) %>%
-    mutate(age_strata = gsub(";", "-", age_strata))
 
-  prevalenceData <- bind_rows(
-    lapply(
-      list.files(
-        here("inst/csv/prevalenceMockResults"),
-        pattern = ".csv",
-        full.names = TRUE
-      ),
-      read_csv
-    )
-  ) %>%
-    mutate(age_strata = gsub(";", "-", age_strata))
-}
+
 
 

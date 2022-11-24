@@ -3,7 +3,9 @@
 library(devtools)
 
 document()
+
 check()
+
 # install()
 
 
@@ -33,5 +35,7 @@ incidencePrevalenceReport(title = title,
                           abstractText = abstractText,
                           byCondition = TRUE,
                           format = "word")
+
+studyReportApp()
 
 

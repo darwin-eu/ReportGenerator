@@ -22,3 +22,5 @@ Imports:
     scales,
     shiny,
     tidyr
+Remotes:
+    darwin-eu/IncidencePrevalence

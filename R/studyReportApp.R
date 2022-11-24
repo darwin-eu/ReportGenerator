@@ -5,6 +5,10 @@
 #' @return An HTML document
 studyReportApp <- function() {
 
+  denominatorData <- denominatorData()
+  incidenceData <- incidenceData()
+  prevalenceData <- prevalenceData()
+
   ui <- shiny::fluidPage(
 
     sidebarLayout(
@@ -43,10 +47,7 @@ studyReportApp <- function() {
                       label = "Large Scale (Appendix)")),
         selectInput(inputId = "download",
                     label = "Database",
-                    choices = c("IPCI",
-                               "CPRD",
-                               "Synthea",
-                               "All")),
+                    choices = unique(incidenceData$database_name)),
         selectInput(inputId = "download",
                     label = "Drug",
                     choices = c("Ranitidine",
