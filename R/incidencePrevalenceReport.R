@@ -420,7 +420,7 @@ incidencePrevalenceReport <- function(title = NULL,
     }
 
     incidencePrevalenceDocx <- read_docx(path = paste0(system.file(package = "ReportGenerator"),
-                                             "/rmarkdown/templates/IncidencePrevalenceReport.docx")) %>%
+                                             "/templates/word/IncidencePrevalenceReport.docx")) %>%
 
       ## Sections
 
