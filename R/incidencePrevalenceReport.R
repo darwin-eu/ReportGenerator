@@ -38,7 +38,6 @@ incidencePrevalenceReport <- function(title = NULL,
 
   prevalenceData <- prevalenceExtraction()
 
-
   ### OBJECTS
 
   ## Specifications
@@ -48,36 +47,50 @@ incidencePrevalenceReport <- function(title = NULL,
   authorsTable <- data.frame(Authors = authors,
                              Institution = authorsInstitution)
 
-
   ## Incidence objects
 
   # Table 1. <Drug users / Patients with condition X> in <list all data sources> during <stud period>
 
   # Loading data from function
+
   incidenceTable1 <- incidenceTable1(incidenceData)
 
   # Correcting either drug or condition study
+
   if (byCondition == FALSE) {
+
     colnames(incidenceTable1) <- c("Database",
                                    "Number of new drug users",
                                    "Total number of drug users")
+
     # Sum of total patients in database
+
     totalPopulationIncidence <- sum(incidenceTable1$`Total number of drug users`)
-  } else {
-    colnames(incidenceTable1) <- c("Database",
+
+    } else {
+
+      colnames(incidenceTable1) <- c("Database",
                                    "Number of new patients",
                                    "Total number of patients")
-    # Sum of total patients in database
-    totalPopulationIncidence <- sum(incidenceTable1$`Total number of patients`)
-  }
+
+      # Sum of total patients in database
+
+      totalPopulationIncidence <- sum(incidenceTable1$`Total number of patients`)
+
+      }
+
+  # Table 1 paragraph
 
   # Year period
+
   minYearIncidence <- min(incidenceData$time)
+
   maxYearIncidence <- max(incidenceData$time)
 
+  # Paragraph
 
-  # Table paragraph
   incidenceTitleIntroTable1 <- "Number of new cases during study period"
+
   incidenceIntroTable1 <- paste("Table 1 describes the total number of new events with at least one day of observation time during the study period. For this study, we investigated use of <outcome 1> in more than ",
                                 totalPopulationIncidence,
                                 " patients during the study period ",
@@ -86,7 +99,9 @@ incidencePrevalenceReport <- function(title = NULL,
                                 maxYearIncidence,
                                 " .",
                                 sep = "")
+
   incidenceTitleTable1 <- "Table 1. Number of new cases and total number of patients per database"
+
   incidenceTextTable1 <- " "
 
   # Figure 1. Incidence rate/s of drug/s use over calendar time (per month/year) overall
@@ -118,41 +133,49 @@ incidencePrevalenceReport <- function(title = NULL,
   table2Incidence <- table2Incidence(incidenceData)
 
   titleTable2Incidence <- "Table 2. Numeric values of displayed figures 1-4"
-  textTable2Incidence <- " "
 
+  textTable2Incidence <- " "
 
   ## Prevalence objects
 
   # Table 3. Number of cases and total number of patients per database
 
-  prevalenceTable3 <- prevalenceData %>%
-    group_by(database_name) %>%
-    summarise(numerator = sum(numerator),
-              denominator = sum(denominator))
-
+  prevalenceTable3 <- prevalenceTable3(prevalenceData)
 
   if (byCondition == FALSE) {
+
     colnames(prevalenceTable3) <- c("Database",
                                    "Number of drug users",
                                    "Total number of drug users per database")
+
     # Sum of total patients in database
+
     totalPopulationPrevalence <- sum(prevalenceTable3$`Total number of drug users`)
-  } else {
+
+    } else {
+
     colnames(prevalenceTable3) <- c("Database",
                                    "Number of patients ",
                                    "Total number of patients")
-    # Sum of total patients in database
-    totalPopulationPrevalence <- sum(prevalenceTable3$`Total number of patients`)
-  }
 
+    # Sum of total patients in database
+
+    totalPopulationPrevalence <- sum(prevalenceTable3$`Total number of patients`)
+
+    }
+
+  # Table 3 paragraph
+
+  # Year period
 
   minYearPrevalence <- min(prevalenceData$time)
 
   maxYearPrevalence <- max(prevalenceData$time)
 
-
+  # Paragraph
 
   prevalenceTitleIntroTable3 <- "Number of cases during study period"
+
   prevalenceIntroTable3 <- paste("Table 3 describes the total number of patients with a condition or drug use time during the study period. For this study, we investigated use of <outcome 1> in more than ",
                                 totalPopulationPrevalence,
                                 " patients during the study period ",
@@ -161,131 +184,46 @@ incidencePrevalenceReport <- function(title = NULL,
                                 maxYearPrevalence,
                                 " .",
                                 sep = "")
+
   prevalenceTitleTable3 <- "Table 3. Number of cases and total number of patients per database"
+
   prevalenceTextTable3 <- " "
 
+  # Figure 5. Prevalence of drug/s use over calendar time (per month/year) overall
 
-  # Figure 1. Prevalence of drug/s use over calendar time (per month/year) overall
-
-  prevalenceFigure5 <- prevalenceData %>%
-    filter(sex_strata == "Both",
-           age_strata == "0-99") %>%
-    ggplot(aes(x = time,
-               y = prev,
-               col = database_name)) +
-    scale_y_continuous(labels = scales::percent,
-                       limits = c(0, 1)) +
-    geom_line(aes(group = 1)) +
-    geom_point() +
-    geom_errorbar(aes(ymin = prev_low,
-                      ymax = prev_high)) +
-    theme_bw() +
-    labs(x = "Calendar year",
-         y = "Prevalence",
-         col = "Database name")
+  prevalenceFigure5 <- prevalenceFigure5(prevalenceData)
 
   titleFigure5Prevalence <- "Figure 5. Prevalence over time overall"
 
-  # Figure 2. by year/month: two plots – males/females, all databases
+  # Figure 6. by year/month: two plots – males/females, all databases
 
-  prevalenceFigure6 <- prevalenceData %>%
-    filter(age_strata == "0-99",
-           sex_strata != "Both") %>%
-    ggplot(aes(x = time,
-               y = prev,
-               group = sex_strata,
-               col = database_name)) +
-    facet_grid(cols = vars(sex_strata)) +
-    scale_y_continuous(labels = scales::percent,
-                       limits = c(0, 1)) +
-    geom_line() +
-    geom_point() +
-    theme_bw() +
-    labs(x = "Calendar year",
-         y = "Prevalence ",
-         col = "Database name")
+  prevalenceFigure6 <- prevalenceFigure6(prevalenceData)
 
   titleFigure6Prevalence <- "Figure 6. Prevalence over time stratified by sex"
 
-  # Figure 3. by year/month: plot for each database, diff lines per age group
+  # Figure 7. by year/month: plot for each database, diff lines per age group
 
-  prevalenceFigure7 <- prevalenceData %>%
-    filter(age_strata != "0-99",
-           sex_strata == "Both") %>%
-    ggplot(aes(x = time,
-               y = prev)) +
-    facet_grid(rows = vars(database_name)) +
-    scale_y_continuous(labels = scales::percent,
-                       limits = c(0, 1)) +
-    geom_line(aes(colour = age_strata)) +
-    geom_point() +
-    theme_bw() +
-    labs(x = "Calendar year",
-         y = "Prevalence",
-         colour = "Age group")
+  prevalenceFigure7 <- prevalenceFigure7(prevalenceData)
 
   titleFigure7Prevalence <- "Figure 7. Prevalence over time stratified by age group"
 
   # Figure 8. by age group (x-axis) for databases (color) and sex (dashed/line)
 
-  prevalenceFigure8 <- prevalenceData %>%
-    filter(age_strata != "0-99",
-           sex_strata != "Both") %>%
-    ggplot(aes(x = time,
-               y = prev,
-               col = database_name)) +
-    facet_grid(rows = vars(database_name),
-               cols = vars(age_strata)) +
-    scale_y_continuous(labels = scales::percent,
-                       limits = c(0, 1)) +
-    geom_line(aes(linetype = sex_strata)) +
-    geom_point() +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    theme_bw() +
-    labs(x = "Calendar year",
-         y = "Prevalence",
-         col = "Database name",
-         linetype = "Sex") +
-    theme(axis.text.x = element_text(angle = 90,
-                                     hjust = 1))
-
+  prevalenceFigure8 <- prevalenceFigure8(prevalenceData)
 
   titleFigure8Prevalence <- "Figure 8. Prevalence over time stratified by sex and age group"
 
   # Table 4. Numeric values of displayed figures 5-8
 
-  table4Prevalence <- prevalenceData %>%
-    select(database_name,
-           time,
-           sex_strata,
-           age_strata,
-           numerator,
-           denominator,
-           prev) %>%
-    mutate(prev = scales::percent(round(prev, 3)))
-
-  table4Prevalence <- table4Prevalence[with(table4Prevalence,
-                                            order(database_name,
-                                                  time,
-                                                  sex_strata,
-                                                  age_strata)),]
-
-  colnames(table4Prevalence) <- c("Database",
-                                  "Time",
-                                  "Sex",
-                                  "Age group",
-                                  "Number of cases",
-                                  "Denominator population",
-                                  "Prevalence")
+  table4Prevalence <- table4Prevalence(prevalenceData)
 
   titletable4Prevalence <- "Table 4. Numeric values of displayed figures 5-8"
+
   texttable4Prevalence <- " "
 
   # Table of Contents
 
   tableContentsTitle <- "Table of Contents"
-
-
 
   ### REPORT GENERATION
 
@@ -435,36 +373,16 @@ incidencePrevalenceReport <- function(title = NULL,
       print(incidencePrevalenceDocx,
           target = here("Reports/IncidencePrevalenceReport.docx"))
 
-
-    # library(officer)
-    # library(dplyr)
-    # data <- read_docx()
-    #
-    # titleTable1Incidence <- "1st without for loop"
-    # textTable1Incidence <- "Second"
-    # image_list <- c(titleTable1Incidence, textTable1Incidence)
-    #
-    # data <- body_add(data, titleTable1Incidence, style = "Normal")
-    #
-    # for(i in image_list) {
-    #   data <- body_add(data, i, style = "Normal")
-    # }
-    # print(data, target = "samp.docx")
-
-    ## Renders docx with rmarkdown function
-    # rmarkdown::render(
-    #   input = paste0(system.file(package = "IncidencePrevalenceReport"),
-    #                  "/rmarkdown/templates/IncidencePrevalenceReport.Rmd"),
-    #   output_format = word_document(reference_docx = paste0(system.file(package = "IncidencePrevalenceReport"),
-    #                                                         "/rmarkdown/templates/IncidencePrevalenceReport.docx")),
-    #   output_file = here("Reports/IncidencePrevalenceReport"),
-    #   encoding = 'UTF-8'
-    # )
   } else {
+
     if (!file.exists(here("Reports/"))) {
+
       dir.create("Reports")
+
     }
+
     rmarkdown::render(
+
       input = paste0(system.file(package = "IncidencePrevalenceReport"),
                      "/rmarkdown/templates/IncidencePrevalenceReport.Rmd"),
       output_format = "html_document",
@@ -474,6 +392,7 @@ incidencePrevalenceReport <- function(title = NULL,
       #               prevalenceParam = prevalenceData,
       #               incidenceParam = incidenceData),
       encoding = 'UTF-8'
+
     )
   }
 }
