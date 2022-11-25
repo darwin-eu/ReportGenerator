@@ -15,6 +15,7 @@ denominatorExtraction <- function () {
       read_csv
     )
   )
+
   return(result)
 }
 #' Extracts incidence data from files in CSV format.
@@ -33,8 +34,8 @@ incidenceExtraction <- function () {
       ),
       read_csv
     )
-  ) %>%
-    mutate(age_strata = gsub(";", "-", age_strata))
+  ) %>% mutate(age_strata = gsub(";", "-", age_strata))
+
   return(result)
 }
 #' Extracts prevalence data from files in CSV format.
@@ -53,7 +54,7 @@ prevalenceExtraction <- function () {
       ),
       read_csv
     )
-  ) %>%
-    mutate(age_strata = gsub(";", "-", age_strata))
+  ) %>% mutate(age_strata = gsub(";", "-", age_strata))
+
   return(result)
 }

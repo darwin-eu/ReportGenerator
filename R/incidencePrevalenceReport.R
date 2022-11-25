@@ -33,11 +33,15 @@ incidencePrevalenceReport <- function(title = NULL,
   ### Data extraction functions
 
   denominatorData <- denominatorExtraction()
+
   incidenceData <- incidenceExtraction()
+
   prevalenceData <- prevalenceExtraction()
 
 
   ### OBJECTS
+
+  ## Specifications
 
   # Authors
 
@@ -49,18 +53,10 @@ incidencePrevalenceReport <- function(title = NULL,
 
   # Table 1. <Drug users / Patients with condition X> in <list all data sources> during <stud period>
 
-  incidenceTable1 <- incidenceData %>%
-    group_by(database_name) %>%
-    summarise(total = sum(n_events))
+  # Loading data from function
+  incidenceTable1 <- incidenceTable1(incidenceData)
 
-  denominatorTable1 <- denominatorData %>%
-    group_by(database_name) %>%
-    summarise(subjects = length(unique(subject_id)))
-
-  incidenceTable1 <- left_join(incidenceTable1,
-                               denominatorTable1,
-                               by = "database_name")
-
+  # Correcting either drug or condition study
   if (byCondition == FALSE) {
     colnames(incidenceTable1) <- c("Database",
                                    "Number of new drug users",
@@ -75,15 +71,12 @@ incidencePrevalenceReport <- function(title = NULL,
     totalPopulationIncidence <- sum(incidenceTable1$`Total number of patients`)
   }
 
-
-
   # Year period
   minYearIncidence <- min(incidenceData$time)
-
   maxYearIncidence <- max(incidenceData$time)
 
 
-
+  # Table paragraph
   incidenceTitleIntroTable1 <- "Number of new cases during study period"
   incidenceIntroTable1 <- paste("Table 1 describes the total number of new events with at least one day of observation time during the study period. For this study, we investigated use of <outcome 1> in more than ",
                                 totalPopulationIncidence,
@@ -96,120 +89,33 @@ incidencePrevalenceReport <- function(title = NULL,
   incidenceTitleTable1 <- "Table 1. Number of new cases and total number of patients per database"
   incidenceTextTable1 <- " "
 
-  # table1 <- left_join(incidenceTable1,
-  #                     prevalenceTable1,
-  #                     by = "database_name")
-
   # Figure 1. Incidence rate/s of drug/s use over calendar time (per month/year) overall
 
-  incidenceFigure1 <- incidenceData %>%
-    filter(sex_strata == "Both",
-           age_strata == "0-99") %>%
-    ggplot(aes(x = time,
-               y = ir_100000_pys,
-               col = database_name)) +
-    # scale_y_continuous(labels = scales::percent,
-    #                    limits = c(0,NA)) +
-    geom_line(aes(group = 1)) +
-    geom_point() +
-    geom_errorbar(aes(ymin = ir_100000_pys_low,
-                      ymax = ir_100000_pys_high)) +
-    theme_bw() +
-    labs(x = "Calendar year",
-         y = "Incidence rate per 100000 person-years",
-         col = "Database name")
+  incidenceFigure1 <- incidenceFigure1(incidenceData)
 
   titleFigure1Incidence <- "Figure 1. Incidence rate over time overall"
 
   # Figure 2. by year/month: two plots – males/females, all databases
 
-  incidenceFigure2 <- incidenceData %>%
-    filter(age_strata == "0-99",
-           sex_strata != "Both") %>%
-    ggplot(aes(x = time,
-               y = ir_100000_pys,
-               group = sex_strata,
-               col = database_name)) +
-    facet_grid(cols = vars(sex_strata)) +
-    # scale_y_continuous(labels = scales::percent,
-    #                    limits = c(0,NA)) +
-    geom_line() +
-    geom_point() +
-    theme_bw() +
-    labs(x = "Calendar year",
-         y = "Incidence rate per 100000 person-years",
-         col = "Database name")
+  incidenceFigure2 <- incidenceFigure2(incidenceData)
 
   titleFigure2Incidence <- "Figure 2. Incidence rate over time stratified by sex"
 
   # Figure 3 . by year/month: plot for each database, diff lines per age group
 
-  incidenceFigure3 <- incidenceData %>%
-    filter(age_strata != "0-99",
-           sex_strata == "Both") %>%
-    ggplot(aes(x = time,
-               y = ir_100000_pys)) +
-    facet_grid(rows = vars(database_name)) +
-    # scale_y_continuous(labels = scales::percent,
-    #                    limits = c(0,NA)) +
-    geom_line(aes(colour = age_strata)) +
-    geom_point() +
-    theme_bw() +
-    labs(x = "Calendar year",
-         y = "Incidence rate per 100000 person-years",
-         colour = "Age group")
+  incidenceFigure3 <- incidenceFigure3(incidenceData)
 
   titleFigure3Incidence <- "Figure 3. Incidence rate over time stratified by age group"
 
   # Figure 4 . by age group (x-axis) for databases (color) and sex (dashed/line)
 
-  incidenceFigure4 <- incidenceData %>%
-    filter(age_strata != "0-99",
-           sex_strata != "Both") %>%
-    ggplot(aes(x = time,
-               y = ir_100000_pys,
-               col = database_name)) +
-    facet_grid(rows = vars(database_name),
-               cols = vars(age_strata)) +
-    # scale_y_continuous(labels = scales::percent,
-    #                    limits = c(0,NA)) +
-    geom_line(aes(linetype = sex_strata)) +
-    geom_point() +
-    theme_bw() +
-    labs(x = "Calendar year",
-         y = "Incidence rate per 100000 person-years",
-         col = "Database name",
-         linetype = "Sex") +
-    theme(axis.text.x = element_text(angle = 90,
-                                     hjust = 1))
+  incidenceFigure4 <- incidenceFigure4(incidenceData)
 
   titleFigure4Incidence <- "Figure 4. Incidence rate over time stratified by sex and age group"
 
   # Table 2. Incidence data according to figures 1 and 2
 
-  table2Incidence <- incidenceData %>%
-    select(database_name,
-           time,
-           sex_strata,
-           age_strata,
-           n_events,
-           person_years,
-           ir_100000_pys) %>%
-    mutate(person_years = round(person_years, 2))
-
-  table2Incidence <- table2Incidence[with(table2Incidence,
-                                          order(database_name,
-                                                time,
-                                                sex_strata,
-                                                age_strata)),]
-
-  colnames(table2Incidence) <- c("Database",
-                                 "Time",
-                                 "Sex",
-                                 "Age group",
-                                 "N events",
-                                 "Person-years",
-                                 "IR 10000 pys")
+  table2Incidence <- table2Incidence(incidenceData)
 
   titleTable2Incidence <- "Table 2. Numeric values of displayed figures 1-4"
   textTable2Incidence <- " "
