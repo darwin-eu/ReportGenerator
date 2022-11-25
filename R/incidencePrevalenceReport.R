@@ -32,9 +32,9 @@ incidencePrevalenceReport <- function(title = NULL,
 
   ### Data extraction functions
 
-  denominatorData <- denominatorData()
-  incidenceData <- incidenceData()
-  prevalenceData <- prevalenceData()
+  denominatorData <- denominatorExtraction()
+  incidenceData <- incidenceExtraction()
+  prevalenceData <- prevalenceExtraction()
 
 
   ### OBJECTS

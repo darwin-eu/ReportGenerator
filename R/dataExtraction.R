@@ -3,7 +3,7 @@
 #' @return A tibble
 #' @export
 #'
-denominatorData <- function () {
+denominatorExtraction <- function () {
 
   result <- bind_rows(
     lapply(
@@ -22,7 +22,7 @@ denominatorData <- function () {
 #' @return A tibble
 #' @export
 #'
-incidenceData <- function () {
+incidenceExtraction <- function () {
 
   result <- bind_rows(
     lapply(
@@ -42,7 +42,7 @@ incidenceData <- function () {
 #' @return A tibble
 #' @export
 #'
-prevalenceData <- function () {
+prevalenceExtraction <- function () {
 
   result <- bind_rows(
     lapply(
