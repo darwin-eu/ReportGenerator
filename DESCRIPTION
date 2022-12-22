@@ -4,11 +4,11 @@ Title: Automatic report generator of the Darwin EU studies
 Version: 0.1.0
 Author: CE BARBOZA
 Maintainer: CE BARBOZA <c.barbozagutierrez@erasmusmc.nl>
-Description: This package creates a report in docx, html and pdf formats.
+Description: This package creates a report in docx, html and pdf formats from Darwin studies. 
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports: 
     CDMConnector,
     dplyr,
@@ -22,5 +22,3 @@ Imports:
     scales,
     shiny,
     tidyr
-Remotes:
-    darwin-eu/IncidencePrevalence

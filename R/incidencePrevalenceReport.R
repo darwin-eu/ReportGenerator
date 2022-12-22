@@ -83,9 +83,11 @@ incidencePrevalenceReport <- function(title = NULL,
 
   # Year period
 
-  minYearIncidence <- min(incidenceData$time)
+  minYearIncidence <- format(min(incidenceData$incidence_start_date),
+                             format = "%Y")
 
-  maxYearIncidence <- max(incidenceData$time)
+  maxYearIncidence <- format(max(incidenceData$incidence_end_date),
+                             format = "%Y")
 
   # Paragraph
 
@@ -168,9 +170,11 @@ incidencePrevalenceReport <- function(title = NULL,
 
   # Year period
 
-  minYearPrevalence <- min(prevalenceData$time)
+  minYearPrevalence <- format(min(prevalenceData$prevalence_start_date),
+                             format = "%Y")
 
-  maxYearPrevalence <- max(prevalenceData$time)
+  maxYearPrevalence <- format(max(prevalenceData$prevalence_end_date),
+                             format = "%Y")
 
   # Paragraph
 

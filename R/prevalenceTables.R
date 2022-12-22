@@ -8,8 +8,8 @@ prevalenceTable3 <- function(prevalenceData) {
 
   prevalenceTableData <- prevalenceData %>%
     group_by(database_name) %>%
-    summarise(numerator = sum(numerator),
-              denominator = sum(denominator))
+    summarise(n_cases = sum(n_cases),
+              n_population = sum(n_population))
 
   return(prevalenceTableData)
 }
@@ -23,22 +23,22 @@ table4Prevalence <- function(prevalenceData) {
 
   table4Data <- prevalenceData %>%
     select(database_name,
-           time,
-           sex_strata,
-           age_strata,
-           numerator,
-           denominator,
-           prev) %>%
-    mutate(prev = scales::percent(round(prev, 3)))
+           prevalence_start_date,
+           denominator_sex,
+           denominator_age_group,
+           n_cases,
+           n_population,
+           prevalence) %>%
+    mutate(prevalence = scales::percent(round(prevalence, 3)))
 
   table4Data <- table4Data[with(table4Data,
                                             order(database_name,
-                                                  time,
-                                                  sex_strata,
-                                                  age_strata)),]
+                                                  prevalence_start_date,
+                                                  denominator_sex,
+                                                  denominator_age_group)),]
 
   colnames(table4Data) <- c("Database",
-                                  "Time",
+                                  "prevalence_start_date",
                                   "Sex",
                                   "Age group",
                                   "Number of cases",

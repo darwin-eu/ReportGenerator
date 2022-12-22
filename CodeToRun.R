@@ -8,6 +8,7 @@ check()
 
 # install()
 
+load_all()
 
 ##### STUDY REPORT LAUNCH
 

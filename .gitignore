@@ -7,3 +7,4 @@ Reports/
 .httr-oauth
 .DS_Store
 inst/csv
+Results/

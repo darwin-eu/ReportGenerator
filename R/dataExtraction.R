@@ -3,12 +3,12 @@
 #' @return A tibble
 #' @export
 #'
-denominatorExtraction <- function () {
+denominatorExtraction <- function (importFolder = here("inst/csv/denominatorMockData")) {
 
   result <- bind_rows(
     lapply(
       list.files(
-        here("inst/csv/denominatorMockData"),
+        importFolder,
         pattern = ".csv",
         full.names = TRUE
       ),
@@ -23,18 +23,18 @@ denominatorExtraction <- function () {
 #' @return A tibble
 #' @export
 #'
-incidenceExtraction <- function () {
+incidenceExtraction <- function (importFolder = here("inst/csv/incidenceMockResults")) {
 
   result <- bind_rows(
     lapply(
       list.files(
-        here("inst/csv/incidenceMockResults"),
+        importFolder,
         pattern = ".csv",
         full.names = TRUE
       ),
       read_csv
     )
-  ) %>% mutate(age_strata = gsub(";", "-", age_strata))
+  ) %>% mutate(denominator_age_group = gsub(";", "-", denominator_age_group))
 
   return(result)
 }
@@ -43,18 +43,18 @@ incidenceExtraction <- function () {
 #' @return A tibble
 #' @export
 #'
-prevalenceExtraction <- function () {
+prevalenceExtraction <- function (importFolder = here("inst/csv/prevalenceMockResults")) {
 
   result <- bind_rows(
     lapply(
       list.files(
-        here("inst/csv/prevalenceMockResults"),
+        importFolder,
         pattern = ".csv",
         full.names = TRUE
       ),
       read_csv
     )
-  ) %>% mutate(age_strata = gsub(";", "-", age_strata))
+  ) %>% mutate(denominator_age_group = gsub(";", "-", denominator_age_group))
 
   return(result)
 }

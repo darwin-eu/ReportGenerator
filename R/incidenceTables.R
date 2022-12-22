@@ -31,19 +31,19 @@ table2Incidence <- function(incidenceData) {
 
   table2Data <- incidenceData %>%
     select(database_name,
-           time,
-           sex_strata,
-           age_strata,
+           incidence_start_date,
+           denominator_sex,
+           denominator_age_group,
            n_events,
            person_years,
-           ir_100000_pys) %>%
+           incidence_100000_pys) %>%
     mutate(person_years = round(person_years, 2))
 
   table2Data <- table2Data[with(table2Data,
-                                          order(database_name,
-                                                time,
-                                                sex_strata,
-                                                age_strata)),]
+                                order(database_name,
+                                      incidence_start_date,
+                                      denominator_sex,
+                                      denominator_age_group)),]
 
   colnames(table2Data) <- c("Database",
                                  "Time",

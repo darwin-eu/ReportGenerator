@@ -1,4 +1,4 @@
-#' Figure 1. Incidence rate/s of drug/s use over calendar time (per month/year) overall
+#' Figure 1. Incidence rate/s of drug/s use over calendar incidence_start_date (per month/year) overall
 #'
 #' @param indcidenceData
 #'
@@ -7,17 +7,17 @@
 incidenceFigure1 <- function(indcidenceData) {
 
   incidenceFigureData <- incidenceData %>%
-    filter(sex_strata == "Both",
-           age_strata == "0-99") %>%
-    ggplot(aes(x = time,
-               y = ir_100000_pys,
+    filter(denominator_sex == "Both",
+           denominator_age_group == "0-99") %>%
+    ggplot(aes(x = incidence_start_date,
+               y = incidence_100000_pys,
                col = database_name)) +
     # scale_y_continuous(labels = scales::percent,
     #                    limits = c(0,NA)) +
     geom_line(aes(group = 1)) +
     geom_point() +
-    geom_errorbar(aes(ymin = ir_100000_pys_low,
-                      ymax = ir_100000_pys_high)) +
+    geom_errorbar(aes(ymin = incidence_100000_pys_95CI_lower,
+                      ymax = incidence_100000_pys_95CI_upper)) +
     theme_bw() +
     labs(x = "Calendar year",
          y = "Incidence rate per 100000 person-years",
@@ -34,13 +34,13 @@ incidenceFigure1 <- function(indcidenceData) {
 incidenceFigure2 <- function(indcidenceData) {
 
   incidenceFigureData <- incidenceData %>%
-    filter(age_strata == "0-99",
-           sex_strata != "Both") %>%
-    ggplot(aes(x = time,
-               y = ir_100000_pys,
-               group = sex_strata,
+    filter(denominator_age_group == "0-99",
+           denominator_sex != "Both") %>%
+    ggplot(aes(x = incidence_start_date,
+               y = incidence_100000_pys,
+               group = denominator_sex,
                col = database_name)) +
-    facet_grid(cols = vars(sex_strata)) +
+    facet_grid(cols = vars(denominator_sex)) +
     # scale_y_continuous(labels = scales::percent,
     #                    limits = c(0,NA)) +
     geom_line() +
@@ -61,14 +61,14 @@ incidenceFigure2 <- function(indcidenceData) {
 incidenceFigure3 <- function(indcidenceData) {
 
   incidenceFigureData <- incidenceData %>%
-  filter(age_strata != "0-99",
-         sex_strata == "Both") %>%
-  ggplot(aes(x = time,
-             y = ir_100000_pys)) +
-  facet_grid(rows = vars(database_name)) +
+    filter(denominator_age_group != "0-99",
+           denominator_sex == "Both") %>%
+    ggplot(aes(x = incidence_start_date,
+               y = incidence_100000_pys)) +
+    facet_grid(rows = vars(database_name)) +
   # scale_y_continuous(labels = scales::percent,
   #                    limits = c(0,NA)) +
-  geom_line(aes(colour = age_strata)) +
+  geom_line(aes(colour = denominator_age_group)) +
   geom_point() +
   theme_bw() +
   labs(x = "Calendar year",
@@ -86,16 +86,16 @@ incidenceFigure3 <- function(indcidenceData) {
 incidenceFigure4 <- function(incidenceData) {
 
   incidenceFigureData <- incidenceData %>%
-    filter(age_strata != "0-99",
-           sex_strata != "Both") %>%
-    ggplot(aes(x = time,
-               y = ir_100000_pys,
+    filter(denominator_age_group != "0-99",
+           denominator_sex != "Both") %>%
+    ggplot(aes(x = incidence_start_date,
+               y = incidence_100000_pys,
                col = database_name)) +
     facet_grid(rows = vars(database_name),
-               cols = vars(age_strata)) +
+               cols = vars(denominator_age_group)) +
     # scale_y_continuous(labels = scales::percent,
     #                    limits = c(0,NA)) +
-    geom_line(aes(linetype = sex_strata)) +
+    geom_line(aes(linetype = denominator_sex)) +
     geom_point() +
     theme_bw() +
     labs(x = "Calendar year",

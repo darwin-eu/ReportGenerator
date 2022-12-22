@@ -7,3 +7,4 @@ CodeToRun.R
 ^CodeToRun\.R$
 ^csv$
 ^inst/csv$
+^Results$
