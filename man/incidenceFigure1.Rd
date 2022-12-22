@@ -2,7 +2,7 @@
 % Please edit documentation in R/incidenceFigures.R
 \name{incidenceFigure1}
 \alias{incidenceFigure1}
-\title{Figure 1. Incidence rate/s of drug/s use over calendar time (per month/year) overall}
+\title{Figure 1. Incidence rate/s of drug/s use over calendar incidence_start_date (per month/year) overall}
 \usage{
 incidenceFigure1(indcidenceData)
 }
@@ -13,5 +13,5 @@ incidenceFigure1(indcidenceData)
 incidenceFigure1
 }
 \description{
-Figure 1. Incidence rate/s of drug/s use over calendar time (per month/year) overall
+Figure 1. Incidence rate/s of drug/s use over calendar incidence_start_date (per month/year) overall
 }

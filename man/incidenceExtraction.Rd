@@ -4,7 +4,7 @@
 \alias{incidenceExtraction}
 \title{Extracts incidence data from files in CSV format.}
 \usage{
-incidenceExtraction()
+incidenceExtraction(importFolder = here("inst/csv/incidenceMockResults"))
 }
 \value{
 A tibble

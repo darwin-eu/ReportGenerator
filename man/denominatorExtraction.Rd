@@ -4,7 +4,7 @@
 \alias{denominatorExtraction}
 \title{Extracts denominator data from files in CSV format.}
 \usage{
-denominatorExtraction()
+denominatorExtraction(importFolder = here("inst/csv/denominatorMockData"))
 }
 \value{
 A tibble
