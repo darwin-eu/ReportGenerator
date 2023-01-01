@@ -3,12 +3,12 @@
 #' @return A tibble
 #' @export
 #'
-denominatorExtraction <- function (importFolder = here("inst/csv/denominatorMockData")) {
+denominatorExtraction <- function (importFolderDenominator = here("inst/csv/denominatorMockData")) {
 
   result <- bind_rows(
     lapply(
       list.files(
-        importFolder,
+        importFolderDenominator,
         pattern = ".csv",
         full.names = TRUE
       ),
@@ -23,12 +23,12 @@ denominatorExtraction <- function (importFolder = here("inst/csv/denominatorMock
 #' @return A tibble
 #' @export
 #'
-incidenceExtraction <- function (importFolder = here("inst/csv/incidenceMockResults")) {
+incidenceExtraction <- function (importFolderIndcidence = here("inst/csv/incidenceMockResults")) {
 
   result <- bind_rows(
     lapply(
       list.files(
-        importFolder,
+        importFolderIndcidence,
         pattern = ".csv",
         full.names = TRUE
       ),
@@ -43,12 +43,12 @@ incidenceExtraction <- function (importFolder = here("inst/csv/incidenceMockResu
 #' @return A tibble
 #' @export
 #'
-prevalenceExtraction <- function (importFolder = here("inst/csv/prevalenceMockResults")) {
+prevalenceExtraction <- function (importFolderPrevalence = here("inst/csv/prevalenceMockResults")) {
 
   result <- bind_rows(
     lapply(
       list.files(
-        importFolder,
+        importFolderPrevalence,
         pattern = ".csv",
         full.names = TRUE
       ),

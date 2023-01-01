@@ -37,6 +37,8 @@ incidencePrevalenceReport(title = title,
                           byCondition = TRUE,
                           format = "word")
 
+
+
 studyReportApp()
 
 

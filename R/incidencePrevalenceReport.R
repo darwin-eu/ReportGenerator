@@ -279,24 +279,6 @@ incidencePrevalenceReport <- function(title = NULL,
       body_add(value = titletable4Prevalence,
                style = "Normal") %>%
 
-
-
-      # body_add(value = c(tableContentsTitle,
-      #                    incidenceTitleTable1,
-      #                    titleFigure1Incidence,
-      #                    titleFigure2Incidence,
-      #                    titleFigure3Incidence,
-      #                    titleFigure4Incidence,
-      #                    titleTable2Incidence,
-      #                    prevalenceTitleTable3,
-      #                    titleFigure5Prevalence,
-      #                    titleFigure6Prevalence,
-      #                    titleFigure7Prevalence,
-      #                    titleFigure8Prevalence,
-      #                    titletable4Prevalence),
-      #          style = "Normal") %>%
-
-
       ## Incidence
 
       # Table 1 Incidence
@@ -403,7 +385,7 @@ incidencePrevalenceReport <- function(title = NULL,
                style = "Normal") %>%
 
       print(incidencePrevalenceDocx,
-          target = here("Reports/IncidencePrevalenceReport.docx"))
+            target = here("Reports/IncidencePrevalenceReport.docx"))
 
   } else {
 
