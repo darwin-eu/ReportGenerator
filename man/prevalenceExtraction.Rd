@@ -4,7 +4,9 @@
 \alias{prevalenceExtraction}
 \title{Extracts prevalence data from files in CSV format.}
 \usage{
-prevalenceExtraction(importFolder = here("inst/csv/prevalenceMockResults"))
+prevalenceExtraction(
+  importFolderPrevalence = here("inst/csv/prevalenceMockResults")
+)
 }
 \value{
 A tibble
