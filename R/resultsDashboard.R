@@ -69,7 +69,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                                                  label = "Drug",
                                                  choices = unique(incidenceData$outcome_cohort_id)),
                                      "Table 1",
-                                     tableOutput("table1Incidence")),
+                                     dataTableOutput("table1Incidence")),
                             tabPanel("Figure 1",
                                      selectInput(inputId = "sexIncidenceFigure1",
                                                  label = "Sex",
@@ -308,7 +308,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     })
 
-    output$table1Incidence <- renderTable(dataIncidenceTable1())
+    output$table1Incidence <- renderDataTable(dataIncidenceTable1())
 
       # Figure 1
 
