@@ -70,7 +70,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                              title = "",
                              id = "tabsetincidence",
                             tabPanel("Table 1",
-                                     "Table 1",
+                                     textOutput("incidenceTable1Paragraph"),
                                      dataTableOutput("table1Incidence")),
                             tabPanel("Figure 1",
                                      "Figure 1",
@@ -231,67 +231,6 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     })
 
-    # observe({
-    #
-    #   if (input$tabsetincidence == "Figure 1") {
-    #
-    #     updateSelectInput(inputId = "sexIncidence",
-    #                       choices = unique(incidenceData$denominator_sex))
-    #
-    #     updateSelectInput(inputId = "ageIncidence",
-    #                       choices = unique(prevalenceData$denominator_age_group))
-    #
-    #   }
-    #
-    # })
-
-    # observe({
-    #
-    #   if (input$tabsetincidence == "Figure 2") {
-    #
-    #     updateSelectInput(inputId = "sexIncidence",
-    #                       choices = c("All",
-    #                                   unique(incidenceData$denominator_sex)))
-    #
-    #     updateSelectInput(inputId = "ageIncidence",
-    #                       choices = unique(prevalenceData$denominator_age_group))
-    #
-    #   }
-    #
-    # })
-
-    # observe({
-    #
-    #   if (input$tabsetincidence == "Figure 3") {
-    #
-    #     updateSelectInput(inputId = "sexIncidence",
-    #                       choices = unique(incidenceData$denominator_sex))
-    #
-    #     updateSelectInput(inputId = "ageIncidence",
-    #                       choices = c("All",
-    #                                   unique(prevalenceData$denominator_age_group)))
-    #
-    #   }
-    #
-    # })
-
-    # observe({
-    #
-    #   if (input$tabsetincidence == "Figure 4") {
-    #
-    #     updateSelectInput(inputId = "sexIncidence",
-    #                       choices = c("All",
-    #                                   unique(incidenceData$denominator_sex)))
-    #
-    #     updateSelectInput(inputId = "ageIncidence",
-    #                       choices = c("All",
-    #                                   unique(prevalenceData$denominator_age_group)))
-    #
-    #   }
-    #
-    # })
-
-
       # Table 1
 
     dataIncidenceTable1 <- reactive({
@@ -306,6 +245,28 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                                                 scrollX = TRUE,
                                                 autoWidth = TRUE
                                               ))
+
+    IncidenceTable1Text <- reactive({
+
+      textData <- table2Incidence(incidenceCommonData())
+
+      # textAgeGroup <- as.character(input$ageIncidence)
+
+      incidenceText <- paste("Table 1 Describes incidence data of 'outcome 1' for ",
+                             "for ",
+                             input$ageIncidence,
+                             " age groups. ",
+                             "Data shown from ",
+                             min(textData$Time),
+                             " to ",
+                             max(textData$Time),
+                             ".")
+
+      incidenceText
+
+    })
+
+    output$incidenceTable1Paragraph <- renderText(IncidenceTable1Text())
 
       # Figure 1
 
@@ -492,66 +453,6 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
       }
 
     })
-
-    # observe({
-    #
-    #   if (input$tabsetprevalence == "Figure 1") {
-    #
-    #     updateSelectInput(inputId = "sexPrevalence",
-    #                       choices = unique(prevalenceData$denominator_sex))
-    #
-    #     updateSelectInput(inputId = "agePrevalence",
-    #                       choices = unique(prevalenceData$denominator_age_group))
-    #
-    #   }
-    #
-    # })
-
-    # observe({
-    #
-    #   if (input$tabsetprevalence == "Figure 2") {
-    #
-    #     updateSelectInput(inputId = "sexPrevalence",
-    #                       choices = c("All",
-    #                                   unique(prevalenceData$denominator_sex)))
-    #
-    #     updateSelectInput(inputId = "agePrevalence",
-    #                       choices = unique(prevalenceData$denominator_age_group))
-    #
-    #   }
-    #
-    # })
-
-    # observe({
-    #
-    #   if (input$tabsetprevalence == "Figure 3") {
-    #
-    #     updateSelectInput(inputId = "sexPrevalence",
-    #                       choices = unique(prevalenceData$denominator_sex))
-    #
-    #     updateSelectInput(inputId = "agePrevalence",
-    #                       choices = c("All",
-    #                                   unique(prevalenceData$denominator_age_group)))
-    #
-    #   }
-    #
-    # })
-
-    # observe({
-    #
-    #   if (input$tabsetprevalence == "Figure 4") {
-    #
-    #     updateSelectInput(inputId = "sexPrevalence",
-    #                       choices = c("All",
-    #                                   unique(prevalenceData$denominator_sex)))
-    #
-    #     updateSelectInput(inputId = "agePrevalence",
-    #                       choices = c("All",
-    #                                   unique(prevalenceData$denominator_age_group)))
-    #
-    #   }
-    #
-    # })
 
     # Table 1
 

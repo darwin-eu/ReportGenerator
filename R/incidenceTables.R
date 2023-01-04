@@ -47,11 +47,11 @@ table2Incidence <- function(incidenceData) {
                                       denominator_age_group)),]
 
   colnames(table2Data) <- c("Database",
-                                 "Time",
-                                 "Sex",
-                                 "Age group",
-                                 "N events",
-                                 "Person-years",
-                                 "IR 10000 pys")
+                            "Time",
+                            "Sex",
+                            "Age group",
+                            "N events",
+                            "Person-years",
+                            "IR 10000 pys")
   return(table2Data)
 }
