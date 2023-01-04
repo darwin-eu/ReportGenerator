@@ -29,20 +29,21 @@ table4Prevalence <- function(prevalenceData) {
            n_cases,
            n_population,
            prevalence) %>%
-    mutate(prevalence = scales::percent(round(prevalence, 3)))
+    mutate(prevalence = scales::percent(prevalence,
+                                        accuracy = 1))
 
   table4Data <- table4Data[with(table4Data,
-                                            order(database_name,
-                                                  prevalence_start_date,
-                                                  denominator_sex,
-                                                  denominator_age_group)),]
+                                order(database_name,
+                                      prevalence_start_date,
+                                      denominator_sex,
+                                      denominator_age_group)),]
 
   colnames(table4Data) <- c("Database",
-                                  "prevalence_start_date",
-                                  "Sex",
-                                  "Age group",
-                                  "Number of cases",
-                                  "Denominator population",
-                                  "Prevalence")
+                            "Time",
+                            "Sex",
+                            "Age group",
+                            "Number of cases",
+                            "Denominator population",
+                            "Prevalence")
   return(table4Data)
 }

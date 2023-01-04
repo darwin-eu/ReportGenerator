@@ -37,7 +37,8 @@ table2Incidence <- function(incidenceData) {
            n_events,
            person_years,
            incidence_100000_pys) %>%
-    mutate(person_years = round(person_years, 2))
+    mutate(person_years = round(person_years, 0),
+           incidence_100000_pys = round(incidence_100000_pys, 0))
 
   table2Data <- table2Data[with(table2Data,
                                 order(database_name,

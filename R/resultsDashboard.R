@@ -47,6 +47,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
               # First tab content
               tabItem(tabName = "incidenceTab",
+                      h3("Incidence Results"),
                       fluidRow(
                            tabBox(
                              title = "",
@@ -153,6 +154,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
           # Second tab content
           tabItem(tabName = "prevalenceTab",
+                  h3("Prevalence Results"),
                   fluidRow(
                     tabBox(
                       title = "",
@@ -175,7 +177,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                                            label = "Drug",
                                            choices = unique(prevalenceData$outcome_cohort_id)),
                                "Table 1",
-                               tableOutput("table1Prevalence")),
+                               dataTableOutput("table1Prevalence")),
                       tabPanel("Figure 1",
                                selectInput(inputId = "sexPrevalenceFigure1",
                                            label = "Sex",
@@ -268,47 +270,44 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     dataIncidenceTable1 <- reactive({
 
-      incidenceData <- incidenceData %>% select(database_name,
-                                                incidence_start_date,
-                                                denominator_sex,
-                                                denominator_age_group,
-                                                n_events,
-                                                person_days,
-                                                incidence_100000_pys) %>%
-        mutate(incidence_start_date = as.character(incidence_start_date))
-
+      incidenceTableData <- table2Incidence(incidenceData)
 
       if (input$sexIncidence == "All") {
-        incidenceData
+        incidenceTableData
       } else {
-        incidenceData <- incidenceData %>%
-          filter(denominator_sex == input$sexIncidence)
+        incidenceTableData <- incidenceTableData %>%
+          filter(Sex == input$sexIncidence)
       }
 
       if (input$ageIncidence == "All") {
-        incidenceData
+        incidenceTableData
       } else {
-        incidenceData <- incidenceData %>%
-          filter(denominator_age_group == input$ageIncidence)
+        incidenceTableData <- incidenceTableData %>%
+          filter(`Age group` == input$ageIncidence)
       }
 
       if (input$calendarperiodIncidence == "All") {
-        incidenceData
+        incidenceTableData
       } else {
-        incidenceData <- incidenceData %>% filter(incidence_start_date == input$calendarperiodIncidence)
+        incidenceTableData <- incidenceTableData %>% filter(Time == input$calendarperiodIncidence)
       }
 
       if (input$ndatabaseIncidence == "All") {
-        incidenceData
+        incidenceTableData
       } else {
-        incidenceData <- incidenceData %>% filter(database_name == input$ndatabaseIncidence)
+        incidenceTableData <- incidenceTableData %>% filter(Database == input$ndatabaseIncidence)
       }
 
-      incidenceData
+      incidenceTableData
 
     })
 
-    output$table1Incidence <- renderDataTable(dataIncidenceTable1())
+    output$table1Incidence <- renderDataTable(dataIncidenceTable1(),
+                                              options = list(
+                                                searching = FALSE,
+                                                scrollX = TRUE,
+                                                autoWidth = TRUE
+                                              ))
 
       # Figure 1
 
@@ -530,47 +529,40 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     dataPrevalenceTable1 <- reactive({
 
-    prevalenceTableData <- prevalenceData %>% select(database_name,
-                                                prevalence_start_date,
-                                                denominator_sex,
-                                                denominator_age_group,
-                                                n_cases,
-                                                n_population,
-                                                prevalence) %>%
-      mutate(prevalence_start_date = as.character(prevalence_start_date))
+      prevalenceTableData <- table4Prevalence(prevalenceData)
 
-    if (input$sexPrevalence == "All") {
-      prevalenceTableData
-      } else {
-        prevalenceTableData <- prevalenceTableData %>%
-          filter(denominator_sex == input$sexPrevalence)
+      if (input$sexPrevalence == "All") {
+        prevalenceTableData
+        } else {
+          prevalenceTableData <- prevalenceTableData %>%
+            filter(Sex == input$sexPrevalence)
         }
-    #
-    if (input$agePrevalence == "All") {
-      prevalenceTableData
-      } else {
-        prevalenceTableData <- prevalenceTableData %>%
-          filter(denominator_age_group == input$agePrevalence)
-    }
-    #
-    if (input$calendarperiodPrevalence == "All") {
-      prevalenceTableData
-      } else {
-        prevalenceTableData <- prevalenceTableData %>%
-          filter(prevalence_start_date == input$calendarperiodPrevalence)
-        }
-    #
-    if (input$ndatabasePrevalence == "All") {
-      prevalenceTableData
-      } else {
-        prevalenceTableData <- prevalenceTableData %>% filter(database_name == input$ndatabasePrevalence)
-        }
+      #
+      if (input$agePrevalence == "All") {
+        prevalenceTableData
+        } else {
+          prevalenceTableData <- prevalenceTableData %>%
+            filter(`Age group` == input$agePrevalence)
+      }
+      #
+      if (input$calendarperiodPrevalence == "All") {
+        prevalenceTableData
+        } else {
+          prevalenceTableData <- prevalenceTableData %>%
+            filter(Time == input$calendarperiodPrevalence)
+          }
+      #
+      if (input$ndatabasePrevalence == "All") {
+        prevalenceTableData
+        } else {
+          prevalenceTableData <- prevalenceTableData %>% filter(Database == input$ndatabasePrevalence)
+          }
 
     prevalenceTableData
 
     })
 
-    output$table1Prevalence <- renderTable(dataPrevalenceTable1())
+    output$table1Prevalence <- renderDataTable(dataPrevalenceTable1())
 
     # Figure 1
 
@@ -623,7 +615,12 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     })
 
-    output$plot1Prevalence <- renderPlot(dataprevalenceFigure1())
+    output$plot1Prevalence <- renderPlot(dataprevalenceFigure1(),
+                                         options = list(
+                                           searching = FALSE,
+                                           scrollX = TRUE,
+                                           autoWidth = TRUE
+                                         ))
 
     # Figure 2
 
