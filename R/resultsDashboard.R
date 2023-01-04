@@ -38,14 +38,13 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
         #             label = "Outcome",
         #             choices = unique(prevalenceData$outcome_cohort_id))
         )
-      # textOutput("res")
       ),
 
     dashboardBody(
 
             tabItems(
 
-              # First tab content
+              # Incidence tab content
               tabItem(tabName = "incidenceTab",
                       h3("Incidence Results"),
                       fluidRow(
@@ -69,7 +68,6 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                       fluidRow(
                            tabBox(
                              title = "",
-                             # The id lets us use input$tabset1 on the server to find the current tab
                              id = "tabsetincidence",
                             tabPanel("Table 1",
                                      "Table 1",
@@ -78,175 +76,66 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                                      "Figure 1",
                                      plotOutput("plot1Incidence")),
                             tabPanel("Figure 2",
-                                     selectInput(inputId = "sexIncidenceFigure2",
-                                                 label = "Sex",
-                                                 choices = c("All", unique(incidenceData$denominator_sex))),
-                                     selectInput(inputId = "ageIncidenceFigure2",
-                                                 label = "Age",
-                                                 choices = unique(incidenceData$denominator_age_group)),
-                                     selectInput(inputId = "calendarperiodIncidenceFigure2",
-                                                 label = "Calendar period",
-                                                 choices = c("All", unique(as.character(incidenceData$incidence_start_date))),
-                                                 selected = "All"),
-                                     selectInput(inputId = "databaseNameIncidenceFigure2",
-                                                 label = "Database",
-                                                 choices = c("All", unique(incidenceData$database_name))),
-                                     selectInput(inputId = "outcomeIncidenceFigure2",
-                                                 label = "Outcome",
-                                                 choices = unique(incidenceData$outcome_cohort_id)),
                                      "Figure 2",
                                      plotOutput("plot2Incidence")),
                             tabPanel("Figure 3",
-                                     selectInput(inputId = "sexIncidenceFigure3",
-                                                 label = "Sex",
-                                                 choices = unique(incidenceData$denominator_sex)),
-                                     selectInput(inputId = "ageIncidenceFigure3",
-                                                 label = "Age",
-                                                 choices = c("All", unique(incidenceData$denominator_age_group))),
-                                     selectInput(inputId = "calendarperiodIncidenceFigure3",
-                                                 label = "Calendar period",
-                                                 choices = c("All", unique(as.character(incidenceData$incidence_start_date))),
-                                                 selected = "All"),
-                                     selectInput(inputId = "databaseNameIncidenceFigure3",
-                                                 label = "Database",
-                                                 choices = c("All", unique(incidenceData$database_name))),
-                                     selectInput(inputId = "outcomeIncidenceFigure3",
-                                                 label = "Outcome",
-                                                 choices = unique(incidenceData$outcome_cohort_id)),
                                      "Figure 3",
                                      plotOutput("plot3Incidence")),
                             tabPanel("Figure 4",
-                                     selectInput(inputId = "sexIncidenceFigure4",
-                                                 label = "Sex",
-                                                 choices = c("All", unique(incidenceData$denominator_sex))),
-                                     selectInput(inputId = "ageIncidenceFigure4",
-                                                 label = "Age",
-                                                 choices = c("All", unique(incidenceData$denominator_age_group))),
-                                     selectInput(inputId = "calendarperiodIncidenceFigure4",
-                                                 label = "Calendar period",
-                                                 choices = c("All", unique(as.character(incidenceData$incidence_start_date))),
-                                                 selected = "All"),
-                                     selectInput(inputId = "databaseNameIncidenceFigure4",
-                                                 label = "Database",
-                                                 choices = c("All", unique(incidenceData$database_name))),
-                                     selectInput(inputId = "outcomeIncidenceFigure4",
-                                                 label = "Outcome",
-                                                 choices = unique(incidenceData$outcome_cohort_id)),
                                      "Figure 4",
                                      plotOutput("plot4Incidence"))
-
                             )
-                      )
-                        ),
+                           )
+                      ),
 
-          # Second tab content
+          # Prevalence tab content
           tabItem(tabName = "prevalenceTab",
                   h3("Prevalence Results"),
+                  fluidRow(
+                    box(
+                      selectInput(inputId = "sexPrevalence",
+                                  label = "Sex",
+                                  choices = c("All", unique(prevalenceData$denominator_sex))),
+                      selectInput(inputId = "agePrevalence",
+                                  label = "Age",
+                                  choices = c("All", unique(prevalenceData$denominator_age_group))),
+                      selectInput(inputId = "calendarperiodPrevalence",
+                                  label = "Calendar period",
+                                  choices = c("All", unique(as.character(prevalenceData$prevalence_start_date)))),
+                      selectInput(inputId = "ndatabasePrevalence",
+                                  label = "Database",
+                                  choices = c("All", unique(prevalenceData$database_name))),
+                      selectInput(inputId = "nOutcomePrevalence",
+                                  label = "Outcome",
+                                  choices = unique(prevalenceData$outcome_cohort_id)),
+                    )
+                  ),
                   fluidRow(
                     tabBox(
                       title = "",
                       # The id lets us use input$tabset1 on the server to find the current tab
                       id = "tabsetprevalence",
                       tabPanel("Table 1",
-                               selectInput(inputId = "sexPrevalence",
-                                           label = "Sex",
-                                           choices = c("All", unique(prevalenceData$denominator_sex))),
-                               selectInput(inputId = "agePrevalence",
-                                           label = "Age",
-                                           choices = c("All", unique(prevalenceData$denominator_age_group))),
-                               selectInput(inputId = "calendarperiodPrevalence",
-                                           label = "Calendar period",
-                                           choices = c("All", unique(as.character(prevalenceData$prevalence_start_date)))),
-                               selectInput(inputId = "ndatabasePrevalence",
-                                           label = "Database",
-                                           choices = c("All", unique(prevalenceData$database_name))),
-                               selectInput(inputId = "nOutcomePrevalence",
-                                           label = "Outcome",
-                                           choices = unique(prevalenceData$outcome_cohort_id)),
                                "Table 1",
                                dataTableOutput("table1Prevalence")),
                       tabPanel("Figure 1",
-                               selectInput(inputId = "sexPrevalenceFigure1",
-                                           label = "Sex",
-                                           choices = unique(prevalenceData$denominator_sex)),
-                               selectInput(inputId = "agePrevalenceFigure1",
-                                           label = "Age",
-                                           choices = unique(prevalenceData$denominator_age_group)),
-                               selectInput(inputId = "calendarperiodPrevalenceFigure1",
-                                           label = "Calendar period",
-                                           choices = c("All", unique(as.character(prevalenceData$prevalence_start_date))),
-                                           selected = "All"),
-                               selectInput(inputId = "ndatabasePrevalenceFigure1",
-                                           label = "Database",
-                                           choices = c("All", unique(prevalenceData$database_name))),
-                               selectInput(inputId = "nOutcomePrevalenceFigure1",
-                                           label = "Outcome",
-                                           choices = unique(prevalenceData$outcome_cohort_id)),
                                "Figure 1",
                                plotOutput("plot1Prevalence")),
                       tabPanel("Figure 2",
-                               selectInput(inputId = "sexPrevalenceFigure2",
-                                           label = "Sex",
-                                           choices = c("All", unique(prevalenceData$denominator_sex))),
-                               selectInput(inputId = "agePrevalenceFigure2",
-                                           label = "Age",
-                                           choices = unique(prevalenceData$denominator_age_group)),
-                               selectInput(inputId = "calendarperiodPrevalenceFigure2",
-                                           label = "Calendar period",
-                                           choices = c("All", unique(as.character(prevalenceData$prevalence_start_date))),
-                                           selected = "All"),
-                               selectInput(inputId = "ndatabasePrevalenceFigure2",
-                                           label = "Database",
-                                           choices = c("All", unique(prevalenceData$database_name))),
-                               selectInput(inputId = "nOutcomePrevalenceFigure2",
-                                           label = "Outcome",
-                                           choices = unique(prevalenceData$outcome_cohort_id)),
                                "Figure 2",
                                plotOutput("plot2Prevalence")),
                       tabPanel("Figure 3",
-                               selectInput(inputId = "sexPrevalenceFigure3",
-                                           label = "Sex",
-                                           choices = unique(prevalenceData$denominator_sex)),
-                               selectInput(inputId = "agePrevalenceFigure3",
-                                           label = "Age",
-                                           choices = c("All", unique(prevalenceData$denominator_age_group))),
-                               selectInput(inputId = "calendarperiodPrevalenceFigure3",
-                                           label = "Calendar period",
-                                           choices = c("All", unique(as.character(prevalenceData$prevalence_start_date))),
-                                           selected = "All"),
-                               selectInput(inputId = "ndatabasePrevalenceFigure3",
-                                           label = "Database",
-                                           choices = c("All", unique(prevalenceData$database_name))),
-                               selectInput(inputId = "nOutcomePrevalenceFigure3",
-                                           label = "Outcome",
-                                           choices = unique(prevalenceData$outcome_cohort_id)),
                                "Figure 3",
                                plotOutput("plot3Prevalence")),
                       tabPanel("Figure 4",
-                               selectInput(inputId = "sexPrevalenceFigure4",
-                                           label = "Sex",
-                                           choices = c("All", unique(prevalenceData$denominator_sex))),
-                               selectInput(inputId = "agePrevalenceFigure4",
-                                           label = "Age",
-                                           choices = c("All", unique(prevalenceData$denominator_age_group))),
-                               selectInput(inputId = "calendarperiodPrevalenceFigure4",
-                                           label = "Calendar period",
-                                           choices = c("All", unique(as.character(prevalenceData$prevalence_start_date))),
-                                           selected = "All"),
-                               selectInput(inputId = "ndatabasePrevalenceFigure4",
-                                           label = "Database",
-                                           choices = c("All", unique(prevalenceData$database_name))),
-                               selectInput(inputId = "nOutcomePrevalenceFigure4",
-                                           label = "Outcome",
-                                           choices = unique(prevalenceData$outcome_cohort_id)),
                                "Figure 4",
                                plotOutput("plot4Prevalence"))
-
+                      )
                     )
-                  ))
-        )
-)
-      )
+                  )
+          )
+          )
+    )
 
 
   server <- function(input, output) {
@@ -287,8 +176,6 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
           filter(database_name == input$databaseNameIncidence)
       }
 
-      commonData
-
     })
 
     # Input update
@@ -304,13 +191,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                           choices = c("All",
                                       unique(prevalenceData$denominator_age_group)))
 
-      }
-
-    })
-
-    observe({
-
-      if (input$tabsetincidence == "Figure 1") {
+      } else if (input$tabsetincidence == "Figure 1") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = unique(incidenceData$denominator_sex))
@@ -318,13 +199,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
         updateSelectInput(inputId = "ageIncidence",
                           choices = unique(prevalenceData$denominator_age_group))
 
-      }
-
-    })
-
-    observe({
-
-      if (input$tabsetincidence == "Figure 2") {
+      } else if (input$tabsetincidence == "Figure 2") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = c("All",
@@ -333,14 +208,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
         updateSelectInput(inputId = "ageIncidence",
                           choices = unique(prevalenceData$denominator_age_group))
 
-      }
-
-
-    })
-
-    observe({
-
-      if (input$tabsetincidence == "Figure 3") {
+      } else if (input$tabsetincidence == "Figure 3") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = unique(incidenceData$denominator_sex))
@@ -349,13 +217,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                           choices = c("All",
                                       unique(prevalenceData$denominator_age_group)))
 
-      }
-
-    })
-
-    observe({
-
-      if (input$tabsetincidence == "Figure 4") {
+      } else if (input$tabsetincidence == "Figure 4") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = c("All",
@@ -368,6 +230,66 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
       }
 
     })
+
+    # observe({
+    #
+    #   if (input$tabsetincidence == "Figure 1") {
+    #
+    #     updateSelectInput(inputId = "sexIncidence",
+    #                       choices = unique(incidenceData$denominator_sex))
+    #
+    #     updateSelectInput(inputId = "ageIncidence",
+    #                       choices = unique(prevalenceData$denominator_age_group))
+    #
+    #   }
+    #
+    # })
+
+    # observe({
+    #
+    #   if (input$tabsetincidence == "Figure 2") {
+    #
+    #     updateSelectInput(inputId = "sexIncidence",
+    #                       choices = c("All",
+    #                                   unique(incidenceData$denominator_sex)))
+    #
+    #     updateSelectInput(inputId = "ageIncidence",
+    #                       choices = unique(prevalenceData$denominator_age_group))
+    #
+    #   }
+    #
+    # })
+
+    # observe({
+    #
+    #   if (input$tabsetincidence == "Figure 3") {
+    #
+    #     updateSelectInput(inputId = "sexIncidence",
+    #                       choices = unique(incidenceData$denominator_sex))
+    #
+    #     updateSelectInput(inputId = "ageIncidence",
+    #                       choices = c("All",
+    #                                   unique(prevalenceData$denominator_age_group)))
+    #
+    #   }
+    #
+    # })
+
+    # observe({
+    #
+    #   if (input$tabsetincidence == "Figure 4") {
+    #
+    #     updateSelectInput(inputId = "sexIncidence",
+    #                       choices = c("All",
+    #                                   unique(incidenceData$denominator_sex)))
+    #
+    #     updateSelectInput(inputId = "ageIncidence",
+    #                       choices = c("All",
+    #                                   unique(prevalenceData$denominator_age_group)))
+    #
+    #   }
+    #
+    # })
 
 
       # Table 1
@@ -389,9 +311,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     dataIncidenceFigure1 <- reactive({
 
-      incidenceFigureData <- incidenceCommonData()
-
-      incidenceFigureData %>%
+      incidenceCommonData() %>%
         ggplot(aes(x = incidence_start_date,
                    y = incidence_100000_pys,
                    col = database_name)) +
@@ -414,50 +334,22 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     dataIncidenceFigure2 <- reactive({
 
-      incidenceFigureData <- incidenceData
 
-      if (input$sexIncidenceFigure2 == "All") {
-        incidenceFigureData
-      } else {
-        incidenceFigureData <- incidenceFigureData %>%
-          filter(denominator_sex == input$sexIncidenceFigure2)
-      }
 
-    if (input$ageIncidenceFigure2 == "All") {
-      incidenceFigureData
-    } else {
-      incidenceFigureData <- incidenceFigureData %>%
-        filter(denominator_age_group == input$ageIncidenceFigure2)
-    }
-
-    if (input$calendarperiodIncidenceFigure2 == "All") {
-      incidenceFigureData
-    } else {
-      incidenceFigureData <- incidenceFigureData %>%
-        filter(incidence_start_date == input$calendarperiodIncidenceFigure2)
-    }
-
-    if (input$databaseNameIncidenceFigure2 == "All") {
-      incidenceFigureData
-    } else {
-      incidenceFigureData <- incidenceFigureData %>%
-        filter(database_name == input$databaseNameIncidenceFigure2)
-    }
-
-    incidenceFigureData %>%
-      ggplot(aes(x = incidence_start_date,
-                 y = incidence_100000_pys,
-                 group = denominator_sex,
-                 col = database_name)) +
-      facet_grid(cols = vars(denominator_sex)) +
-      # scale_y_continuous(labels = scales::percent,
-      #                    limits = c(0,NA)) +
-      geom_line() +
-      geom_point() +
-      theme_bw() +
-      labs(x = "Calendar year",
-           y = "Incidence rate per 100000 person-years",
-           col = "Database name")
+      incidenceCommonData() %>%
+        ggplot(aes(x = incidence_start_date,
+                   y = incidence_100000_pys,
+                   group = denominator_sex,
+                   col = database_name)) +
+        facet_grid(cols = vars(denominator_sex)) +
+        # scale_y_continuous(labels = scales::percent,
+        #                    limits = c(0,NA)) +
+        geom_line() +
+        geom_point() +
+        theme_bw() +
+        labs(x = "Calendar year",
+             y = "Incidence rate per 100000 person-years",
+             col = "Database name")
 
 
 })
@@ -468,50 +360,20 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     dataIncidenceFigure3 <- reactive({
 
-    incidenceFigureData <- incidenceData
+      incidenceCommonData() %>%
+        ggplot(aes(x = incidence_start_date,
+                   y = incidence_100000_pys)) +
+        facet_grid(rows = vars(database_name)) +
+        # scale_y_continuous(labels = scales::percent,
+        #                    limits = c(0,NA)) +
+        geom_line(aes(colour = denominator_age_group)) +
+        geom_point() +
+        theme_bw() +
+        labs(x = "Calendar year",
+             y = "Incidence rate per 100000 person-years",
+             colour = "Age group")
 
-    if (input$sexIncidenceFigure3 == "All") {
-      incidenceFigureData
-    } else {
-      incidenceFigureData <- incidenceFigureData %>%
-        filter(denominator_sex == input$sexIncidenceFigure3)
-    }
-
-    if (input$ageIncidenceFigure3 == "All") {
-      incidenceFigureData
-    } else {
-      incidenceFigureData <- incidenceFigureData %>%
-        filter(denominator_age_group == input$ageIncidenceFigure3)
-    }
-
-    if (input$calendarperiodIncidenceFigure3 == "All") {
-      incidenceFigureData
-    } else {
-      incidenceFigureData <- incidenceFigureData %>%
-        filter(incidence_start_date == input$calendarperiodIncidenceFigure3)
-    }
-
-    if (input$databaseNameIncidenceFigure3 == "All") {
-      incidenceFigureData
-    } else {
-      incidenceFigureData <- incidenceFigureData %>%
-        filter(database_name == input$databaseNameIncidenceFigure3)
-    }
-
-    incidenceFigureData %>%
-      ggplot(aes(x = incidence_start_date,
-                 y = incidence_100000_pys)) +
-      facet_grid(rows = vars(database_name)) +
-      # scale_y_continuous(labels = scales::percent,
-      #                    limits = c(0,NA)) +
-      geom_line(aes(colour = denominator_age_group)) +
-      geom_point() +
-      theme_bw() +
-      labs(x = "Calendar year",
-           y = "Incidence rate per 100000 person-years",
-           colour = "Age group")
-
-    })
+      })
 
     output$plot3Incidence <- renderPlot(dataIncidenceFigure3())
 
@@ -519,37 +381,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     dataIncidenceFigure4 <- reactive({
 
-      incidenceFigureData <- incidenceData
-
-      if (input$sexIncidenceFigure4 == "All") {
-        incidenceFigureData
-      } else {
-        incidenceFigureData <- incidenceFigureData %>%
-          filter(denominator_sex == input$sexIncidenceFigure4)
-      }
-
-      if (input$ageIncidenceFigure4 == "All") {
-        incidenceFigureData
-      } else {
-        incidenceFigureData <- incidenceFigureData %>%
-          filter(denominator_age_group == input$ageIncidenceFigure4)
-      }
-
-      if (input$calendarperiodIncidenceFigure4 == "All") {
-        incidenceFigureData
-      } else {
-        incidenceFigureData <- incidenceFigureData %>%
-          filter(incidence_start_date == input$calendarperiodIncidenceFigure4)
-      }
-
-      if (input$databaseNameIncidenceFigure4 == "All") {
-        incidenceFigureData
-      } else {
-        incidenceFigureData <- incidenceFigureData %>%
-          filter(database_name == input$databaseNameIncidenceFigure4)
-      }
-
-      incidenceFigureData %>%
+      incidenceCommonData() %>%
         ggplot(aes(x = incidence_start_date,
                    y = incidence_100000_pys,
                    col = database_name)) +
@@ -573,80 +405,174 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     # Prevalence Data
 
+    # Data filter
+
+    prevalenceCommonData <- reactive({
+
+      commonData <- prevalenceData
+
+      if (input$sexPrevalence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(denominator_sex == input$sexPrevalence)
+      }
+      #
+      if (input$agePrevalence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(denominator_age_group == input$agePrevalence)
+      }
+      #
+      if (input$calendarperiodPrevalence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(prevalence_start_date == input$calendarperiodPrevalence)
+      }
+      #
+      if (input$ndatabasePrevalence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(database_name == input$ndatabasePrevalence)
+      }
+
+    })
+
+    observe({
+
+      if (input$tabsetprevalence == "Table 1") {
+
+        updateSelectInput(inputId = "sexPrevalence",
+                          choices = c("All",
+                                      unique(prevalenceData$denominator_sex)))
+
+        updateSelectInput(inputId = "agePrevalence",
+                          choices = c("All",
+                                      unique(prevalenceData$denominator_age_group)))
+
+      } else if (input$tabsetprevalence == "Figure 1") {
+
+        updateSelectInput(inputId = "sexPrevalence",
+                          choices = unique(prevalenceData$denominator_sex))
+
+        updateSelectInput(inputId = "agePrevalence",
+                          choices = unique(prevalenceData$denominator_age_group))
+
+      } else  if (input$tabsetprevalence == "Figure 2") {
+
+        updateSelectInput(inputId = "sexPrevalence",
+                          choices = c("All",
+                                      unique(prevalenceData$denominator_sex)))
+
+        updateSelectInput(inputId = "agePrevalence",
+                          choices = unique(prevalenceData$denominator_age_group))
+
+      } else if (input$tabsetprevalence == "Figure 3") {
+
+        updateSelectInput(inputId = "sexPrevalence",
+                          choices = unique(prevalenceData$denominator_sex))
+
+        updateSelectInput(inputId = "agePrevalence",
+                          choices = c("All",
+                                      unique(prevalenceData$denominator_age_group)))
+
+      } else if (input$tabsetprevalence == "Figure 4") {
+
+        updateSelectInput(inputId = "sexPrevalence",
+                          choices = c("All",
+                                      unique(prevalenceData$denominator_sex)))
+
+        updateSelectInput(inputId = "agePrevalence",
+                          choices = c("All",
+                                      unique(prevalenceData$denominator_age_group)))
+
+      }
+
+    })
+
+    # observe({
+    #
+    #   if (input$tabsetprevalence == "Figure 1") {
+    #
+    #     updateSelectInput(inputId = "sexPrevalence",
+    #                       choices = unique(prevalenceData$denominator_sex))
+    #
+    #     updateSelectInput(inputId = "agePrevalence",
+    #                       choices = unique(prevalenceData$denominator_age_group))
+    #
+    #   }
+    #
+    # })
+
+    # observe({
+    #
+    #   if (input$tabsetprevalence == "Figure 2") {
+    #
+    #     updateSelectInput(inputId = "sexPrevalence",
+    #                       choices = c("All",
+    #                                   unique(prevalenceData$denominator_sex)))
+    #
+    #     updateSelectInput(inputId = "agePrevalence",
+    #                       choices = unique(prevalenceData$denominator_age_group))
+    #
+    #   }
+    #
+    # })
+
+    # observe({
+    #
+    #   if (input$tabsetprevalence == "Figure 3") {
+    #
+    #     updateSelectInput(inputId = "sexPrevalence",
+    #                       choices = unique(prevalenceData$denominator_sex))
+    #
+    #     updateSelectInput(inputId = "agePrevalence",
+    #                       choices = c("All",
+    #                                   unique(prevalenceData$denominator_age_group)))
+    #
+    #   }
+    #
+    # })
+
+    # observe({
+    #
+    #   if (input$tabsetprevalence == "Figure 4") {
+    #
+    #     updateSelectInput(inputId = "sexPrevalence",
+    #                       choices = c("All",
+    #                                   unique(prevalenceData$denominator_sex)))
+    #
+    #     updateSelectInput(inputId = "agePrevalence",
+    #                       choices = c("All",
+    #                                   unique(prevalenceData$denominator_age_group)))
+    #
+    #   }
+    #
+    # })
+
     # Table 1
 
     dataPrevalenceTable1 <- reactive({
 
-      prevalenceTableData <- table4Prevalence(prevalenceData)
-
-      if (input$sexPrevalence == "All") {
-        prevalenceTableData
-        } else {
-          prevalenceTableData <- prevalenceTableData %>%
-            filter(Sex == input$sexPrevalence)
-        }
-      #
-      if (input$agePrevalence == "All") {
-        prevalenceTableData
-        } else {
-          prevalenceTableData <- prevalenceTableData %>%
-            filter(`Age group` == input$agePrevalence)
-      }
-      #
-      if (input$calendarperiodPrevalence == "All") {
-        prevalenceTableData
-        } else {
-          prevalenceTableData <- prevalenceTableData %>%
-            filter(Time == input$calendarperiodPrevalence)
-          }
-      #
-      if (input$ndatabasePrevalence == "All") {
-        prevalenceTableData
-        } else {
-          prevalenceTableData <- prevalenceTableData %>% filter(Database == input$ndatabasePrevalence)
-          }
-
-    prevalenceTableData
+      table4Prevalence(prevalenceCommonData())
 
     })
 
-    output$table1Prevalence <- renderDataTable(dataPrevalenceTable1())
+    output$table1Prevalence <- renderDataTable(dataPrevalenceTable1(),
+                                               options = list(
+                                                 searching = FALSE,
+                                                 scrollX = TRUE,
+                                                 autoWidth = TRUE
+                                               ))
 
     # Figure 1
 
     dataprevalenceFigure1 <- reactive({
 
-      prevalenceFigureData <- prevalenceData
-
-      if (input$sexPrevalenceFigure1 == "All") {
-        prevalenceFigureData
-      } else {
-        prevalenceFigureData <- prevalenceFigureData %>%
-          filter(denominator_sex == input$sexPrevalenceFigure1)
-      }
-      #
-      if (input$agePrevalenceFigure1 == "All") {
-        prevalenceFigureData
-      } else {
-        prevalenceFigureData <- prevalenceFigureData %>%
-          filter(denominator_age_group == input$agePrevalenceFigure1)
-      }
-      #
-      if (input$calendarperiodPrevalenceFigure1 == "All") {
-        prevalenceFigureData
-      } else {
-        prevalenceFigureData <- prevalenceFigureData %>%
-          filter(prevalence_start_date == input$calendarperiodPrevalenceFigure1)
-      }
-      #
-      if (input$ndatabasePrevalenceFigure1 == "All") {
-        prevalenceFigureData
-      } else {
-        prevalenceFigureData <- prevalenceFigureData %>%
-          filter(database_name == input$ndatabasePrevalenceFigure1)
-      }
-
-      prevalenceFigureData %>%
+      prevalenceCommonData() %>%
         ggplot(aes(x = prevalence_start_date,
                    y = prevalence,
                    col = database_name)) +
@@ -663,48 +589,13 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     })
 
-    output$plot1Prevalence <- renderPlot(dataprevalenceFigure1(),
-                                         options = list(
-                                           searching = FALSE,
-                                           scrollX = TRUE,
-                                           autoWidth = TRUE
-                                         ))
+    output$plot1Prevalence <- renderPlot(dataprevalenceFigure1())
 
     # Figure 2
 
     dataprevalenceFigure2 <- reactive({
 
-      prevalenceFigureData <- prevalenceData
-
-      if (input$sexPrevalenceFigure2 == "All") {
-        prevalenceFigureData
-      } else {
-        prevalenceFigureData <- prevalenceFigureData %>%
-          filter(denominator_sex == input$sexPrevalenceFigure2)
-      }
-      #
-      if (input$agePrevalenceFigure2 == "All") {
-        prevalenceFigureData
-      } else {
-        prevalenceFigureData <- prevalenceFigureData %>%
-          filter(denominator_age_group == input$agePrevalenceFigure2)
-      }
-      #
-      if (input$calendarperiodPrevalenceFigure2 == "All") {
-        prevalenceFigureData
-      } else {
-        prevalenceFigureData <- prevalenceFigureData %>%
-          filter(prevalence_start_date == input$calendarperiodPrevalenceFigure2)
-      }
-      #
-      if (input$ndatabasePrevalenceFigure2 == "All") {
-        prevalenceFigureData
-      } else {
-        prevalenceFigureData <- prevalenceFigureData %>%
-          filter(database_name == input$ndatabasePrevalenceFigure2)
-      }
-
-      prevalenceFigureData %>%
+      prevalenceCommonData() %>%
         ggplot(aes(x = prevalence_start_date,
                    y = prevalence,
                    group = denominator_sex,
@@ -725,39 +616,30 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     # Figure 3
 
+    dataprevalenceFigure3 <- reactive({
+
+      prevalenceCommonData() %>%
+        ggplot(aes(x = prevalence_start_date,
+                   y = prevalence)) +
+        facet_grid(rows = vars(database_name)) +
+        scale_y_continuous(labels = scales::percent,
+                           limits = c(0, NA)) +
+        geom_line(aes(colour = denominator_age_group)) +
+        geom_point() +
+        theme_bw() +
+        labs(x = "Calendar year",
+             y = "Prevalence",
+             colour = "Age group")
+
+    })
+
+    output$plot3Prevalence <- renderPlot(dataprevalenceFigure3())
+
+    # Figure 4
+
     dataprevalenceFigure4 <- reactive({
 
-      prevalenceFigureData <- prevalenceData
-
-      if (input$sexPrevalenceFigure4 == "All") {
-        prevalenceFigureData
-      } else {
-        prevalenceFigureData <- prevalenceFigureData %>%
-          filter(denominator_sex == input$sexPrevalenceFigure4)
-      }
-      #
-      if (input$agePrevalenceFigure4 == "All") {
-        prevalenceFigureData
-      } else {
-        prevalenceFigureData <- prevalenceFigureData %>%
-          filter(denominator_age_group == input$agePrevalenceFigure4)
-      }
-      #
-      if (input$calendarperiodPrevalenceFigure4 == "All") {
-        prevalenceFigureData
-      } else {
-        prevalenceFigureData <- prevalenceFigureData %>%
-          filter(prevalence_start_date == input$calendarperiodPrevalenceFigure4)
-      }
-      #
-      if (input$ndatabasePrevalenceFigure4 == "All") {
-        prevalenceFigureData
-      } else {
-        prevalenceFigureData <- prevalenceFigureData %>%
-          filter(database_name == input$ndatabasePrevalenceFigure4)
-      }
-
-      prevalenceFigureData %>%
+      prevalenceCommonData() %>%
         ggplot(aes(x = prevalence_start_date,
                    y = prevalence,
                    col = database_name)) +
