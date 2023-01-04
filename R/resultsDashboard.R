@@ -34,8 +34,8 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
         # selectInput(inputId = "ndatabasePrevalence",
         #             label = "Database",
         #             choices = unique(prevalenceData$database_name)),
-        # selectInput(inputId = "ndrugPrevalence",
-        #             label = "Drug",
+        # selectInput(inputId = "nOutcomePrevalence",
+        #             label = "Outcome",
         #             choices = unique(prevalenceData$outcome_cohort_id))
         )
       # textOutput("res")
@@ -49,45 +49,32 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
               tabItem(tabName = "incidenceTab",
                       h3("Incidence Results"),
                       fluidRow(
+                        box(
+                          selectInput(inputId = "sexIncidence",
+                                      label = "Sex",
+                                      choices = c("All", unique(incidenceData$denominator_sex))),
+                          selectInput(inputId = "ageIncidence",
+                                      label = "Age",
+                                      choices = c("All", unique(incidenceData$denominator_age_group))),
+                          selectInput(inputId = "calendarperiodIncidence",
+                                      label = "Calendar period",
+                                      choices = c("All", unique(as.character(incidenceData$incidence_start_date)))),
+                          selectInput(inputId = "databaseNameIncidence",
+                                      label = "Database",
+                                      choices = c("All", unique(incidenceData$database_name))),
+                          selectInput(inputId = "outcomeIncidence",
+                                      label = "Outcome",
+                                      choices = unique(incidenceData$outcome_cohort_id)),
+                        )),
+                      fluidRow(
                            tabBox(
                              title = "",
                              # The id lets us use input$tabset1 on the server to find the current tab
                              id = "tabsetincidence",
                             tabPanel("Table 1",
-                                     selectInput(inputId = "sexIncidence",
-                                                 label = "Sex",
-                                                 choices = c("All", unique(incidenceData$denominator_sex))),
-                                     selectInput(inputId = "ageIncidence",
-                                                 label = "Age",
-                                                 choices = c("All", unique(incidenceData$denominator_age_group))),
-                                     selectInput(inputId = "calendarperiodIncidence",
-                                                 label = "Calendar period",
-                                                 choices = c("All", unique(as.character(incidenceData$incidence_start_date)))),
-                                     selectInput(inputId = "ndatabaseIncidence",
-                                                 label = "Database",
-                                                 choices = c("All", unique(incidenceData$database_name))),
-                                     selectInput(inputId = "ndrugIncidence",
-                                                 label = "Drug",
-                                                 choices = unique(incidenceData$outcome_cohort_id)),
                                      "Table 1",
                                      dataTableOutput("table1Incidence")),
                             tabPanel("Figure 1",
-                                     selectInput(inputId = "sexIncidenceFigure1",
-                                                 label = "Sex",
-                                                 choices = unique(incidenceData$denominator_sex)),
-                                     selectInput(inputId = "ageIncidenceFigure1",
-                                                 label = "Age",
-                                                 choices = unique(incidenceData$denominator_age_group)),
-                                     selectInput(inputId = "calendarperiodIncidenceFigure1",
-                                                 label = "Calendar period",
-                                                 choices = c("All", unique(as.character(incidenceData$incidence_start_date))),
-                                                 selected = "All"),
-                                     selectInput(inputId = "ndatabaseIncidenceFigure1",
-                                                 label = "Database",
-                                                 choices = c("All", unique(incidenceData$database_name))),
-                                     selectInput(inputId = "ndrugIncidenceFigure1",
-                                                 label = "Drug",
-                                                 choices = unique(incidenceData$outcome_cohort_id)),
                                      "Figure 1",
                                      plotOutput("plot1Incidence")),
                             tabPanel("Figure 2",
@@ -101,11 +88,11 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                                                  label = "Calendar period",
                                                  choices = c("All", unique(as.character(incidenceData$incidence_start_date))),
                                                  selected = "All"),
-                                     selectInput(inputId = "ndatabaseIncidenceFigure2",
+                                     selectInput(inputId = "databaseNameIncidenceFigure2",
                                                  label = "Database",
                                                  choices = c("All", unique(incidenceData$database_name))),
-                                     selectInput(inputId = "ndrugIncidenceFigure2",
-                                                 label = "Drug",
+                                     selectInput(inputId = "outcomeIncidenceFigure2",
+                                                 label = "Outcome",
                                                  choices = unique(incidenceData$outcome_cohort_id)),
                                      "Figure 2",
                                      plotOutput("plot2Incidence")),
@@ -120,11 +107,11 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                                                  label = "Calendar period",
                                                  choices = c("All", unique(as.character(incidenceData$incidence_start_date))),
                                                  selected = "All"),
-                                     selectInput(inputId = "ndatabaseIncidenceFigure3",
+                                     selectInput(inputId = "databaseNameIncidenceFigure3",
                                                  label = "Database",
                                                  choices = c("All", unique(incidenceData$database_name))),
-                                     selectInput(inputId = "ndrugIncidenceFigure3",
-                                                 label = "Drug",
+                                     selectInput(inputId = "outcomeIncidenceFigure3",
+                                                 label = "Outcome",
                                                  choices = unique(incidenceData$outcome_cohort_id)),
                                      "Figure 3",
                                      plotOutput("plot3Incidence")),
@@ -139,18 +126,18 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                                                  label = "Calendar period",
                                                  choices = c("All", unique(as.character(incidenceData$incidence_start_date))),
                                                  selected = "All"),
-                                     selectInput(inputId = "ndatabaseIncidenceFigure4",
+                                     selectInput(inputId = "databaseNameIncidenceFigure4",
                                                  label = "Database",
                                                  choices = c("All", unique(incidenceData$database_name))),
-                                     selectInput(inputId = "ndrugIncidenceFigure4",
-                                                 label = "Drug",
+                                     selectInput(inputId = "outcomeIncidenceFigure4",
+                                                 label = "Outcome",
                                                  choices = unique(incidenceData$outcome_cohort_id)),
                                      "Figure 4",
                                      plotOutput("plot4Incidence"))
 
                             )
-                        )
-                      ),
+                      )
+                        ),
 
           # Second tab content
           tabItem(tabName = "prevalenceTab",
@@ -173,8 +160,8 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                                selectInput(inputId = "ndatabasePrevalence",
                                            label = "Database",
                                            choices = c("All", unique(prevalenceData$database_name))),
-                               selectInput(inputId = "ndrugPrevalence",
-                                           label = "Drug",
+                               selectInput(inputId = "nOutcomePrevalence",
+                                           label = "Outcome",
                                            choices = unique(prevalenceData$outcome_cohort_id)),
                                "Table 1",
                                dataTableOutput("table1Prevalence")),
@@ -192,8 +179,8 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                                selectInput(inputId = "ndatabasePrevalenceFigure1",
                                            label = "Database",
                                            choices = c("All", unique(prevalenceData$database_name))),
-                               selectInput(inputId = "ndrugPrevalenceFigure1",
-                                           label = "Drug",
+                               selectInput(inputId = "nOutcomePrevalenceFigure1",
+                                           label = "Outcome",
                                            choices = unique(prevalenceData$outcome_cohort_id)),
                                "Figure 1",
                                plotOutput("plot1Prevalence")),
@@ -211,8 +198,8 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                                selectInput(inputId = "ndatabasePrevalenceFigure2",
                                            label = "Database",
                                            choices = c("All", unique(prevalenceData$database_name))),
-                               selectInput(inputId = "ndrugPrevalenceFigure2",
-                                           label = "Drug",
+                               selectInput(inputId = "nOutcomePrevalenceFigure2",
+                                           label = "Outcome",
                                            choices = unique(prevalenceData$outcome_cohort_id)),
                                "Figure 2",
                                plotOutput("plot2Prevalence")),
@@ -230,8 +217,8 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                                selectInput(inputId = "ndatabasePrevalenceFigure3",
                                            label = "Database",
                                            choices = c("All", unique(prevalenceData$database_name))),
-                               selectInput(inputId = "ndrugPrevalenceFigure3",
-                                           label = "Drug",
+                               selectInput(inputId = "nOutcomePrevalenceFigure3",
+                                           label = "Outcome",
                                            choices = unique(prevalenceData$outcome_cohort_id)),
                                "Figure 3",
                                plotOutput("plot3Prevalence")),
@@ -249,8 +236,8 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                                selectInput(inputId = "ndatabasePrevalenceFigure4",
                                            label = "Database",
                                            choices = c("All", unique(prevalenceData$database_name))),
-                               selectInput(inputId = "ndrugPrevalenceFigure4",
-                                           label = "Drug",
+                               selectInput(inputId = "nOutcomePrevalenceFigure4",
+                                           label = "Outcome",
                                            choices = unique(prevalenceData$outcome_cohort_id)),
                                "Figure 4",
                                plotOutput("plot4Prevalence"))
@@ -258,47 +245,136 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
                     )
                   ))
         )
-
+)
       )
-    )
+
 
   server <- function(input, output) {
 
     # Incidence data
 
+      # Data filter
+
+    incidenceCommonData <- reactive({
+
+      commonData <- incidenceData
+
+      if (input$sexIncidence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(denominator_sex == input$sexIncidence)
+      }
+
+      if (input$ageIncidence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(denominator_age_group == input$ageIncidence)
+      }
+
+      if (input$calendarperiodIncidence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(incidence_start_date == input$calendarperiodIncidence)
+      }
+
+      if (input$databaseNameIncidence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(database_name == input$databaseNameIncidence)
+      }
+
+      commonData
+
+    })
+
+    # Input update
+
+    observe({
+
+      if (input$tabsetincidence == "Table 1") {
+
+        updateSelectInput(inputId = "sexIncidence",
+                          choices = c("All", unique(incidenceData$denominator_sex)))
+
+        updateSelectInput(inputId = "ageIncidence",
+                          choices = c("All",
+                                      unique(prevalenceData$denominator_age_group)))
+
+      }
+
+    })
+
+    observe({
+
+      if (input$tabsetincidence == "Figure 1") {
+
+        updateSelectInput(inputId = "sexIncidence",
+                          choices = unique(incidenceData$denominator_sex))
+
+        updateSelectInput(inputId = "ageIncidence",
+                          choices = unique(prevalenceData$denominator_age_group))
+
+      }
+
+    })
+
+    observe({
+
+      if (input$tabsetincidence == "Figure 2") {
+
+        updateSelectInput(inputId = "sexIncidence",
+                          choices = c("All",
+                                      unique(incidenceData$denominator_sex)))
+
+        updateSelectInput(inputId = "ageIncidence",
+                          choices = unique(prevalenceData$denominator_age_group))
+
+      }
+
+
+    })
+
+    observe({
+
+      if (input$tabsetincidence == "Figure 3") {
+
+        updateSelectInput(inputId = "sexIncidence",
+                          choices = unique(incidenceData$denominator_sex))
+
+        updateSelectInput(inputId = "ageIncidence",
+                          choices = c("All",
+                                      unique(prevalenceData$denominator_age_group)))
+
+      }
+
+    })
+
+    observe({
+
+      if (input$tabsetincidence == "Figure 4") {
+
+        updateSelectInput(inputId = "sexIncidence",
+                          choices = c("All",
+                                      unique(incidenceData$denominator_sex)))
+
+        updateSelectInput(inputId = "ageIncidence",
+                          choices = c("All",
+                                      unique(prevalenceData$denominator_age_group)))
+
+      }
+
+    })
+
+
       # Table 1
 
     dataIncidenceTable1 <- reactive({
 
-      incidenceTableData <- table2Incidence(incidenceData)
-
-      if (input$sexIncidence == "All") {
-        incidenceTableData
-      } else {
-        incidenceTableData <- incidenceTableData %>%
-          filter(Sex == input$sexIncidence)
-      }
-
-      if (input$ageIncidence == "All") {
-        incidenceTableData
-      } else {
-        incidenceTableData <- incidenceTableData %>%
-          filter(`Age group` == input$ageIncidence)
-      }
-
-      if (input$calendarperiodIncidence == "All") {
-        incidenceTableData
-      } else {
-        incidenceTableData <- incidenceTableData %>% filter(Time == input$calendarperiodIncidence)
-      }
-
-      if (input$ndatabaseIncidence == "All") {
-        incidenceTableData
-      } else {
-        incidenceTableData <- incidenceTableData %>% filter(Database == input$ndatabaseIncidence)
-      }
-
-      incidenceTableData
+      table2Incidence(incidenceCommonData())
 
     })
 
@@ -313,35 +389,7 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
 
     dataIncidenceFigure1 <- reactive({
 
-      incidenceFigureData <- incidenceData
-
-      if (input$sexIncidenceFigure1 == "All") {
-        incidenceFigureData
-      } else {
-        incidenceFigureData <- incidenceFigureData %>%
-          filter(denominator_sex == input$sexIncidenceFigure1)
-      }
-
-      if (input$ageIncidenceFigure1 == "All") {
-        incidenceFigureData
-      } else {
-        incidenceFigureData <- incidenceFigureData %>%
-          filter(denominator_age_group == input$ageIncidenceFigure1)
-      }
-
-      if (input$calendarperiodIncidenceFigure1 == "All") {
-        incidenceFigureData
-      } else {
-        incidenceFigureData <- incidenceFigureData %>%
-          filter(incidence_start_date == input$calendarperiodIncidenceFigure1)
-      }
-
-      if (input$ndatabaseIncidenceFigure1 == "All") {
-        incidenceFigureData
-      } else {
-        incidenceFigureData <- incidenceFigureData %>%
-          filter(database_name == input$ndatabaseIncidenceFigure1)
-      }
+      incidenceFigureData <- incidenceCommonData()
 
       incidenceFigureData %>%
         ggplot(aes(x = incidence_start_date,
@@ -389,11 +437,11 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
         filter(incidence_start_date == input$calendarperiodIncidenceFigure2)
     }
 
-    if (input$ndatabaseIncidenceFigure2 == "All") {
+    if (input$databaseNameIncidenceFigure2 == "All") {
       incidenceFigureData
     } else {
       incidenceFigureData <- incidenceFigureData %>%
-        filter(database_name == input$ndatabaseIncidenceFigure2)
+        filter(database_name == input$databaseNameIncidenceFigure2)
     }
 
     incidenceFigureData %>%
@@ -443,11 +491,11 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
         filter(incidence_start_date == input$calendarperiodIncidenceFigure3)
     }
 
-    if (input$ndatabaseIncidenceFigure3 == "All") {
+    if (input$databaseNameIncidenceFigure3 == "All") {
       incidenceFigureData
     } else {
       incidenceFigureData <- incidenceFigureData %>%
-        filter(database_name == input$ndatabaseIncidenceFigure3)
+        filter(database_name == input$databaseNameIncidenceFigure3)
     }
 
     incidenceFigureData %>%
@@ -494,11 +542,11 @@ resultDashboard <- function(importFolderDenominator = here("inst/csv/denominator
           filter(incidence_start_date == input$calendarperiodIncidenceFigure4)
       }
 
-      if (input$ndatabaseIncidenceFigure4 == "All") {
+      if (input$databaseNameIncidenceFigure4 == "All") {
         incidenceFigureData
       } else {
         incidenceFigureData <- incidenceFigureData %>%
-          filter(database_name == input$ndatabaseIncidenceFigure4)
+          filter(database_name == input$databaseNameIncidenceFigure4)
       }
 
       incidenceFigureData %>%
