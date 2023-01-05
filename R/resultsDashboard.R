@@ -46,16 +46,19 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                           selectInput(inputId = "outcomeIncidence",
                                       label = "Outcome",
                                       choices = unique(incidenceData$outcome_cohort_id)),
+                          selectInput(inputId = "analysisIdIncidence",
+                                      label = "Analysis ID",
+                                      choices = unique(incidenceData$analysis_id)),
                           selectInput(inputId = "sexIncidence",
                                       label = "Sex",
                                       choices = c("All", unique(incidenceData$denominator_sex))),
                           selectInput(inputId = "ageIncidence",
                                       label = "Age",
                                       choices = c("All", unique(incidenceData$denominator_age_group))),
-                          selectInput(inputId = "calendarperiodIncidence",
-                                      label = "Calendar period",
+                          selectInput(inputId = "timeIncidence",
+                                      label = "Time",
                                       choices = c("All", unique(as.character(incidenceData$incidence_start_date)))),
-                          selectInput(inputId = "databaseNameIncidence",
+                          selectInput(inputId = "databaseIncidence",
                                       label = "Database",
                                       choices = c("All", unique(incidenceData$database_name))),
                         )),
@@ -90,16 +93,19 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                       selectInput(inputId = "outcomePrevalence",
                                   label = "Outcome",
                                   choices = unique(prevalenceData$outcome_cohort_id)),
+                      selectInput(inputId = "analysisIdPrevalence",
+                                  label = "Analysis ID",
+                                  choices = unique(prevalenceData$analysis_id)),
                       selectInput(inputId = "sexPrevalence",
                                   label = "Sex",
                                   choices = c("All", unique(prevalenceData$denominator_sex))),
                       selectInput(inputId = "agePrevalence",
                                   label = "Age",
                                   choices = c("All", unique(prevalenceData$denominator_age_group))),
-                      selectInput(inputId = "calendarperiodPrevalence",
-                                  label = "Calendar period",
+                      selectInput(inputId = "timePrevalence",
+                                  label = "Time",
                                   choices = c("All", unique(as.character(prevalenceData$prevalence_start_date)))),
-                      selectInput(inputId = "ndatabasePrevalence",
+                      selectInput(inputId = "databasePrevalence",
                                   label = "Database",
                                   choices = c("All", unique(prevalenceData$database_name))),
                     )
@@ -144,12 +150,17 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
       commonData[is.na(commonData)] = 0
 
-      if (input$outcomeIncidence == "All") {
-        commonData
-      } else {
-        commonData <- commonData %>%
-          filter(outcome_cohort_id == input$outcomeIncidence)
-      }
+      # Outcome
+
+      commonData <- commonData %>%
+        filter(outcome_cohort_id == input$outcomeIncidence)
+
+      # Analysis ID
+
+      commonData <- commonData %>%
+        filter(analysis_id == input$analysisIdIncidence)
+
+      # Sex
 
       if (input$sexIncidence == "All") {
         commonData
@@ -158,6 +169,8 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
           filter(denominator_sex == input$sexIncidence)
       }
 
+      # Age group
+
       if (input$ageIncidence == "All") {
         commonData
       } else {
@@ -165,18 +178,22 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
           filter(denominator_age_group == input$ageIncidence)
       }
 
-      if (input$calendarperiodIncidence == "All") {
+      # Time
+
+      if (input$timeIncidence == "All") {
         commonData
       } else {
         commonData <- commonData %>%
-          filter(incidence_start_date == input$calendarperiodIncidence)
+          filter(incidence_start_date == input$timeIncidence)
       }
 
-      if (input$databaseNameIncidence == "All") {
+      # Database
+
+      if (input$databaseIncidence == "All") {
         commonData
       } else {
         commonData <- commonData %>%
-          filter(database_name == input$databaseNameIncidence)
+          filter(database_name == input$databaseIncidence)
       }
 
     })
@@ -377,8 +394,17 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
       commonData[is.na(commonData)] = 0
 
+      # Outcome
+
       commonData <- commonData %>%
         filter(outcome_cohort_id == input$outcomePrevalence)
+
+      # Analysis ID
+
+      commonData <- commonData %>%
+        filter(analysis_id == input$analysisIdPrevalence)
+
+      # Sex
 
       if (input$sexPrevalence == "All") {
         commonData
@@ -386,26 +412,32 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
         commonData <- commonData %>%
           filter(denominator_sex == input$sexPrevalence)
       }
-      #
+
+      # Age
+
       if (input$agePrevalence == "All") {
         commonData
       } else {
         commonData <- commonData %>%
           filter(denominator_age_group == input$agePrevalence)
       }
-      #
-      if (input$calendarperiodPrevalence == "All") {
+
+      # Time
+
+      if (input$timePrevalence == "All") {
         commonData
       } else {
         commonData <- commonData %>%
-          filter(prevalence_start_date == input$calendarperiodPrevalence)
+          filter(prevalence_start_date == input$timePrevalence)
       }
-      #
-      if (input$ndatabasePrevalence == "All") {
+
+      # database
+
+      if (input$databasePrevalence == "All") {
         commonData
       } else {
         commonData <- commonData %>%
-          filter(database_name == input$ndatabasePrevalence)
+          filter(database_name == input$databasePrevalence)
       }
 
     })
@@ -413,6 +445,11 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
     observe({
 
       if (input$tabsetprevalence == "Table 1") {
+
+        updateID <- prevalenceData %>% filter(outcome_cohort_id == input$outcomePrevalence)
+
+        updateSelectInput(inputId = "analysisIdPrevalence",
+                          choices = unique(updateID$analysis_id))
 
         updateSelectInput(inputId = "sexPrevalence",
                           choices = c("All",
