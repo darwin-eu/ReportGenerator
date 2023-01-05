@@ -22,21 +22,15 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
         menuItem("Population level DUS",
                  tabName = "populationlevel",
-                 icon = icon("dashboard"),
+                 icon = icon("th"),
                  menuSubItem("Attrition", tabName = "attritionPopTab"),
                  menuSubItem("Incidence", tabName = "incidenceTab"),
                  menuSubItem("Prevalence", tabName = "prevalenceTab")
 
                  ),
-        menuItem("Widgets",
-                 tabName = "widgets",
+        menuItem("Patient Level DUS",
+                 tabName = "patientLevel",
                  icon = icon("th"))
-        # selectInput(inputId = "ndatabasePrevalence",
-        #             label = "Database",
-        #             choices = unique(prevalenceData$database_name)),
-        # selectInput(inputId = "nOutcomePrevalence",
-        #             label = "Outcome",
-        #             choices = unique(prevalenceData$outcome_cohort_id))
         )
       ),
 
@@ -147,6 +141,8 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
     incidenceCommonData <- reactive({
 
       commonData <- incidenceData
+
+      commonData[is.na(commonData)] = 0
 
       if (input$outcomeIncidence == "All") {
         commonData
@@ -378,6 +374,8 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
     prevalenceCommonData <- reactive({
 
       commonData <- prevalenceData
+
+      commonData[is.na(commonData)] = 0
 
       commonData <- commonData %>%
         filter(outcome_cohort_id == input$outcomePrevalence)
