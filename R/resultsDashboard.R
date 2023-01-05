@@ -4,8 +4,8 @@
 #' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard
 #' @return Dashboard
 resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominatorMockData"),
-                            importFolderIndcidence = here("inst/csv/incidenceMockResults"),
-                            importFolderPrevalence = here("inst/csv/prevalenceMockResults")) {
+                             importFolderIndcidence = here("inst/csv/incidenceMockResults"),
+                             importFolderPrevalence = here("inst/csv/prevalenceMockResults")) {
 
   denominatorData <- denominatorExtraction(importFolderDenominator)
 
@@ -49,6 +49,9 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                       h3("Incidence Results"),
                       fluidRow(
                         box(
+                          selectInput(inputId = "outcomeIncidence",
+                                      label = "Outcome",
+                                      choices = unique(incidenceData$outcome_cohort_id)),
                           selectInput(inputId = "sexIncidence",
                                       label = "Sex",
                                       choices = c("All", unique(incidenceData$denominator_sex))),
@@ -61,9 +64,6 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                           selectInput(inputId = "databaseNameIncidence",
                                       label = "Database",
                                       choices = c("All", unique(incidenceData$database_name))),
-                          selectInput(inputId = "outcomeIncidence",
-                                      label = "Outcome",
-                                      choices = unique(incidenceData$outcome_cohort_id)),
                         )),
                       fluidRow(
                            tabBox(
@@ -93,6 +93,9 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                   h3("Prevalence Results"),
                   fluidRow(
                     box(
+                      selectInput(inputId = "outcomePrevalence",
+                                  label = "Outcome",
+                                  choices = unique(prevalenceData$outcome_cohort_id)),
                       selectInput(inputId = "sexPrevalence",
                                   label = "Sex",
                                   choices = c("All", unique(prevalenceData$denominator_sex))),
@@ -105,9 +108,6 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                       selectInput(inputId = "ndatabasePrevalence",
                                   label = "Database",
                                   choices = c("All", unique(prevalenceData$database_name))),
-                      selectInput(inputId = "nOutcomePrevalence",
-                                  label = "Outcome",
-                                  choices = unique(prevalenceData$outcome_cohort_id)),
                     )
                   ),
                   fluidRow(
@@ -147,6 +147,13 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
     incidenceCommonData <- reactive({
 
       commonData <- incidenceData
+
+      if (input$outcomeIncidence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(outcome_cohort_id == input$outcomeIncidence)
+      }
 
       if (input$sexIncidence == "All") {
         commonData
@@ -189,7 +196,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
-                                      unique(prevalenceData$denominator_age_group)))
+                                      unique(incidenceData$denominator_age_group)))
 
       } else if (input$tabsetincidence == "Figure 1") {
 
@@ -197,7 +204,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                           choices = unique(incidenceData$denominator_sex))
 
         updateSelectInput(inputId = "ageIncidence",
-                          choices = unique(prevalenceData$denominator_age_group))
+                          choices = unique(incidenceData$denominator_age_group))
 
       } else if (input$tabsetincidence == "Figure 2") {
 
@@ -206,7 +213,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                                       unique(incidenceData$denominator_sex)))
 
         updateSelectInput(inputId = "ageIncidence",
-                          choices = unique(prevalenceData$denominator_age_group))
+                          choices = unique(incidenceData$denominator_age_group))
 
       } else if (input$tabsetincidence == "Figure 3") {
 
@@ -215,7 +222,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
-                                      unique(prevalenceData$denominator_age_group)))
+                                      unique(incidenceData$denominator_age_group)))
 
       } else if (input$tabsetincidence == "Figure 4") {
 
@@ -225,7 +232,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
-                                      unique(prevalenceData$denominator_age_group)))
+                                      unique(incidenceData$denominator_age_group)))
 
       }
 
@@ -371,6 +378,9 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
     prevalenceCommonData <- reactive({
 
       commonData <- prevalenceData
+
+      commonData <- commonData %>%
+        filter(outcome_cohort_id == input$outcomePrevalence)
 
       if (input$sexPrevalence == "All") {
         commonData
