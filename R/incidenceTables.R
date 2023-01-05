@@ -4,7 +4,8 @@
 #'
 #' @return incidenceTable1
 #' @export
-incidenceTable1 <- function(incidenceData = NULL) {
+incidenceTable1 <- function(incidenceData = NULL,
+                            denominatorData = NULL) {
 
   incidenceTableData <- incidenceData %>%
     group_by(database_name) %>%

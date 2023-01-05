@@ -2,13 +2,13 @@
 
 library(devtools)
 
-document()
-
-check()
-
 # install()
 
 load_all()
+
+# Generate mock data
+
+# mockSampleCSV()
 
 ##### STUDY REPORT LAUNCH
 
@@ -24,10 +24,6 @@ abstractText <- "ABSTRACT: Lorem ipsum dolor sit amet, consectetur adipiscing el
 # incidence <- incidence
 # prevalence <- prevalence
 
-
-
-load_all()
-
 ## RUN
 
 incidencePrevalenceReport(title = title,
@@ -37,8 +33,8 @@ incidencePrevalenceReport(title = title,
                           byCondition = TRUE,
                           format = "word")
 
+# Launch app
 
-
-studyReportApp()
+resultsDashboard()
 
 

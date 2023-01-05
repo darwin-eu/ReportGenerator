@@ -53,7 +53,8 @@ incidencePrevalenceReport <- function(title = NULL,
 
   # Loading data from function
 
-  incidenceTable1 <- incidenceTable1(incidenceData)
+  incidenceTable1 <- incidenceTable1(incidenceData,
+                                     denominatorData)
 
   # Correcting either drug or condition study
 
@@ -108,31 +109,31 @@ incidencePrevalenceReport <- function(title = NULL,
 
   # Figure 1. Incidence rate/s of drug/s use over calendar time (per month/year) overall
 
-  incidenceFigure1 <- incidenceFigure1(incidenceData)
+  incidenceFigure1 <- incidenceFigure1(incidenceData = incidenceData)
 
   titleFigure1Incidence <- "Figure 1. Incidence rate over time overall"
 
   # Figure 2. by year/month: two plots – males/females, all databases
 
-  incidenceFigure2 <- incidenceFigure2(incidenceData)
+  incidenceFigure2 <- incidenceFigure2(incidenceData = incidenceData)
 
   titleFigure2Incidence <- "Figure 2. Incidence rate over time stratified by sex"
 
   # Figure 3 . by year/month: plot for each database, diff lines per age group
 
-  incidenceFigure3 <- incidenceFigure3(incidenceData)
+  incidenceFigure3 <- incidenceFigure3(incidenceData = incidenceData)
 
   titleFigure3Incidence <- "Figure 3. Incidence rate over time stratified by age group"
 
   # Figure 4 . by age group (x-axis) for databases (color) and sex (dashed/line)
 
-  incidenceFigure4 <- incidenceFigure4(incidenceData)
+  incidenceFigure4 <- incidenceFigure4(incidenceData = incidenceData)
 
   titleFigure4Incidence <- "Figure 4. Incidence rate over time stratified by sex and age group"
 
   # Table 2. Incidence data according to figures 1 and 2
 
-  table2Incidence <- table2Incidence(incidenceData)
+  table2Incidence <- table2Incidence(incidenceData = incidenceData)
 
   titleTable2Incidence <- "Table 2. Numeric values of displayed figures 1-4"
 
@@ -142,7 +143,7 @@ incidencePrevalenceReport <- function(title = NULL,
 
   # Table 3. Number of cases and total number of patients per database
 
-  prevalenceTable3 <- prevalenceTable3(prevalenceData)
+  prevalenceTable3 <- prevalenceTable3(prevalenceData = prevalenceData)
 
   if (byCondition == FALSE) {
 
@@ -195,31 +196,31 @@ incidencePrevalenceReport <- function(title = NULL,
 
   # Figure 5. Prevalence of drug/s use over calendar time (per month/year) overall
 
-  prevalenceFigure5 <- prevalenceFigure5(prevalenceData)
+  prevalenceFigure5 <- prevalenceFigure5(prevalenceData = prevalenceData)
 
   titleFigure5Prevalence <- "Figure 5. Prevalence over time overall"
 
   # Figure 6. by year/month: two plots – males/females, all databases
 
-  prevalenceFigure6 <- prevalenceFigure6(prevalenceData)
+  prevalenceFigure6 <- prevalenceFigure6(prevalenceData = prevalenceData)
 
   titleFigure6Prevalence <- "Figure 6. Prevalence over time stratified by sex"
 
   # Figure 7. by year/month: plot for each database, diff lines per age group
 
-  prevalenceFigure7 <- prevalenceFigure7(prevalenceData)
+  prevalenceFigure7 <- prevalenceFigure7(prevalenceData = prevalenceData)
 
   titleFigure7Prevalence <- "Figure 7. Prevalence over time stratified by age group"
 
   # Figure 8. by age group (x-axis) for databases (color) and sex (dashed/line)
 
-  prevalenceFigure8 <- prevalenceFigure8(prevalenceData)
+  prevalenceFigure8 <- prevalenceFigure8(prevalenceData = prevalenceData)
 
   titleFigure8Prevalence <- "Figure 8. Prevalence over time stratified by sex and age group"
 
   # Table 4. Numeric values of displayed figures 5-8
 
-  table4Prevalence <- table4Prevalence(prevalenceData)
+  table4Prevalence <- table4Prevalence(prevalenceData = prevalenceData)
 
   titletable4Prevalence <- "Table 4. Numeric values of displayed figures 5-8"
 

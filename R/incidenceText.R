@@ -1,6 +1,5 @@
 #' Table 1 Paragraph. Incidence rate/s of drug/s use over calendar incidence_start_date (per month/year) overall
 #'
-#' @param indcidenceData
 #' @export
 #' @import dplyr CDMConnector rmarkdown here officer
 #' @importFrom utils head globalVariables

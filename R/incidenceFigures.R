@@ -1,10 +1,10 @@
 #' Figure 1. Incidence rate/s of drug/s use over calendar incidence_start_date (per month/year) overall
 #'
-#' @param indcidenceData
+#' @param incidenceData
 #'
 #' @return incidenceFigure1
 #' @export
-incidenceFigure1 <- function(indcidenceData) {
+incidenceFigure1 <- function(incidenceData) {
 
   incidenceFigureData <- incidenceData %>%
     filter(denominator_sex == "Both",
@@ -27,11 +27,11 @@ incidenceFigure1 <- function(indcidenceData) {
 }
 #' Figure 2. by year/month: two plots – males/females, all databases
 #'
-#' @param indcidenceData
+#' @param incidenceData
 #'
 #' @return incidenceFigure2
 #' @export
-incidenceFigure2 <- function(indcidenceData) {
+incidenceFigure2 <- function(incidenceData) {
 
   incidenceFigureData <- incidenceData %>%
     filter(denominator_age_group == "0-99",
@@ -54,11 +54,11 @@ incidenceFigure2 <- function(indcidenceData) {
 }
 #' Figure 3 . by year/month: plot for each database, diff lines per age group
 #'
-#' @param indcidenceData
+#' @param incidenceData
 #'
 #' @return incidenceFigure3
 #' @export
-incidenceFigure3 <- function(indcidenceData) {
+incidenceFigure3 <- function(incidenceData) {
 
   incidenceFigureData <- incidenceData %>%
     filter(denominator_age_group != "0-99",
@@ -79,7 +79,7 @@ incidenceFigure3 <- function(indcidenceData) {
 }
 #' Figure 4 . by age group (x-axis) for databases (color) and sex (dashed/line)
 #'
-#' @param indcidenceData
+#' @param incidenceData
 #'
 #' @return incidenceFigure4
 #' @export

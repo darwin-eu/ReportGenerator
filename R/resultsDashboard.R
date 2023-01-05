@@ -3,7 +3,7 @@
 #' @export
 #' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard
 #' @return Dashboard
-resultDashboard <- function(importFolderDenominator = here("inst/csv/denominatorMockData"),
+resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominatorMockData"),
                             importFolderIndcidence = here("inst/csv/incidenceMockResults"),
                             importFolderPrevalence = here("inst/csv/prevalenceMockResults")) {
 
