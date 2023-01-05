@@ -4,10 +4,10 @@
 \alias{incidenceFigure3}
 \title{Figure 3 . by year/month: plot for each database, diff lines per age group}
 \usage{
-incidenceFigure3(indcidenceData)
+incidenceFigure3(incidenceData)
 }
 \arguments{
-\item{indcidenceData}{}
+\item{incidenceData}{}
 }
 \value{
 incidenceFigure3

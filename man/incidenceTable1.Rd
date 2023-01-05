@@ -4,7 +4,7 @@
 \alias{incidenceTable1}
 \title{Table 1. <Drug users / Patients with condition X> in <list all data sources> during <stud period>}
 \usage{
-incidenceTable1(incidenceData = NULL)
+incidenceTable1(incidenceData = NULL, denominatorData = NULL)
 }
 \arguments{
 \item{incidenceData}{}

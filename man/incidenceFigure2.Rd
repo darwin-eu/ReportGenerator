@@ -4,10 +4,10 @@
 \alias{incidenceFigure2}
 \title{Figure 2. by year/month: two plots – males/females, all databases}
 \usage{
-incidenceFigure2(indcidenceData)
+incidenceFigure2(incidenceData)
 }
 \arguments{
-\item{indcidenceData}{}
+\item{incidenceData}{}
 }
 \value{
 incidenceFigure2

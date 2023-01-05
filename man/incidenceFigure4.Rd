@@ -7,7 +7,7 @@
 incidenceFigure4(incidenceData)
 }
 \arguments{
-\item{indcidenceData}{}
+\item{incidenceData}{}
 }
 \value{
 incidenceFigure4

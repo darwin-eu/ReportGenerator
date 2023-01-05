@@ -4,10 +4,10 @@
 \alias{incidenceFigure1}
 \title{Figure 1. Incidence rate/s of drug/s use over calendar incidence_start_date (per month/year) overall}
 \usage{
-incidenceFigure1(indcidenceData)
+incidenceFigure1(incidenceData)
 }
 \arguments{
-\item{indcidenceData}{}
+\item{incidenceData}{}
 }
 \value{
 incidenceFigure1
