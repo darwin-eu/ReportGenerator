@@ -5,7 +5,8 @@
 \title{Extracts prevalence data from files in CSV format.}
 \usage{
 prevalenceExtraction(
-  importFolderPrevalence = here("inst/csv/prevalenceMockResults")
+  importFolderPrevalence = here("inst/csv/prevalenceMockResults"),
+  studyName = "mock_data"
 )
 }
 \value{

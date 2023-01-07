@@ -5,7 +5,8 @@
 \title{Extracts incidence data from files in CSV format.}
 \usage{
 incidenceExtraction(
-  importFolderIndcidence = here("inst/csv/incidenceMockResults")
+  importFolderIndcidence = here("inst/csv/incidenceMockResults"),
+  studyName = "mock_data"
 )
 }
 \value{

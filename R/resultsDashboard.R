@@ -1,7 +1,7 @@
 #' This application displays an automated and interactive report of the results from the IncidencePrevalence package.
 #'
 #' @export
-#' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard
+#' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets
 #' @return Dashboard
 resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominatorMockData"),
                              importFolderIndcidence = here("inst/csv/incidenceMockResults"),
@@ -14,17 +14,32 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                                 "incidence",
                                 "mock_data.rds"))
 
+  # prevalenceData <- readRDS(here("inst",
+  #                                "data",
+  #                                "prevalence",
+  #                                "mock_data.rds"))
+
   prevalenceData <- readRDS(here("inst",
                                  "data",
                                  "prevalence",
-                                 "mock_data.rds"))
+                                 "blood_cancer_IPCI.rds"))
+
+  # prevalenceData <- readRDS(here("inst",
+  #                                "data",
+  #                                "prevalence",
+  #                                "blood_cancer_direct.rds"))
+
+  # prevalenceData <- readRDS(here("inst",
+  #                                "data",
+  #                                "prevalence",
+  #                                "blood_cancer.rds"))
 
   ui <- dashboardPage(
     dashboardHeader(title = "Study Results"),
     dashboardSidebar(
       sidebarMenu(
         id = "tabs",
-        selectInput("dataset",
+        selectInput("datasetPrevalence",
                     label = "Dataset Prevalence",
                     choices = list.files(
                       here("inst",
@@ -51,19 +66,19 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
               tabItem(tabName = "incidenceTab",
                       fluidRow(
                         box(
-                          h4("Incidence Results"),
+                          h3("Incidence Results"),
                           fluidRow(
                             column(4,
                                    pickerInput(inputId = "databaseIncidence",
                                                label = "Database",
                                                choices = c("All", unique(incidenceData$database_name)),
                                                selected = "All",
-                                               multiple = TRUE),
+                                               multiple = TRUE)
                             ),
                             column(4,
                             selectInput(inputId = "outcomeIncidence",
                                         label = "Outcome",
-                                        choices = unique(incidenceData$outcome_cohort_id)),
+                                        choices = unique(incidenceData$outcome_cohort_id))
                             )
                           ),
                           h4("Population settings"),
@@ -71,27 +86,28 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                             column(4,
                             selectInput(inputId = "sexIncidence",
                                         label = "Sex",
-                                        choices = c("All", unique(incidenceData$denominator_sex))),
+                                        choices = c("All", unique(incidenceData$denominator_sex)))
                             ),
                             column(4,
                             selectInput(inputId = "ageIncidence",
                                         label = "Age",
-                                        choices = c("All", unique(incidenceData$denominator_age_group))),
+                                        choices = c("All", unique(incidenceData$denominator_age_group)))
                             ),
                             column(4,
                             selectInput(inputId = "timeIncidence",
                                         label = "Time",
-                                        choices = c("All", unique(as.character(incidenceData$incidence_start_date)))),
+                                        choices = c("All", unique(as.character(incidenceData$incidence_start_date))))
                             )
-                          ),
-                          h4("Analysis settings"),
-                          fluidRow(
-                            column(4,
-                            selectInput(inputId = "analysisIdIncidence",
-                                        label = "Analysis ID",
-                                        choices = unique(incidenceData$analysis_id)),
                           )
-                        ))),
+                        #   h4("Analysis settings"),
+                        #   fluidRow(
+                        #     column(4,
+                        #     selectInput(inputId = "analysisIdIncidence",
+                        #                 label = "Analysis ID",
+                        #                 choices = unique(incidenceData$analysis_id)),
+                        #   )
+                        # )
+                        )),
                       fluidRow(
                            tabBox(
                              title = "",
@@ -117,29 +133,51 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
           # Prevalence tab content
           tabItem(tabName = "prevalenceTab",
-                  h3("Prevalence Results"),
                   fluidRow(
                     box(
-                      selectInput(inputId = "outcomePrevalence",
-                                  label = "Outcome",
-                                  choices = unique(prevalenceData$outcome_cohort_id)),
-                      selectInput(inputId = "analysisIdPrevalence",
-                                  label = "Analysis ID",
-                                  choices = unique(prevalenceData$analysis_id)),
-                      selectInput(inputId = "sexPrevalence",
-                                  label = "Sex",
-                                  choices = c("All", unique(prevalenceData$denominator_sex))),
-                      selectInput(inputId = "agePrevalence",
-                                  label = "Age",
-                                  choices = c("All", unique(prevalenceData$denominator_age_group))),
-                      selectInput(inputId = "timePrevalence",
-                                  label = "Time",
-                                  choices = c("All", unique(as.character(prevalenceData$prevalence_start_date)))),
-                      selectInput(inputId = "databasePrevalence",
-                                  label = "Database",
-                                  choices = c("All", unique(prevalenceData$database_name))),
-                    )
-                  ),
+                      h3("Prevalence Results"),
+                      fluidRow(
+                        column(4,
+                               pickerInput(inputId = "databasePrevalence",
+                                           label = "Database",
+                                           choices = c("All", unique(prevalenceData$database_name)),
+                                           selected = "All",
+                                           multiple = TRUE)
+                        ),
+                        column(4,
+                               selectInput(inputId = "outcomePrevalence",
+                                           label = "Outcome",
+                                           choices = unique(prevalenceData$outcome_cohort_id))
+                        )
+                      ),
+                      h4("Population settings"),
+                      fluidRow(
+                        column(4,
+                        selectInput(inputId = "sexPrevalence",
+                                    label = "Sex",
+                                    choices = c("All", unique(prevalenceData$denominator_sex)))
+                        ),
+                        column(4,
+                              selectInput(inputId = "agePrevalence",
+                                          label = "Age",
+                                          choices = c("All", unique(prevalenceData$denominator_age_group)))
+                        ),
+                        column(4,
+                              selectInput(inputId = "timePrevalence",
+                                          label = "Time",
+                                          choices = c("All", unique(as.character(prevalenceData$prevalence_start_date))))
+                        )
+                      ),
+                      # h4("Analysis settings"),
+                      # fluidRow(
+                      #   column(4,
+                      #          selectInput(inputId = "analysisIdPrevalence",
+                      #                      label = "Analysis ID",
+                      #                      choices = unique(prevalenceData$analysis_id))
+                      #          )
+                      #   )
+                      )
+                    ),
                   fluidRow(
                     tabBox(
                       title = "",
@@ -180,6 +218,15 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
       commonData[is.na(commonData)] = 0
 
+      # Database
+
+      if (length(input$databaseIncidence) == 1 && input$databaseIncidence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(database_name %in% c(input$databaseIncidence))
+      }
+
       # Outcome
 
       commonData <- commonData %>%
@@ -187,8 +234,8 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
       # Analysis ID
 
-      commonData <- commonData %>%
-        filter(analysis_id == input$analysisIdIncidence)
+      # commonData <- commonData %>%
+      #   filter(analysis_id == input$analysisIdIncidence)
 
       # Sex
 
@@ -215,15 +262,6 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
       } else {
         commonData <- commonData %>%
           filter(incidence_start_date == input$timeIncidence)
-      }
-
-      # Database
-
-      if (length(input$databaseIncidence) == 1 && input$databaseIncidence == "All") {
-        commonData
-      } else {
-        commonData <- commonData %>%
-          filter(database_name %in% c(input$databaseIncidence))
       }
 
     })
@@ -414,9 +452,16 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     # Prevalence Data
 
-    # observeEvent(input
+    # prevalenceData <- reactive({
     #
-    # )
+    #   prevalenceData <- readRDS(here("inst",
+    #                                  "data",
+    #                                  "prevalence",
+    #                                  input$datasetPrevalence))
+    #
+    #   prevalenceData
+    #
+    # })
 
     # Data filter
 
@@ -455,11 +500,11 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
       # database
 
-      if (input$databasePrevalence == "All") {
+      if (length(input$databasePrevalence) == 1 && input$databasePrevalence == "All") {
         commonData
       } else {
         commonData <- commonData %>%
-          filter(database_name == input$databasePrevalence)
+          filter(database_name %in% c(input$databasePrevalence))
       }
 
     })
@@ -467,9 +512,6 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
     observe({
 
       if (input$tabsetprevalence == "Table 1") {
-
-        updateSelectInput(inputId = "analysisIdPrevalence",
-                          choices = unique(prevalenceData$analysis_id))
 
         updateSelectInput(inputId = "sexPrevalence",
                           choices = c("All",
