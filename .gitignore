@@ -8,3 +8,4 @@ Reports/
 .DS_Store
 inst/csv
 Results/
+inst/data
