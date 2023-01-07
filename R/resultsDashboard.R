@@ -14,10 +14,10 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                                 "incidence",
                                 "mock_data.rds"))
 
-  # prevalenceData <- readRDS(here("inst",
-  #                                "data",
-  #                                "prevalence",
-  #                                "mock_data.rds"))
+  prevalenceData <- readRDS(here("inst",
+                                 "data",
+                                 "prevalence",
+                                 "mock_data.rds"))
 
   ui <- dashboardPage(
     dashboardHeader(title = "Study Results"),
