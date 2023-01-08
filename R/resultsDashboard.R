@@ -51,7 +51,6 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
         menuItem("Population level DUS",
                  tabName = "populationlevel",
                  icon = icon("th"),
-                 menuSubItem("Attrition", tabName = "attritionPopTab"),
                  menuSubItem("Incidence", tabName = "incidenceTab"),
                  menuSubItem("Prevalence", tabName = "prevalenceTab")
                  ),
@@ -145,9 +144,11 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                                            multiple = TRUE)
                         ),
                         column(4,
-                               selectInput(inputId = "outcomePrevalence",
+                               pickerInput(inputId = "outcomePrevalence",
                                            label = "Outcome",
-                                           choices = unique(prevalenceData$outcome_cohort_id))
+                                           choices = unique(prevalenceData$outcome_cohort_id),
+                                           selected = unique(prevalenceData$outcome_cohort_id)[1],
+                                           multiple = TRUE)
                         )
                       ),
                       h4("Population settings"),
@@ -168,14 +169,26 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                                           choices = c("All", unique(as.character(prevalenceData$prevalence_start_date))))
                         )
                       ),
-                      # h4("Analysis settings"),
-                      # fluidRow(
-                      #   column(4,
-                      #          selectInput(inputId = "analysisIdPrevalence",
-                      #                      label = "Analysis ID",
-                      #                      choices = unique(prevalenceData$analysis_id))
-                      #          )
-                      #   )
+                      fluidRow(
+                        column(4,
+                               selectInput(inputId = "daysPriorPrevalence",
+                                           label = "Days prior history",
+                                           choices = unique(prevalenceData$denominator_days_prior_history))
+                        )
+                      ),
+                      h4("Analysis settings"),
+                      fluidRow(
+                        column(4,
+                               selectInput(inputId = "typePrevalence",
+                                           label = "Type",
+                                           choices = unique(prevalenceData$analysis_type))
+                               ),
+                        column(4,
+                               selectInput(inputId = "contributionPrevalence",
+                                           label = "Full contribution",
+                                           choices = unique(prevalenceData$analysis_full_contribution))
+                        ),
+                        )
                       )
                     ),
                   fluidRow(
@@ -197,7 +210,10 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                                plotOutput("plot3Prevalence")),
                       tabPanel("Figure 4",
                                "Figure 4",
-                               plotOutput("plot4Prevalence"))
+                               plotOutput("plot4Prevalence")),
+                      tabPanel("Attrition table",
+                               "Attrition table",
+                               dataTableOutput("attritionPrevalence"))
                       )
                     )
                   )
@@ -232,11 +248,6 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
       commonData <- commonData %>%
         filter(outcome_cohort_id == input$outcomeIncidence)
 
-      # Analysis ID
-
-      # commonData <- commonData %>%
-      #   filter(analysis_id == input$analysisIdIncidence)
-
       # Sex
 
       if (input$sexIncidence == "All") {
@@ -263,6 +274,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
         commonData <- commonData %>%
           filter(incidence_start_date == input$timeIncidence)
       }
+
 
     })
 
@@ -471,6 +483,22 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
       commonData[is.na(commonData)] = 0
 
+      # database
+
+      if (length(input$databasePrevalence) == 1 && input$databasePrevalence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(database_name %in% c(input$databasePrevalence))
+      }
+
+      # Outcome
+
+        commonData <- commonData %>%
+          filter(outcome_cohort_id %in% c(input$outcomePrevalence))
+
+      # Settings
+
       # Sex
 
       if (input$sexPrevalence == "All") {
@@ -498,14 +526,31 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
           filter(prevalence_start_date == input$timePrevalence)
       }
 
-      # database
+      # Time
 
-      if (length(input$databasePrevalence) == 1 && input$databasePrevalence == "All") {
+      if (input$timePrevalence == "All") {
         commonData
       } else {
         commonData <- commonData %>%
-          filter(database_name %in% c(input$databasePrevalence))
+          filter(prevalence_start_date == input$timePrevalence)
       }
+
+      # Days prior history
+
+      commonData <- commonData %>%
+        filter(denominator_days_prior_history == input$daysPriorPrevalence)
+
+      # Analysis
+
+      # Type
+
+      commonData <- commonData %>%
+        filter(analysis_type == input$typePrevalence)
+
+      # Full contribution
+
+      commonData <- commonData %>%
+        filter(analysis_full_contribution == input$contributionPrevalence)
 
     })
 
@@ -669,6 +714,24 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
     })
 
     output$plot4Prevalence <- renderPlot(dataprevalenceFigure4())
+
+    # Table 1
+
+    attritionPrevalence <- reactive({
+
+      attritionPrevalence <- readRDS(here("inst/data/bloodCancerPrevalence/prevalence_attrition.rds"))
+
+      attritionPrevalence
+
+    })
+
+    output$attritionPrevalence <- renderDataTable(attritionPrevalence(),
+                                               options = list(
+                                                 searching = FALSE,
+                                                 scrollX = TRUE,
+                                                 autoWidth = TRUE
+                                               ))
+
 
   }
 
