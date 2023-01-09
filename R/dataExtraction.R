@@ -23,13 +23,13 @@ denominatorExtraction <- function (importFolderDenominator = here("inst/csv/deno
 #' @return A tibble
 #' @export
 #'
-incidenceExtraction <- function (importFolderIndcidence = here("inst/csv/incidenceMockResults"),
+incidenceExtraction <- function (importFolderIncidence = here("inst/csv/incidenceMockResults"),
                                  studyName = "mock_data") {
 
   result <- bind_rows(
     lapply(
       list.files(
-        importFolderIndcidence,
+        importFolderIncidence,
         pattern = ".csv",
         full.names = TRUE
       ),

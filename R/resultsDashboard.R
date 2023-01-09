@@ -4,7 +4,7 @@
 #' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets
 #' @return Dashboard
 resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominatorMockData"),
-                             importFolderIndcidence = here("inst/csv/incidenceMockResults"),
+                             importFolderIncidence = here("inst/csv/incidenceMockResults"),
                              importFolderPrevalence = here("inst/csv/prevalenceMockResults")) {
 
   # denominatorData <- denominatorExtraction(importFolderDenominator)
