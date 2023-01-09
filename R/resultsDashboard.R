@@ -9,10 +9,15 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
   # denominatorData <- denominatorExtraction(importFolderDenominator)
 
+  # incidenceData <- readRDS(here("inst",
+  #                               "data",
+  #                               "incidence",
+  #                               "mock_data.rds"))
+
   incidenceData <- readRDS(here("inst",
                                 "data",
                                 "incidence",
-                                "mock_data.rds"))
+                                "pso_data.rds"))
 
   # prevalenceData <- readRDS(here("inst",
   #                                "data",
@@ -97,15 +102,20 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                                         label = "Time",
                                         choices = c("All", unique(as.character(incidenceData$incidence_start_date))))
                             )
+                          ),
+                          h4("Analysis settings"),
+                          fluidRow(
+                            column(4,
+                            selectInput(inputId = "intervalIncidence",
+                                        label = "Interval",
+                                        choices = unique(incidenceData$analysis_interval)),
+                          ),
+                          column(4,
+                                 selectInput(inputId = "repeatedIncidence",
+                                             label = "Repeated Events",
+                                             choices = unique(incidenceData$analysis_repeated_events)),
                           )
-                        #   h4("Analysis settings"),
-                        #   fluidRow(
-                        #     column(4,
-                        #     selectInput(inputId = "analysisIdIncidence",
-                        #                 label = "Analysis ID",
-                        #                 choices = unique(incidenceData$analysis_id)),
-                        #   )
-                        # )
+                        )
                         )),
                       fluidRow(
                            tabBox(
@@ -275,6 +285,17 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
           filter(incidence_start_date == input$timeIncidence)
       }
 
+      # Analysis
+
+      # Interval
+
+      commonData <- commonData %>%
+        filter(analysis_interval == input$intervalIncidence)
+
+      # Repeated events
+
+      commonData <- commonData %>%
+        filter(analysis_repeated_events == input$repeatedIncidence)
 
     })
 
@@ -631,6 +652,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                    col = database_name)) +
         scale_y_continuous(labels = scales::percent,
                            limits = c(0,NA)) +
+        facet_grid(rows = vars(outcome_cohort_id)) +
         geom_line(aes(group = 1)) +
         geom_point() +
         geom_errorbar(aes(ymin = prevalence_95CI_lower,
@@ -654,6 +676,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                    group = denominator_sex,
                    col = database_name)) +
         facet_grid(cols = vars(denominator_sex)) +
+        facet_grid(rows = vars(outcome_cohort_id)) +
         scale_y_continuous(labels = scales::percent,
                            limits = c(0, NA)) +
         geom_line() +
@@ -675,6 +698,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
         ggplot(aes(x = prevalence_start_date,
                    y = prevalence)) +
         facet_grid(rows = vars(database_name)) +
+        facet_grid(rows = vars(outcome_cohort_id)) +
         scale_y_continuous(labels = scales::percent,
                            limits = c(0, NA)) +
         geom_line(aes(colour = denominator_age_group)) +
@@ -710,6 +734,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
              linetype = "Sex") +
         theme(axis.text.x = element_text(angle = 90,
                                          hjust = 1))
+
 
     })
 
