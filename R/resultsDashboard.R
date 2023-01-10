@@ -24,15 +24,15 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
   #                                "prevalence",
   #                                "mock_data.rds"))
 
-  prevalenceData <- readRDS(here("inst",
-                                 "data",
-                                 "prevalence",
-                                 "blood_cancer_IPCI.rds"))
-
   # prevalenceData <- readRDS(here("inst",
   #                                "data",
   #                                "prevalence",
-  #                                "blood_cancer_direct.rds"))
+  #                                "blood_cancer_IPCI.rds"))
+
+  prevalenceData <- readRDS(here("inst",
+                                 "data",
+                                 "prevalence",
+                                 "blood_cancer_direct.rds"))
 
   # prevalenceData <- readRDS(here("inst",
   #                                "data",
@@ -56,187 +56,219 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
         menuItem("Population level DUS",
                  tabName = "populationlevel",
                  icon = icon("th"),
-                 menuSubItem("Incidence", tabName = "incidenceTab"),
-                 menuSubItem("Prevalence", tabName = "prevalenceTab")
-                 ),
+                 menuSubItem("Incidence",
+                             tabName = "incidenceTab"),
+                 menuSubItem("Prevalence",
+                             tabName = "prevalenceTab")
+        ),
         menuItem("Patient Level DUS",
                  tabName = "patientLevel",
                  icon = icon("th"))
-        )
-      ),
+      )
+    ),
     dashboardBody(
-            tabItems(
-              # Incidence tab content
-              tabItem(tabName = "incidenceTab",
-                      fluidRow(
-                        box(
-                          h3("Incidence Results"),
-                          fluidRow(
-                            column(4,
-                                   pickerInput(inputId = "databaseIncidence",
-                                               label = "Database",
-                                               choices = c("All", unique(incidenceData$database_name)),
-                                               selected = "All",
-                                               multiple = TRUE)
-                            ),
-                            column(4,
-                            selectInput(inputId = "outcomeIncidence",
-                                        label = "Outcome",
-                                        choices = unique(incidenceData$outcome_cohort_id))
-                            )
-                          ),
-                          h4("Population settings"),
-                          fluidRow(
-                            column(4,
-                            selectInput(inputId = "sexIncidence",
-                                        label = "Sex",
-                                        choices = c("All", unique(incidenceData$denominator_sex)))
-                            ),
-                            column(4,
-                            selectInput(inputId = "ageIncidence",
-                                        label = "Age",
-                                        choices = c("All", unique(incidenceData$denominator_age_group)))
-                            ),
-                            column(4,
-                            selectInput(inputId = "timeIncidence",
-                                        label = "Time",
-                                        choices = c("All", unique(as.character(incidenceData$incidence_start_date))))
-                            )
-                          ),
-                          h4("Analysis settings"),
-                          fluidRow(
-                            column(4,
-                            selectInput(inputId = "intervalIncidence",
-                                        label = "Interval",
-                                        choices = unique(incidenceData$analysis_interval)),
-                          ),
-                          column(4,
-                                 selectInput(inputId = "repeatedIncidence",
-                                             label = "Repeated Events",
-                                             choices = unique(incidenceData$analysis_repeated_events)),
-                          )
-                        )
-                        )),
-                      fluidRow(
-                           tabBox(
-                             title = "",
-                             id = "tabsetincidence",
-                            tabPanel("Table 1",
-                                     textOutput("incidenceTable1Paragraph"),
-                                     dataTableOutput("table1Incidence")),
-                            tabPanel("Figure 1",
-                                     "Figure 1",
-                                     plotOutput("plot1Incidence")),
-                            tabPanel("Figure 2",
-                                     "Figure 2",
-                                     plotOutput("plot2Incidence")),
-                            tabPanel("Figure 3",
-                                     "Figure 3",
-                                     plotOutput("plot3Incidence")),
-                            tabPanel("Figure 4",
-                                     "Figure 4",
-                                     plotOutput("plot4Incidence"))
-                            )
-                           )
+      tabItems(
+        # Incidence tab content
+        tabItem(tabName = "incidenceTab",
+                fluidRow(
+                  box(
+                    h3("Incidence Results"),
+                    fluidRow(
+                      column(4,
+                             pickerInput(inputId = "databaseIncidence",
+                                         label = "Database",
+                                         choices = c("All", unique(incidenceData$database_name)),
+                                         selected = "All",
+                                         multiple = TRUE)
                       ),
-
-          # Prevalence tab content
-          tabItem(tabName = "prevalenceTab",
-                  fluidRow(
-                    box(
-                      h3("Prevalence Results"),
-                      fluidRow(
-                        column(4,
-                               pickerInput(inputId = "databasePrevalence",
-                                           label = "Database",
-                                           choices = c("All", unique(prevalenceData$database_name)),
-                                           selected = "All",
-                                           multiple = TRUE)
-                        ),
-                        column(4,
-                               pickerInput(inputId = "outcomePrevalence",
-                                           label = "Outcome",
-                                           choices = unique(prevalenceData$outcome_cohort_id),
-                                           selected = unique(prevalenceData$outcome_cohort_id)[1],
-                                           multiple = TRUE)
-                        )
-                      ),
-                      h4("Population settings"),
-                      fluidRow(
-                        column(4,
-                        selectInput(inputId = "sexPrevalence",
-                                    label = "Sex",
-                                    choices = c("All", unique(prevalenceData$denominator_sex)))
-                        ),
-                        column(4,
-                              selectInput(inputId = "agePrevalence",
-                                          label = "Age",
-                                          choices = c("All", unique(prevalenceData$denominator_age_group)))
-                        ),
-                        column(4,
-                              selectInput(inputId = "timePrevalence",
-                                          label = "Time",
-                                          choices = c("All", unique(as.character(prevalenceData$prevalence_start_date))))
-                        )
-                      ),
-                      fluidRow(
-                        column(4,
-                               selectInput(inputId = "daysPriorPrevalence",
-                                           label = "Days prior history",
-                                           choices = unique(prevalenceData$denominator_days_prior_history))
-                        )
-                      ),
-                      h4("Analysis settings"),
-                      fluidRow(
-                        column(4,
-                               selectInput(inputId = "typePrevalence",
-                                           label = "Type",
-                                           choices = unique(prevalenceData$analysis_type))
-                               ),
-                        column(4,
-                               selectInput(inputId = "contributionPrevalence",
-                                           label = "Full contribution",
-                                           choices = unique(prevalenceData$analysis_full_contribution))
-                        ),
-                        )
+                      column(4,
+                             selectInput(inputId = "outcomeIncidence",
+                                         label = "Outcome",
+                                         choices = unique(incidenceData$outcome_cohort_id))
                       )
                     ),
-                  fluidRow(
-                    tabBox(
-                      title = "",
-                      # The id lets us use input$tabset1 on the server to find the current tab
-                      id = "tabsetprevalence",
-                      tabPanel("Table 1",
-                               "Table 1",
-                               dataTableOutput("table1Prevalence")),
-                      tabPanel("Figure 1",
-                               "Figure 1",
-                               plotOutput("plot1Prevalence")),
-                      tabPanel("Figure 2",
-                               "Figure 2",
-                               plotOutput("plot2Prevalence")),
-                      tabPanel("Figure 3",
-                               "Figure 3",
-                               plotOutput("plot3Prevalence")),
-                      tabPanel("Figure 4",
-                               "Figure 4",
-                               plotOutput("plot4Prevalence")),
-                      tabPanel("Attrition table",
-                               "Attrition table",
-                               dataTableOutput("attritionPrevalence"))
+                    h4("Population settings"),
+                    fluidRow(
+                      column(4,
+                             selectInput(inputId = "sexIncidence",
+                                         label = "Sex",
+                                         choices = c("All", unique(incidenceData$denominator_sex)))
+                      ),
+                      column(4,
+                             selectInput(inputId = "ageIncidence",
+                                         label = "Age",
+                                         choices = c("All", unique(incidenceData$denominator_age_group)))
+                      ),
+
+                    ),
+
+                    h4("Analysis settings"),
+                    fluidRow(
+                      column(4,
+                             selectInput(inputId = "intervalIncidence",
+                                         label = "Interval",
+                                         choices = unique(incidenceData$analysis_interval)),
+                      ),
+                      column(4,
+                             selectInput(inputId = "repeatedIncidence",
+                                         label = "Repeated Events",
+                                         choices = unique(incidenceData$analysis_repeated_events)),
+                      )
+                    ),
+                    h4("Start Time"),
+                    fluidRow(
+                      column(4,
+                             selectInput(inputId = "timeFromIncidence",
+                                         label = "From",
+                                         choices = unique(incidenceData$incidence_start_date),
+                                         selected = min(unique(incidenceData$incidence_start_date)))
+                      ),
+                      column(4,
+                             selectInput(inputId = "timeToIncidence",
+                                         label = "To",
+                                         choices = unique(incidenceData$incidence_start_date),
+                                         selected = max(unique(incidenceData$incidence_start_date)))
+                      )
+                    )
+                  )),
+                fluidRow(
+                  tabBox(
+                    title = "",
+                    id = "tabsetincidence",
+                    tabPanel("Table 1",
+                             downloadButton("downloadIncidence", "Download CSV"),
+                             br(),
+                             # textOutput("incidenceTable1Paragraph"),
+                             dataTableOutput("table1Incidence")),
+                    tabPanel("Figure 1",
+                             "Figure 1",
+                             plotOutput("plot1Incidence")),
+                    tabPanel("Figure 2",
+                             "Figure 2",
+                             plotOutput("plot2Incidence")),
+                    tabPanel("Figure 3",
+                             "Figure 3",
+                             plotOutput("plot3Incidence")),
+                    tabPanel("Figure 4",
+                             "Figure 4",
+                             plotOutput("plot4Incidence"))
+                  )
+                )
+        ),
+
+        # Prevalence tab content
+        tabItem(tabName = "prevalenceTab",
+                fluidRow(
+                  box(
+                    h3("Prevalence Results"),
+                    fluidRow(
+                      column(4,
+                             pickerInput(inputId = "databasePrevalence",
+                                         label = "Database",
+                                         choices = c("All", unique(prevalenceData$database_name)),
+                                         selected = "All",
+                                         multiple = TRUE)
+                      ),
+                      column(4,
+                             pickerInput(inputId = "outcomePrevalence",
+                                         label = "Outcome",
+                                         choices = unique(prevalenceData$outcome_cohort_id),
+                                         selected = unique(prevalenceData$outcome_cohort_id)[1],
+                                         multiple = TRUE)
+                      )
+                    ),
+                    h4("Population settings"),
+                    fluidRow(
+                      column(4,
+                             selectInput(inputId = "sexPrevalence",
+                                         label = "Sex",
+                                         choices = c("All", unique(prevalenceData$denominator_sex)))
+                      ),
+                      column(4,
+                             selectInput(inputId = "agePrevalence",
+                                         label = "Age",
+                                         choices = c("All", unique(prevalenceData$denominator_age_group)))
+                      ),
+                      column(4,
+                             selectInput(inputId = "timePrevalence",
+                                         label = "Start Time",
+                                         choices = c("All", unique(prevalenceData$prevalence_start_date)))
+                      )
+                    ),
+                    fluidRow(
+                      column(4,
+                             selectInput(inputId = "daysPriorPrevalence",
+                                         label = "Days prior history",
+                                         choices = unique(prevalenceData$denominator_days_prior_history))
+                      )
+                    ),
+                    h4("Analysis settings"),
+                    fluidRow(
+                      column(4,
+                             selectInput(inputId = "typePrevalence",
+                                         label = "Type",
+                                         choices = unique(prevalenceData$analysis_type))
+                      ),
+                      column(4,
+                             selectInput(inputId = "contributionPrevalence",
+                                         label = "Full contribution",
+                                         choices = unique(prevalenceData$analysis_full_contribution))
+                      ),
+                    ),
+                    h4("Start Time"),
+                    fluidRow(
+                      column(4,
+                             selectInput(inputId = "timeFromPrevalence",
+                                         label = "From",
+                                         choices = unique(prevalenceData$prevalence_start_date),
+                                         selected = min(unique(prevalenceData$prevalence_start_date)))
+                      ),
+                      column(4,
+                             selectInput(inputId = "timeToPrevalence",
+                                         label = "To",
+                                         choices = unique(prevalenceData$prevalence_start_date),
+                                         selected = max(unique(prevalenceData$prevalence_start_date)))
                       )
                     )
                   )
-          )
-          )
+                ),
+                fluidRow(
+                  tabBox(
+                    title = "",
+                    # The id lets us use input$tabset1 on the server to find the current tab
+                    id = "tabsetprevalence",
+                    tabPanel("Table 1",
+                             downloadButton("downloadPrevalence", "Download CSV"),
+                             # "Table 1",
+                             dataTableOutput("table1Prevalence")),
+                    tabPanel("Figure 1",
+                             "Figure 1",
+                             plotOutput("plot1Prevalence")),
+                    tabPanel("Figure 2",
+                             "Figure 2",
+                             plotOutput("plot2Prevalence")),
+                    tabPanel("Figure 3",
+                             "Figure 3",
+                             plotOutput("plot3Prevalence")),
+                    tabPanel("Figure 4",
+                             "Figure 4",
+                             plotOutput("plot4Prevalence")),
+                    tabPanel("Attrition table",
+                             "Attrition table",
+                             dataTableOutput("attritionPrevalence"))
+                  )
+                )
+        )
+      )
     )
+  )
 
 
   server <- function(input, output) {
 
     # Incidence data
 
-      # Data filter
+    # Data filter
 
     incidenceCommonData <- reactive({
 
@@ -276,14 +308,19 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
           filter(denominator_age_group == input$ageIncidence)
       }
 
-      # Time
+      # Start Time
 
-      if (input$timeIncidence == "All") {
-        commonData
-      } else {
-        commonData <- commonData %>%
-          filter(incidence_start_date == input$timeIncidence)
-      }
+      commonData <- commonData %>%
+        filter(between(incidence_start_date,
+                       as.Date(input$timeFromIncidence),
+                       as.Date(input$timeToIncidence)))
+
+      # if (input$timeIncidence == "All") {
+      #   commonData
+      # } else {
+      #   commonData <- commonData %>%
+      #     filter(incidence_start_date == input$timeIncidence)
+      # }
 
       # Analysis
 
@@ -352,7 +389,18 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     })
 
-      # Table 1
+    # Downloadable csv of Incidence Data
+
+    output$downloadIncidence <- downloadHandler(
+      filename = function() {
+        paste("incidence_data", ".csv", sep = "")
+      },
+      content = function(file) {
+        write.csv(incidenceCommonData(), file, row.names = FALSE)
+      }
+    )
+
+    # Table 1
 
     dataIncidenceTable1 <- reactive({
 
@@ -389,7 +437,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     output$incidenceTable1Paragraph <- renderText(IncidenceTable1Text())
 
-      # Figure 1
+    # Figure 1
 
     dataIncidenceFigure1 <- reactive({
 
@@ -432,7 +480,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
              col = "Database name")
 
 
-})
+    })
 
     output$plot2Incidence <- renderPlot(dataIncidenceFigure2())
 
@@ -453,7 +501,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
              y = "Incidence rate per 100000 person-years",
              colour = "Age group")
 
-      })
+    })
 
     output$plot3Incidence <- renderPlot(dataIncidenceFigure3())
 
@@ -515,8 +563,8 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
       # Outcome
 
-        commonData <- commonData %>%
-          filter(outcome_cohort_id %in% c(input$outcomePrevalence))
+      commonData <- commonData %>%
+        filter(outcome_cohort_id %in% c(input$outcomePrevalence))
 
       # Settings
 
@@ -538,7 +586,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
           filter(denominator_age_group == input$agePrevalence)
       }
 
-      # Time
+      # Start Time
 
       if (input$timePrevalence == "All") {
         commonData
@@ -572,6 +620,13 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
       commonData <- commonData %>%
         filter(analysis_full_contribution == input$contributionPrevalence)
+
+      # Start Time
+
+      commonData <- commonData %>%
+        filter(between(prevalence_start_date,
+                       as.Date(input$timeFromPrevalence),
+                       as.Date(input$timeToPrevalence)))
 
     })
 
@@ -626,6 +681,17 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
       }
 
     })
+
+    # Downloadable csv of Prevalence Data
+
+    output$downloadPrevalence <- downloadHandler(
+      filename = function() {
+        paste("prevalence_data", ".csv", sep = "")
+      },
+      content = function(file) {
+        write.csv(prevalenceCommonData(), file, row.names = FALSE)
+      }
+    )
 
     # Table 1
 
@@ -751,11 +817,11 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
     })
 
     output$attritionPrevalence <- renderDataTable(attritionPrevalence(),
-                                               options = list(
-                                                 searching = FALSE,
-                                                 scrollX = TRUE,
-                                                 autoWidth = TRUE
-                                               ))
+                                                  options = list(
+                                                    searching = FALSE,
+                                                    scrollX = TRUE,
+                                                    autoWidth = TRUE
+                                                  ))
 
 
   }
