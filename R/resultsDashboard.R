@@ -153,6 +153,29 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     })
 
+    # Select data (dropdown menu)
+
+    # incidenceData <- reactive({
+    #
+    #   inFile <- input$datasetIncidence
+    #
+    #     if (is.null(inFile)) {
+    #
+    #       return(NULL)
+    #
+    #     } else {
+    #
+    #       readRDS(here("inst",
+    #                    "data",
+    #                    "incidence",
+    #                    input$datasetIncidence))
+    #
+    #     }
+    #
+    # })
+
+    # Check if incidence data is null
+
     output$fileUploadIncidence <- reactive({
 
       return(!is.null(incidenceData()))
@@ -163,18 +186,41 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                   'fileUploadIncidence',
                   suspendWhenHidden = FALSE)
 
+
     # Render UI
 
     output$incidenceInputSettings <- renderUI({
 
       box(
         h3("Incidence Results"),
+
         fluidRow(
           column(4,
+
+                 # FileInput selection
+
                  fileInput("datasetIncidence",
                            "Choose CSV File",
                            accept = c(".csv")
-                 )
+                           )
+
+
+        # Dropdown selection
+
+                 # selectInput("datasetIncidence",
+                 #             label = "Dataset Incidence",
+                 #             choices = list.files(
+                 #               here("inst",
+                 #                     "data",
+                 #                     "incidence"),
+                 #                pattern = ".rds",
+                 #                full.names = FALSE
+                 #                )
+                 #              ),
+
+
+
+        # --------------------------------------
           )
         ),
 
@@ -536,17 +582,40 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     })
 
+
+
+    # Select database (dropdown menu method)
+
+    # prevalenceData <- reactive({
+    #
+    #   inFile <- input$datasetPrevalence
+    #
+    #   if (is.null(inFile)) {
+    #
+    #     return(NULL)
+    #
+    #   } else {
+    #
+    #     readRDS(here("inst",
+    #                  "data",
+    #                  "prevalence",
+    #                  input$datasetPrevalence))
+    #
+    #   }
+    #
+    # })
+
+    # Check if prevalence data is null
+
     output$fileUploadPrevalence <- reactive({
 
       return(!is.null(prevalenceData()))
 
-      })
+    })
 
     outputOptions(output,
                   'fileUploadPrevalence',
                   suspendWhenHidden = FALSE)
-
-    # Select database (dropdown menu method)
 
     # Render UI
 
@@ -556,10 +625,29 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
           h3("Prevalence Results"),
           fluidRow(
           column(4,
+
+                 # FileInput method
+
                  fileInput("datasetPrevalence",
                            "Choose CSV File",
                            accept = c(".csv")
                            )
+
+                 # Dropdown selection
+
+                 # selectInput("datasetPrevalence",
+                 #             label = "Dataset Prevalence",
+                 #             choices = list.files(
+                 #               here("inst",
+                 #                    "data",
+                 #                    "mockPrevalence"),
+                 #               pattern = ".rds",
+                 #               full.names = FALSE
+                 #             ))
+
+
+
+                 # -----------------
                  )
           ),
 
@@ -577,11 +665,9 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                                  multiple = TRUE)
                      ),
               column(4,
-                     pickerInput(inputId = "outcomePrevalence",
+                     selectInput(inputId = "outcomePrevalence",
                                  label = "Outcome",
-                                 choices = unique(prevalenceData()$outcome_cohort_id),
-                                 selected = unique(prevalenceData()$outcome_cohort_id)[1],
-                                 multiple = TRUE)
+                                 choices = unique(prevalenceData()$outcome_cohort_id))
                      )
               ),
           h4("Population settings"),
@@ -595,11 +681,6 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                    selectInput(inputId = "agePrevalence",
                                label = "Age",
                                choices = c("All", unique(prevalenceData()$denominator_age_group)))
-            ),
-            column(4,
-                   selectInput(inputId = "timePrevalence",
-                               label = "Start Time",
-                               choices = c("All", unique(prevalenceData()$prevalence_start_date)))
             )
           ),
           fluidRow(
@@ -642,7 +723,6 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     })
 
-
     # Data filter
 
     prevalenceCommonData <- reactive({
@@ -663,7 +743,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
       # Outcome
 
       commonData <- commonData %>%
-        filter(outcome_cohort_id %in% c(input$outcomePrevalence))
+        filter(outcome_cohort_id == input$outcomePrevalence)
 
       # Settings
 
@@ -685,23 +765,12 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
           filter(denominator_age_group == input$agePrevalence)
       }
 
-      # Start Time
-
-      if (input$timePrevalence == "All") {
-        commonData
-      } else {
-        commonData <- commonData %>%
-          filter(prevalence_start_date == input$timePrevalence)
-      }
-
       # Time
 
-      if (input$timePrevalence == "All") {
-        commonData
-      } else {
-        commonData <- commonData %>%
-          filter(prevalence_start_date == input$timePrevalence)
-      }
+      commonData <- commonData %>%
+        filter(between(prevalence_start_date,
+                       as.Date(input$timeFromPrevalence),
+                       as.Date(input$timeToIncidence)))
 
       # Days prior history
 
@@ -817,7 +886,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                    col = database_name)) +
         scale_y_continuous(labels = scales::percent,
                            limits = c(0,NA)) +
-        facet_grid(rows = vars(outcome_cohort_id)) +
+        # facet_grid(rows = vars(outcome_cohort_id)) +
         geom_line(aes(group = 1)) +
         geom_point() +
         geom_errorbar(aes(ymin = prevalence_95CI_lower,
