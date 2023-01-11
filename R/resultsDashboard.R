@@ -153,15 +153,6 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
     #
     # })
     #
-    # output$fileUploadIncidence <- reactive({
-    #
-    #   return(!is.null(incidenceData()))
-    #
-    # })
-    #
-    # outputOptions(output,
-    #               'fileUploadIncidence',
-    #               suspendWhenHidden = FALSE)
 
     # Select data (dropdown menu)
 
