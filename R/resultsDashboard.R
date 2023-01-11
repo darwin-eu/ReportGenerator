@@ -132,48 +132,47 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     # Select data (file input method)
 
-    # incidenceData <- reactive({
-    #
-    #   inFile <- input$datasetIncidence
-    #
-    #   if (is.null(inFile)) {
-    #
-    #     return(NULL)
-    #
-    #   } else {
-    #
-    #     incidenceData <- read.csv(inFile$datapath, header = TRUE)
-    #
-    #     incidenceData %>%
-    #       mutate(denominator_age_group = gsub(";", "-", denominator_age_group),
-    #              incidence_start_date = as.Date(incidence_start_date),
-    #              incidence_end_date = as.Date(incidence_end_date))
-    #
-    #   }
-    #
-    # })
-    #
-
-    # Select data (dropdown menu)
-
     incidenceData <- reactive({
 
       inFile <- input$datasetIncidence
 
-        if (is.null(inFile)) {
+      if (is.null(inFile)) {
 
-          return(NULL)
+        return(NULL)
 
-        } else {
+      } else {
 
-          readRDS(here("inst",
-                       "data",
-                       "incidence",
-                       input$datasetIncidence))
+        incidenceData <- read.csv(inFile$datapath, header = TRUE)
 
-        }
+        incidenceData %>%
+          mutate(denominator_age_group = gsub(";", "-", denominator_age_group),
+                 incidence_start_date = as.Date(incidence_start_date),
+                 incidence_end_date = as.Date(incidence_end_date))
+
+      }
 
     })
+
+    # Select data (dropdown menu)
+
+    # incidenceData <- reactive({
+    #
+    #   inFile <- input$datasetIncidence
+    #
+    #     if (is.null(inFile)) {
+    #
+    #       return(NULL)
+    #
+    #     } else {
+    #
+    #       readRDS(here("inst",
+    #                    "data",
+    #                    "incidence",
+    #                    input$datasetIncidence))
+    #
+    #     }
+    #
+    # })
 
     # Check if incidence data is null
 
@@ -198,26 +197,28 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
         fluidRow(
           column(4,
 
+                 # FileInput selection
+
+                 fileInput("datasetIncidence",
+                           "Choose CSV File",
+                           accept = c(".csv")
+                           )
+
+
         # Dropdown selection
 
-                 selectInput("datasetIncidence",
-                             label = "Dataset Incidence",
-                             choices = list.files(
-                               here("inst",
-                                     "data",
-                                     "incidence"),
-                                pattern = ".rds",
-                                full.names = FALSE
-                                )
-                              ),
+                 # selectInput("datasetIncidence",
+                 #             label = "Dataset Incidence",
+                 #             choices = list.files(
+                 #               here("inst",
+                 #                     "data",
+                 #                     "incidence"),
+                 #                pattern = ".rds",
+                 #                full.names = FALSE
+                 #                )
+                 #              ),
 
-        # FileInput selection
 
-        #          fileInput("datasetIncidence",
-        #                    "Choose CSV File",
-        #                    accept = c(".csv")
-        #                    )
-        #
 
         # --------------------------------------
           )
@@ -559,48 +560,50 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     # Select data (file input method)
 
-    # prevalenceData <- reactive({
-    #
-    #     inFile <- input$datasetPrevalence
-    #
-    #     if (is.null(inFile)) {
-    #
-    #       return(NULL)
-    #
-    #     } else {
-    #
-    #       prevalenceData <- read.csv(inFile$datapath,
-    #                                  header = TRUE)
-    #
-    #       prevalenceData %>%
-    #         mutate(denominator_age_group = gsub(";", "-", denominator_age_group),
-    #                prevalence_start_date = as.Date(prevalence_start_date),
-    #                prevalence_end_date = as.Date(prevalence_end_date))
-    #
-    #     }
-    #
-    # })
+    prevalenceData <- reactive({
+
+        inFile <- input$datasetPrevalence
+
+        if (is.null(inFile)) {
+
+          return(NULL)
+
+        } else {
+
+          prevalenceData <- read.csv(inFile$datapath,
+                                     header = TRUE)
+
+          prevalenceData %>%
+            mutate(denominator_age_group = gsub(";", "-", denominator_age_group),
+                   prevalence_start_date = as.Date(prevalence_start_date),
+                   prevalence_end_date = as.Date(prevalence_end_date))
+
+        }
+
+    })
+
+
 
     # Select database (dropdown menu method)
 
-    prevalenceData <- reactive({
-
-      inFile <- input$datasetPrevalence
-
-      if (is.null(inFile)) {
-
-        return(NULL)
-
-      } else {
-
-        readRDS(here("inst",
-                     "data",
-                     "prevalence",
-                     input$datasetPrevalence))
-
-      }
-
-    })
+    # prevalenceData <- reactive({
+    #
+    #   inFile <- input$datasetPrevalence
+    #
+    #   if (is.null(inFile)) {
+    #
+    #     return(NULL)
+    #
+    #   } else {
+    #
+    #     readRDS(here("inst",
+    #                  "data",
+    #                  "prevalence",
+    #                  input$datasetPrevalence))
+    #
+    #   }
+    #
+    # })
 
     # Check if prevalence data is null
 
@@ -622,24 +625,27 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
           h3("Prevalence Results"),
           fluidRow(
           column(4,
+
+                 # FileInput method
+
+                 fileInput("datasetPrevalence",
+                           "Choose CSV File",
+                           accept = c(".csv")
+                           )
+
                  # Dropdown selection
 
-                 selectInput("datasetPrevalence",
-                             label = "Dataset Prevalence",
-                             choices = list.files(
-                               here("inst",
-                                    "data",
-                                    "mockPrevalence"),
-                               pattern = ".rds",
-                               full.names = FALSE
-                             ))
+                 # selectInput("datasetPrevalence",
+                 #             label = "Dataset Prevalence",
+                 #             choices = list.files(
+                 #               here("inst",
+                 #                    "data",
+                 #                    "mockPrevalence"),
+                 #               pattern = ".rds",
+                 #               full.names = FALSE
+                 #             ))
 
-                # FileInput method
 
-                 # fileInput("datasetPrevalence",
-                 #           "Choose CSV File",
-                 #           accept = c(".csv")
-                 #           )
 
                  # -----------------
                  )
