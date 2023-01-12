@@ -18,13 +18,13 @@ denominatorExtraction <- function (importFolderDenominator = here("inst/csv/deno
 
   return(result)
 }
-#' Extracts incidence data from files in CSV format.
+#' Extracts incidence data from files in CSV format and saves the result in RDS.
 #'
 #' @return A tibble
 #' @export
 #'
-incidenceExtraction <- function (importFolderIndcidence = here("inst/csv/incidenceMockResults"),
-                                 studyName = "mock_data") {
+incidenceExtractionToRDS <- function (importFolderIndcidence = here("inst/csv/incidenceMockResults"),
+                                      studyName = "mock_data") {
 
   result <- bind_rows(
     lapply(
@@ -59,13 +59,13 @@ incidenceExtraction <- function (importFolderIndcidence = here("inst/csv/inciden
                )
           )
 }
-#' Extracts prevalence data from files in CSV format.
+#' Extracts prevalence data from files in CSV format nd saves the result in RDS.
 #'
 #' @return A tibble
 #' @export
 #'
-prevalenceExtraction <- function (importFolderPrevalence = here("inst/csv/prevalenceMockResults"),
-                                  studyName = "mock_data") {
+prevalenceExtractionToRDS <- function (importFolderPrevalence = here("inst/csv/prevalenceMockResults"),
+                                       studyName = "mock_data") {
 
   result <- bind_rows(
     lapply(
@@ -106,7 +106,7 @@ prevalenceExtraction <- function (importFolderPrevalence = here("inst/csv/preval
 #' @return A tibble
 #' @export
 #'
-bloodCancerPrevalenceExtraction <- function () {
+bloodCancerPrevalenceExtractionToRDS <- function () {
 
   prepare_output <- function(result){
     result <- result %>%

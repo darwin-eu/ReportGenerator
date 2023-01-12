@@ -4,11 +4,7 @@
 \alias{resultsDashboard}
 \title{This application displays an automated and interactive report of the results from the IncidencePrevalence package.}
 \usage{
-resultsDashboard(
-  importFolderDenominator = here("inst/csv/denominatorMockData"),
-  importFolderIndcidence = here("inst/csv/incidenceMockResults"),
-  importFolderPrevalence = here("inst/csv/prevalenceMockResults")
-)
+resultsDashboard()
 }
 \value{
 Dashboard

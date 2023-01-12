@@ -22,4 +22,5 @@ Imports:
     scales,
     shiny,
     shinydashboard,
+    shinyWidgets,
     tidyr
