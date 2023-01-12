@@ -36,6 +36,26 @@ incidenceExtractionToRDS <- function (importFolderIndcidence = here("inst/csv/in
       read_csv
     )
   ) %>% mutate(denominator_age_group = gsub(";", "-", denominator_age_group))
+  return(result)
+}
+#' Extracts incidence data from files in CSV format and saves the result in RDS.
+#'
+#' @return A tibble
+#' @export
+#'
+incidenceExtractionToRDS <- function (importFolderIndcidence = here("inst/csv/incidenceMockResults"),
+                                      studyName = "mock_data") {
+
+  result <- bind_rows(
+    lapply(
+      list.files(
+        importFolderIndcidence,
+        pattern = ".csv",
+        full.names = TRUE
+      ),
+      read_csv
+    )
+  ) %>% mutate(denominator_age_group = gsub(";", "-", denominator_age_group))
 
   subDir <- here("inst",
                  "data",
@@ -99,6 +119,27 @@ prevalenceExtractionToRDS <- function (importFolderPrevalence = here("inst/csv/p
                )
           )
   )
+
+}
+#' Extracts prevalence data from files in CSV format nd saves the result in RDS.
+#'
+#' @return A tibble
+#' @export
+#'
+prevalenceExtractionToRDS <- function (importFolderPrevalence = here("inst/csv/prevalenceMockResults"),
+                                       studyName = "mock_data") {
+
+  result <- bind_rows(
+    lapply(
+      list.files(
+        importFolderPrevalence,
+        pattern = ".csv",
+        full.names = TRUE
+      ),
+      read_csv
+    )
+  ) %>% mutate(denominator_age_group = gsub(";", "-", denominator_age_group))
+  return(result)
 
 }
 #' Extracts denominator data from files in CSV format.

@@ -238,7 +238,7 @@ incidencePrevalenceReport <- function(title = NULL,
     }
 
     incidencePrevalenceDocx <- read_docx(path = paste0(system.file(package = "ReportGenerator"),
-                                             "/templates/word/IncidencePrevalenceReport.docx")) %>%
+                                             "/templates/word/darwinTemplate.docx")) %>%
 
       ## Sections
 
