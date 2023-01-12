@@ -63,26 +63,30 @@ resultsDashboard <- function() {
                   uiOutput("incidenceInputSettings")
                   ),
                 fluidRow(
-                  tabBox(
-                    title = "",
-                    id = "tabsetincidence",
-                    tabPanel("Table 1",
-                             downloadButton("downloadIncidence", "Download CSV"),
-                             br(),
-                             # textOutput("incidenceTable1Paragraph"),
-                             dataTableOutput("table1Incidence")),
-                    tabPanel("Figure 1",
-                             "Figure 1",
-                             plotOutput("plot1Incidence")),
-                    tabPanel("Figure 2",
-                             "Figure 2",
-                             plotOutput("plot2Incidence")),
-                    tabPanel("Figure 3",
-                             "Figure 3",
-                             plotOutput("plot3Incidence")),
-                    tabPanel("Figure 4",
-                             "Figure 4",
-                             plotOutput("plot4Incidence"))
+                  conditionalPanel(
+                    condition = "output.fileUploadIncidence",
+
+                    tabBox(
+                      title = "",
+                      id = "tabsetincidence",
+                      tabPanel("Table 1",
+                               downloadButton("downloadIncidence", "Download CSV"),
+                               br(),
+                               # textOutput("incidenceTable1Paragraph"),
+                               dataTableOutput("table1Incidence")),
+                      tabPanel("Figure 1",
+                               "Figure 1",
+                               plotOutput("plot1Incidence")),
+                      tabPanel("Figure 2",
+                               "Figure 2",
+                               plotOutput("plot2Incidence")),
+                      tabPanel("Figure 3",
+                               "Figure 3",
+                               plotOutput("plot3Incidence")),
+                      tabPanel("Figure 4",
+                               "Figure 4",
+                               plotOutput("plot4Incidence"))
+                    )
                   )
                 )
         ),
@@ -93,6 +97,8 @@ resultsDashboard <- function() {
                   uiOutput("prevalenceInputSettings")
                 ),
                 fluidRow(
+                  conditionalPanel(
+                    condition = "output.fileUploadPrevalence",
                   tabBox(
                     title = "",
                     # The id lets us use input$tabset1 on the server to find the current tab
@@ -117,6 +123,7 @@ resultsDashboard <- function() {
                              "Attrition table",
                              dataTableOutput("attritionPrevalence"))
                   )
+                )
                 )
         )
       )
