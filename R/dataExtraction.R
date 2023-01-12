@@ -23,7 +23,7 @@ denominatorExtraction <- function (importFolderDenominator = here("inst/csv/deno
 #' @return A tibble
 #' @export
 #'
-incidenceExtractionToRDS <- function (importFolderIndcidence = here("inst/csv/incidenceMockResults"),
+incidenceExtraction <- function (importFolderIndcidence = here("inst/csv/incidenceMockResults"),
                                       studyName = "mock_data") {
 
   result <- bind_rows(
@@ -84,7 +84,7 @@ incidenceExtractionToRDS <- function (importFolderIndcidence = here("inst/csv/in
 #' @return A tibble
 #' @export
 #'
-prevalenceExtractionToRDS <- function (importFolderPrevalence = here("inst/csv/prevalenceMockResults"),
+prevalenceExtraction <- function (importFolderPrevalence = here("inst/csv/prevalenceMockResults"),
                                        studyName = "mock_data") {
 
   result <- bind_rows(
