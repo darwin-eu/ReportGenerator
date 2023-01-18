@@ -147,7 +147,14 @@ resultsDashboard <- function() {
 
       } else {
 
-        incidenceData <- read.csv(inFile$datapath, header = TRUE)
+        incidenceData <- bind_rows(
+          lapply(
+            inFile$datapath,
+            read_csv
+          )
+        )
+
+        # incidenceData <- read.csv(inFile$datapath, header = TRUE)
 
         incidenceData %>%
           mutate(denominator_age_group = gsub(";", "-", denominator_age_group),
@@ -206,7 +213,8 @@ resultsDashboard <- function() {
 
                  fileInput("datasetIncidence",
                            "Choose CSV File",
-                           accept = c(".csv")
+                           accept = c(".csv"),
+                           multiple = TRUE
                            )
 
 
@@ -575,8 +583,12 @@ resultsDashboard <- function() {
 
         } else {
 
-          prevalenceData <- read.csv(inFile$datapath,
-                                     header = TRUE)
+          prevalenceData <- bind_rows(
+            lapply(
+              inFile$datapath,
+              read_csv
+            )
+          )
 
           prevalenceData %>%
             mutate(denominator_age_group = gsub(";", "-", denominator_age_group),
@@ -635,7 +647,8 @@ resultsDashboard <- function() {
 
                  fileInput("datasetPrevalence",
                            "Choose CSV File",
-                           accept = c(".csv")
+                           accept = c(".csv"),
+                           multiple = TRUE
                            )
 
                  # Dropdown selection
