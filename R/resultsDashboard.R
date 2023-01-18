@@ -775,7 +775,7 @@ resultsDashboard <- function() {
       commonData <- commonData %>%
         filter(between(prevalence_start_date,
                        as.Date(input$timeFromPrevalence),
-                       as.Date(input$timeToIncidence)))
+                       as.Date(input$timeToPrevalence)))
 
       # Days prior history
 
