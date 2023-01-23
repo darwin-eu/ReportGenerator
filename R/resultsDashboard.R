@@ -76,16 +76,24 @@ resultsDashboard <- function() {
                                dataTableOutput("table1Incidence")),
                       tabPanel("Figure 1",
                                "Figure 1",
-                               plotOutput("plot1Incidence")),
+                               plotOutput("plot1Incidence"),
+                               downloadButton("downloadIncidenceFigure1",
+                                              "Download Plot")),
                       tabPanel("Figure 2",
                                "Figure 2",
-                               plotOutput("plot2Incidence")),
+                               plotOutput("plot2Incidence"),
+                               downloadButton("downloadIncidenceFigure2",
+                                              "Download Plot")),
                       tabPanel("Figure 3",
                                "Figure 3",
-                               plotOutput("plot3Incidence")),
+                               plotOutput("plot3Incidence"),
+                               downloadButton("downloadIncidenceFigure3",
+                                              "Download Plot")),
                       tabPanel("Figure 4",
                                "Figure 4",
-                               plotOutput("plot4Incidence"))
+                               plotOutput("plot4Incidence"),
+                               downloadButton("downloadIncidenceFigure4",
+                                              "Download Plot"))
                     )
                   )
                 )
@@ -109,19 +117,27 @@ resultsDashboard <- function() {
                              dataTableOutput("table1Prevalence")),
                     tabPanel("Figure 1",
                              "Figure 1",
-                             plotOutput("plot1Prevalence")),
+                             plotOutput("plot1Prevalence"),
+                             downloadButton("downloadPrevalenceFigure1",
+                                            "Download Plot")),
                     tabPanel("Figure 2",
                              "Figure 2",
-                             plotOutput("plot2Prevalence")),
+                             plotOutput("plot2Prevalence"),
+                             downloadButton("downloadPrevalenceFigure2",
+                                            "Download Plot")),
                     tabPanel("Figure 3",
                              "Figure 3",
-                             plotOutput("plot3Prevalence")),
+                             plotOutput("plot3Prevalence"),
+                             downloadButton("downloadPrevalenceFigure3",
+                                            "Download Plot")),
                     tabPanel("Figure 4",
                              "Figure 4",
-                             plotOutput("plot4Prevalence")),
-                    tabPanel("Attrition table",
-                             "Attrition table",
-                             dataTableOutput("attritionPrevalence"))
+                             plotOutput("plot4Prevalence"),
+                             downloadButton("downloadPrevalenceFigure4",
+                                            "Download Plot"))
+                    # tabPanel("Attrition table",
+                    #          "Attrition table",
+                    #          dataTableOutput("attritionPrevalence"))
                   )
                 )
                 )
@@ -427,16 +443,7 @@ resultsDashboard <- function() {
 
     })
 
-    # Downloadable csv of Incidence Data
 
-    output$downloadIncidence <- downloadHandler(
-      filename = function() {
-        paste("incidence_data", ".csv", sep = "")
-      },
-      content = function(file) {
-        write.csv(incidenceCommonData(), file, row.names = FALSE)
-      }
-    )
 
     # Table 1
 
@@ -475,6 +482,17 @@ resultsDashboard <- function() {
 
     output$incidenceTable1Paragraph <- renderText(IncidenceTable1Text())
 
+    # Downloadable csv of Incidence Data
+
+    output$downloadIncidence <- downloadHandler(
+      filename = function() {
+        paste("incidence_data", ".csv", sep = "")
+      },
+      content = function(file) {
+        write.csv(incidenceCommonData(), file, row.names = FALSE)
+      }
+    )
+
     # Figure 1
 
     dataIncidenceFigure1 <- reactive({
@@ -497,6 +515,17 @@ resultsDashboard <- function() {
     })
 
     output$plot1Incidence <- renderPlot(dataIncidenceFigure1())
+
+    # Download Incidence Figure 1
+
+    output$downloadIncidenceFigure1 <- downloadHandler(
+      filename = function() {
+        paste("incidence_figure_1", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataIncidenceFigure1(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
 
     # Figure 2
 
@@ -522,6 +551,17 @@ resultsDashboard <- function() {
 
     output$plot2Incidence <- renderPlot(dataIncidenceFigure2())
 
+    # Download Incidence Figure 2
+
+    output$downloadIncidenceFigure2 <- downloadHandler(
+      filename = function() {
+        paste("incidence_figure_2", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataIncidenceFigure2(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
+
     # Figure 3
 
     dataIncidenceFigure3 <- reactive({
@@ -542,6 +582,17 @@ resultsDashboard <- function() {
     })
 
     output$plot3Incidence <- renderPlot(dataIncidenceFigure3())
+
+    # Download Incidence Figure 3
+
+    output$downloadIncidenceFigure3 <- downloadHandler(
+      filename = function() {
+        paste("incidence_figure_3", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataIncidenceFigure3(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
 
     # Figure 4
 
@@ -568,6 +619,17 @@ resultsDashboard <- function() {
     })
 
     output$plot4Incidence <- renderPlot(dataIncidenceFigure4())
+
+    # Download Incidence Figure 4
+
+    output$downloadIncidenceFigure4 <- downloadHandler(
+      filename = function() {
+        paste("incidence_figure_4", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataIncidenceFigure4(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
 
     # Prevalence Data
 
@@ -918,6 +980,17 @@ resultsDashboard <- function() {
 
     output$plot1Prevalence <- renderPlot(dataprevalenceFigure1())
 
+    # Download Prevalence Figure 1
+
+    output$downloadPrevalenceFigure1 <- downloadHandler(
+      filename = function() {
+        paste("prevalence_figure_1", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataprevalenceFigure1(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
+
     # Figure 2
 
     dataprevalenceFigure2 <- reactive({
@@ -942,6 +1015,17 @@ resultsDashboard <- function() {
 
     output$plot2Prevalence <- renderPlot(dataprevalenceFigure2())
 
+    # Download Prevalence Figure 2
+
+    output$downloadPrevalenceFigure2 <- downloadHandler(
+      filename = function() {
+        paste("prevalence_figure_2", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataprevalenceFigure2(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
+
     # Figure 3
 
     dataprevalenceFigure3 <- reactive({
@@ -963,6 +1047,17 @@ resultsDashboard <- function() {
     })
 
     output$plot3Prevalence <- renderPlot(dataprevalenceFigure3())
+
+    # Download Prevalence Figure 3
+
+    output$downloadPrevalenceFigure3 <- downloadHandler(
+      filename = function() {
+        paste("prevalence_figure_3", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataprevalenceFigure3(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
 
     # Figure 4
 
@@ -992,22 +1087,33 @@ resultsDashboard <- function() {
 
     output$plot4Prevalence <- renderPlot(dataprevalenceFigure4())
 
+    # Download Prevalence Figure 4
+
+    output$downloadPrevalenceFigure4 <- downloadHandler(
+      filename = function() {
+        paste("prevalence_figure_4", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataprevalenceFigure4(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
+
     # Table 1
 
-    attritionPrevalence <- reactive({
-
-      attritionPrevalence <- readRDS(here("inst/data/bloodCancerPrevalence/prevalence_attrition.rds"))
-
-      attritionPrevalence
-
-    })
-
-    output$attritionPrevalence <- renderDataTable(attritionPrevalence(),
-                                                  options = list(
-                                                    searching = FALSE,
-                                                    scrollX = TRUE,
-                                                    autoWidth = TRUE
-                                                  ))
+    # attritionPrevalence <- reactive({
+    #
+    #   attritionPrevalence <- readRDS(here("inst/data/bloodCancerPrevalence/prevalence_attrition.rds"))
+    #
+    #   attritionPrevalence
+    #
+    # })
+    #
+    # output$attritionPrevalence <- renderDataTable(attritionPrevalence(),
+    #                                               options = list(
+    #                                                 searching = FALSE,
+    #                                                 scrollX = TRUE,
+    #                                                 autoWidth = TRUE
+    #                                               ))
 
 
   }
