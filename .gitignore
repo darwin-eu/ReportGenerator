@@ -13,4 +13,5 @@ rsconnect/
 RunApp.R
 CodeToRun.R
 studyReportApp.R
+dataShiny.RData
 
