@@ -1131,4 +1131,3 @@ utils::globalVariables(c("incidence_end_date",
                          "analysis_full_contribution",
                          "prevalence_95CI_lower",
                          "prevalence_95CI_upper"))
->>>>>>> main
