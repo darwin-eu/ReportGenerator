@@ -3,9 +3,7 @@
 #' @export
 #' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets
 #' @return Dashboard
-resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominatorMockData"),
-                             importFolderIncidence = here("inst/csv/incidenceMockResults"),
-                             importFolderPrevalence = here("inst/csv/prevalenceMockResults")) {
+resultsDashboard <- function() {
 
   # denominatorData <- denominatorExtraction(importFolderDenominator)
 
@@ -14,20 +12,20 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
   #                               "incidence",
   #                               "mock_data.rds"))
 
-  incidenceData <- readRDS(here("inst",
-                                "data",
-                                "incidence",
-                                "pso_data.rds"))
+  # incidenceData <- readRDS(here("inst",
+  #                               "data",
+  #                               "incidence",
+  #                               "pso_data.rds"))
 
   # prevalenceData <- readRDS(here("inst",
   #                                "data",
   #                                "prevalence",
   #                                "mock_data.rds"))
 
-  prevalenceData <- readRDS(here("inst",
-                                 "data",
-                                 "prevalence",
-                                 "blood_cancer_IPCI.rds"))
+  # prevalenceData <- readRDS(here("inst",
+  #                                "data",
+  #                                "prevalence",
+  #                                "blood_cancer_IPCI.rds"))
 
   # prevalenceData <- readRDS(here("inst",
   #                                "data",
@@ -44,203 +42,291 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
     dashboardSidebar(
       sidebarMenu(
         id = "tabs",
-        selectInput("datasetPrevalence",
-                    label = "Dataset Prevalence",
-                    choices = list.files(
-                      here("inst",
-                           "data",
-                           "prevalence"),
-                      pattern = ".rds",
-                      full.names = FALSE
-                    )),
         menuItem("Population level DUS",
                  tabName = "populationlevel",
                  icon = icon("th"),
-                 menuSubItem("Incidence", tabName = "incidenceTab"),
-                 menuSubItem("Prevalence", tabName = "prevalenceTab")
-                 ),
+                 menuSubItem("Incidence",
+                             tabName = "incidenceTab"),
+                 menuSubItem("Prevalence",
+                             tabName = "prevalenceTab")
+        ),
         menuItem("Patient Level DUS",
                  tabName = "patientLevel",
                  icon = icon("th"))
-        )
-      ),
+      )
+    ),
     dashboardBody(
-            tabItems(
-              # Incidence tab content
-              tabItem(tabName = "incidenceTab",
-                      fluidRow(
-                        box(
-                          h3("Incidence Results"),
-                          fluidRow(
-                            column(4,
-                                   pickerInput(inputId = "databaseIncidence",
-                                               label = "Database",
-                                               choices = c("All", unique(incidenceData$database_name)),
-                                               selected = "All",
-                                               multiple = TRUE)
-                            ),
-                            column(4,
-                            selectInput(inputId = "outcomeIncidence",
-                                        label = "Outcome",
-                                        choices = unique(incidenceData$outcome_cohort_id))
-                            )
-                          ),
-                          h4("Population settings"),
-                          fluidRow(
-                            column(4,
-                            selectInput(inputId = "sexIncidence",
-                                        label = "Sex",
-                                        choices = c("All", unique(incidenceData$denominator_sex)))
-                            ),
-                            column(4,
-                            selectInput(inputId = "ageIncidence",
-                                        label = "Age",
-                                        choices = c("All", unique(incidenceData$denominator_age_group)))
-                            ),
-                            column(4,
-                            selectInput(inputId = "timeIncidence",
-                                        label = "Time",
-                                        choices = c("All", unique(as.character(incidenceData$incidence_start_date))))
-                            )
-                          ),
-                          h4("Analysis settings"),
-                          fluidRow(
-                            column(4,
-                            selectInput(inputId = "intervalIncidence",
-                                        label = "Interval",
-                                        choices = unique(incidenceData$analysis_interval)),
-                          ),
-                          column(4,
-                                 selectInput(inputId = "repeatedIncidence",
-                                             label = "Repeated Events",
-                                             choices = unique(incidenceData$analysis_repeated_events)),
-                          )
-                        )
-                        )),
-                      fluidRow(
-                           tabBox(
-                             title = "",
-                             id = "tabsetincidence",
-                            tabPanel("Table 1",
-                                     textOutput("incidenceTable1Paragraph"),
-                                     dataTableOutput("table1Incidence")),
-                            tabPanel("Figure 1",
-                                     "Figure 1",
-                                     plotOutput("plot1Incidence")),
-                            tabPanel("Figure 2",
-                                     "Figure 2",
-                                     plotOutput("plot2Incidence")),
-                            tabPanel("Figure 3",
-                                     "Figure 3",
-                                     plotOutput("plot3Incidence")),
-                            tabPanel("Figure 4",
-                                     "Figure 4",
-                                     plotOutput("plot4Incidence"))
-                            )
-                           )
-                      ),
+      tabItems(
+        # Incidence tab content
+        tabItem(tabName = "incidenceTab",
+                fluidRow(
+                  uiOutput("incidenceInputSettings")
+                  ),
+                fluidRow(
+                  conditionalPanel(
+                    condition = "output.fileUploadIncidence",
 
-          # Prevalence tab content
-          tabItem(tabName = "prevalenceTab",
-                  fluidRow(
-                    box(
-                      h3("Prevalence Results"),
-                      fluidRow(
-                        column(4,
-                               pickerInput(inputId = "databasePrevalence",
-                                           label = "Database",
-                                           choices = c("All", unique(prevalenceData$database_name)),
-                                           selected = "All",
-                                           multiple = TRUE)
-                        ),
-                        column(4,
-                               pickerInput(inputId = "outcomePrevalence",
-                                           label = "Outcome",
-                                           choices = unique(prevalenceData$outcome_cohort_id),
-                                           selected = unique(prevalenceData$outcome_cohort_id)[1],
-                                           multiple = TRUE)
-                        )
-                      ),
-                      h4("Population settings"),
-                      fluidRow(
-                        column(4,
-                        selectInput(inputId = "sexPrevalence",
-                                    label = "Sex",
-                                    choices = c("All", unique(prevalenceData$denominator_sex)))
-                        ),
-                        column(4,
-                              selectInput(inputId = "agePrevalence",
-                                          label = "Age",
-                                          choices = c("All", unique(prevalenceData$denominator_age_group)))
-                        ),
-                        column(4,
-                              selectInput(inputId = "timePrevalence",
-                                          label = "Time",
-                                          choices = c("All", unique(as.character(prevalenceData$prevalence_start_date))))
-                        )
-                      ),
-                      fluidRow(
-                        column(4,
-                               selectInput(inputId = "daysPriorPrevalence",
-                                           label = "Days prior history",
-                                           choices = unique(prevalenceData$denominator_days_prior_history))
-                        )
-                      ),
-                      h4("Analysis settings"),
-                      fluidRow(
-                        column(4,
-                               selectInput(inputId = "typePrevalence",
-                                           label = "Type",
-                                           choices = unique(prevalenceData$analysis_type))
-                               ),
-                        column(4,
-                               selectInput(inputId = "contributionPrevalence",
-                                           label = "Full contribution",
-                                           choices = unique(prevalenceData$analysis_full_contribution))
-                        ),
-                        )
-                      )
-                    ),
-                  fluidRow(
                     tabBox(
                       title = "",
-                      # The id lets us use input$tabset1 on the server to find the current tab
-                      id = "tabsetprevalence",
+                      id = "tabsetincidence",
                       tabPanel("Table 1",
-                               "Table 1",
-                               dataTableOutput("table1Prevalence")),
+                               downloadButton("downloadIncidence", "Download CSV"),
+                               br(),
+                               # textOutput("incidenceTable1Paragraph"),
+                               dataTableOutput("table1Incidence")),
                       tabPanel("Figure 1",
                                "Figure 1",
-                               plotOutput("plot1Prevalence")),
+                               plotOutput("plot1Incidence"),
+                               downloadButton("downloadIncidenceFigure1",
+                                              "Download Plot")),
                       tabPanel("Figure 2",
                                "Figure 2",
-                               plotOutput("plot2Prevalence")),
+                               plotOutput("plot2Incidence"),
+                               downloadButton("downloadIncidenceFigure2",
+                                              "Download Plot")),
                       tabPanel("Figure 3",
                                "Figure 3",
-                               plotOutput("plot3Prevalence")),
+                               plotOutput("plot3Incidence"),
+                               downloadButton("downloadIncidenceFigure3",
+                                              "Download Plot")),
                       tabPanel("Figure 4",
                                "Figure 4",
-                               plotOutput("plot4Prevalence")),
-                      tabPanel("Attrition table",
-                               "Attrition table",
-                               dataTableOutput("attritionPrevalence"))
-                      )
+                               plotOutput("plot4Incidence"),
+                               downloadButton("downloadIncidenceFigure4",
+                                              "Download Plot"))
                     )
                   )
-          )
-          )
+                )
+        ),
+
+        # Prevalence tab content
+        tabItem(tabName = "prevalenceTab",
+                fluidRow(
+                  uiOutput("prevalenceInputSettings")
+                ),
+                fluidRow(
+                  conditionalPanel(
+                    condition = "output.fileUploadPrevalence",
+                  tabBox(
+                    title = "",
+                    # The id lets us use input$tabset1 on the server to find the current tab
+                    id = "tabsetprevalence",
+                    tabPanel("Table 1",
+                             downloadButton("downloadPrevalence", "Download CSV"),
+                             # "Table 1",
+                             dataTableOutput("table1Prevalence")),
+                    tabPanel("Figure 1",
+                             "Figure 1",
+                             plotOutput("plot1Prevalence"),
+                             downloadButton("downloadPrevalenceFigure1",
+                                            "Download Plot")),
+                    tabPanel("Figure 2",
+                             "Figure 2",
+                             plotOutput("plot2Prevalence"),
+                             downloadButton("downloadPrevalenceFigure2",
+                                            "Download Plot")),
+                    tabPanel("Figure 3",
+                             "Figure 3",
+                             plotOutput("plot3Prevalence"),
+                             downloadButton("downloadPrevalenceFigure3",
+                                            "Download Plot")),
+                    tabPanel("Figure 4",
+                             "Figure 4",
+                             plotOutput("plot4Prevalence"),
+                             downloadButton("downloadPrevalenceFigure4",
+                                            "Download Plot"))
+                    # tabPanel("Attrition table",
+                    #          "Attrition table",
+                    #          dataTableOutput("attritionPrevalence"))
+                  )
+                )
+                )
+        )
+      )
     )
+  )
 
 
   server <- function(input, output) {
 
     # Incidence data
 
-      # Data filter
+    # Select data (file input method)
+
+    incidenceData <- reactive({
+
+      inFile <- input$datasetIncidence
+
+      if (is.null(inFile)) {
+
+        return(NULL)
+
+      } else {
+
+        incidenceData <- bind_rows(
+          lapply(
+            inFile$datapath,
+            read_csv
+          )
+        )
+
+        # incidenceData <- read.csv(inFile$datapath, header = TRUE)
+
+        incidenceData %>%
+          mutate(denominator_age_group = gsub(";", "-", denominator_age_group),
+                 incidence_start_date = as.Date(incidence_start_date),
+                 incidence_end_date = as.Date(incidence_end_date))
+
+      }
+
+    })
+
+    # Select data (dropdown menu)
+
+    # incidenceData <- reactive({
+    #
+    #   inFile <- input$datasetIncidence
+    #
+    #     if (is.null(inFile)) {
+    #
+    #       return(NULL)
+    #
+    #     } else {
+    #
+    #       readRDS(here("inst",
+    #                    "data",
+    #                    "incidence",
+    #                    input$datasetIncidence))
+    #
+    #     }
+    #
+    # })
+
+    # Check if incidence data is null
+
+    output$fileUploadIncidence <- reactive({
+
+      return(!is.null(incidenceData()))
+
+    })
+
+    outputOptions(output,
+                  'fileUploadIncidence',
+                  suspendWhenHidden = FALSE)
+
+
+    # Render UI
+
+    output$incidenceInputSettings <- renderUI({
+
+      box(
+        h3("Incidence Results"),
+
+        fluidRow(
+          column(4,
+
+                 # FileInput selection
+
+                 fileInput("datasetIncidence",
+                           "Choose CSV File",
+                           accept = c(".csv"),
+                           multiple = TRUE
+                           )
+
+
+        # Dropdown selection
+
+                 # selectInput("datasetIncidence",
+                 #             label = "Dataset Incidence",
+                 #             choices = list.files(
+                 #               here("inst",
+                 #                     "data",
+                 #                     "incidence"),
+                 #                pattern = ".rds",
+                 #                full.names = FALSE
+                 #                )
+                 #              ),
+
+
+
+        # --------------------------------------
+          )
+        ),
+
+        # conditionalPanel shows settings when a file is loaded
+
+        conditionalPanel(
+          condition = "output.fileUploadIncidence",
+
+        fluidRow(
+          column(4,
+                 pickerInput(inputId = "databaseIncidence",
+                             label = "Database",
+                             choices = c("All", unique(incidenceData()$database_name)),
+                             selected = "All",
+                             multiple = TRUE)
+          ),
+          column(4,
+                 selectInput(inputId = "outcomeIncidence",
+                             label = "Outcome",
+                             choices = unique(incidenceData()$outcome_cohort_id))
+          )
+        ),
+        h4("Population settings"),
+        fluidRow(
+          column(4,
+                 selectInput(inputId = "sexIncidence",
+                             label = "Sex",
+                             choices = c("All", unique(incidenceData()$denominator_sex)))
+          ),
+          column(4,
+                 selectInput(inputId = "ageIncidence",
+                             label = "Age",
+                             choices = c("All", unique(incidenceData()$denominator_age_group)))
+          ),
+
+        ),
+
+        h4("Analysis settings"),
+        fluidRow(
+          column(4,
+                 selectInput(inputId = "intervalIncidence",
+                             label = "Interval",
+                             choices = unique(incidenceData()$analysis_interval)),
+          ),
+          column(4,
+                 selectInput(inputId = "repeatedIncidence",
+                             label = "Repeated Events",
+                             choices = unique(incidenceData()$analysis_repeated_events)),
+          )
+        ),
+        h4("Start Time"),
+        fluidRow(
+          column(4,
+                 selectInput(inputId = "timeFromIncidence",
+                             label = "From",
+                             choices = unique(incidenceData()$incidence_start_date),
+                             selected = min(unique(incidenceData()$incidence_start_date)))
+          ),
+          column(4,
+                 selectInput(inputId = "timeToIncidence",
+                             label = "To",
+                             choices = unique(incidenceData()$incidence_start_date),
+                             selected = max(unique(incidenceData()$incidence_start_date)))
+                 )
+          )
+        )
+      )
+
+
+    })
+
+
+    # Data filter
 
     incidenceCommonData <- reactive({
 
-      commonData <- incidenceData
+      commonData <- incidenceData()
 
       commonData[is.na(commonData)] = 0
 
@@ -276,14 +362,19 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
           filter(denominator_age_group == input$ageIncidence)
       }
 
-      # Time
+      # Start Time
 
-      if (input$timeIncidence == "All") {
-        commonData
-      } else {
-        commonData <- commonData %>%
-          filter(incidence_start_date == input$timeIncidence)
-      }
+      commonData <- commonData %>%
+        filter(between(incidence_start_date,
+                       as.Date(input$timeFromIncidence),
+                       as.Date(input$timeToIncidence)))
+
+      # if (input$timeIncidence == "All") {
+      #   commonData
+      # } else {
+      #   commonData <- commonData %>%
+      #     filter(incidence_start_date == input$timeIncidence)
+      # }
 
       # Analysis
 
@@ -306,53 +397,55 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
       if (input$tabsetincidence == "Table 1") {
 
         updateSelectInput(inputId = "sexIncidence",
-                          choices = c("All", unique(incidenceData$denominator_sex)))
+                          choices = c("All", unique(incidenceData()$denominator_sex)))
 
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
-                                      unique(incidenceData$denominator_age_group)))
+                                      unique(incidenceData()$denominator_age_group)))
 
       } else if (input$tabsetincidence == "Figure 1") {
 
         updateSelectInput(inputId = "sexIncidence",
-                          choices = unique(incidenceData$denominator_sex))
+                          choices = unique(incidenceData()$denominator_sex))
 
         updateSelectInput(inputId = "ageIncidence",
-                          choices = unique(incidenceData$denominator_age_group))
+                          choices = unique(incidenceData()$denominator_age_group))
 
       } else if (input$tabsetincidence == "Figure 2") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = c("All",
-                                      unique(incidenceData$denominator_sex)))
+                                      unique(incidenceData()$denominator_sex)))
 
         updateSelectInput(inputId = "ageIncidence",
-                          choices = unique(incidenceData$denominator_age_group))
+                          choices = unique(incidenceData()$denominator_age_group))
 
       } else if (input$tabsetincidence == "Figure 3") {
 
         updateSelectInput(inputId = "sexIncidence",
-                          choices = unique(incidenceData$denominator_sex))
+                          choices = unique(incidenceData()$denominator_sex))
 
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
-                                      unique(incidenceData$denominator_age_group)))
+                                      unique(incidenceData()$denominator_age_group)))
 
       } else if (input$tabsetincidence == "Figure 4") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = c("All",
-                                      unique(incidenceData$denominator_sex)))
+                                      unique(incidenceData()$denominator_sex)))
 
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
-                                      unique(incidenceData$denominator_age_group)))
+                                      unique(incidenceData()$denominator_age_group)))
 
       }
 
     })
 
-      # Table 1
+
+
+    # Table 1
 
     dataIncidenceTable1 <- reactive({
 
@@ -389,7 +482,18 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     output$incidenceTable1Paragraph <- renderText(IncidenceTable1Text())
 
-      # Figure 1
+    # Downloadable csv of Incidence Data
+
+    output$downloadIncidence <- downloadHandler(
+      filename = function() {
+        paste("incidence_data", ".csv", sep = "")
+      },
+      content = function(file) {
+        write.csv(incidenceCommonData(), file, row.names = FALSE)
+      }
+    )
+
+    # Figure 1
 
     dataIncidenceFigure1 <- reactive({
 
@@ -412,6 +516,17 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     output$plot1Incidence <- renderPlot(dataIncidenceFigure1())
 
+    # Download Incidence Figure 1
+
+    output$downloadIncidenceFigure1 <- downloadHandler(
+      filename = function() {
+        paste("incidence_figure_1", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataIncidenceFigure1(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
+
     # Figure 2
 
     dataIncidenceFigure2 <- reactive({
@@ -432,9 +547,20 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
              col = "Database name")
 
 
-})
+    })
 
     output$plot2Incidence <- renderPlot(dataIncidenceFigure2())
+
+    # Download Incidence Figure 2
+
+    output$downloadIncidenceFigure2 <- downloadHandler(
+      filename = function() {
+        paste("incidence_figure_2", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataIncidenceFigure2(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
 
     # Figure 3
 
@@ -453,9 +579,20 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
              y = "Incidence rate per 100000 person-years",
              colour = "Age group")
 
-      })
+    })
 
     output$plot3Incidence <- renderPlot(dataIncidenceFigure3())
+
+    # Download Incidence Figure 3
+
+    output$downloadIncidenceFigure3 <- downloadHandler(
+      filename = function() {
+        paste("incidence_figure_3", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataIncidenceFigure3(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
 
     # Figure 4
 
@@ -483,24 +620,194 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     output$plot4Incidence <- renderPlot(dataIncidenceFigure4())
 
+    # Download Incidence Figure 4
+
+    output$downloadIncidenceFigure4 <- downloadHandler(
+      filename = function() {
+        paste("incidence_figure_4", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataIncidenceFigure4(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
+
     # Prevalence Data
+
+    # Select data (file input method)
+
+    prevalenceData <- reactive({
+
+        inFile <- input$datasetPrevalence
+
+        if (is.null(inFile)) {
+
+          return(NULL)
+
+        } else {
+
+          prevalenceData <- bind_rows(
+            lapply(
+              inFile$datapath,
+              read_csv
+            )
+          )
+
+          prevalenceData %>%
+            mutate(denominator_age_group = gsub(";", "-", denominator_age_group),
+                   prevalence_start_date = as.Date(prevalence_start_date),
+                   prevalence_end_date = as.Date(prevalence_end_date))
+
+        }
+
+    })
+
+
+
+    # Select database (dropdown menu method)
 
     # prevalenceData <- reactive({
     #
-    #   prevalenceData <- readRDS(here("inst",
-    #                                  "data",
-    #                                  "prevalence",
-    #                                  input$datasetPrevalence))
+    #   inFile <- input$datasetPrevalence
     #
-    #   prevalenceData
+    #   if (is.null(inFile)) {
+    #
+    #     return(NULL)
+    #
+    #   } else {
+    #
+    #     readRDS(here("inst",
+    #                  "data",
+    #                  "prevalence",
+    #                  input$datasetPrevalence))
+    #
+    #   }
     #
     # })
+
+    # Check if prevalence data is null
+
+    output$fileUploadPrevalence <- reactive({
+
+      return(!is.null(prevalenceData()))
+
+    })
+
+    outputOptions(output,
+                  'fileUploadPrevalence',
+                  suspendWhenHidden = FALSE)
+
+    # Render UI
+
+    output$prevalenceInputSettings <- renderUI({
+
+      box(
+          h3("Prevalence Results"),
+          fluidRow(
+          column(4,
+
+                 # FileInput method
+
+                 fileInput("datasetPrevalence",
+                           "Choose CSV File",
+                           accept = c(".csv"),
+                           multiple = TRUE
+                           )
+
+                 # Dropdown selection
+
+                 # selectInput("datasetPrevalence",
+                 #             label = "Dataset Prevalence",
+                 #             choices = list.files(
+                 #               here("inst",
+                 #                    "data",
+                 #                    "mockPrevalence"),
+                 #               pattern = ".rds",
+                 #               full.names = FALSE
+                 #             ))
+
+
+
+                 # -----------------
+                 )
+          ),
+
+          # conditionalPanel shows settings when a file is loaded
+
+          conditionalPanel(
+            condition = "output.fileUploadPrevalence",
+
+            fluidRow(
+              column(4,
+                     pickerInput(inputId = "databasePrevalence",
+                                 label = "Database",
+                                 choices = c("All", unique(prevalenceData()$database_name)),
+                                 selected = "All",
+                                 multiple = TRUE)
+                     ),
+              column(4,
+                     selectInput(inputId = "outcomePrevalence",
+                                 label = "Outcome",
+                                 choices = unique(prevalenceData()$outcome_cohort_id))
+                     )
+              ),
+          h4("Population settings"),
+          fluidRow(
+            column(4,
+                   selectInput(inputId = "sexPrevalence",
+                               label = "Sex",
+                               choices = c("All", unique(prevalenceData()$denominator_sex)))
+            ),
+            column(4,
+                   selectInput(inputId = "agePrevalence",
+                               label = "Age",
+                               choices = c("All", unique(prevalenceData()$denominator_age_group)))
+            )
+          ),
+          fluidRow(
+            column(4,
+                   selectInput(inputId = "daysPriorPrevalence",
+                               label = "Days prior history",
+                               choices = unique(prevalenceData()$denominator_days_prior_history))
+            )
+          ),
+          h4("Analysis settings"),
+          fluidRow(
+            column(4,
+                   selectInput(inputId = "typePrevalence",
+                               label = "Type",
+                               choices = unique(prevalenceData()$analysis_type))
+            ),
+            column(4,
+                   selectInput(inputId = "contributionPrevalence",
+                               label = "Full contribution",
+                               choices = unique(prevalenceData()$analysis_full_contribution))
+            ),
+          ),
+          h4("Start Time"),
+          fluidRow(
+            column(4,
+                   selectInput(inputId = "timeFromPrevalence",
+                               label = "From",
+                               choices = unique(prevalenceData()$prevalence_start_date),
+                               selected = min(unique(prevalenceData()$prevalence_start_date)))
+            ),
+            column(4,
+                   selectInput(inputId = "timeToPrevalence",
+                               label = "To",
+                               choices = unique(prevalenceData()$prevalence_start_date),
+                               selected = max(unique(prevalenceData()$prevalence_start_date)))
+            )
+          )
+      )
+      )
+
+    })
 
     # Data filter
 
     prevalenceCommonData <- reactive({
 
-      commonData <- prevalenceData
+      commonData <- prevalenceData()
 
       commonData[is.na(commonData)] = 0
 
@@ -515,8 +822,8 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
       # Outcome
 
-        commonData <- commonData %>%
-          filter(outcome_cohort_id %in% c(input$outcomePrevalence))
+      commonData <- commonData %>%
+        filter(outcome_cohort_id == input$outcomePrevalence)
 
       # Settings
 
@@ -540,21 +847,10 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
       # Time
 
-      if (input$timePrevalence == "All") {
-        commonData
-      } else {
-        commonData <- commonData %>%
-          filter(prevalence_start_date == input$timePrevalence)
-      }
-
-      # Time
-
-      if (input$timePrevalence == "All") {
-        commonData
-      } else {
-        commonData <- commonData %>%
-          filter(prevalence_start_date == input$timePrevalence)
-      }
+      commonData <- commonData %>%
+        filter(between(prevalence_start_date,
+                       as.Date(input$timeFromPrevalence),
+                       as.Date(input$timeToPrevalence)))
 
       # Days prior history
 
@@ -573,6 +869,13 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
       commonData <- commonData %>%
         filter(analysis_full_contribution == input$contributionPrevalence)
 
+      # Start Time
+
+      commonData <- commonData %>%
+        filter(between(prevalence_start_date,
+                       as.Date(input$timeFromPrevalence),
+                       as.Date(input$timeToPrevalence)))
+
     })
 
     observe({
@@ -581,51 +884,62 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
         updateSelectInput(inputId = "sexPrevalence",
                           choices = c("All",
-                                      unique(prevalenceData$denominator_sex)))
+                                      unique(prevalenceData()$denominator_sex)))
 
         updateSelectInput(inputId = "agePrevalence",
                           choices = c("All",
-                                      unique(prevalenceData$denominator_age_group)))
+                                      unique(prevalenceData()$denominator_age_group)))
 
       } else if (input$tabsetprevalence == "Figure 1") {
 
         updateSelectInput(inputId = "sexPrevalence",
-                          choices = unique(prevalenceData$denominator_sex))
+                          choices = unique(prevalenceData()$denominator_sex))
 
         updateSelectInput(inputId = "agePrevalence",
-                          choices = unique(prevalenceData$denominator_age_group))
+                          choices = unique(prevalenceData()$denominator_age_group))
 
       } else  if (input$tabsetprevalence == "Figure 2") {
 
         updateSelectInput(inputId = "sexPrevalence",
                           choices = c("All",
-                                      unique(prevalenceData$denominator_sex)))
+                                      unique(prevalenceData()$denominator_sex)))
 
         updateSelectInput(inputId = "agePrevalence",
-                          choices = unique(prevalenceData$denominator_age_group))
+                          choices = unique(prevalenceData()$denominator_age_group))
 
       } else if (input$tabsetprevalence == "Figure 3") {
 
         updateSelectInput(inputId = "sexPrevalence",
-                          choices = unique(prevalenceData$denominator_sex))
+                          choices = unique(prevalenceData()$denominator_sex))
 
         updateSelectInput(inputId = "agePrevalence",
                           choices = c("All",
-                                      unique(prevalenceData$denominator_age_group)))
+                                      unique(prevalenceData()$denominator_age_group)))
 
       } else if (input$tabsetprevalence == "Figure 4") {
 
         updateSelectInput(inputId = "sexPrevalence",
                           choices = c("All",
-                                      unique(prevalenceData$denominator_sex)))
+                                      unique(prevalenceData()$denominator_sex)))
 
         updateSelectInput(inputId = "agePrevalence",
                           choices = c("All",
-                                      unique(prevalenceData$denominator_age_group)))
+                                      unique(prevalenceData()$denominator_age_group)))
 
       }
 
     })
+
+    # Downloadable csv of Prevalence Data
+
+    output$downloadPrevalence <- downloadHandler(
+      filename = function() {
+        paste("prevalence_data", ".csv", sep = "")
+      },
+      content = function(file) {
+        write.csv(prevalenceCommonData(), file, row.names = FALSE)
+      }
+    )
 
     # Table 1
 
@@ -652,7 +966,7 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
                    col = database_name)) +
         scale_y_continuous(labels = scales::percent,
                            limits = c(0,NA)) +
-        facet_grid(rows = vars(outcome_cohort_id)) +
+        # facet_grid(rows = vars(outcome_cohort_id)) +
         geom_line(aes(group = 1)) +
         geom_point() +
         geom_errorbar(aes(ymin = prevalence_95CI_lower,
@@ -665,6 +979,17 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
     })
 
     output$plot1Prevalence <- renderPlot(dataprevalenceFigure1())
+
+    # Download Prevalence Figure 1
+
+    output$downloadPrevalenceFigure1 <- downloadHandler(
+      filename = function() {
+        paste("prevalence_figure_1", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataprevalenceFigure1(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
 
     # Figure 2
 
@@ -690,6 +1015,17 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     output$plot2Prevalence <- renderPlot(dataprevalenceFigure2())
 
+    # Download Prevalence Figure 2
+
+    output$downloadPrevalenceFigure2 <- downloadHandler(
+      filename = function() {
+        paste("prevalence_figure_2", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataprevalenceFigure2(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
+
     # Figure 3
 
     dataprevalenceFigure3 <- reactive({
@@ -711,6 +1047,17 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
     })
 
     output$plot3Prevalence <- renderPlot(dataprevalenceFigure3())
+
+    # Download Prevalence Figure 3
+
+    output$downloadPrevalenceFigure3 <- downloadHandler(
+      filename = function() {
+        paste("prevalence_figure_3", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataprevalenceFigure3(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
 
     # Figure 4
 
@@ -740,22 +1087,33 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
 
     output$plot4Prevalence <- renderPlot(dataprevalenceFigure4())
 
+    # Download Prevalence Figure 4
+
+    output$downloadPrevalenceFigure4 <- downloadHandler(
+      filename = function() {
+        paste("prevalence_figure_4", ".png", sep = "")
+      },
+      content = function(file) {
+        ggsave(file, plot = dataprevalenceFigure4(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
+
     # Table 1
 
-    attritionPrevalence <- reactive({
-
-      attritionPrevalence <- readRDS(here("inst/data/bloodCancerPrevalence/prevalence_attrition.rds"))
-
-      attritionPrevalence
-
-    })
-
-    output$attritionPrevalence <- renderDataTable(attritionPrevalence(),
-                                               options = list(
-                                                 searching = FALSE,
-                                                 scrollX = TRUE,
-                                                 autoWidth = TRUE
-                                               ))
+    # attritionPrevalence <- reactive({
+    #
+    #   attritionPrevalence <- readRDS(here("inst/data/bloodCancerPrevalence/prevalence_attrition.rds"))
+    #
+    #   attritionPrevalence
+    #
+    # })
+    #
+    # output$attritionPrevalence <- renderDataTable(attritionPrevalence(),
+    #                                               options = list(
+    #                                                 searching = FALSE,
+    #                                                 scrollX = TRUE,
+    #                                                 autoWidth = TRUE
+    #                                               ))
 
 
   }
@@ -763,3 +1121,14 @@ resultsDashboard <- function(importFolderDenominator = here("inst/csv/denominato
   shinyApp(ui, server)
 
 }
+utils::globalVariables(c("incidence_end_date",
+                         "outcome_cohort_id",
+                         "analysis_interval",
+                         "analysis_repeated_events",
+                         "prevalence_end_date",
+                         "denominator_days_prior_history",
+                         "analysis_type",
+                         "analysis_full_contribution",
+                         "prevalence_95CI_lower",
+                         "prevalence_95CI_upper"))
+>>>>>>> main

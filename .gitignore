@@ -7,5 +7,10 @@ Reports/
 .httr-oauth
 .DS_Store
 inst/csv
-Results/
 inst/data
+Results/
+rsconnect/
+RunApp.R
+CodeToRun.R
+studyReportApp.R
+

@@ -1,9 +1,4 @@
-#' Table 3. Number of cases and total number of patients per database
-#'
-#' @param prevalenceData
-#'
-#' @return prevalenceTable3
-#' @export
+# Table 3. Number of cases and total number of patients per database
 prevalenceTable3 <- function(prevalenceData) {
 
   prevalenceTableData <- prevalenceData %>%
@@ -13,12 +8,7 @@ prevalenceTable3 <- function(prevalenceData) {
 
   return(prevalenceTableData)
 }
-#' Table 4. Numeric values of displayed figures 5-8
-#'
-#' @param prevalenceData
-#'
-#' @return table4Prevalence
-#' @export
+# Table 4. Numeric values of displayed figures 5-8
 table4Prevalence <- function(prevalenceData) {
 
   table4Data <- prevalenceData %>%
@@ -47,3 +37,5 @@ table4Prevalence <- function(prevalenceData) {
                             "Prevalence")
   return(table4Data)
 }
+utils::globalVariables(c("n_cases",
+                         "n_population"))

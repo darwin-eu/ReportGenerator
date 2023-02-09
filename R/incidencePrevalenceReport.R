@@ -243,13 +243,13 @@ incidencePrevalenceReport <- function(title = NULL,
       ## Sections
 
       ## Introduction
-
+      body_add_img(src = here("inst/img/darwinLogoDocument.png"), style = "Title", height = 1.79, width = 4.35, pos = "after") %>%
       body_add(value = title,
                style = "Title") %>%
       body_add_table(authorsTable,
-                     style = "Authors") %>%
+                     style = "Subtitle") %>%
       body_add(value = abstractText,
-               style = "heading 2") %>%
+               style = "Normal") %>%
 
       ## Table of Contents
 

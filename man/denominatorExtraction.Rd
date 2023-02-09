@@ -8,6 +8,9 @@ denominatorExtraction(
   importFolderDenominator = here("inst/csv/denominatorMockData")
 )
 }
+\arguments{
+\item{importFolderDenominator}{Location of denominator data.}
+}
 \value{
 A tibble
 }

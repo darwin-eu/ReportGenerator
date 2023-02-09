@@ -1,9 +1,4 @@
-#' Table 1. <Drug users / Patients with condition X> in <list all data sources> during <stud period>
-#'
-#' @param incidenceData
-#'
-#' @return incidenceTable1
-#' @export
+# Table 1. <Drug users / Patients with condition X> in <list all data sources> during <stud period>
 incidenceTable1 <- function(incidenceData = NULL,
                             denominatorData = NULL) {
 
@@ -22,12 +17,7 @@ incidenceTable1 <- function(incidenceData = NULL,
   return(incidenceTableData)
 
 }
-#' Table 2. Incidence data according to figures 1 and 2
-#'
-#' @param incidenceData
-#'
-#' @return table2Incidence
-#' @export
+# Table 2. Incidence data according to figures 1 and 2
 table2Incidence <- function(incidenceData) {
 
   table2Data <- incidenceData %>%
@@ -56,3 +46,11 @@ table2Incidence <- function(incidenceData) {
                             "IR 10000 pys")
   return(table2Data)
 }
+utils::globalVariables(c("incidenceData",
+                         "n_cases",
+                         "n_population",
+                         "incidence_100000_pys_95CI_lower",
+                         "incidence_100000_pys_95CI_upper",
+                         "incidence_100000_pys",
+                         "prevalence_start_date",
+                         "prevalence"))
