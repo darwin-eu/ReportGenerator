@@ -9,3 +9,6 @@ CodeToRun.R
 ^inst/csv$
 ^inst/data$
 ^Results$
+^rsconnect$
+RunApp.R
+studyReportApp.R

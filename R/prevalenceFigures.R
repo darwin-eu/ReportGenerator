@@ -1,9 +1,4 @@
-#' Figure 5. Prevalence of drug/s use over calendar time (per month/year) overall
-#'
-#' @param prevalenceData
-#'
-#' @return prevalenceFigureData
-#' @export
+# Figure 5. Prevalence of drug/s use over calendar time (per month/year) overall
 prevalenceFigure5 <- function(prevalenceData) {
 
   prevalenceFigureData <- prevalenceData %>%
@@ -25,12 +20,7 @@ prevalenceFigure5 <- function(prevalenceData) {
 
   return(prevalenceFigureData)
 }
-#' Figure 6. by year/month: two plots – males/females, all databases
-#'
-#' @param prevalenceData
-#'
-#' @return prevalenceFigure6
-#' @export
+# Figure 6. by year/month: two plots – males/females, all databases
 prevalenceFigure6 <- function(prevalenceData) {
 
   prevalenceFigureData <- prevalenceData %>%
@@ -52,12 +42,7 @@ prevalenceFigure6 <- function(prevalenceData) {
 
   return(prevalenceFigureData)
 }
-#' Figure 7. by year/month: plot for each database, diff lines per age group
-#'
-#' @param prevalenceData
-#'
-#' @return prevalenceFigure7
-#' @export
+# Figure 7. by year/month: plot for each database, diff lines per age group
 prevalenceFigure7 <- function(prevalenceData) {
   prevalenceFigureData <- prevalenceData %>%
     filter(denominator_age_group != "0-99",
@@ -76,12 +61,7 @@ prevalenceFigure7 <- function(prevalenceData) {
 
 return(prevalenceFigureData)
 }
-#' Figure 8. by age group (x-axis) for databases (color) and sex (dashed/line)
-#'
-#' @param prevalenceData
-#'
-#' @return prevalenceFigure8
-#' @export
+# Figure 8. by age group (x-axis) for databases (color) and sex (dashed/line)
 prevalenceFigure8 <- function(prevalenceData) {
   prevalenceFigureData <- prevalenceData %>%
     filter(denominator_age_group != "0-99",
@@ -106,3 +86,5 @@ prevalenceFigure8 <- function(prevalenceData) {
 
   return(prevalenceFigureData)
 }
+utils::globalVariables(c("prevalence_95CI_lower",
+                         "prevalence_95CI_upper"))

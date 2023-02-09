@@ -208,5 +208,10 @@ for (i in databaseName) {
 }
 
 }
-
+utils::globalVariables(c("generateDenominatorCohortSet",
+                         "estimateIncidence",
+                         "estimatePointPrevalence",
+                         "estimatePeriodPrevalence",
+                         "gatherIncidencePrevalenceResults",
+                         "exportIncidencePrevalenceResults"))
 

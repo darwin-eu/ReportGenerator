@@ -4,7 +4,7 @@
 \alias{generateMockData}
 \title{This function uses data mockIncidencePrevalenceRef function to simulate three databases in CSV format to test the ReportGenerator}
 \usage{
-generateMockData(databaseName = c("SYNTHEA", "IPCI", "CPRD"))
+generateMockData(databaseName = c("SYNTHEA", "IPCI", "CPRD", "SIDIAP"))
 }
 \arguments{
 \item{databaseName}{A vector that specifies the name of each database.}

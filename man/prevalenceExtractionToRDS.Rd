@@ -9,6 +9,11 @@ prevalenceExtractionToRDS(
   studyName = "mock_data"
 )
 }
+\arguments{
+\item{importFolderPrevalence}{Location of prevalence results.}
+
+\item{studyName}{In a string, the name of the study.}
+}
 \value{
 A tibble
 }

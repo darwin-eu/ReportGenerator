@@ -1,9 +1,4 @@
-#' Figure 1. Incidence rate/s of drug/s use over calendar incidence_start_date (per month/year) overall
-#'
-#' @param incidenceData
-#'
-#' @return incidenceFigure1
-#' @export
+# Figure 1. Incidence rate/s of drug/s use over calendar incidence_start_date (per month/year) overall
 incidenceFigure1 <- function(incidenceData) {
 
   incidenceFigureData <- incidenceData %>%
@@ -25,12 +20,7 @@ incidenceFigure1 <- function(incidenceData) {
 
   return(incidenceFigureData)
 }
-#' Figure 2. by year/month: two plots – males/females, all databases
-#'
-#' @param incidenceData
-#'
-#' @return incidenceFigure2
-#' @export
+# Figure 2. by year/month: two plots – males/females, all databases
 incidenceFigure2 <- function(incidenceData) {
 
   incidenceFigureData <- incidenceData %>%
@@ -52,12 +42,7 @@ incidenceFigure2 <- function(incidenceData) {
 
   return(incidenceFigureData)
 }
-#' Figure 3 . by year/month: plot for each database, diff lines per age group
-#'
-#' @param incidenceData
-#'
-#' @return incidenceFigure3
-#' @export
+# Figure 3 . by year/month: plot for each database, diff lines per age group
 incidenceFigure3 <- function(incidenceData) {
 
   incidenceFigureData <- incidenceData %>%
@@ -77,12 +62,7 @@ incidenceFigure3 <- function(incidenceData) {
 
   return(incidenceFigureData)
 }
-#' Figure 4 . by age group (x-axis) for databases (color) and sex (dashed/line)
-#'
-#' @param incidenceData
-#'
-#' @return incidenceFigure4
-#' @export
+# Figure 4 . by age group (x-axis) for databases (color) and sex (dashed/line)
 incidenceFigure4 <- function(incidenceData) {
 
   incidenceFigureData <- incidenceData %>%
@@ -107,3 +87,11 @@ incidenceFigure4 <- function(incidenceData) {
 
   return(incidenceFigureData)
 }
+utils::globalVariables(c("denominator_sex",
+                         "denominator_age_group",
+                         "incidence_start_date",
+                         "incidence_100000_pys_95CI_lower",
+                         "incidence_100000_pys_95CI_upper",
+                         "incidence_100000_pys",
+                         "prevalence_start_date",
+                         "prevalence"))

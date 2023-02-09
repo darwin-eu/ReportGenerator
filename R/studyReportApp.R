@@ -1,5 +1,7 @@
 #' This application displays an automated and interactive report of the results from the IncidencePrevalence package.
-#'
+#' @param importFolderDenominator Location of denominator data.
+#' @param importFolderIndcidence Location of incidence results.
+#' @param importFolderPrevalence Location of prevalence results.
 #' @export
 #' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard
 #' @return An HTML document

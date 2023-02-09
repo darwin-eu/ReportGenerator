@@ -1,13 +1,4 @@
-#' Table 1 Paragraph. Incidence rate/s of drug/s use over calendar incidence_start_date (per month/year) overall
-#'
-#' @export
-#' @import dplyr CDMConnector rmarkdown here officer
-#' @importFrom utils head globalVariables
-#' @importFrom scales percent
-#' @importFrom readr read_csv
-#' @importFrom stats time
-#' @return table1Paragraph
-#' @export
+# Table 1 Paragraph. Incidence rate/s of drug/s use over calendar incidence_start_date (per month/year) overall
 table1IncidenceParagraph <- function(indcidenceData) {
 
   incidenceTable1 <- incidenceTable1(incidenceData)

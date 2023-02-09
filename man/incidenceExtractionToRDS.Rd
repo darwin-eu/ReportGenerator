@@ -9,6 +9,11 @@ incidenceExtractionToRDS(
   studyName = "mock_data"
 )
 }
+\arguments{
+\item{importFolderIndcidence}{Location of incidence results.}
+
+\item{studyName}{In a string, the name of the study.}
+}
 \value{
 A tibble
 }
