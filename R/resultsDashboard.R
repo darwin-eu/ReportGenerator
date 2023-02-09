@@ -151,17 +151,34 @@ resultsDashboard <- function() {
 
     # Incidence data
 
-    # Select data (file input method)
+    # Select data (file input method) with reset button method
+
+    resetDataIncidence <- reactiveValues(data = NULL)
+
+    observeEvent(input$datasetIncidence, {
+      resetDataIncidence$data <- NULL
+    })
+
+    observeEvent(input$resetIncidence, {
+      resetDataIncidence$data <- "resetDataIncidence"
+    })
+
 
     incidenceData <- reactive({
 
       inFile <- input$datasetIncidence
 
+      applyReset <- resetDataIncidence$data
+
       if (is.null(inFile)) {
 
         return(NULL)
 
-      } else {
+      } else if (!is.null(applyReset)) {
+
+        return(NULL)
+
+      } else if (!is.null(inFile)) {
 
         incidenceData <- bind_rows(
           lapply(
@@ -231,7 +248,10 @@ resultsDashboard <- function() {
                            "Choose CSV File",
                            accept = c(".csv"),
                            multiple = TRUE
-                           )
+                           ),
+                 actionButton('resetIncidence',
+                              'Reset data')
+
 
 
         # Dropdown selection
@@ -250,10 +270,15 @@ resultsDashboard <- function() {
 
 
         # --------------------------------------
-          )
+          ),
+
+
+
+
         ),
 
         # conditionalPanel shows settings when a file is loaded
+
 
         conditionalPanel(
           condition = "output.fileUploadIncidence",
@@ -443,8 +468,6 @@ resultsDashboard <- function() {
 
     })
 
-
-
     # Table 1
 
     dataIncidenceTable1 <- reactive({
@@ -633,17 +656,37 @@ resultsDashboard <- function() {
 
     # Prevalence Data
 
-    # Select data (file input method)
+    # Select data (file input method) with reset button method
+
+    resetDataPrevalence <- reactiveValues(data = NULL)
+
+    observeEvent(input$datasetPrevalence, {
+
+      resetDataPrevalence$data <- NULL
+
+      })
+
+    observeEvent(input$resetPrevalence, {
+
+      resetDataPrevalence$data <- "resetDataPrevalence"
+
+      })
 
     prevalenceData <- reactive({
 
         inFile <- input$datasetPrevalence
 
+        applyReset <- resetDataPrevalence$data
+
         if (is.null(inFile)) {
 
           return(NULL)
 
-        } else {
+        } else if (!is.null(applyReset)) {
+
+          return(NULL)
+
+          } else if (!is.null(inFile)) {
 
           prevalenceData <- bind_rows(
             lapply(
@@ -660,8 +703,6 @@ resultsDashboard <- function() {
         }
 
     })
-
-
 
     # Select database (dropdown menu method)
 
@@ -711,7 +752,9 @@ resultsDashboard <- function() {
                            "Choose CSV File",
                            accept = c(".csv"),
                            multiple = TRUE
-                           )
+                           ),
+                 actionButton('resetPrevalence',
+                              'Reset data')
 
                  # Dropdown selection
 
