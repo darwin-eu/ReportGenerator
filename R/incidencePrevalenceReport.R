@@ -29,69 +29,13 @@ incidencePrevalenceReport <- function(title = NULL,
                                       byCondition = TRUE,
                                       format = "word") {
 
-  ## TEST VARIABLES
-
-
-  title <- "Incidence Prevalence Report Generator Test"
-  authors <- c("Jane Roe",
-               "John Roe",
-               "Richard Roe")
-  authorsInstitution <- c("Erasmus MC",
-                          "Oxford University",
-                          "Erasmus MC")
-  abstractText <- "ABSTRACT: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-
-
   ##### Data extraction functions
 
-  # denominatorData <- denominatorExtraction()
-  #
-  # incidenceData <- incidenceExtraction()
-  #
-  # prevalenceData <- prevalenceExtraction()
+  denominatorData <- denominatorExtraction()
 
-  ##### Mock Data
+  incidenceData <- incidenceExtraction()
 
-  # denominatorData <- denominatorExtraction()
-
-  incidenceDataMock <- incidenceExtraction()
-
-  glimpse(incidenceDataMock)
-
-  prevalenceDataMock <- prevalenceExtraction()
-
-  glimpse(prevalenceDataMock)
-
-
-  ##### antibioticsProcessed data
-
-  load(here("inst/data/antibioticsProcessed/dataShiny.RData"))
-
-  # denominatorData <- denominatorExtraction()
-
-  # Incidence Data
-
-  incidenceData <- incidence_estimates
-
-  glimpse(incidenceData)
-
-  # Column names not from original IncidencePrevalence
-
-  namesIncidence <- names(incidenceData)
-
-  extraNamesIncidence <- namesIncidence[!(names(incidenceData) %in% names(incidenceDataMock))]
-
-  # Incidence data
-
-  prevalenceData <- prevalence_estimates
-
-  glimpse(prevalence_estimates)
-
-  # Column names not from original IncidencePrevalence
-
-  namesPrevalence <- names(prevalenceData)
-
-  extraNamesPrevalence <- namesPrevalence[!(names(prevalenceData) %in% names(prevalenceDataMock))]
+  prevalenceData <- prevalenceExtraction()
 
   ### OBJECTS
 
