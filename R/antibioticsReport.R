@@ -52,15 +52,15 @@ antibioticsReport <- function(title = NULL,
 
   ##### Mock Data
 
-  # denominatorData <- denominatorExtraction()
+  denominatorData <- denominatorExtraction()
 
-  # incidenceDataMock <- incidenceExtraction()
+  incidenceDataMock <- incidenceExtraction()
   #
-  # glimpse(incidenceDataMock)
+  glimpse(incidenceDataMock)
   #
-  # prevalenceDataMock <- prevalenceExtraction()
+  prevalenceDataMock <- prevalenceExtraction()
   #
-  # glimpse(prevalenceDataMock)
+  glimpse(prevalenceDataMock)
 
 
   ##### antibioticsProcessed data
@@ -73,25 +73,25 @@ antibioticsReport <- function(title = NULL,
 
   incidenceData <- incidence_estimates
 
-  # glimpse(incidenceData)
+  glimpse(incidenceData)
 
   # Column names not from original IncidencePrevalence
 
-  # namesIncidence <- names(incidenceData)
-  #
-  # extraNamesIncidence <- namesIncidence[!(names(incidenceData) %in% names(incidenceDataMock))]
+  namesIncidence <- names(incidenceData)
+
+  extraNamesIncidence <- namesIncidence[!(names(incidenceData) %in% names(incidenceDataMock))]
 
   # Incidence data
 
   prevalenceData <- prevalence_estimates
-  #
-  # glimpse(prevalence_estimates)
+
+  glimpse(prevalence_estimates)
 
   # Column names not from original IncidencePrevalence
 
-  # namesPrevalence <- names(prevalenceData)
-  #
-  # extraNamesPrevalence <- namesPrevalence[!(names(prevalenceData) %in% names(prevalenceDataMock))]
+  namesPrevalence <- names(prevalenceData)
+
+  extraNamesPrevalence <- namesPrevalence[!(names(prevalenceData) %in% names(prevalenceDataMock))]
 
   ### OBJECTS
 
