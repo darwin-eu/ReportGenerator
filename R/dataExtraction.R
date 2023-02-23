@@ -80,7 +80,7 @@ incidenceExtractionToRDS <- function (importFolderIndcidence = here("inst/csv/in
                )
           )
 }
-#' Extracts prevalence data from files in CSV format nd saves the result in RDS.
+#' Extracts prevalence data from files in CSV format and saves the result in RDS.
 #' @param importFolderPrevalence Location of prevalence results.
 #' @param studyName In a string, the name of the study.
 #' @return A tibble
