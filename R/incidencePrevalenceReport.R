@@ -29,8 +29,7 @@ incidencePrevalenceReport <- function(title = NULL,
                                       byCondition = TRUE,
                                       format = "word") {
 
-
-  ### Data extraction functions
+  ##### Data extraction functions
 
   denominatorData <- denominatorExtraction()
 

@@ -23,4 +23,6 @@ Imports:
     shiny,
     shinydashboard,
     shinyWidgets,
+    testthat,
     tidyr
+Config/testthat/edition: 3

@@ -80,7 +80,7 @@ incidenceExtractionToRDS <- function (importFolderIndcidence = here("inst/csv/in
                )
           )
 }
-#' Extracts prevalence data from files in CSV format nd saves the result in RDS.
+#' Extracts prevalence data from files in CSV format and saves the result in RDS.
 #' @param importFolderPrevalence Location of prevalence results.
 #' @param studyName In a string, the name of the study.
 #' @return A tibble
@@ -143,6 +143,18 @@ prevalenceExtractionToRDS <- function (importFolderPrevalence = here("inst/csv/p
                )
           )
   )
+
+}
+
+
+dataLoader <- function(dataObject) {
+
+  dataObject <- load(here("inst/data/antibioticsProcessed/dataShiny.RData"))
+
+
+  is.object(incidence_estimates)
+  class(incidence_estimates)
+  is.object
 
 }
 # Extracts denominator data from files in CSV format.
