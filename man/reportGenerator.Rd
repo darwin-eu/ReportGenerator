@@ -6,9 +6,6 @@
 \usage{
 reportGenerator()
 }
-\value{
-Dashboard
-}
 \description{
 This application offers a visualization of the figures available to fill in a study report in Word format.
 }

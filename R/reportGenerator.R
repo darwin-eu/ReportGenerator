@@ -19,11 +19,11 @@ reportGenerator <- function() {
           add_rank_list(
             text = "Drag from here",
             labels = list(
-              "Table 1 Number of participants",
-              "Table 2 Incidence overall",
-              "Table 3 Incidence by year",
-              "Table 4 Incidence by age group",
-              "Table 5 Incidence by sex"
+              "Table – Number of participants",
+              "Table – Incidence overall",
+              "Table – Incidence by year",
+              "Table – Incidence by age group",
+              "Table – Incidence by sex"
               # htmltools::tags$div(
               #   htmltools::em("Complex"), " html tag without a name"
               # ),
@@ -31,12 +31,12 @@ reportGenerator <- function() {
               #   htmltools::em("Complex"), " html tag with name: 'five'"
               # )
             ),
-            input_id = "rank_list_1"
+            input_id = "objectsList1"
           ),
           add_rank_list(
             text = "to here",
             labels = NULL,
-            input_id = "rank_list_2"
+            input_id = "objectsList2"
           )
         )
       )
@@ -48,11 +48,14 @@ reportGenerator <- function() {
         column(
           width = 12,
 
-          # tags$p("input$rank_list_1"),
+          # tags$p("input$objectsList1"),
           # verbatimTextOutput("results_1"),
 
-          tags$p("Tables and figures in the report"),
-          verbatimTextOutput("results_2"),
+          # tags$p("Tables and figures in the report"),
+
+          # verbatimTextOutput("results_2"),
+
+          tableOutput("table"),
 
           actionButton("generateReport", "Generate Report")
 
@@ -66,62 +69,84 @@ reportGenerator <- function() {
   server <- function(input,output) {
     # output$results_1 <-
     #   renderPrint(
-    #     input$rank_list_1 # This matches the input_id of the first rank list
+    #     input$objectsList1 # This matches the input_id of the first rank list
     #   )
-    output$results_2 <-
-      renderPrint(
-        input$rank_list_2 # This matches the input_id of the second rank list
-      )
+    # output$results_2 <-
+    #   renderPrint(
+    #     input$objectsList2 # This matches the input_id of the second rank list
+    #   )
+
+    objectsListData <- reactive({
+
+      Index <- seq(1:length(input$objectsList2))
+
+      Contents  <- input$objectsList2
+
+      objectsDataFrame <- data.frame(Index, Contents)
+
+      objectsDataFrame
+
+    })
+
+    output$table <- renderTable(objectsListData())
 
     observeEvent(input$generateReport, {
 
-      incidencePrevalenceDocx <- read_docx(path = paste0(system.file(package = "ReportGenerator"),
-                                                         "/templates/word/IncidencePrevalenceReport.docx"))
+      incidencePrevalenceDocx <- read_docx(path = here("inst/templates/word/darwinTemplate.docx"))
 
-      for (i in input$rank_list_2) {
+      # styles_info(incidencePrevalenceDocx)
 
-        if (i == "Table 1 Number of participants") {
+      reverseList <- rev(input$objectsList2)
 
-          table1 <- table1NumPar(incidence_attrition, prevalence_attrition)
+      for (i in reverseList) {
 
-          body_add_flextable(
-            incidencePrevalenceDocx,
-            value =  table1)
+        if (i == "Table – Number of participants") {
 
-        } else if (i == "Table 2 Incidence overall") {
+          object <- table1NumPar(incidence_attrition,
+                                 prevalence_attrition)
 
-          table2 <- table2IncOver(incidence_estimates)
+        } else if (i == "Table – Incidence overall") {
+
+          object <- table2IncOver(incidence_estimates)
+
+        } else if (i == "Table – Incidence by year") {
+
+          object <- table3IncYear(incidence_estimates)
+
+        } else if (i == "Table – Incidence by age group") {
+
+          object <- table4IncAge(incidence_estimates)
+
+        } else if (i == "Table – Incidence by sex") {
+
+          object <- table4IncAge(incidence_estimates)
+
+        }
+
+        if (class(object) == "flextable" && length(class(object)) == 1) {
+
+        body_add_flextable(incidencePrevalenceDocx,
+                           value = object)
+
+        body_add(incidencePrevalenceDocx,
+                 value = i,
+                 style = "Heading 1 (Agency)")
+
+        } else {
+
+          body_add_table(incidencePrevalenceDocx,
+                    value = object,
+                    style = "TableOverall")
 
           body_add(incidencePrevalenceDocx,
-                   value = table2,
-                   style = "Normal")
+                   value = i,
+                   style = "Heading 1 (Agency)")
 
-        } else if (i == "Table 3 Incidence by year") {
-
-          table3 <- table3IncYear(incidence_estimates)
-
-          body_add(incidencePrevalenceDocx,
-                   value = table3,
-                   style = "Normal")
-
-        } else if (i == "Table 4 Incidence by age group") {
-
-          table4 <- table4IncAge(incidence_estimates)
-
-          body_add(incidencePrevalenceDocx,
-                   value = table4,
-                   style = "Normal")
-
-        } else if (i == "Table 5 Incidence by sex") {
-
-          table4 <- table4IncAge(incidence_estimates)
-
-          body_add(incidencePrevalenceDocx,
-                   value = table4,
-                   style = "Normal")
         }
 
       }
+
+      body_add_toc(incidencePrevalenceDocx)
 
       print(incidencePrevalenceDocx,
             target = here("Reports/generatedReport.docx"))
@@ -131,9 +156,6 @@ reportGenerator <- function() {
     #   renderPrint(
     #     input$bucket_list_group # Matches the group_name of the bucket list
     #   )
-
-
-
 
   }
 
