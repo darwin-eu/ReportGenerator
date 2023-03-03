@@ -5,8 +5,27 @@
 reportGenerator <- function() {
 
   ui <- fluidPage(
-    tags$head(
-      tags$style(HTML(".bucket-list-container {min-height: 350px;}"))
+    # tags$head(
+    #   tags$style(HTML(".bucket-list-container {min-height: 700px;}"))
+    # ),
+    fluidRow(
+      column(
+        width = 12,
+        tags$b("Load data"),
+        column(
+          width = 12,
+          fileInput("datasetLoad",
+                    "Choose file, folder or ZIP",
+                    accept = c(".csv",
+                               ".rda",
+                               ".zip",
+                               ".RData"),
+                    multiple = TRUE
+          ),
+          actionButton('resetData',
+                       'Reset data')
+        )
+      )
     ),
     fluidRow(
       column(
@@ -53,7 +72,7 @@ reportGenerator <- function() {
 
           # tags$p("Tables and figures in the report"),
 
-          # verbatimTextOutput("results_2"),
+          verbatimTextOutput("fileList"),
 
           tableOutput("table"),
 
@@ -67,16 +86,85 @@ reportGenerator <- function() {
   )
 
   server <- function(input,output) {
-    # output$results_1 <-
-    #   renderPrint(
-    #     input$objectsList1 # This matches the input_id of the first rank list
-    #   )
-    # output$results_2 <-
-    #   renderPrint(
-    #     input$objectsList2 # This matches the input_id of the second rank list
-    #   )
 
-    objectsListData <- reactive({
+    # Load data
+
+    resetDatasetLoad <- reactiveValues(data = NULL)
+
+    observeEvent(input$datasetLoad, {
+
+      resetDatasetLoad$data <- NULL
+
+      })
+
+    observeEvent(input$resetData, {
+
+      resetDatasetLoad$data <- "resetDatasetLoad"
+
+      })
+
+    studyData <- reactive({
+
+      inFile <- input$datasetLoad
+
+      applyReset <- resetDatasetLoad$data
+
+      if (is.null(inFile)) {
+
+        return(NULL)
+
+      } else if (!is.null(applyReset)) {
+
+        return(NULL)
+
+      } else if (!is.null(inFile)) {
+
+        studyData <- inFile$datapath
+
+        if (grepl(".RData",
+                  studyData,
+                  fixed = TRUE)) {
+
+
+          load(studyData)
+
+          "studyData"
+
+        } else if (grepl(".zip",
+                        studyData,
+                        fixed = TRUE)) {
+
+
+
+        }
+
+        # studyData <- bind_rows(
+        #   lapply(
+        #     inFile$datapath,
+        #     read_csv
+        #   )
+        # )
+        #
+        # # studyData <- read.csv(inFile$datapath, header = TRUE)
+        #
+        # studyData %>%
+        #   mutate(denominator_age_group = gsub(";", "-", denominator_age_group),
+        #          incidence_start_date = as.Date(incidence_start_date),
+        #          incidence_end_date = as.Date(incidence_end_date))
+
+      }
+
+    })
+
+    output$fileList <- renderPrint(
+        studyData()
+      )
+
+
+    # Objects list
+
+
+    objectsList <- reactive({
 
       Index <- seq(1:length(input$objectsList2))
 
@@ -88,7 +176,10 @@ reportGenerator <- function() {
 
     })
 
-    output$table <- renderTable(objectsListData())
+    output$table <- renderTable(objectsList())
+
+
+    # Report generator
 
     observeEvent(input$generateReport, {
 

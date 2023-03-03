@@ -147,14 +147,11 @@ prevalenceExtractionToRDS <- function (importFolderPrevalence = here("inst/csv/p
 }
 
 
-dataLoader <- function(dataObject) {
+dataLoaderRda <- function(dataObject) {
 
-  dataObject <- load(here("inst/data/antibioticsProcessed/dataShiny.RData"))
+  load(dataObject)
 
-
-  is.object(incidence_estimates)
-  class(incidence_estimates)
-  is.object
+  return(incidence_estimates)
 
 }
 # Extracts denominator data from files in CSV format.
