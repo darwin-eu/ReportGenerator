@@ -29,6 +29,5 @@ Imports:
 Suggests:
     testthat
 Remotes:
-    darwin-eu/IncidencePrevalence,
-    darwin-eu/CDMConnector
+    darwin-eu/IncidencePrevalence
 Config/testthat/edition: 3
