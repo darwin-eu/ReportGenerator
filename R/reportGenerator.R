@@ -4,17 +4,9 @@
 #' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable
 reportGenerator <- function() {
 
-  itemsList <- list(
-    "Table - Number of participants" = "table1NumPar(incidence_attrition,
-                                                     prevalence_attrition)",
-    "Table - Incidence overall" = "table2IncOver(incidence_estimates)",
-    "Table - Incidence by year" = "table3IncYear(incidence_estimates)",
-    "Table - Incidence by age group" = "table4IncAge(incidence_estimates)",
-    "Table - Incidence by sex" = "table5IncSex(incidence_estimates)",
-    "Plot - Incidence rate per year" = "incidenceRatePerYearPlot(incidence_estimates)",
-    "Plot - Incidence rate per year group by sex" = "incidenceRatePerYearGroupBySexPlot(incidence_estimates)",
-    "Plot - Incidence rate per year color by age" = " incidenceRatePerYearColorByAgePlot(incidence_estimates)",
-    "Plot - Incidence rate per year facet by database, age group" = "incidenceRatePerYearFacetByDBAgeGroupPlot(incidence_estimates)")
+  itemsList <- read.csv("inst/config/itemsConfig.csv", sep = ";") %>%
+    dplyr::mutate(signature = paste0(name, "(", arguments, ")")) %>%
+    dplyr::select(title, signature)
 
   ui <- fluidPage(
     tags$head(
@@ -30,7 +22,7 @@ reportGenerator <- function() {
           orientation = "horizontal",
           add_rank_list(
             text = "Drag from here",
-            labels = names(itemsList),
+            labels = itemsList$title,
             input_id = "objectsList1"
           ),
           add_rank_list(
@@ -76,7 +68,9 @@ reportGenerator <- function() {
 
       reverseList <- rev(input$objectsList2)
       for (i in reverseList) {
-        object <- eval(parse(text = itemsList[[i]]))
+        object <- eval(parse(text = itemsList %>%
+                               dplyr::filter(title == i) %>%
+                               dplyr::pull(signature)))
         if ("flextable" %in% class(object)) {
           body_add_flextable(incidencePrevalenceDocx,
                              value = object)
