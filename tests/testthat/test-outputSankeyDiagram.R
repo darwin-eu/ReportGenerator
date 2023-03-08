@@ -27,5 +27,7 @@ test_that("minimal", {
     groupCombinations = TRUE,
     fileName = "sankeyDiagram.html")
 
-  expect_true(file.exists(paste0(tmpDir, "sankeyDiagram.html")))
+  path <- normalizePath(paste0(tmpDir, "sankeyDiagram.html"), mustWork = FALSE)
+
+  expect_true(file.exists(path))
 })
