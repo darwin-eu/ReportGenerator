@@ -13,6 +13,7 @@ Imports:
     CDMConnector,
     dplyr,
     ggplot2,
+    plotly,
     here,
     IncidencePrevalence,
     officer,

@@ -1,7 +1,7 @@
 #' This application displays an automated and interactive report of the results from the IncidencePrevalence package.
 #'
 #' @export
-#' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets
+#' @import dplyr CDMConnector rmarkdown here ggplot2 plotly quarto shiny shinydashboard shinyWidgets
 #' @return Dashboard
 resultsDashboard <- function() {
 
@@ -76,22 +76,22 @@ resultsDashboard <- function() {
                                dataTableOutput("table1Incidence")),
                       tabPanel("Figure 1",
                                "Figure 1",
-                               plotOutput("plot1Incidence"),
+                               plotlyOutput("plot1Incidence"),
                                downloadButton("downloadIncidenceFigure1",
                                               "Download Plot")),
                       tabPanel("Figure 2",
                                "Figure 2",
-                               plotOutput("plot2Incidence"),
+                               plotlyOutput("plot2Incidence"),
                                downloadButton("downloadIncidenceFigure2",
                                               "Download Plot")),
                       tabPanel("Figure 3",
                                "Figure 3",
-                               plotOutput("plot3Incidence"),
+                               plotlyOutput("plot3Incidence"),
                                downloadButton("downloadIncidenceFigure3",
                                               "Download Plot")),
                       tabPanel("Figure 4",
                                "Figure 4",
-                               plotOutput("plot4Incidence"),
+                               plotlyOutput("plot4Incidence"),
                                downloadButton("downloadIncidenceFigure4",
                                               "Download Plot"))
                     )
@@ -117,22 +117,22 @@ resultsDashboard <- function() {
                              dataTableOutput("table1Prevalence")),
                     tabPanel("Figure 1",
                              "Figure 1",
-                             plotOutput("plot1Prevalence"),
+                             plotlyOutput("plot1Prevalence"),
                              downloadButton("downloadPrevalenceFigure1",
                                             "Download Plot")),
                     tabPanel("Figure 2",
                              "Figure 2",
-                             plotOutput("plot2Prevalence"),
+                             plotlyOutput("plot2Prevalence"),
                              downloadButton("downloadPrevalenceFigure2",
                                             "Download Plot")),
                     tabPanel("Figure 3",
                              "Figure 3",
-                             plotOutput("plot3Prevalence"),
+                             plotlyOutput("plot3Prevalence"),
                              downloadButton("downloadPrevalenceFigure3",
                                             "Download Plot")),
                     tabPanel("Figure 4",
                              "Figure 4",
-                             plotOutput("plot4Prevalence"),
+                             plotlyOutput("plot4Prevalence"),
                              downloadButton("downloadPrevalenceFigure4",
                                             "Download Plot"))
                     # tabPanel("Attrition table",
@@ -537,7 +537,7 @@ resultsDashboard <- function() {
 
     })
 
-    output$plot1Incidence <- renderPlot(dataIncidenceFigure1())
+    output$plot1Incidence <- renderPlotly(dataIncidenceFigure1())
 
     # Download Incidence Figure 1
 
@@ -572,7 +572,7 @@ resultsDashboard <- function() {
 
     })
 
-    output$plot2Incidence <- renderPlot(dataIncidenceFigure2())
+    output$plot2Incidence <- renderPlotly(dataIncidenceFigure2())
 
     # Download Incidence Figure 2
 
@@ -604,7 +604,7 @@ resultsDashboard <- function() {
 
     })
 
-    output$plot3Incidence <- renderPlot(dataIncidenceFigure3())
+    output$plot3Incidence <- renderPlotly(dataIncidenceFigure3())
 
     # Download Incidence Figure 3
 
@@ -641,7 +641,7 @@ resultsDashboard <- function() {
 
     })
 
-    output$plot4Incidence <- renderPlot(dataIncidenceFigure4())
+    output$plot4Incidence <- renderPlotly(dataIncidenceFigure4())
 
     # Download Incidence Figure 4
 
@@ -1021,7 +1021,7 @@ resultsDashboard <- function() {
 
     })
 
-    output$plot1Prevalence <- renderPlot(dataprevalenceFigure1())
+    output$plot1Prevalence <- renderPlotly(dataprevalenceFigure1())
 
     # Download Prevalence Figure 1
 
@@ -1056,7 +1056,7 @@ resultsDashboard <- function() {
 
     })
 
-    output$plot2Prevalence <- renderPlot(dataprevalenceFigure2())
+    output$plot2Prevalence <- renderPlotly(dataprevalenceFigure2())
 
     # Download Prevalence Figure 2
 
@@ -1089,7 +1089,7 @@ resultsDashboard <- function() {
 
     })
 
-    output$plot3Prevalence <- renderPlot(dataprevalenceFigure3())
+    output$plot3Prevalence <- renderPlotly(dataprevalenceFigure3())
 
     # Download Prevalence Figure 3
 
@@ -1128,7 +1128,7 @@ resultsDashboard <- function() {
 
     })
 
-    output$plot4Prevalence <- renderPlot(dataprevalenceFigure4())
+    output$plot4Prevalence <- renderPlotly(dataprevalenceFigure4())
 
     # Download Prevalence Figure 4
 
