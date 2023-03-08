@@ -24,7 +24,10 @@ reportGenerator <- function() {
               "Table - Incidence by year",
               "Table - Incidence by age group",
               "Table - Incidence by sex",
-              "Plot - Incidence rate per year"
+              "Plot - Incidence rate per year",
+              "Plot - Incidence rate per year group by sex",
+              "Plot - Incidence rate per year color by age",
+              "Plot - Incidence rate per year facet by database, age group"
               # htmltools::tags$div(
               #   htmltools::em("Complex"), " html tag without a name"
               # ),
@@ -122,6 +125,12 @@ reportGenerator <- function() {
 
         } else if (i == "Plot - Incidence rate per year") {
           object <- incidenceRatePerYearPlot(incidence_estimates)
+        } else if (i == "Plot - Incidence rate per year group by sex") {
+          object <- incidenceRatePerYearGroupBySexPlot(incidence_estimates)
+        } else if (i == "Plot - Incidence rate per year color by age") {
+          object <- incidenceRatePerYearColorByAgePlot(incidence_estimates)
+        } else if (i == "Plot - Incidence rate per year facet by database, age group") {
+          object <- incidenceRatePerYearFacetByDBAgeGroupPlot(incidence_estimates)
         }
 
         if (length(class(object)) == 1 && class(object) == "flextable") {
@@ -134,15 +143,13 @@ reportGenerator <- function() {
                    style = "Heading 1 (Agency)")
 
         } else if ("ggplot" %in% class(object)) {
-          body_add(x = incidencePrevalenceDocx,
-                   value = "titleFigure1Incidence",
-                   style = "heading 1")
-          body_add_gg(x = incidencePrevalenceDocx,
-                      value = object,
-                      style = "Normal")
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
+
+          body_add_gg(x = incidencePrevalenceDocx,
+                      value = object,
+                      style = "Normal")
         } else {
 
           body_add_table(incidencePrevalenceDocx,
