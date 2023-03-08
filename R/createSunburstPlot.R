@@ -159,7 +159,7 @@ transformCSVtoJSON <- function(data, outcomes, folder, fileName) {
   # Assertions
   checkmate::assertDataFrame(x = data)
   checkmate::assertCharacter(x = outcomes, null.ok = FALSE)
-  checkmate::assertDirectoryExists(x = folder)
+  #checkmate::assertDirectoryExists(x = folder)
   checkmate::assertCharacter(x = fileName, len = 1, null.ok = FALSE)
   # Add bitwise numbers to define combination treatments
   bitwiseNumbers <- sapply(
