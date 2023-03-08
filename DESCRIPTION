@@ -24,10 +24,11 @@ Imports:
     shiny,
     shinydashboard,
     shinyWidgets,
+    flextable,
     sortable,
     tidyr
 Suggests: 
-    testthat (>= 3.1.4)
+    testthat
 Remotes:
     darwin-eu/IncidencePrevalence
 Config/testthat/edition: 3

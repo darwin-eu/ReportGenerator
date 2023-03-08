@@ -1,5 +1,8 @@
 #' table1NumPar
 #'
+#' @param incidence_attrition incidence of the attrition
+#' @param prevalence_attrition prevalence of the attrition
+#'
 #' @import here flextable dplyr
 #' @export
 table1NumPar <- function (incidence_attrition,
@@ -107,6 +110,8 @@ table1NumPar <- function (incidence_attrition,
 
 #' table2IncOver
 #'
+#' @param incidence_estimates estimates of of the incidence
+#'
 #' @import here flextable dplyr
 #' @export
 table2IncOver <- function (incidence_estimates) {
@@ -172,6 +177,7 @@ table2IncOver <- function (incidence_estimates) {
 }
 
 #' table3IncYear
+#' @param incidence_estimates estimates of of the incidence
 #'
 #' @import here flextable dplyr
 #' @export
@@ -207,6 +213,8 @@ table3IncYear <- function (incidence_estimates) {
 }
 
 #' table4IncAge
+#'
+#' @param incidence_estimates estimates of of the incidence
 #'
 #' @import here flextable dplyr
 #' @export
@@ -244,6 +252,8 @@ table4IncAge <- function (incidence_estimates) {
 }
 
 #' table5IncSex
+#'
+#' @param incidence_estimates estimates of of the incidence
 #'
 #' @import here flextable dplyr
 #' @export
