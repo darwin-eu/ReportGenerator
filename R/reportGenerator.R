@@ -133,7 +133,7 @@ reportGenerator <- function() {
           object <- incidenceRatePerYearFacetByDBAgeGroupPlot(incidence_estimates)
         }
 
-        if (length(class(object)) == 1 && class(object) == "flextable") {
+        if ("flextable" %in% class(object)) {
 
           body_add_flextable(incidencePrevalenceDocx,
                              value = object)
