@@ -214,8 +214,8 @@ transformCSVtoJSON <- function(data, outcomes, folder, fileName) {
   result <- paste0(
     "{ \"data\" : ", transformed_json, ", \"lookup\" : ", lookup, "}")
 
-  file <- file(file.path(folder, fileName))
-  writeLines(result, file)
+  file <- paste0(folder, fileName)
+  writeLines(text = result, con = file)
   # close(file)
   return(result)
 }
