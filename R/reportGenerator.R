@@ -15,11 +15,9 @@ reportGenerator <- function() {
         column(
           width = 12,
           fileInput("datasetLoad",
-                    "Choose file, folder or ZIP",
-                    accept = c(".csv",
-                               ".rda",
-                               ".zip",
-                               ".RData"),
+                    "Upload zip folder or csv file",
+                    accept = c(".zip",
+                               ".csv"),
                     multiple = TRUE
           ),
           actionButton('resetData',
@@ -121,20 +119,14 @@ reportGenerator <- function() {
 
         studyData <- inFile$datapath
 
-        if (grepl(".RData",
+        if (grepl(".zip",
                   studyData,
                   fixed = TRUE)) {
 
 
-          load(studyData)
-
-          "studyData"
-
-        } else if (grepl(".zip",
+        } else if (grepl(".csv",
                         studyData,
                         fixed = TRUE)) {
-
-
 
         }
 
