@@ -23,7 +23,8 @@ reportGenerator <- function() {
               "Table - Incidence overall",
               "Table - Incidence by year",
               "Table - Incidence by age group",
-              "Table - Incidence by sex"
+              "Table - Incidence by sex",
+              "Plot - Incidence rate per year"
               # htmltools::tags$div(
               #   htmltools::em("Complex"), " html tag without a name"
               # ),
@@ -77,15 +78,13 @@ reportGenerator <- function() {
     #   )
 
     objectsListData <- reactive({
-
-      Index <- seq(1:length(input$objectsList2))
-
-      Contents  <- input$objectsList2
-
-      objectsDataFrame <- data.frame(Index, Contents)
-
+      Index    <- seq(1:length(input$objectsList2))
+      Contents <- input$objectsList2
+      objectsDataFrame <- NULL
+      if (!is.null(Contents) && !identical(Contents, character(0))) {
+        objectsDataFrame <- data.frame(Index, Contents)
+      }
       objectsDataFrame
-
     })
 
     output$table <- renderTable(objectsListData())
@@ -121,17 +120,31 @@ reportGenerator <- function() {
 
           object <- table4IncAge(incidence_estimates)
 
+        } else if (i == "Plot - Incidence rate per year") {
+          incidence_estimates <- read.csv("/Users/ginberg/Code/IncidencePrevalence/example_results/incidence_estimates_example_data.csv")
+          object <- incidenceRatePerYearPlot(incidence_estimates)
+
         }
 
-        if (class(object) == "flextable" && length(class(object)) == 1) {
+        if (length(class(object)) == 1 && class(object) == "flextable") {
 
-        body_add_flextable(incidencePrevalenceDocx,
-                           value = object)
+          body_add_flextable(incidencePrevalenceDocx,
+                             value = object)
 
-        body_add(incidencePrevalenceDocx,
-                 value = i,
-                 style = "Heading 1 (Agency)")
+          body_add(incidencePrevalenceDocx,
+                   value = i,
+                   style = "Heading 1 (Agency)")
 
+        } else if ("ggplot" %in% class(object)) {
+          body_add(x = incidencePrevalenceDocx,
+                   value = "titleFigure1Incidence",
+                   style = "heading 1")
+          body_add_gg(x = incidencePrevalenceDocx,
+                      value = object,
+                      style = "Normal")
+          body_add(incidencePrevalenceDocx,
+                   value = i,
+                   style = "Heading 1 (Agency)")
         } else {
 
           body_add_table(incidencePrevalenceDocx,
