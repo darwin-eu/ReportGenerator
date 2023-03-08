@@ -14,3 +14,4 @@ RunApp.R
 studyReportApp.R
 dataShiny.RData
 notes1.R
+.gitignore
