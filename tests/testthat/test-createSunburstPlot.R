@@ -31,6 +31,8 @@ test_that("minimal", {
     folder = tmpDir,
     fileName = "sunburstPlot.html")
 
+  path <- normalizePath(paste0(tmpDir, "sunburstPlot.html"), mustWork = FALSE)
+
   expect_true(
-    file.exists(normalizePath(paste0(tmpDir, "sunburstPlot.html"), mustWork = FALSE)))
+    file.exists(path))
 })
