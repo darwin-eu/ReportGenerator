@@ -12,6 +12,7 @@ RoxygenNote: 7.2.3
 Imports: 
     CDMConnector,
     dplyr,
+    flextable,
     ggplot2,
     here,
     IncidencePrevalence,
@@ -23,6 +24,10 @@ Imports:
     shiny,
     shinydashboard,
     shinyWidgets,
-    testthat,
+    sortable,
     tidyr
+Suggests: 
+    testthat (>= 3.1.4)
+Remotes:
+    darwin-eu/IncidencePrevalence
 Config/testthat/edition: 3

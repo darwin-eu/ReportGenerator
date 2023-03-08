@@ -486,7 +486,10 @@ if(getRversion() >= "2.15.1")    utils::globalVariables(c("age_strata",
                                                           "prev_high",
                                                           "prev_low",
                                                           "subject_id",
-                                                          "n_events"))
+                                                          "n_events",
+                                                          "incidence_estimates",
+                                                          "prevalence_estimates",
+                                                          "cdm_snapshot"))
 
 
 

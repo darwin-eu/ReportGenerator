@@ -62,7 +62,7 @@ table1NumPar <- function (incidence_attrition,
     subPrevalenceAtt <- subPrevIncData[, -c(1:2)]
 
     tablePrevIncData <- bind_cols(tablePrevIncData,
-                                    subPrevalenceAtt)
+                                  subPrevalenceAtt)
 
   }
 
@@ -126,22 +126,22 @@ table2IncOver <- function (incidence_estimates) {
   #
   # return(tableIncidence)
 
-# names(incidence_estimates)
-#
-# incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
-# View(incidence_estimates)
-# tableIncidence <- incidence_estimates %>%
-#   filter(database_name == "CPRD GOLD",
-#          n_persons == 8215316) %>%
-#   group_by(outcome_cohort_name,
-#            database_name,
-#            n_persons,
-#            person_years,
-#            n_events,
-#            incidence_100000_pys) %>%
-#   summarise()
-#
-# View(tableIncidence)
+  # names(incidence_estimates)
+  #
+  # incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
+  # View(incidence_estimates)
+  # tableIncidence <- incidence_estimates %>%
+  #   filter(database_name == "CPRD GOLD",
+  #          n_persons == 8215316) %>%
+  #   group_by(outcome_cohort_name,
+  #            database_name,
+  #            n_persons,
+  #            person_years,
+  #            n_events,
+  #            incidence_100000_pys) %>%
+  #   summarise()
+  #
+  # View(tableIncidence)
 
   load(here("inst/data/antibioticsProcessed/dataShiny.RData"))
 
@@ -203,7 +203,7 @@ table3IncYear <- function (incidence_estimates) {
              incidence_100000_pys) %>%
     summarise()
 
- return(tableIncidence)
+  return(tableIncidence)
 }
 
 #' table4IncAge
@@ -281,3 +281,21 @@ table5IncSex <- function (incidence_estimates) {
 
   return(tableIncidence)
 }
+if(getRversion() >= "2.15.1")    utils::globalVariables(c("step",
+                                                          "reason",
+                                                          "denominator",
+                                                          "current_n",
+                                                          "excluded",
+                                                          "outcome_cohort_name",
+                                                          "n_persons",
+                                                          "numerator",
+                                                          "person_years",
+                                                          "sex_strata",
+                                                          "prev",
+                                                          "prev_high",
+                                                          "prev_low",
+                                                          "subject_id",
+                                                          "n_events",
+                                                          "incidence_estimates",
+                                                          "prevalence_estimates",
+                                                          "cdm_snapshot"))

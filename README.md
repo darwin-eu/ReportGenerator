@@ -4,6 +4,8 @@
 # reportGenerator
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/darwin-eu-dev/ReportGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/ReportGenerator/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Automatic report generator of the Darwin EU studies.
