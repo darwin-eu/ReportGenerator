@@ -122,3 +122,7 @@ outputSankeyDiagram <- function(
     con = file.path(outputFolder, fileName)
   )
 }
+
+utils::globalVariables(
+  c("freq", "combination", "event_cohort_name1",
+    "event_cohort_name2","event_cohort_name3"))
