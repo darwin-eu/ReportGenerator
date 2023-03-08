@@ -119,7 +119,7 @@ outputSankeyDiagram <- function(
 
   writeLines(
     text = plot$html$chart,
-    con = normalizePath(file.path(outputFolder, fileName), mustWork = FALSE)
+    con = normalizePath(paste0(outputFolder, fileName), mustWork = FALSE)
   )
 }
 
