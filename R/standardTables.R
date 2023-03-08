@@ -8,9 +8,7 @@
 table1NumPar <- function (incidence_attrition,
                           prevalence_attrition) {
 
-  # load(here("inst/data/antibioticsProcessed/dataShiny.RData"))
-
-  databaseNamePrev <- unique(prevalence_attrition$database_name)
+ databaseNamePrev <- unique(prevalence_attrition$database_name)
 
   databaseNamePrev <- databaseNamePrev[1:3]
 
@@ -37,11 +35,7 @@ table1NumPar <- function (incidence_attrition,
 
   tablePrevIncData <- bind_rows(tablePrevalenceAtt, tableIncidenceAtt)
 
-  # for (i in databaseNamePrev[2:length(databaseNamePrev)])
-
   for (i in databaseNamePrev[2:3]) {
-
-    # i <- 2
 
     subPrevalenceAtt <- prevalence_attrition %>%
       filter(database_name == i) %>%
@@ -86,24 +80,11 @@ table1NumPar <- function (incidence_attrition,
                                  colwidths = rep(1, 8),
                                  top = FALSE)
 
-  # flexTableAtt <- add_header_row(flexTableAtt,
-  #                                values = headerNames,
-  #                                colwidths = rep(1, length(headerNames)),
-  #                                top = FALSE)
-
-  # Adds header specifying database names
-
   flexTableAtt <- add_header_row(flexTableAtt,
                                  values = subtitles,
                                  colwidths = rep(2, length(subtitles)),
                                  top = TRUE) %>%
     theme_box()
-
-  # flexTableAtt <- add_header_row(flexTableAtt,
-  #                                values = subtitles,
-  #                                colwidths = rep(2, length(subtitles)),
-  #                                top = TRUE) %>%
-  #   theme_box()
 
   return(flexTableAtt)
 }
@@ -116,47 +97,8 @@ table1NumPar <- function (incidence_attrition,
 #' @export
 table2IncOver <- function (incidence_estimates) {
 
-  # names(incidence_estimates)
-  #
-  # tableIncidence <- incidence_estimates %>%
-  #   group_by(outcome_cohort_name,
-  #            database_name,
-  #            n_persons,
-  #            person_years,
-  #            n_events,
-  #            incidence_100000_pys) %>%
-  #   summarise()
-  #
-  # # View(tableIncidence)
-  #
-  # return(tableIncidence)
-
-  # names(incidence_estimates)
-  #
-  # incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
-  # View(incidence_estimates)
-  # tableIncidence <- incidence_estimates %>%
-  #   filter(database_name == "CPRD GOLD",
-  #          n_persons == 8215316) %>%
-  #   group_by(outcome_cohort_name,
-  #            database_name,
-  #            n_persons,
-  #            person_years,
-  #            n_events,
-  #            incidence_100000_pys) %>%
-  #   summarise()
-  #
-  # View(tableIncidence)
-
-  load(here("inst/data/antibioticsProcessed/dataShiny.RData"))
-
   incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
 
-  # databaseNamePrev <- unique(prevalence_attrition$database_name)
-
-  # databaseNamePrev <- databaseNamePrev[1:3]
-
-  # View(incidence_estimates)
   tableIncidence <- incidence_estimates %>%
     filter(n_persons %in% c(8215316,
                             2283830,
@@ -259,10 +201,6 @@ table4IncAge <- function (incidence_estimates) {
 #' @export
 table5IncSex <- function (incidence_estimates) {
 
-  # load(here("inst/data/antibioticsProcessed/dataShiny.RData"))
-  #
-  # names(incidence_estimates)
-
   incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
 
   databaseNamePrev <- unique(prevalence_attrition$database_name)
@@ -286,8 +224,6 @@ table5IncSex <- function (incidence_estimates) {
     summarise()
 
   unique(tableIncidence$n_persons)
-
-  # View(tableIncidence)
 
   return(tableIncidence)
 }

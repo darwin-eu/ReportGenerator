@@ -941,23 +941,7 @@ resultsDashboard <- function() {
     # Figure 1
 
     dataprevalenceFigure1 <- reactive({
-
-      prevalenceCommonData() %>%
-        ggplot(aes(x = prevalence_start_date,
-                   y = prevalence,
-                   col = database_name)) +
-        scale_y_continuous(labels = scales::percent,
-                           limits = c(0,NA)) +
-        # facet_grid(rows = vars(outcome_cohort_id)) +
-        geom_line(aes(group = 1)) +
-        geom_point() +
-        geom_errorbar(aes(ymin = prevalence_95CI_lower,
-                          ymax = prevalence_95CI_upper)) +
-        theme_bw() +
-        labs(x = "Calendar year",
-             y = "Prevalence",
-             col = "Database name")
-
+      prevalenceRatePerYearPlot(prevalenceCommonData())
     })
 
     output$plot1Prevalence <- renderPlotly(dataprevalenceFigure1())
@@ -976,23 +960,7 @@ resultsDashboard <- function() {
     # Figure 2
 
     dataprevalenceFigure2 <- reactive({
-
-      prevalenceCommonData() %>%
-        ggplot(aes(x = prevalence_start_date,
-                   y = prevalence,
-                   group = denominator_sex,
-                   col = database_name)) +
-        facet_grid(cols = vars(denominator_sex)) +
-        facet_grid(rows = vars(outcome_cohort_id)) +
-        scale_y_continuous(labels = scales::percent,
-                           limits = c(0, NA)) +
-        geom_line() +
-        geom_point() +
-        theme_bw() +
-        labs(x = "Calendar year",
-             y = "Prevalence ",
-             col = "Database name")
-
+      prevalenceRatePerYearGroupBySexPlot(prevalenceCommonData())
     })
 
     output$plot2Prevalence <- renderPlotly(dataprevalenceFigure2())
@@ -1011,21 +979,7 @@ resultsDashboard <- function() {
     # Figure 3
 
     dataprevalenceFigure3 <- reactive({
-
-      prevalenceCommonData() %>%
-        ggplot(aes(x = prevalence_start_date,
-                   y = prevalence)) +
-        facet_grid(rows = vars(database_name)) +
-        facet_grid(rows = vars(outcome_cohort_id)) +
-        scale_y_continuous(labels = scales::percent,
-                           limits = c(0, NA)) +
-        geom_line(aes(colour = denominator_age_group)) +
-        geom_point() +
-        theme_bw() +
-        labs(x = "Calendar year",
-             y = "Prevalence",
-             colour = "Age group")
-
+      prevalenceRatePerYearFacetByDBOutcomePlot(prevalenceCommonData())
     })
 
     output$plot3Prevalence <- renderPlotly(dataprevalenceFigure3())
@@ -1044,27 +998,7 @@ resultsDashboard <- function() {
     # Figure 4
 
     dataprevalenceFigure4 <- reactive({
-
-      prevalenceCommonData() %>%
-        ggplot(aes(x = prevalence_start_date,
-                   y = prevalence,
-                   col = database_name)) +
-        facet_grid(rows = vars(database_name),
-                   cols = vars(denominator_age_group)) +
-        scale_y_continuous(labels = scales::percent,
-                           limits = c(0, NA)) +
-        geom_line(aes(linetype = denominator_sex)) +
-        geom_point() +
-        theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-        theme_bw() +
-        labs(x = "Calendar year",
-             y = "Prevalence",
-             col = "Database name",
-             linetype = "Sex") +
-        theme(axis.text.x = element_text(angle = 90,
-                                         hjust = 1))
-
-
+      prevalenceRatePerYearFacetByDBAgeGroupPlot(prevalenceCommonData())
     })
 
     output$plot4Prevalence <- renderPlotly(dataprevalenceFigure4())
@@ -1079,25 +1013,6 @@ resultsDashboard <- function() {
         ggsave(file, plot = dataprevalenceFigure4(), device = "png", height = 500, width = 845, units = "mm")
       }
     )
-
-    # Table 1
-
-    # attritionPrevalence <- reactive({
-    #
-    #   attritionPrevalence <- readRDS(here("inst/data/bloodCancerPrevalence/prevalence_attrition.rds"))
-    #
-    #   attritionPrevalence
-    #
-    # })
-    #
-    # output$attritionPrevalence <- renderDataTable(attritionPrevalence(),
-    #                                               options = list(
-    #                                                 searching = FALSE,
-    #                                                 scrollX = TRUE,
-    #                                                 autoWidth = TRUE
-    #                                               ))
-
-
   }
 
   shinyApp(ui, server)
