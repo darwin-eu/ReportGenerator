@@ -12,6 +12,7 @@ RoxygenNote: 7.2.3
 Imports: 
     CDMConnector,
     dplyr,
+    flextable,
     ggplot2,
     plotly,
     here,
@@ -24,10 +25,10 @@ Imports:
     shiny,
     shinydashboard,
     shinyWidgets,
-    tidyr,
     flextable,
-    sortable
-Suggests:
+    sortable,
+    tidyr
+Suggests: 
     testthat
 Remotes:
     darwin-eu/IncidencePrevalence

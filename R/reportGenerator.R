@@ -177,3 +177,6 @@ reportGenerator <- function() {
 
 
   }
+if(getRversion() >= "2.15.1")    utils::globalVariables(c("incidence_attrition",
+                                                          "prevalence_attrition",
+                                                          "incidence_estimates"))
