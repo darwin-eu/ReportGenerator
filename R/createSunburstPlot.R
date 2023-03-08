@@ -214,11 +214,9 @@ transformCSVtoJSON <- function(data, outcomes, folder, fileName) {
   result <- paste0(
     "{ \"data\" : ", transformed_json, ", \"lookup\" : ", lookup, "}")
 
-  baseFileName <- unlist(stringr::str_split(fileName, "\\.")[2])
-
-  file <- file(file.path(folder, paste0(baseFileName, "_input.txt")))
+  file <- file(file.path(folder, fileName))
   writeLines(result, file)
-  close(file)
+  # close(file)
   return(result)
 }
 
@@ -261,7 +259,11 @@ createSunburstPlot <- function(data, folder, fileName) {
     )))
 
   # Load CSV file and convert to JSON
-  json <- transformCSVtoJSON(data, outcomes, folder, fileName)
+  json <- transformCSVtoJSON(
+    data = data,
+    outcomes = outcomes,
+    folder = folder,
+    fileName = unlist(stringr::str_split(string = fileName, "\\."))[2])
 
   # Load template HTML file
   html <- paste(
