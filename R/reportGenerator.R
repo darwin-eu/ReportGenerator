@@ -121,9 +121,7 @@ reportGenerator <- function() {
           object <- table4IncAge(incidence_estimates)
 
         } else if (i == "Plot - Incidence rate per year") {
-          incidence_estimates <- read.csv("/Users/ginberg/Code/IncidencePrevalence/example_results/incidence_estimates_example_data.csv")
           object <- incidenceRatePerYearPlot(incidence_estimates)
-
         }
 
         if (length(class(object)) == 1 && class(object) == "flextable") {

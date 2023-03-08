@@ -25,7 +25,6 @@ Imports:
     shiny,
     shinydashboard,
     shinyWidgets,
-    flextable,
     sortable,
     tidyr
 Suggests: 
