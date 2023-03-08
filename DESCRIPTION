@@ -26,7 +26,9 @@ Imports:
     shinyWidgets,
     flextable,
     sortable,
-    tidyr
+    tidyr,
+    googleVis,
+    data.table
 Suggests: 
     testthat
 Remotes:
