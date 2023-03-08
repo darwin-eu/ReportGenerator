@@ -19,11 +19,11 @@ reportGenerator <- function() {
           add_rank_list(
             text = "Drag from here",
             labels = list(
-              "Table – Number of participants",
-              "Table – Incidence overall",
-              "Table – Incidence by year",
-              "Table – Incidence by age group",
-              "Table – Incidence by sex"
+              "Table - Number of participants",
+              "Table - Incidence overall",
+              "Table - Incidence by year",
+              "Table - Incidence by age group",
+              "Table - Incidence by sex"
               # htmltools::tags$div(
               #   htmltools::em("Complex"), " html tag without a name"
               # ),
@@ -100,24 +100,24 @@ reportGenerator <- function() {
 
       for (i in reverseList) {
 
-        if (i == "Table – Number of participants") {
+        if (i == "Table - Number of participants") {
 
           object <- table1NumPar(incidence_attrition,
                                  prevalence_attrition)
 
-        } else if (i == "Table – Incidence overall") {
+        } else if (i == "Table - Incidence overall") {
 
           object <- table2IncOver(incidence_estimates)
 
-        } else if (i == "Table – Incidence by year") {
+        } else if (i == "Table - Incidence by year") {
 
           object <- table3IncYear(incidence_estimates)
 
-        } else if (i == "Table – Incidence by age group") {
+        } else if (i == "Table - Incidence by age group") {
 
           object <- table4IncAge(incidence_estimates)
 
-        } else if (i == "Table – Incidence by sex") {
+        } else if (i == "Table - Incidence by sex") {
 
           object <- table4IncAge(incidence_estimates)
 

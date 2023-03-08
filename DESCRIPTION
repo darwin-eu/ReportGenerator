@@ -23,6 +23,11 @@ Imports:
     shiny,
     shinydashboard,
     shinyWidgets,
-    testthat,
-    tidyr
+    tidyr,
+    flextable,
+    sortable
+Suggests:
+    testthat
+Remotes:
+    darwin-eu/IncidencePrevalence
 Config/testthat/edition: 3

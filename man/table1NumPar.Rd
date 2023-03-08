@@ -6,6 +6,11 @@
 \usage{
 table1NumPar(incidence_attrition, prevalence_attrition)
 }
+\arguments{
+\item{incidence_attrition}{incidence of the attrition}
+
+\item{prevalence_attrition}{prevalence of the attrition}
+}
 \description{
 table1NumPar
 }
