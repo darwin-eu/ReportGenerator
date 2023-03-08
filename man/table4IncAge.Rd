@@ -6,6 +6,9 @@
 \usage{
 table4IncAge(incidence_estimates)
 }
+\arguments{
+\item{incidence_estimates}{estimates of of the incidence}
+}
 \description{
 table4IncAge
 }
