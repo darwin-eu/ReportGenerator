@@ -14,6 +14,7 @@ Imports:
     dplyr,
     flextable,
     ggplot2,
+    plotly,
     here,
     IncidencePrevalence,
     officer,
@@ -24,11 +25,16 @@ Imports:
     shiny,
     shinydashboard,
     shinyWidgets,
-    flextable,
     sortable,
     tidyr,
     checkmate,
     webshot2 (>= 0.1.0)
+    stringi,
+    stringr,
+    checkmate,
+    rjson
+    googleVis,
+    data.table
 Suggests: 
     testthat
 Remotes:
