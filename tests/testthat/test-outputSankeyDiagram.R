@@ -11,16 +11,12 @@ data <- data.frame(
     "Amoxicillin+Clavulanate", "Aspirin"),
   freq = c(206, 211, 48, 6, 12, 6, 14))
 
-tmpDir <- paste0(tempdir(), "\\")
-
 test_that("void", {
   expect_error(outputSankeyDiagram())
 })
 
 
 test_that("minimal", {
-  # Make tmpDir
-
   outputSankeyDiagram(
     data = data,
     outputFolder = tmpDir,
