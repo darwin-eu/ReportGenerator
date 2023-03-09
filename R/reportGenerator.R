@@ -20,6 +20,7 @@ reportGenerator <- function() {
                                ".csv"),
                     multiple = TRUE
           ),
+          verbatimTextOutput("fileList"),
           actionButton('resetData',
                        'Reset data')
         )
@@ -36,7 +37,7 @@ reportGenerator <- function() {
           add_rank_list(
             text = "Drag from here",
             labels = list(
-              "Table - Number of participants",
+              # "Table - Number of participants",
               "Table - Incidence overall",
               "Table - Incidence by year",
               "Table - Incidence by age group",
@@ -70,7 +71,7 @@ reportGenerator <- function() {
 
           # tags$p("Tables and figures in the report"),
 
-          verbatimTextOutput("fileList"),
+
 
           tableOutput("table"),
 
@@ -86,6 +87,22 @@ reportGenerator <- function() {
   server <- function(input,output) {
 
     # Load data
+
+    dataVariables <- reactiveValues()
+
+    # observeEvent(input$datasetLoad, {
+    #
+    #     inFile <- req(input$datasetLoad)
+    #     dataVariables <- unzip(inFile$datapath, list = TRUE)
+    #
+    #
+    #   })
+    #
+    # output$fileList <-
+    #   renderPrint(
+    #     dataVariables # Matches the group_name of the bucket list
+    #   )
+
 
     resetDatasetLoad <- reactiveValues(data = NULL)
 
@@ -123,12 +140,28 @@ reportGenerator <- function() {
                   studyData,
                   fixed = TRUE)) {
 
+          csvLocation <- tempdir()
 
-        } else if (grepl(".csv",
-                        studyData,
-                        fixed = TRUE)) {
+          unzip(studyData, exdir = csvLocation)
+
+          csvFiles <- list.files(path = csvLocation,
+                                 pattern = ".csv",
+                                 full.names = TRUE)
 
         }
+
+        csvFiles
+
+        # csvData <- lapply(csvFiles, read_csv)
+        #
+        # csvData[1]
+
+
+        # } else if (grepl(".csv",
+        #                 studyData,
+        #                 fixed = TRUE)) {
+        #
+        # }
 
         # studyData <- bind_rows(
         #   lapply(
@@ -151,6 +184,56 @@ reportGenerator <- function() {
     output$fileList <- renderPrint(
         studyData()
       )
+
+    incidence_estimates <- reactive({
+
+      for (i in studyData()) {
+
+        incidenceNames <- c("analysis_id",
+                            "n_persons",
+                            "person_days",
+                            "n_events",
+                            "incidence_start_date",
+                            "incidence_end_date",
+                            "person_years",
+                            "incidence_100000_pys",
+                            "incidence_100000_pys_95CI_lower",
+                            "incidence_100000_pys_95CI_upper",
+                            "cohort_obscured",
+                            "result_obscured",
+                            "outcome_cohort_id",
+                            "outcome_cohort_name",
+                            "analysis_outcome_washout",
+                            "analysis_repeated_events",
+                            "analysis_interval",
+                            "analysis_complete_database_intervals",
+                            "denominator_cohort_id",
+                            "analysis_min_cell_count",
+                            "denominator_age_group",
+                            "denominator_sex",
+                            "denominator_days_prior_history",
+                            "denominator_start_date",
+                            "denominator_end_date",
+                            "denominator_strata_cohort_definition_id",
+                            "denominator_strata_cohort_name",
+                            "database_name",
+                            "result_id",
+                            "inc_date")
+
+        csvData <- read_csv("C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpOWAWGl/incidence_estimates.csv")
+
+        if (all.equal(incidenceNames, names(csvData))) {
+
+          result <- csvData
+
+        }
+
+
+      }
+
+      result
+
+    })
 
 
     # Objects list
@@ -183,26 +266,28 @@ reportGenerator <- function() {
 
       for (i in reverseList) {
 
-        if (i == "Table - Number of participants") {
+        # if (i == "Table - Number of participants") {
+        #
+        #   object <- table1NumPar(incidence_attrition,
+        #                          prevalence_attrition)
+        #
+        # } else
 
-          object <- table1NumPar(incidence_attrition,
-                                 prevalence_attrition)
+        if (i == "Table - Incidence overall") {
 
-        } else if (i == "Table - Incidence overall") {
-
-          object <- table2IncOver(incidence_estimates)
+          object <- table2IncOver(incidence_estimates())
 
         } else if (i == "Table - Incidence by year") {
 
-          object <- table3IncYear(incidence_estimates)
+          object <- table3IncYear(incidence_estimates())
 
         } else if (i == "Table - Incidence by age group") {
 
-          object <- table4IncAge(incidence_estimates)
+          object <- table4IncAge(incidence_estimates())
 
         } else if (i == "Table - Incidence by sex") {
 
-          object <- table4IncAge(incidence_estimates)
+          object <- table4IncAge(incidence_estimates())
 
         }
 
