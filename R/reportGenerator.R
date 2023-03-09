@@ -107,7 +107,12 @@ if(getRversion() >= "2.15.1")    utils::globalVariables(c("incidence_attrition",
                                                           "prevalence_attrition",
                                                           "incidence_estimates"))
 
-# get items list from the configuration file and filter them by the files that have been uploaded
+#' Get the items that the user can choose from in the report generator. The list is loaded from the configuration file
+#' and filtered by the files that have been uploaded.
+#'
+#' @param uploadedFiles vector of uploaded filenames.
+#'
+#' @return a dataframe with the properties of the items
 getItemsList <- function(uploadedFiles) {
   itemsList <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";") %>%
     dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
