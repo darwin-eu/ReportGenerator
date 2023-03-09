@@ -27,6 +27,10 @@ Imports:
     shinyWidgets,
     sortable,
     tidyr,
+    stringi,
+    stringr,
+    checkmate,
+    rjson
     googleVis,
     data.table
 Suggests: 
