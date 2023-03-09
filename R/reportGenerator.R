@@ -4,9 +4,11 @@
 #' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable
 reportGenerator <- function() {
 
-  itemsList <- read.csv("inst/config/itemsConfig.csv", sep = ";") %>%
-    dplyr::mutate(signature = paste0(name, "(", arguments, ")")) %>%
-    dplyr::select(title, signature)
+  # TODO filter itemsList based on the files that have been actually uploaded
+  uploadedFiles <- c("incidence_attrition_example_data.csv",
+                     "incidence_estimates_example_data.csv",
+                     "prevalence_attrition_example_data.csv")
+  itemsList <- getItemsList(uploadedFiles)
 
   ui <- fluidPage(
     tags$head(
@@ -104,3 +106,24 @@ reportGenerator <- function() {
 if(getRversion() >= "2.15.1")    utils::globalVariables(c("incidence_attrition",
                                                           "prevalence_attrition",
                                                           "incidence_estimates"))
+
+# get items list from the configuration file and filter them by the files that have been uploaded
+getItemsList <- function(uploadedFiles) {
+  itemsList <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";") %>%
+    dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
+
+  checkNeeds <- function(needs) {
+    unlist(lapply(needs, FUN = function(need) {
+      required <- trimws(unlist(strsplit(need, ",")))
+      requiredLength <- length(required)
+      actualLength <- sum(unlist(lapply(required, FUN = function(pattern) {
+        any(grepl(pattern, uploadedFiles))
+      })))
+      return(requiredLength == actualLength)
+    }))
+  }
+
+  itemsList %>%
+    dplyr::filter(checkNeeds(.data$needs)) %>%
+    dplyr::select(title, signature)
+}
