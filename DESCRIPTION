@@ -27,6 +27,8 @@ Imports:
     shinyWidgets,
     sortable,
     tidyr,
+    checkmate,
+    webshot2 (>= 0.1.0)
     stringi,
     stringr,
     checkmate,
