@@ -11,7 +11,7 @@
 #' @param format A string. Options are "word", "pdf" or "html".
 #' @param byCondition TRUE if study is related to a condition, FALSE if it is related to drug utilisation.
 #' @export
-#' @import dplyr CDMConnector rmarkdown here officer
+#' @import dplyr rmarkdown here officer
 #' @importFrom utils head globalVariables
 #' @importFrom scales percent
 #' @importFrom readr read_csv

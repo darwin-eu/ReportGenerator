@@ -1,7 +1,7 @@
 #' This application offers a visualization of the figures available to fill in a study report in Word format.
 #'
 #' @export
-#' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable
+#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable
 reportGenerator <- function() {
 
   itemsList <- list(
