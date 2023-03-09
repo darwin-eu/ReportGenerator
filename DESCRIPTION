@@ -26,7 +26,15 @@ Imports:
     shinydashboard,
     shinyWidgets,
     sortable,
-    tidyr
+    tidyr,
+    checkmate,
+    webshot2 (>= 0.1.0)
+    stringi,
+    stringr,
+    checkmate,
+    rjson
+    googleVis,
+    data.table
 Suggests: 
     testthat
 Remotes:
