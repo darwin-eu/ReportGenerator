@@ -4,6 +4,18 @@
 #' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable
 reportGenerator <- function() {
 
+  itemsList <- list(
+    "Table - Number of participants" = "table1NumPar(incidence_attrition,
+                                                     prevalence_attrition)",
+    "Table - Incidence overall" = "table2IncOver(incidence_estimates)",
+    "Table - Incidence by year" = "table3IncYear(incidence_estimates)",
+    "Table - Incidence by age group" = "table4IncAge(incidence_estimates)",
+    "Table - Incidence by sex" = "table5IncSex(incidence_estimates)",
+    "Plot - Incidence rate per year" = "incidenceRatePerYearPlot(incidence_estimates)",
+    "Plot - Incidence rate per year group by sex" = "incidenceRatePerYearGroupBySexPlot(incidence_estimates)",
+    "Plot - Incidence rate per year color by age" = " incidenceRatePerYearColorByAgePlot(incidence_estimates)",
+    "Plot - Incidence rate per year facet by database, age group" = "incidenceRatePerYearFacetByDBAgeGroupPlot(incidence_estimates)")
+
   ui <- fluidPage(
     tags$head(
       tags$style(HTML(".bucket-list-container {min-height: 350px;}"))
@@ -18,19 +30,7 @@ reportGenerator <- function() {
           orientation = "horizontal",
           add_rank_list(
             text = "Drag from here",
-            labels = list(
-              "Table - Number of participants",
-              "Table - Incidence overall",
-              "Table - Incidence by year",
-              "Table - Incidence by age group",
-              "Table - Incidence by sex"
-              # htmltools::tags$div(
-              #   htmltools::em("Complex"), " html tag without a name"
-              # ),
-              # "five" = htmltools::tags$div(
-              #   htmltools::em("Complex"), " html tag with name: 'five'"
-              # )
-            ),
+            labels = names(itemsList),
             input_id = "objectsList1"
           ),
           add_rank_list(
@@ -47,45 +47,23 @@ reportGenerator <- function() {
         tags$b("Result"),
         column(
           width = 12,
-
-          # tags$p("input$objectsList1"),
-          # verbatimTextOutput("results_1"),
-
-          # tags$p("Tables and figures in the report"),
-
-          # verbatimTextOutput("results_2"),
-
-          tableOutput("table"),
-
+        tableOutput("table"),
           actionButton("generateReport", "Generate Report")
-
-          # tags$p("input$bucket_list_group"),
-          # verbatimTextOutput("results_3")
         )
       )
     )
   )
 
-  server <- function(input,output) {
-    # output$results_1 <-
-    #   renderPrint(
-    #     input$objectsList1 # This matches the input_id of the first rank list
-    #   )
-    # output$results_2 <-
-    #   renderPrint(
-    #     input$objectsList2 # This matches the input_id of the second rank list
-    #   )
+  server <- function(input, output) {
 
     objectsListData <- reactive({
-
-      Index <- seq(1:length(input$objectsList2))
-
-      Contents  <- input$objectsList2
-
-      objectsDataFrame <- data.frame(Index, Contents)
-
+      Index    <- seq(1:length(input$objectsList2))
+      Contents <- input$objectsList2
+      objectsDataFrame <- NULL
+      if (!is.null(Contents) && !identical(Contents, character(0))) {
+        objectsDataFrame <- data.frame(Index, Contents)
+      }
       objectsDataFrame
-
     })
 
     output$table <- renderTable(objectsListData())
@@ -97,73 +75,38 @@ reportGenerator <- function() {
       # styles_info(incidencePrevalenceDocx)
 
       reverseList <- rev(input$objectsList2)
-
       for (i in reverseList) {
-
-        if (i == "Table - Number of participants") {
-
-          object <- table1NumPar(incidence_attrition,
-                                 prevalence_attrition)
-
-        } else if (i == "Table - Incidence overall") {
-
-          object <- table2IncOver(incidence_estimates)
-
-        } else if (i == "Table - Incidence by year") {
-
-          object <- table3IncYear(incidence_estimates)
-
-        } else if (i == "Table - Incidence by age group") {
-
-          object <- table4IncAge(incidence_estimates)
-
-        } else if (i == "Table - Incidence by sex") {
-
-          object <- table4IncAge(incidence_estimates)
-
-        }
-
-        if (class(object) == "flextable" && length(class(object)) == 1) {
-
-        body_add_flextable(incidencePrevalenceDocx,
-                           value = object)
-
-        body_add(incidencePrevalenceDocx,
-                 value = i,
-                 style = "Heading 1 (Agency)")
-
-        } else {
-
-          body_add_table(incidencePrevalenceDocx,
-                    value = object,
-                    style = "TableOverall")
-
+        object <- eval(parse(text = itemsList[[i]]))
+        if ("flextable" %in% class(object)) {
+          body_add_flextable(incidencePrevalenceDocx,
+                             value = object)
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
-
+        } else if ("ggplot" %in% class(object)) {
+          body_add(incidencePrevalenceDocx,
+                   value = i,
+                   style = "Heading 1 (Agency)")
+          body_add_gg(x = incidencePrevalenceDocx,
+                      value = object,
+                      style = "Normal")
+        } else {
+          body_add_table(incidencePrevalenceDocx,
+                    value = object,
+                    style = "TableOverall")
+          body_add(incidencePrevalenceDocx,
+                   value = i,
+                   style = "Heading 1 (Agency)")
         }
-
       }
-
       body_add_toc(incidencePrevalenceDocx)
-
       print(incidencePrevalenceDocx,
             target = here("Reports/generatedReport.docx"))
-
     })
-    # output$results_3 <-
-    #   renderPrint(
-    #     input$bucket_list_group # Matches the group_name of the bucket list
-    #   )
-
   }
-
-
   shinyApp(ui, server)
+}
 
-
-  }
 if(getRversion() >= "2.15.1")    utils::globalVariables(c("incidence_attrition",
                                                           "prevalence_attrition",
                                                           "incidence_estimates"))
