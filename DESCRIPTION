@@ -28,11 +28,11 @@ Imports:
     sortable,
     tidyr,
     checkmate,
-    webshot2 (>= 0.1.0)
+    webshot2 (>= 0.1.0),
     stringi,
     stringr,
     checkmate,
-    rjson
+    rjson,
     googleVis,
     data.table
 Suggests: 
