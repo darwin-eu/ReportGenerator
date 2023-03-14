@@ -185,6 +185,8 @@ reportGenerator <- function() {
         studyData()
       )
 
+
+
     incidence_estimates <- reactive({
 
       for (i in studyData()) {
@@ -220,7 +222,7 @@ reportGenerator <- function() {
                             "result_id",
                             "inc_date")
 
-        csvData <- read_csv("C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpOWAWGl/incidence_estimates.csv")
+        csvData <- read_csv(i)
 
         if (all.equal(incidenceNames, names(csvData))) {
 
