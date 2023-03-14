@@ -27,8 +27,26 @@ reportGenerator <- function() {
   itemsList <- getItemsList(uploadedFiles)
 
   ui <- fluidPage(
-    tags$head(
-      tags$style(HTML(".bucket-list-container {min-height: 350px;}"))
+    # tags$head(
+    #   tags$style(HTML(".bucket-list-container {min-height: 700px;}"))
+    # ),
+    fluidRow(
+      column(
+        width = 12,
+        tags$b("Load data"),
+        column(
+          width = 12,
+          fileInput("datasetLoad",
+                    "Upload zip folder or csv file",
+                    accept = c(".zip",
+                               ".csv"),
+                    multiple = TRUE
+          ),
+          verbatimTextOutput("fileList"),
+          actionButton('resetData',
+                       'Reset data')
+        )
+      )
     ),
     fluidRow(
       column(
@@ -57,26 +75,204 @@ reportGenerator <- function() {
         tags$b("Result"),
         column(
           width = 12,
-        tableOutput("table"),
+
+          # tags$p("input$objectsList1"),
+          # verbatimTextOutput("results_1"),
+          # tags$p("Tables and figures in the report"),
+          
+          tableOutput("table"),
+
+
           actionButton("generateReport", "Generate Report")
         )
       )
     )
   )
 
-  server <- function(input, output) {
 
-    objectsListData <- reactive({
-      Index    <- seq(1:length(input$objectsList2))
-      Contents <- input$objectsList2
-      objectsDataFrame <- NULL
-      if (!is.null(Contents) && !identical(Contents, character(0))) {
-        objectsDataFrame <- data.frame(Index, Contents)
+  server <- function(input,output) {
+
+    # Load data
+
+    dataVariables <- reactiveValues()
+
+    # observeEvent(input$datasetLoad, {
+    #
+    #     inFile <- req(input$datasetLoad)
+    #     dataVariables <- unzip(inFile$datapath, list = TRUE)
+    #
+    #
+    #   })
+    #
+    # output$fileList <-
+    #   renderPrint(
+    #     dataVariables # Matches the group_name of the bucket list
+    #   )
+
+
+    resetDatasetLoad <- reactiveValues(data = NULL)
+
+    observeEvent(input$datasetLoad, {
+
+      resetDatasetLoad$data <- NULL
+
+      })
+
+    observeEvent(input$resetData, {
+
+      resetDatasetLoad$data <- "resetDatasetLoad"
+
+      })
+
+    studyData <- reactive({
+
+      inFile <- input$datasetLoad
+
+      applyReset <- resetDatasetLoad$data
+
+      if (is.null(inFile)) {
+
+        return(NULL)
+
+      } else if (!is.null(applyReset)) {
+
+        return(NULL)
+
+      } else if (!is.null(inFile)) {
+
+        studyData <- inFile$datapath
+
+        if (grepl(".zip",
+                  studyData,
+                  fixed = TRUE)) {
+
+          csvLocation <- tempdir()
+
+          unzip(studyData, exdir = csvLocation)
+
+          csvFiles <- list.files(path = csvLocation,
+                                 pattern = ".csv",
+                                 full.names = TRUE)
+
+        }
+
+        csvFiles
+
+        # csvData <- lapply(csvFiles, read_csv)
+        #
+        # csvData[1]
+
+
+        # } else if (grepl(".csv",
+        #                 studyData,
+        #                 fixed = TRUE)) {
+        #
+        # }
+
+        # studyData <- bind_rows(
+        #   lapply(
+        #     inFile$datapath,
+        #     read_csv
+        #   )
+        # )
+        #
+        # # studyData <- read.csv(inFile$datapath, header = TRUE)
+        #
+        # studyData %>%
+        #   mutate(denominator_age_group = gsub(";", "-", denominator_age_group),
+        #          incidence_start_date = as.Date(incidence_start_date),
+        #          incidence_end_date = as.Date(incidence_end_date))
+
       }
+
+    })
+
+    output$fileList <- renderPrint(
+        studyData()
+      )
+
+
+
+    incidence_estimates <- reactive({
+
+      for (i in studyData()) {
+
+        incidenceNames <- c("analysis_id",
+                            "n_persons",
+                            "person_days",
+                            "n_events",
+                            "incidence_start_date",
+                            "incidence_end_date",
+                            "person_years",
+                            "incidence_100000_pys",
+                            "incidence_100000_pys_95CI_lower",
+                            "incidence_100000_pys_95CI_upper",
+                            "cohort_obscured",
+                            "result_obscured",
+                            "outcome_cohort_id",
+                            "outcome_cohort_name",
+                            "analysis_outcome_washout",
+                            "analysis_repeated_events",
+                            "analysis_interval",
+                            "analysis_complete_database_intervals",
+                            "denominator_cohort_id",
+                            "analysis_min_cell_count",
+                            "denominator_age_group",
+                            "denominator_sex",
+                            "denominator_days_prior_history",
+                            "denominator_start_date",
+                            "denominator_end_date",
+                            "denominator_strata_cohort_definition_id",
+                            "denominator_strata_cohort_name",
+                            "database_name",
+                            "result_id",
+                            "inc_date")
+
+        csvData <- read_csv(i)
+
+        if (all.equal(incidenceNames, names(csvData))) {
+
+          result <- csvData
+
+        }
+
+
+      }
+
+      result
+
+    })
+
+
+    # Objects list
+
+
+    objectsList <- reactive({
+
+      Index <- seq(1:length(input$objectsList2))
+
+      Contents  <- input$objectsList2
+
+      objectsDataFrame <- data.frame(Index, Contents)
+
+
+#  server <- function(input, output) {
+
+#    objectsListData <- reactive({
+#      Index    <- seq(1:length(input$objectsList2))
+#      Contents <- input$objectsList2
+#      objectsDataFrame <- NULL
+#      if (!is.null(Contents) && !identical(Contents, character(0))) {
+#        objectsDataFrame <- data.frame(Index, Contents)
+#      }
+
       objectsDataFrame
     })
 
-    output$table <- renderTable(objectsListData())
+    output$table <- renderTable(objectsList())
+
+
+    # Report generator
 
     observeEvent(input$generateReport, {
 
@@ -86,6 +282,7 @@ reportGenerator <- function() {
 
       reverseList <- rev(input$objectsList2)
       for (i in reverseList) {
+
         object <- eval(parse(text = itemsList %>%
                                dplyr::filter(title == i) %>%
                                dplyr::pull(signature)))
