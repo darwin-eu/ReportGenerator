@@ -1,7 +1,24 @@
+# Copyright 2023 DARWIN EU®
+#
+# This file is part of ReportGenerator
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 #' This application displays an automated and interactive report of the results from the IncidencePrevalence package.
 #'
 #' @export
-#' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets
+#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets
+#' @importFrom plotly plotlyOutput renderPlotly
 #' @return Dashboard
 resultsDashboard <- function() {
 
@@ -76,22 +93,22 @@ resultsDashboard <- function() {
                                dataTableOutput("table1Incidence")),
                       tabPanel("Figure 1",
                                "Figure 1",
-                               plotOutput("plot1Incidence"),
+                               plotlyOutput("plot1Incidence"),
                                downloadButton("downloadIncidenceFigure1",
                                               "Download Plot")),
                       tabPanel("Figure 2",
                                "Figure 2",
-                               plotOutput("plot2Incidence"),
+                               plotlyOutput("plot2Incidence"),
                                downloadButton("downloadIncidenceFigure2",
                                               "Download Plot")),
                       tabPanel("Figure 3",
                                "Figure 3",
-                               plotOutput("plot3Incidence"),
+                               plotlyOutput("plot3Incidence"),
                                downloadButton("downloadIncidenceFigure3",
                                               "Download Plot")),
                       tabPanel("Figure 4",
                                "Figure 4",
-                               plotOutput("plot4Incidence"),
+                               plotlyOutput("plot4Incidence"),
                                downloadButton("downloadIncidenceFigure4",
                                               "Download Plot"))
                     )
@@ -117,22 +134,22 @@ resultsDashboard <- function() {
                              dataTableOutput("table1Prevalence")),
                     tabPanel("Figure 1",
                              "Figure 1",
-                             plotOutput("plot1Prevalence"),
+                             plotlyOutput("plot1Prevalence"),
                              downloadButton("downloadPrevalenceFigure1",
                                             "Download Plot")),
                     tabPanel("Figure 2",
                              "Figure 2",
-                             plotOutput("plot2Prevalence"),
+                             plotlyOutput("plot2Prevalence"),
                              downloadButton("downloadPrevalenceFigure2",
                                             "Download Plot")),
                     tabPanel("Figure 3",
                              "Figure 3",
-                             plotOutput("plot3Prevalence"),
+                             plotlyOutput("plot3Prevalence"),
                              downloadButton("downloadPrevalenceFigure3",
                                             "Download Plot")),
                     tabPanel("Figure 4",
                              "Figure 4",
-                             plotOutput("plot4Prevalence"),
+                             plotlyOutput("plot4Prevalence"),
                              downloadButton("downloadPrevalenceFigure4",
                                             "Download Plot"))
                     # tabPanel("Attrition table",
@@ -519,25 +536,10 @@ resultsDashboard <- function() {
     # Figure 1
 
     dataIncidenceFigure1 <- reactive({
-
-      incidenceCommonData() %>%
-        ggplot(aes(x = incidence_start_date,
-                   y = incidence_100000_pys,
-                   col = database_name)) +
-        # scale_y_continuous(labels = scales::percent,
-        #                    limits = c(0,NA)) +
-        geom_line(aes(group = 1)) +
-        geom_point() +
-        geom_errorbar(aes(ymin = incidence_100000_pys_95CI_lower,
-                          ymax = incidence_100000_pys_95CI_upper)) +
-        theme_bw() +
-        labs(x = "Calendar year",
-             y = "Incidence rate per 100000 person-years",
-             col = "Database name")
-
+      incidenceRatePerYearPlot(incidenceCommonData())
     })
 
-    output$plot1Incidence <- renderPlot(dataIncidenceFigure1())
+    output$plot1Incidence <- renderPlotly(dataIncidenceFigure1())
 
     # Download Incidence Figure 1
 
@@ -553,26 +555,10 @@ resultsDashboard <- function() {
     # Figure 2
 
     dataIncidenceFigure2 <- reactive({
-
-      incidenceCommonData() %>%
-        ggplot(aes(x = incidence_start_date,
-                   y = incidence_100000_pys,
-                   group = denominator_sex,
-                   col = database_name)) +
-        facet_grid(cols = vars(denominator_sex)) +
-        # scale_y_continuous(labels = scales::percent,
-        #                    limits = c(0,NA)) +
-        geom_line() +
-        geom_point() +
-        theme_bw() +
-        labs(x = "Calendar year",
-             y = "Incidence rate per 100000 person-years",
-             col = "Database name")
-
-
+      incidenceRatePerYearGroupBySexPlot(incidenceCommonData())
     })
 
-    output$plot2Incidence <- renderPlot(dataIncidenceFigure2())
+    output$plot2Incidence <- renderPlotly(dataIncidenceFigure2())
 
     # Download Incidence Figure 2
 
@@ -588,23 +574,10 @@ resultsDashboard <- function() {
     # Figure 3
 
     dataIncidenceFigure3 <- reactive({
-
-      incidenceCommonData() %>%
-        ggplot(aes(x = incidence_start_date,
-                   y = incidence_100000_pys)) +
-        facet_grid(rows = vars(database_name)) +
-        # scale_y_continuous(labels = scales::percent,
-        #                    limits = c(0,NA)) +
-        geom_line(aes(colour = denominator_age_group)) +
-        geom_point() +
-        theme_bw() +
-        labs(x = "Calendar year",
-             y = "Incidence rate per 100000 person-years",
-             colour = "Age group")
-
+      incidenceRatePerYearColorByAgePlot(incidenceCommonData())
     })
 
-    output$plot3Incidence <- renderPlot(dataIncidenceFigure3())
+    output$plot3Incidence <- renderPlotly(dataIncidenceFigure3())
 
     # Download Incidence Figure 3
 
@@ -620,28 +593,10 @@ resultsDashboard <- function() {
     # Figure 4
 
     dataIncidenceFigure4 <- reactive({
-
-      incidenceCommonData() %>%
-        ggplot(aes(x = incidence_start_date,
-                   y = incidence_100000_pys,
-                   col = database_name)) +
-        facet_grid(rows = vars(database_name),
-                   cols = vars(denominator_age_group)) +
-        # scale_y_continuous(labels = scales::percent,
-        #                    limits = c(0,NA)) +
-        geom_line(aes(linetype = denominator_sex)) +
-        geom_point() +
-        theme_bw() +
-        labs(x = "Calendar year",
-             y = "Incidence rate per 100000 person-years",
-             col = "Database name",
-             linetype = "Sex") +
-        theme(axis.text.x = element_text(angle = 90,
-                                         hjust = 1))
-
+      incidenceRatePerYearFacetByDBAgeGroupPlot(incidenceCommonData())
     })
 
-    output$plot4Incidence <- renderPlot(dataIncidenceFigure4())
+    output$plot4Incidence <- renderPlotly(dataIncidenceFigure4())
 
     # Download Incidence Figure 4
 
@@ -1002,26 +957,10 @@ resultsDashboard <- function() {
     # Figure 1
 
     dataprevalenceFigure1 <- reactive({
-
-      prevalenceCommonData() %>%
-        ggplot(aes(x = prevalence_start_date,
-                   y = prevalence,
-                   col = database_name)) +
-        scale_y_continuous(labels = scales::percent,
-                           limits = c(0,NA)) +
-        # facet_grid(rows = vars(outcome_cohort_id)) +
-        geom_line(aes(group = 1)) +
-        geom_point() +
-        geom_errorbar(aes(ymin = prevalence_95CI_lower,
-                          ymax = prevalence_95CI_upper)) +
-        theme_bw() +
-        labs(x = "Calendar year",
-             y = "Prevalence",
-             col = "Database name")
-
+      prevalenceRatePerYearPlot(prevalenceCommonData())
     })
 
-    output$plot1Prevalence <- renderPlot(dataprevalenceFigure1())
+    output$plot1Prevalence <- renderPlotly(dataprevalenceFigure1())
 
     # Download Prevalence Figure 1
 
@@ -1037,26 +976,10 @@ resultsDashboard <- function() {
     # Figure 2
 
     dataprevalenceFigure2 <- reactive({
-
-      prevalenceCommonData() %>%
-        ggplot(aes(x = prevalence_start_date,
-                   y = prevalence,
-                   group = denominator_sex,
-                   col = database_name)) +
-        facet_grid(cols = vars(denominator_sex)) +
-        facet_grid(rows = vars(outcome_cohort_id)) +
-        scale_y_continuous(labels = scales::percent,
-                           limits = c(0, NA)) +
-        geom_line() +
-        geom_point() +
-        theme_bw() +
-        labs(x = "Calendar year",
-             y = "Prevalence ",
-             col = "Database name")
-
+      prevalenceRatePerYearGroupBySexPlot(prevalenceCommonData())
     })
 
-    output$plot2Prevalence <- renderPlot(dataprevalenceFigure2())
+    output$plot2Prevalence <- renderPlotly(dataprevalenceFigure2())
 
     # Download Prevalence Figure 2
 
@@ -1072,24 +995,10 @@ resultsDashboard <- function() {
     # Figure 3
 
     dataprevalenceFigure3 <- reactive({
-
-      prevalenceCommonData() %>%
-        ggplot(aes(x = prevalence_start_date,
-                   y = prevalence)) +
-        facet_grid(rows = vars(database_name)) +
-        facet_grid(rows = vars(outcome_cohort_id)) +
-        scale_y_continuous(labels = scales::percent,
-                           limits = c(0, NA)) +
-        geom_line(aes(colour = denominator_age_group)) +
-        geom_point() +
-        theme_bw() +
-        labs(x = "Calendar year",
-             y = "Prevalence",
-             colour = "Age group")
-
+      prevalenceRatePerYearFacetByDBOutcomePlot(prevalenceCommonData())
     })
 
-    output$plot3Prevalence <- renderPlot(dataprevalenceFigure3())
+    output$plot3Prevalence <- renderPlotly(dataprevalenceFigure3())
 
     # Download Prevalence Figure 3
 
@@ -1105,30 +1014,10 @@ resultsDashboard <- function() {
     # Figure 4
 
     dataprevalenceFigure4 <- reactive({
-
-      prevalenceCommonData() %>%
-        ggplot(aes(x = prevalence_start_date,
-                   y = prevalence,
-                   col = database_name)) +
-        facet_grid(rows = vars(database_name),
-                   cols = vars(denominator_age_group)) +
-        scale_y_continuous(labels = scales::percent,
-                           limits = c(0, NA)) +
-        geom_line(aes(linetype = denominator_sex)) +
-        geom_point() +
-        theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-        theme_bw() +
-        labs(x = "Calendar year",
-             y = "Prevalence",
-             col = "Database name",
-             linetype = "Sex") +
-        theme(axis.text.x = element_text(angle = 90,
-                                         hjust = 1))
-
-
+      prevalenceRatePerYearFacetByDBAgeGroupPlot(prevalenceCommonData())
     })
 
-    output$plot4Prevalence <- renderPlot(dataprevalenceFigure4())
+    output$plot4Prevalence <- renderPlotly(dataprevalenceFigure4())
 
     # Download Prevalence Figure 4
 
@@ -1140,25 +1029,6 @@ resultsDashboard <- function() {
         ggsave(file, plot = dataprevalenceFigure4(), device = "png", height = 500, width = 845, units = "mm")
       }
     )
-
-    # Table 1
-
-    # attritionPrevalence <- reactive({
-    #
-    #   attritionPrevalence <- readRDS(here("inst/data/bloodCancerPrevalence/prevalence_attrition.rds"))
-    #
-    #   attritionPrevalence
-    #
-    # })
-    #
-    # output$attritionPrevalence <- renderDataTable(attritionPrevalence(),
-    #                                               options = list(
-    #                                                 searching = FALSE,
-    #                                                 scrollX = TRUE,
-    #                                                 autoWidth = TRUE
-    #                                               ))
-
-
   }
 
   shinyApp(ui, server)

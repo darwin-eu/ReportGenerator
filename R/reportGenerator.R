@@ -1,8 +1,30 @@
+# Copyright 2023 DARWIN EU®
+#
+# This file is part of ReportGenerator
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 #' This application offers a visualization of the figures available to fill in a study report in Word format.
 #'
 #' @export
-#' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable
+#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable
 reportGenerator <- function() {
+
+  # TODO filter itemsList based on the files that have been actually uploaded
+  uploadedFiles <- c("incidence_attrition_example_data.csv",
+                     "incidence_estimates_example_data.csv",
+                     "prevalence_attrition_example_data.csv")
+  itemsList <- getItemsList(uploadedFiles)
 
   ui <- fluidPage(
     # tags$head(
@@ -36,19 +58,7 @@ reportGenerator <- function() {
           orientation = "horizontal",
           add_rank_list(
             text = "Drag from here",
-            labels = list(
-              # "Table - Number of participants",
-              "Table - Incidence overall",
-              "Table - Incidence by year",
-              "Table - Incidence by age group",
-              "Table - Incidence by sex"
-              # htmltools::tags$div(
-              #   htmltools::em("Complex"), " html tag without a name"
-              # ),
-              # "five" = htmltools::tags$div(
-              #   htmltools::em("Complex"), " html tag with name: 'five'"
-              # )
-            ),
+            labels = itemsList$title,
             input_id = "objectsList1"
           ),
           add_rank_list(
@@ -68,21 +78,17 @@ reportGenerator <- function() {
 
           # tags$p("input$objectsList1"),
           # verbatimTextOutput("results_1"),
-
           # tags$p("Tables and figures in the report"),
-
-
-
+          
           tableOutput("table"),
 
-          actionButton("generateReport", "Generate Report")
 
-          # tags$p("input$bucket_list_group"),
-          # verbatimTextOutput("results_3")
+          actionButton("generateReport", "Generate Report")
         )
       )
     )
   )
+
 
   server <- function(input,output) {
 
@@ -249,8 +255,18 @@ reportGenerator <- function() {
 
       objectsDataFrame <- data.frame(Index, Contents)
 
-      objectsDataFrame
 
+#  server <- function(input, output) {
+
+#    objectsListData <- reactive({
+#      Index    <- seq(1:length(input$objectsList2))
+#      Contents <- input$objectsList2
+#      objectsDataFrame <- NULL
+#      if (!is.null(Contents) && !identical(Contents, character(0))) {
+#        objectsDataFrame <- data.frame(Index, Contents)
+#      }
+
+      objectsDataFrame
     })
 
     output$table <- renderTable(objectsList())
@@ -265,75 +281,67 @@ reportGenerator <- function() {
       # styles_info(incidencePrevalenceDocx)
 
       reverseList <- rev(input$objectsList2)
-
       for (i in reverseList) {
 
-        # if (i == "Table - Number of participants") {
-        #
-        #   object <- table1NumPar(incidence_attrition,
-        #                          prevalence_attrition)
-        #
-        # } else
-
-        if (i == "Table - Incidence overall") {
-
-          object <- table2IncOver(incidence_estimates())
-
-        } else if (i == "Table - Incidence by year") {
-
-          object <- table3IncYear(incidence_estimates())
-
-        } else if (i == "Table - Incidence by age group") {
-
-          object <- table4IncAge(incidence_estimates())
-
-        } else if (i == "Table - Incidence by sex") {
-
-          object <- table4IncAge(incidence_estimates())
-
-        }
-
-        if (class(object) == "flextable" && length(class(object)) == 1) {
-
-        body_add_flextable(incidencePrevalenceDocx,
-                           value = object)
-
-        body_add(incidencePrevalenceDocx,
-                 value = i,
-                 style = "Heading 1 (Agency)")
-
-        } else {
-
-          body_add_table(incidencePrevalenceDocx,
-                    value = object,
-                    style = "TableOverall")
-
+        object <- eval(parse(text = itemsList %>%
+                               dplyr::filter(title == i) %>%
+                               dplyr::pull(signature)))
+        if ("flextable" %in% class(object)) {
+          body_add_flextable(incidencePrevalenceDocx,
+                             value = object)
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
-
+        } else if ("ggplot" %in% class(object)) {
+          body_add(incidencePrevalenceDocx,
+                   value = i,
+                   style = "Heading 1 (Agency)")
+          body_add_gg(x = incidencePrevalenceDocx,
+                      value = object,
+                      style = "Normal")
+        } else {
+          body_add_table(incidencePrevalenceDocx,
+                    value = object,
+                    style = "TableOverall")
+          body_add(incidencePrevalenceDocx,
+                   value = i,
+                   style = "Heading 1 (Agency)")
         }
-
       }
-
       body_add_toc(incidencePrevalenceDocx)
-
       print(incidencePrevalenceDocx,
             target = here("Reports/generatedReport.docx"))
-
     })
-    # output$results_3 <-
-    #   renderPrint(
-    #     input$bucket_list_group # Matches the group_name of the bucket list
-    #   )
-
   }
-
-
   shinyApp(ui, server)
+}
 
-
-  }
 if(getRversion() >= "2.15.1")    utils::globalVariables(c("incidence_attrition",
                                                           "prevalence_attrition",
                                                           "incidence_estimates"))
+
+#' Get the items that the user can choose from in the report generator. The list is loaded from the configuration file
+#' and filtered by the files that have been uploaded.
+#'
+#' @param uploadedFiles vector of uploaded filenames.
+#'
+#' @return a dataframe with the properties of the items
+getItemsList <- function(uploadedFiles) {
+  itemsList <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";") %>%
+    dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
+
+  checkNeeds <- function(needs) {
+    unlist(lapply(needs, FUN = function(need) {
+      required <- trimws(unlist(strsplit(need, ",")))
+      requiredLength <- length(required)
+      actualLength <- sum(unlist(lapply(required, FUN = function(pattern) {
+        any(grepl(pattern, uploadedFiles))
+      })))
+      return(requiredLength == actualLength)
+    }))
+  }
+
+  itemsList %>%
+    dplyr::filter(checkNeeds(.data$needs)) %>%
+    dplyr::select(title, signature)
+}
