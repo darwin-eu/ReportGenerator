@@ -17,8 +17,6 @@ data <- data.frame(
     "Amoxicillin+Clavulanate-Acetaminophen-End"),
   freq = c(211, 206, 48, 14, 12, 6, 6, 3, 2, 2, 1, 1))
 
-tmpDir <- paste0(tempdir(), "\\")
-
 test_that("void", {
   expect_error(
     createSunburstPlot()
