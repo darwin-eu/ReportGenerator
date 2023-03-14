@@ -4,17 +4,11 @@
 #' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable
 reportGenerator <- function() {
 
-  itemsList <- list(
-    "Table - Number of participants" = "table1NumPar(incidence_attrition,
-                                                     prevalence_attrition)",
-    "Table - Incidence overall" = "table2IncOver(incidence_estimates)",
-    "Table - Incidence by year" = "table3IncYear(incidence_estimates)",
-    "Table - Incidence by age group" = "table4IncAge(incidence_estimates)",
-    "Table - Incidence by sex" = "table5IncSex(incidence_estimates)",
-    "Plot - Incidence rate per year" = "incidenceRatePerYearPlot(incidence_estimates)",
-    "Plot - Incidence rate per year group by sex" = "incidenceRatePerYearGroupBySexPlot(incidence_estimates)",
-    "Plot - Incidence rate per year color by age" = " incidenceRatePerYearColorByAgePlot(incidence_estimates)",
-    "Plot - Incidence rate per year facet by database, age group" = "incidenceRatePerYearFacetByDBAgeGroupPlot(incidence_estimates)")
+  # TODO filter itemsList based on the files that have been actually uploaded
+  uploadedFiles <- c("incidence_attrition_example_data.csv",
+                     "incidence_estimates_example_data.csv",
+                     "prevalence_attrition_example_data.csv")
+  itemsList <- getItemsList(uploadedFiles)
 
   ui <- fluidPage(
     tags$head(
@@ -30,7 +24,7 @@ reportGenerator <- function() {
           orientation = "horizontal",
           add_rank_list(
             text = "Drag from here",
-            labels = names(itemsList),
+            labels = itemsList$title,
             input_id = "objectsList1"
           ),
           add_rank_list(
@@ -76,7 +70,9 @@ reportGenerator <- function() {
 
       reverseList <- rev(input$objectsList2)
       for (i in reverseList) {
-        object <- eval(parse(text = itemsList[[i]]))
+        object <- eval(parse(text = itemsList %>%
+                               dplyr::filter(title == i) %>%
+                               dplyr::pull(signature)))
         if ("flextable" %in% class(object)) {
           body_add_flextable(incidencePrevalenceDocx,
                              value = object)
@@ -110,3 +106,29 @@ reportGenerator <- function() {
 if(getRversion() >= "2.15.1")    utils::globalVariables(c("incidence_attrition",
                                                           "prevalence_attrition",
                                                           "incidence_estimates"))
+
+#' Get the items that the user can choose from in the report generator. The list is loaded from the configuration file
+#' and filtered by the files that have been uploaded.
+#'
+#' @param uploadedFiles vector of uploaded filenames.
+#'
+#' @return a dataframe with the properties of the items
+getItemsList <- function(uploadedFiles) {
+  itemsList <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";") %>%
+    dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
+
+  checkNeeds <- function(needs) {
+    unlist(lapply(needs, FUN = function(need) {
+      required <- trimws(unlist(strsplit(need, ",")))
+      requiredLength <- length(required)
+      actualLength <- sum(unlist(lapply(required, FUN = function(pattern) {
+        any(grepl(pattern, uploadedFiles))
+      })))
+      return(requiredLength == actualLength)
+    }))
+  }
+
+  itemsList %>%
+    dplyr::filter(checkNeeds(.data$needs)) %>%
+    dplyr::select(title, signature)
+}

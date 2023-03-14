@@ -4,7 +4,7 @@
 #'
 #' @import ggplot2
 #' @export
-incidenceRatePerYearPlot <- function (incidence_estimates) {
+incidenceRatePerYearPlot <- function(incidence_estimates) {
   incidence_estimates %>%
     ggplot(aes(x = incidence_start_date,
                y = incidence_100000_pys,
