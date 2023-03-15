@@ -79,7 +79,7 @@ reportGenerator <- function() {
           # tags$p("input$objectsList1"),
           # verbatimTextOutput("results_1"),
           # tags$p("Tables and figures in the report"),
-          
+
           tableOutput("table"),
 
 
@@ -327,6 +327,7 @@ if(getRversion() >= "2.15.1")    utils::globalVariables(c("incidence_attrition",
 #'
 #' @return a dataframe with the properties of the items
 getItemsList <- function(uploadedFiles) {
+
   itemsList <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";") %>%
     dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
 
