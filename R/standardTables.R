@@ -219,9 +219,9 @@ table5IncSex <- function (incidence_estimates) {
 
   incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
 
-  databaseNamePrev <- unique(prevalence_attrition$database_name)
-
-  databaseNamePrev <- databaseNamePrev[1:3]
+  # databaseNamePrev <- unique(prevalence_attrition$database_name)
+  #
+  # databaseNamePrev <- databaseNamePrev[1:3]
 
   tableIncidence <- incidence_estimates %>%
     filter(n_persons %in% c(8215316,

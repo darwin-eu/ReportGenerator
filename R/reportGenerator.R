@@ -21,10 +21,10 @@
 reportGenerator <- function() {
 
   # TODO filter itemsList based on the files that have been actually uploaded
-  uploadedFiles <- c("incidence_attrition_example_data.csv",
-                     "incidence_estimates_example_data.csv",
-                     "prevalence_attrition_example_data.csv")
-  itemsList <- getItemsList(uploadedFiles)
+  # uploadedFiles <- c("incidence_attrition_example_data.csv",
+  #                    "incidence_estimates_example_data.csv",
+  #                    "prevalence_attrition_example_data.csv")
+  # itemsList <- getItemsList(uploadedFiles)
 
   ui <- fluidPage(
     # tags$head(
@@ -36,49 +36,67 @@ reportGenerator <- function() {
         tags$b("Load data"),
         column(
           width = 12,
+          # File input field
           fileInput("datasetLoad",
                     "Upload zip folder or csv file",
                     accept = c(".zip",
                                ".csv"),
                     multiple = TRUE
           ),
-          verbatimTextOutput("fileList"),
+
+          # Print to monitor
+          verbatimTextOutput("uploadedFiles"),
+
+          # # Print to monitor
+          verbatimTextOutput("incidence_estimates"),
+
+          # Reset data button
           actionButton('resetData',
                        'Reset data')
         )
       )
     ),
     fluidRow(
-      column(
-        tags$b("Report Generator"),
-        width = 12,
-        bucket_list(
-          header = "Select the figures you want in the report",
-          group_name = "bucket_list_group",
-          orientation = "horizontal",
-          add_rank_list(
-            text = "Drag from here",
-            labels = itemsList$title,
-            input_id = "objectsList1"
-          ),
-          add_rank_list(
-            text = "to here",
-            labels = NULL,
-            input_id = "objectsList2"
-          )
-        )
-      )
+
+      # Item selection menu
+
+      uiOutput("itemSelectionMenu")
+
+      # column(
+      #   tags$b("Item selection"),
+      #   width = 12,
+      #   bucket_list(
+      #     header = "Select the figures you want in the report",
+      #     group_name = "bucket_list_group",
+      #     orientation = "horizontal",
+      #     add_rank_list(
+      #       text = "Drag from here",
+      #       labels = itemsList$title,
+      #       input_id = "objectsList1"
+      #     ),
+      #     add_rank_list(
+      #       text = "to here",
+      #       labels = NULL,
+      #       input_id = "objectsList2"
+      #     )
+      #   )
+      # )
+
+
+
     ),
     fluidRow(
       column(
         width = 12,
-        tags$b("Result"),
+        tags$b("Preview"),
         column(
           width = 12,
 
           # tags$p("input$objectsList1"),
           # verbatimTextOutput("results_1"),
           # tags$p("Tables and figures in the report"),
+
+          # Preview, list and objects
 
           tableOutput("table"),
 
@@ -94,8 +112,9 @@ reportGenerator <- function() {
 
     # Load data
 
-    dataVariables <- reactiveValues()
-
+    #
+    # dataVariables <- reactiveValues()
+    #
     # observeEvent(input$datasetLoad, {
     #
     #     inFile <- req(input$datasetLoad)
@@ -104,11 +123,15 @@ reportGenerator <- function() {
     #
     #   })
     #
-    # output$fileList <-
+    # output$uploadedFiles <-
     #   renderPrint(
     #     dataVariables # Matches the group_name of the bucket list
     #   )
 
+
+    # 1. Load files
+
+    # Reset data variables
 
     resetDatasetLoad <- reactiveValues(data = NULL)
 
@@ -124,7 +147,9 @@ reportGenerator <- function() {
 
       })
 
-    studyData <- reactive({
+    # Upload files
+
+    uploadedFiles <- reactive({
 
       inFile <- input$datasetLoad
 
@@ -140,15 +165,15 @@ reportGenerator <- function() {
 
       } else if (!is.null(inFile)) {
 
-        studyData <- inFile$datapath
+        uploadedFiles <- inFile$datapath
 
         if (grepl(".zip",
-                  studyData,
+                  uploadedFiles,
                   fixed = TRUE)) {
 
           csvLocation <- tempdir()
 
-          unzip(studyData, exdir = csvLocation)
+          unzip(uploadedFiles, exdir = csvLocation)
 
           csvFiles <- list.files(path = csvLocation,
                                  pattern = ".csv",
@@ -156,90 +181,145 @@ reportGenerator <- function() {
 
         }
 
-        csvFiles
-
-        # csvData <- lapply(csvFiles, read_csv)
-        #
-        # csvData[1]
-
-
-        # } else if (grepl(".csv",
-        #                 studyData,
-        #                 fixed = TRUE)) {
-        #
-        # }
-
-        # studyData <- bind_rows(
-        #   lapply(
-        #     inFile$datapath,
-        #     read_csv
-        #   )
-        # )
-        #
-        # # studyData <- read.csv(inFile$datapath, header = TRUE)
-        #
-        # studyData %>%
-        #   mutate(denominator_age_group = gsub(";", "-", denominator_age_group),
-        #          incidence_start_date = as.Date(incidence_start_date),
-        #          incidence_end_date = as.Date(incidence_end_date))
+        return(csvFiles)
 
       }
 
     })
 
-    output$fileList <- renderPrint(
-        studyData()
+    # To UI
+
+    output$uploadedFiles <- renderPrint(
+        uploadedFiles()
       )
 
+    # Render UI itemSelectionMenu
 
+    itemsList <- reactive({
 
-    incidence_estimates <- reactive({
+      inFile <- input$datasetLoad
 
-      for (i in studyData()) {
+      applyReset <- resetDatasetLoad$data
 
-        incidenceNames <- c("analysis_id",
-                            "n_persons",
-                            "person_days",
-                            "n_events",
-                            "incidence_start_date",
-                            "incidence_end_date",
-                            "person_years",
-                            "incidence_100000_pys",
-                            "incidence_100000_pys_95CI_lower",
-                            "incidence_100000_pys_95CI_upper",
-                            "cohort_obscured",
-                            "result_obscured",
-                            "outcome_cohort_id",
-                            "outcome_cohort_name",
-                            "analysis_outcome_washout",
-                            "analysis_repeated_events",
-                            "analysis_interval",
-                            "analysis_complete_database_intervals",
-                            "denominator_cohort_id",
-                            "analysis_min_cell_count",
-                            "denominator_age_group",
-                            "denominator_sex",
-                            "denominator_days_prior_history",
-                            "denominator_start_date",
-                            "denominator_end_date",
-                            "denominator_strata_cohort_definition_id",
-                            "denominator_strata_cohort_name",
-                            "database_name",
-                            "result_id",
-                            "inc_date")
+      if (is.null(inFile)) {
 
-        csvData <- read_csv(i)
+        return(NULL)
 
-        if (all.equal(incidenceNames, names(csvData))) {
+      } else if (!is.null(applyReset)) {
 
-          result <- csvData
+        return(NULL)
+
+      } else if (!is.null(inFile)) {
+
+        itemsList <- c()
+
+        # TEST uploadedFiles
+        # uploadedFiles <- list.files(path = "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\Rtmponi7Jt",
+        #                             pattern = ".csv",
+        #                             full.names = TRUE)
+
+        # PROD
+        for (i in uploadedFiles()) {
+
+        # TEST for loop uploadedFiles
+        # for (i in uploadedFiles) {
+
+          # TEST i
+          # i <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\Rtmponi7Jt/indicationSummaryWide.csv"
+
+          resultsData <- read_csv(i)
+
+          resultsColumns <- names(resultsData)
+
+          configData <- read.csv(system.file("config/variablesConfig.csv",
+                                             package = "ReportGenerator"))
+
+          configDataTypes <- unique(configData$name)
+
+          for (val in configDataTypes) {
+
+            # TEST val
+            # val <- "largeScaleSummary"
+
+            configColumns <- configData %>% filter(name == val)
+
+            configColumns <- configColumns$variables
+
+            if (length(configColumns) == length(resultsColumns)) {
+
+              if (identical(configColumns, resultsColumns)) {
+
+                itemsList <- append(itemsList, val)
+
+            }
+
+            }
+
+          }
 
         }
 
+        result <- itemsList
 
-      }
+        menuList <- read.csv(system.file("config/itemsConfig.csv",
+                                         package = "ReportGenerator"),
+                             sep = ";") %>%
+          dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
 
-      result
+        checkNeeds <- function(menuList, uploadedFiles) {
+          unlist(lapply(menuList, FUN = function(menuList) {
+            required <- trimws(unlist(strsplit(menuList, ",")))
+            exists <- required %in% uploadedFiles
+
+            if (TRUE %in% exists) {
+
+              return(TRUE)
+
+              } else {
+
+              return(FALSE)
+
+              }
+
+            })
+
+          )}
+
+        menuList %>%
+          dplyr::filter(checkNeeds(menuList$arguments, result)) %>%
+          dplyr::select(title, signature)
+
+    }
+
+      })
+
+    # output$itemsList <- renderPrint(
+    #   itemsList()
+    # )
+#
+    output$itemSelectionMenu <- renderUI({
+
+      column(
+        tags$b("Item selection"),
+        width = 12,
+        bucket_list(
+          header = "Select the figures you want in the report",
+          group_name = "bucket_list_group",
+          orientation = "horizontal",
+          add_rank_list(
+            text = "Drag from here",
+            labels = itemsList()$title,
+            input_id = "objectsList1"
+          ),
+          add_rank_list(
+            text = "to here",
+            labels = NULL,
+            input_id = "objectsList2"
+          )
+        )
+      )
+
+
 
     })
 
@@ -255,22 +335,115 @@ reportGenerator <- function() {
 
       objectsDataFrame <- data.frame(Index, Contents)
 
-
-#  server <- function(input, output) {
-
-#    objectsListData <- reactive({
-#      Index    <- seq(1:length(input$objectsList2))
-#      Contents <- input$objectsList2
-#      objectsDataFrame <- NULL
-#      if (!is.null(Contents) && !identical(Contents, character(0))) {
-#        objectsDataFrame <- data.frame(Index, Contents)
-#      }
-
       objectsDataFrame
+
     })
 
     output$table <- renderTable(objectsList())
 
+
+    # Data variables
+
+    # Uploaded object: Incidence Attrition
+
+    incidence_attrition <- reactive({
+
+      for (i in uploadedFiles()) {
+
+        configColumns <- read.csv(system.file("config/variablesConfig.csv",
+                                              package = "ReportGenerator")) %>%
+          dplyr::filter(name == "incidence_attrition")
+
+        configColumns <- configColumns$variables
+
+        # i <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpAdrrwm/incidence_attrition.csv"
+        csvData <- read_csv(i)
+
+        resultsColumns <- names(csvData)
+
+        if (length(configColumns) == length(resultsColumns)) {
+
+          if (identical(configColumns, resultsColumns)) {
+
+            result <- csvData
+
+          }
+
+        }
+
+        }
+
+      return(result)
+
+    })
+
+    # Uploaded object: Prevalence Attrition
+
+    prevalence_attrition <- reactive({
+
+      for (i in uploadedFiles()) {
+
+        configColumns <- read.csv(system.file("config/variablesConfig.csv",
+                                              package = "ReportGenerator")) %>%
+          dplyr::filter(name == "prevalence_attrition")
+
+        configColumns <- configColumns$variables
+
+        # i <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpAdrrwm/prevalence_attrition.csv"
+
+        csvData <- read_csv(i)
+
+        resultsColumns <- names(csvData)
+
+        if (length(configColumns) == length(resultsColumns)) {
+
+          if (identical(configColumns, resultsColumns)) {
+
+            result <- csvData
+
+          }
+
+        }
+
+      }
+
+      return(result)
+
+    })
+
+    # Uploaded object: Incidence Estimates
+
+    incidence_estimates <- reactive({
+
+      for (i in uploadedFiles()) {
+
+        configColumns <- read.csv(system.file("config/variablesConfig.csv",
+                                              package = "ReportGenerator")) %>%
+          dplyr::filter(name == "incidence_estimates")
+
+        configColumns <- configColumns$variables
+
+        # i <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpAdrrwm/incidence_estimates.csv"
+
+        csvData <- read_csv(i)
+
+        resultsColumns <- names(csvData)
+
+        if (length(configColumns) == length(resultsColumns)) {
+
+          if (identical(configColumns, resultsColumns)) {
+
+            result <- csvData
+
+          }
+
+        }
+
+      }
+
+      return(result)
+
+    })
 
     # Report generator
 
@@ -281,34 +454,58 @@ reportGenerator <- function() {
       # styles_info(incidencePrevalenceDocx)
 
       reverseList <- rev(input$objectsList2)
+
+      menuList <- read.csv(system.file("config/itemsConfig.csv",
+                                       package = "ReportGenerator"),
+                           sep = ";")
+
+      menuList$arguments <- gsub("incidence_attrition" , "incidence_attrition()", menuList$arguments)
+      menuList$arguments <- gsub("prevalence_attrition" , "prevalence_attrition()", menuList$arguments)
+      menuList$arguments <- gsub("incidence_estimates" , "incidence_estimates()", menuList$arguments)
+
+      menuList <- menuList %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
+
       for (i in reverseList) {
 
-        object <- eval(parse(text = itemsList %>%
+        object <- eval(parse(text = menuList %>%
                                dplyr::filter(title == i) %>%
                                dplyr::pull(signature)))
+
         if ("flextable" %in% class(object)) {
+
           body_add_flextable(incidencePrevalenceDocx,
                              value = object)
+
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
-        } else if ("ggplot" %in% class(object)) {
-          body_add(incidencePrevalenceDocx,
-                   value = i,
-                   style = "Heading 1 (Agency)")
-          body_add_gg(x = incidencePrevalenceDocx,
-                      value = object,
-                      style = "Normal")
-        } else {
-          body_add_table(incidencePrevalenceDocx,
-                    value = object,
-                    style = "TableOverall")
-          body_add(incidencePrevalenceDocx,
-                   value = i,
-                   style = "Heading 1 (Agency)")
+
+          } else if ("ggplot" %in% class(object)) {
+
+            body_add_gg(x = incidencePrevalenceDocx,
+                        value = object,
+                        style = "Normal")
+
+            body_add(incidencePrevalenceDocx,
+                     value = i,
+                     style = "Heading 1 (Agency)")
+
+            } else {
+
+              body_add_table(incidencePrevalenceDocx,
+                             value = object,
+                             style = "TableOverall")
+
+              body_add(incidencePrevalenceDocx,
+                       value = i,
+                       style = "Heading 1 (Agency)")
+
+            }
+
         }
-      }
+
       body_add_toc(incidencePrevalenceDocx)
+
       print(incidencePrevalenceDocx,
             target = here("Reports/generatedReport.docx"))
     })
@@ -320,29 +517,4 @@ if(getRversion() >= "2.15.1")    utils::globalVariables(c("incidence_attrition",
                                                           "prevalence_attrition",
                                                           "incidence_estimates"))
 
-#' Get the items that the user can choose from in the report generator. The list is loaded from the configuration file
-#' and filtered by the files that have been uploaded.
-#'
-#' @param uploadedFiles vector of uploaded filenames.
-#'
-#' @return a dataframe with the properties of the items
-getItemsList <- function(uploadedFiles) {
 
-  itemsList <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";") %>%
-    dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-
-  checkNeeds <- function(needs) {
-    unlist(lapply(needs, FUN = function(need) {
-      required <- trimws(unlist(strsplit(need, ",")))
-      requiredLength <- length(required)
-      actualLength <- sum(unlist(lapply(required, FUN = function(pattern) {
-        any(grepl(pattern, uploadedFiles))
-      })))
-      return(requiredLength == actualLength)
-    }))
-  }
-
-  itemsList %>%
-    dplyr::filter(checkNeeds(.data$needs)) %>%
-    dplyr::select(title, signature)
-}
