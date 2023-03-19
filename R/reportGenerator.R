@@ -88,7 +88,7 @@ reportGenerator <- function() {
     fluidRow(
       column(
         width = 12,
-        tags$b("Preview"),
+        tags$b("Item preview"),
         column(
           width = 12,
 
@@ -111,23 +111,6 @@ reportGenerator <- function() {
   server <- function(input,output) {
 
     # Load data
-
-    #
-    # dataVariables <- reactiveValues()
-    #
-    # observeEvent(input$datasetLoad, {
-    #
-    #     inFile <- req(input$datasetLoad)
-    #     dataVariables <- unzip(inFile$datapath, list = TRUE)
-    #
-    #
-    #   })
-    #
-    # output$uploadedFiles <-
-    #   renderPrint(
-    #     dataVariables # Matches the group_name of the bucket list
-    #   )
-
 
     # 1. Load files
 
@@ -187,7 +170,7 @@ reportGenerator <- function() {
 
     })
 
-    # To UI
+    # Test to UI
 
     output$uploadedFiles <- renderPrint(
         uploadedFiles()
