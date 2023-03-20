@@ -289,7 +289,10 @@ reportGenerator <- function() {
     # output$itemsList <- renderPrint(
     #   itemsList()
     # )
-#
+
+
+    ## UI Menu
+
     output$itemSelectionMenu <- renderUI({
 
       column(
@@ -449,12 +452,19 @@ reportGenerator <- function() {
       reverseList <- rev(input$objectsList2)
 
       menuList <- read.csv(system.file("config/itemsConfig.csv",
-                                       package = "ReportGenerator"),
-                           sep = ";")
+                                       package = "ReportGenerator"), sep = ";")
 
-      menuList$arguments <- gsub("incidence_attrition" , "incidence_attrition()", menuList$arguments)
-      menuList$arguments <- gsub("prevalence_attrition" , "prevalence_attrition()", menuList$arguments)
-      menuList$arguments <- gsub("incidence_estimates" , "incidence_estimates()", menuList$arguments)
+      menuList$arguments <- gsub("incidence_attrition" ,
+                                 "incidence_attrition()",
+                                 menuList$arguments)
+
+      menuList$arguments <- gsub("prevalence_attrition" ,
+                                 "prevalence_attrition()",
+                                 menuList$arguments)
+
+      menuList$arguments <- gsub("incidence_estimates" ,
+                                 "incidence_estimates()",
+                                 menuList$arguments)
 
       menuList <- menuList %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
 
