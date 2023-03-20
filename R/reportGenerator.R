@@ -126,7 +126,17 @@ reportGenerator <- function() {
 
     observeEvent(input$resetData, {
 
-      resetDatasetLoad$data <- "resetDatasetLoad"
+      if (!is.null(uploadedFiles())) {
+
+        lapply(uploadedFiles(), file.remove)
+
+        resetDatasetLoad$data <- "resetDatasetLoad"
+
+      } else {
+
+        resetDatasetLoad$data <- "resetDatasetLoad"
+
+      }
 
       })
 
