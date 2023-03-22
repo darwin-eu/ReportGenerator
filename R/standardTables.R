@@ -167,7 +167,7 @@ table3IncYear <- function (incidence_estimates) {
              incidence_100000_pys) %>%
     summarise()
 
-  return(tableIncidence)
+  return(flextable(tableIncidence))
 }
 
 #' table4IncAge
@@ -206,7 +206,7 @@ table4IncAge <- function (incidence_estimates) {
 
   # View(tableIncidence)
 
-  return(tableIncidence)
+  return(flextable(tableIncidence))
 }
 
 #' table5IncSex
@@ -241,7 +241,7 @@ table5IncSex <- function (incidence_estimates) {
 
   unique(tableIncidence$n_persons)
 
-  return(tableIncidence)
+  return(flextable(tableIncidence))
 }
 if(getRversion() >= "2.15.1")    utils::globalVariables(c("step",
                                                           "reason",
