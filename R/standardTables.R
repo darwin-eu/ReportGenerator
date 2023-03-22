@@ -130,7 +130,7 @@ table2IncOver <- function (incidence_estimates) {
              incidence_100000_pys) %>%
     summarise()
 
-  return(tableIncidence)
+  return(flextable(tableIncidence))
 
 }
 
