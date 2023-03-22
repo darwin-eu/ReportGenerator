@@ -17,7 +17,7 @@
 #' This application offers a visualization of the figures available to fill in a study report in Word format.
 #'
 #' @export
-#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable DT flextable
+#' @import dplyr rmarkdown huxtable here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable DT flextable
 reportGenerator <- function() {
 
   ui <- fluidPage(

@@ -32,7 +32,8 @@ Imports:
     stringr,
     rjson,
     googleVis,
-    data.table
+    data.table,
+    huxtable
 Suggests: 
     testthat
 Remotes:
