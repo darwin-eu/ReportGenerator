@@ -385,11 +385,17 @@ reportGenerator <- function() {
 
       menuFun  <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";")
 
-      menuFun$arguments <- gsub("incidence_attrition" , "incidence_attrition()", menuFun$arguments)
+      menuFun$arguments <- gsub("incidence_attrition",
+                                "incidence_attrition()",
+                                menuFun$arguments)
 
-      menuFun$arguments <- gsub("prevalence_attrition" , "prevalence_attrition()", menuFun$arguments)
+      menuFun$arguments <- gsub("prevalence_attrition",
+                                "prevalence_attrition()",
+                                menuFun$arguments)
 
-      menuFun$arguments <- gsub("incidence_estimates" , "incidence_estimates()", menuFun$arguments)
+      menuFun$arguments <- gsub("incidence_estimates",
+                                "incidence_estimates()",
+                                menuFun$arguments)
 
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
 
