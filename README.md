@@ -23,7 +23,7 @@ To test the package, generate first the mock data with mockSampleCSV()
 
 ``` r
 
- mockSampleCSV()
+ generateMockData()
 ```
 
 It generates an WORD document in the reports folder.
