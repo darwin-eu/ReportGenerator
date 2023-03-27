@@ -415,13 +415,9 @@ reportGenerator <- function() {
     # Item choice data
 
     objectChoice  <- reactive({
-
       req(input$tableContents_cells_selected)
 
       objectSelection  <- menu()[input$tableContents_cells_selected,]
-
-      # objectSelection <- "Plot - Incidence rate per year"
-
       if (length(objectSelection) >= 1) {
         object <- eval(parse(text = menuFun() %>%
                                dplyr::filter(title == objectSelection) %>%
@@ -434,46 +430,34 @@ reportGenerator <- function() {
     # Renders item preview depending on the object class
 
     output$itemPreview <- renderUI({
-
       req(objectChoice())
 
       if (is(objectChoice(), "flextable")) {
-
-        tableOutput("tableContentTable")
-
+        DT::dataTableOutput("tableContentTable")
       } else {
-
         plotlyOutput("tableContentPlot")
-
       }
-
     })
 
     # Objects to be rendered in the UI
 
-    output$tableContentTable <- renderUI({
+    output$tableContentTable <- DT::renderDataTable({
+      objectChoice <- objectChoice()
+      req(objectChoice)
 
-      req(objectChoice())
-
-      if (is(objectChoice(), "flextable")) {
-
-        htmltools_value(objectChoice())
-
-        }
-
-      })
+      if (is(objectChoice, "flextable")) {
+        data <- objectChoice$body$dataset
+      }
+      data
+    })
 
     output$tableContentPlot<- renderPlotly({
-
       req(objectChoice())
 
       if (!is(objectChoice(), "flextable")) {
-
         objectChoice()
-
-        }
-
-      })
+      }
+    })
 
     # 4. Word report generator
 
