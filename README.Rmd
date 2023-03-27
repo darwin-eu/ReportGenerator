@@ -28,7 +28,7 @@ You can install the development version of reportGenerator like so:
 
 ``` r
 install.packages("remotes")
-remotes::install_github("cbarbozaerasmus/reportGenerator")
+remotes::install_github("darwin-eu-dev/reportGenerator")
 ```
 
 To test the package, generate first the mock data with mockSampleCSV()
