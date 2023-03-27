@@ -17,7 +17,7 @@
 #' This application offers a visualization of the figures available to fill in a study report in Word format.
 #'
 #' @export
-#' @import dplyr rmarkdown huxtable here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable DT flextable
+#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable flextable
 reportGenerator <- function() {
 
   ui <- fluidPage(
@@ -159,112 +159,46 @@ reportGenerator <- function() {
       applyReset <- resetDatasetLoad$data
 
       if (is.null(inFile)) {
-
         return(NULL)
-
       } else if (!is.null(applyReset)) {
-
         return(NULL)
-
       } else if (!is.null(inFile)) {
-
         itemsList <- c()
-
         for (i in uploadedFiles()) {
-
           resultsData <- read_csv(i)
-
           resultsColumns <- names(resultsData)
-
           configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
-
           configDataTypes <- unique(configData$name)
-
           for (val in configDataTypes) {
-
             configColumns <- configData %>% filter(name == val)
-
             configColumns <- configColumns$variables
-
             if (length(configColumns) == length(resultsColumns)) {
-
               if (identical(configColumns, resultsColumns)) {
-
                 itemsList <- append(itemsList, val)
-
-            }
-
-            }
-
-          }
-
-        }
-
-        result <- itemsList
-
-        menuFun  <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"),
-                             sep = ";") %>%
-          dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-
-        checkNeeds <- function(menuFun , uploadedFiles) {
-
-          unlist(lapply(menuFun , FUN = function(menuFun ) {
-
-              required <- trimws(unlist(strsplit(menuFun , ",")))
-
-              exists <- required %in% uploadedFiles
-
-            if (TRUE %in% exists) {
-
-              return(TRUE)
-
-              } else {
-
-              return(FALSE)
-
               }
-
-            })
-
-          )}
-
-        menuFun  %>%
-          dplyr::filter(checkNeeds(menuFun $arguments, result)) %>%
-          dplyr::select(title, signature)
-
+            }
+          }
         }
-
-      })
+        result <- getItemsList(itemsList)
+      }
+    })
 
     output$itemSelectionMenu <- renderUI({
 
       column(tags$b("Item selection"),
-
              width = 12,
-
              bucket_list(header = "Select the figures you want in the report",
-
                          group_name = "bucket_list_group",
-
                          orientation = "horizontal",
-
                          add_rank_list(text = "Drag from here",
-
                                        labels = itemsList()$title,
-
                                        input_id = "objectMenu"),
-
                          add_rank_list(text = "to here",
-
                                        labels = NULL,
-
                                        input_id = "objectSelection"
-
                            )
-
                          )
              )
-
       })
 
     # 2.3 Load Data variables
@@ -272,97 +206,56 @@ reportGenerator <- function() {
     # Uploaded object: Incidence Attrition
 
     incidence_attrition <- reactive({
-
       for (i in uploadedFiles()) {
-
         configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-
           dplyr::filter(name == "incidence_attrition")
-
         configColumns <- configColumns$variables
-
         csvData <- read_csv(i)
-
         resultsColumns <- names(csvData)
-
         if (length(configColumns) == length(resultsColumns)) {
-
           if (identical(configColumns, resultsColumns)) {
-
             result <- csvData
-
           }
-
         }
-
-        }
-
+      }
       return(result)
-
     })
 
     # Uploaded object: Prevalence Attrition
 
     prevalence_attrition <- reactive({
-
       for (i in uploadedFiles()) {
-
         configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-
           dplyr::filter(name == "prevalence_attrition")
 
         configColumns <- configColumns$variables
-
         csvData <- read_csv(i)
-
         resultsColumns <- names(csvData)
-
         if (length(configColumns) == length(resultsColumns)) {
-
           if (identical(configColumns, resultsColumns)) {
-
             result <- csvData
-
           }
-
         }
-
       }
-
       return(result)
-
     })
 
     # Uploaded object: Incidence Estimates
 
     incidence_estimates <- reactive({
-
       for (i in uploadedFiles()) {
-
         configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-
           dplyr::filter(name == "incidence_estimates")
-
         configColumns <- configColumns$variables
-
         csvData <- read_csv(i)
-
         resultsColumns <- names(csvData)
-
         if (length(configColumns) == length(resultsColumns)) {
-
           if (identical(configColumns, resultsColumns)) {
-
             result <- csvData
-
           }
-
         }
-
       }
-
       return(result)
-
     })
 
     # 3. Item preview
@@ -370,21 +263,14 @@ reportGenerator <- function() {
     # 3.1 Objects list. From the sortable menu.
 
     menu <- reactive({
-
       contents  <- input$objectSelection
-
       objectsDataFrame <- data.frame(contents)
-
       objectsDataFrame
-
     })
 
     # Functions available from the configuration file
-
     menuFun  <- reactive({
-
       menuFun  <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";")
-
       menuFun$arguments <- gsub("incidence_attrition",
                                 "incidence_attrition()",
                                 menuFun$arguments)
@@ -398,9 +284,7 @@ reportGenerator <- function() {
                                 menuFun$arguments)
 
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-
       menuFun
-
     })
 
     # 3.2 Preview Table
@@ -462,59 +346,73 @@ reportGenerator <- function() {
     # 4. Word report generator
 
     observeEvent(input$generateReport, {
-
       incidencePrevalenceDocx <- read_docx(path = here("inst/templates/word/darwinTemplate.docx"))
-
       reverseList <- rev(input$objectSelection)
-
       for (i in reverseList) {
-
         object <- eval(parse(text = menuFun() %>%
                                dplyr::filter(title == i) %>%
                                dplyr::pull(signature)))
 
         if ("flextable" %in% class(object)) {
-
           body_add_flextable(incidencePrevalenceDocx, value = object)
-
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
 
           } else if ("ggplot" %in% class(object)) {
-
             body_add_gg(x = incidencePrevalenceDocx,
                         value = object,
                         style = "Normal")
-
             body_add(incidencePrevalenceDocx,
                      value = i,
                      style = "Heading 1 (Agency)")
 
             } else {
-
               body_add_table(incidencePrevalenceDocx,
                              value = object,
                              style = "TableOverall")
-
               body_add(incidencePrevalenceDocx,
                        value = i,
                        style = "Heading 1 (Agency)")
-
             }
-
         }
-
       body_add_toc(incidencePrevalenceDocx)
-
       print(incidencePrevalenceDocx,
             target = here("Reports/generatedReport.docx"))
     })
   }
   shinyApp(ui, server)
-}
+  }
+
 if(getRversion() >= "2.15.1")    utils::globalVariables(c("incidence_attrition",
                                                           "prevalence_attrition",
                                                           "incidence_estimates"))
 
 
+#' Get the items that the user can choose from in the report generator. The list is loaded from the configuration file
+#' and filtered by the files that have been uploaded.
+#'
+#' @param uploadedFiles vector of uploaded filenames.
+#'
+#' @return a dataframe with the properties of the items
+getItemsList <- function(uploadedFiles) {
+  menuFunctions <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"),
+                       sep = ";") %>%
+    dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
+
+  checkNeeds <- function(menuFunctions, uploadedFiles) {
+    unlist(lapply(menuFunctions, FUN = function(menuFunction) {
+      required <- trimws(unlist(strsplit(menuFunction , ",")))
+      exists <- required %in% uploadedFiles
+
+      if (TRUE %in% exists) {
+        return(TRUE)
+      } else {
+        return(FALSE)
+      }
+    }))
+  }
+  menuFunctions  %>%
+    dplyr::filter(checkNeeds(menuFunctions$arguments, uploadedFiles)) %>%
+    dplyr::select(title, signature)
+}

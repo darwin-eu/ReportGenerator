@@ -33,7 +33,7 @@ Imports:
     rjson,
     googleVis,
     data.table,
-    huxtable
+    DT
 Suggests: 
     testthat
 Remotes:
