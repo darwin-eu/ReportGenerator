@@ -206,7 +206,8 @@ for (i in databaseName) {
            files = list.files(tempDir, full.names = TRUE),
            mode = "cherry-pick")
 
-  unlink(tempDir, recursive = TRUE)
+
+  lapply(list.files(tempDir, full.names = TRUE), file.remove)
 
 }
 

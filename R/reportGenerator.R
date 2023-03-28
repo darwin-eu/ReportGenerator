@@ -229,7 +229,7 @@ reportGenerator <- function() {
           )}
 
         menuFun  %>%
-          dplyr::filter(checkNeeds(menuFun $arguments, result)) %>%
+          dplyr::filter(checkNeeds(menuFun$arguments, result)) %>%
           dplyr::select(title, signature)
 
         }
