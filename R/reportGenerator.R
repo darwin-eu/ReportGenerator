@@ -21,13 +21,9 @@
 reportGenerator <- function() {
 
   ui <- fluidPage(
-    # tags$head(
-    #   tags$style(HTML(".bucket-list-container {min-height: 700px;}"))
-    # ),
+    fluidRow(column(width = 12, uiOutput("studyDesign"))),
     fluidRow(
-
       column(width = 12, tags$b("Load data"),
-
         column(width = 12,
                # File input field
                fileInput("datasetLoad",
@@ -338,6 +334,16 @@ reportGenerator <- function() {
       if (!is(objectChoice(), "flextable")) {
         objectChoice()
       }
+    })
+
+    # studyDesign
+    output$studyDesign <- renderUI({
+      checkboxGroupInput(inputId = "studyDesignGroup", label = "Select study type",
+                         choices = c("Drug Utilisation Studies (DUS)",
+                                     "Disease Epidemiology",
+                                     "Routine Repeated Analysis",
+                                     "Drug/Vaccine Safety or Comparative Effectiveness Studies"),
+                         inline = TRUE)
     })
 
     # 4. Word report generator
