@@ -291,10 +291,7 @@ reportGenerator <- function() {
 
     # Table of contents to the UI
 
-    output$tableContents <- DT::renderDataTable(menu(),
-                                                options = list(dom = "t"),
-                                                selection = list(mode = "single", target = "cell"),
-                                                rownames = FALSE)
+    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(menu()))
 
     # Item choice data
 
@@ -332,7 +329,7 @@ reportGenerator <- function() {
       if (is(objectChoice, "flextable")) {
         data <- objectChoice$body$dataset
       }
-      data
+      createPreviewTable(data)
     })
 
     output$tableContentPlot<- renderPlotly({
