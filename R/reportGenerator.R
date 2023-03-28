@@ -206,7 +206,7 @@ reportGenerator <- function() {
                              sep = ";") %>%
           dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
 
-        checkNeeds <- function(menuFun , uploadedFiles) {
+        checkNeeds <- function(menuFun, uploadedFiles) {
 
           unlist(lapply(menuFun , FUN = function(menuFun ) {
 
