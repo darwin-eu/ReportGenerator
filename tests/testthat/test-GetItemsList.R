@@ -5,17 +5,17 @@ genericChecks <- function(result) {
 
 test_that("getItemsList happy flow", {
 
-  uploadedFiles <- c("incidence_attrition_example_data.csv",
-                     "incidence_estimates_example_data.csv",
-                     "prevalence_attrition_example_data.csv")
+  uploadedFiles <- c("incidence_attrition",
+                     "incidence_estimates",
+                     "prevalence_attrition")
 
   result <- getItemsList(uploadedFiles)
 
   genericChecks(result)
   expect_equal(nrow(result), 9)
 
-  uploadedFiles <- c("incidence_attrition_example_data.csv",
-                     "prevalence_attrition_example_data.csv")
+  uploadedFiles <- c("incidence_attrition",
+                     "prevalence_attrition")
 
   result <- getItemsList(uploadedFiles)
 
