@@ -20,6 +20,9 @@
 #' @import dplyr rmarkdown huxtable here ggplot2 quarto shiny shinydashboard shinyWidgets officer sortable DT flextable
 reportGenerator <- function() {
 
+  # set max file upload size
+  options(shiny.maxRequestSize = 30*1024^2)
+
   ui <- fluidPage(
     # tags$head(
     #   tags$style(HTML(".bucket-list-container {min-height: 700px;}"))
@@ -103,43 +106,28 @@ reportGenerator <- function() {
       })
 
     # 1.2 Upload files
-
     uploadedFiles <- reactive({
-
       inFile <- input$datasetLoad
-
       applyReset <- resetDatasetLoad$data
-
       if (is.null(inFile)) {
-
         return(NULL)
-
       } else if (!is.null(applyReset)) {
-
         return(NULL)
-
       } else if (!is.null(inFile)) {
-
         uploadedFiles <- inFile$datapath
-
         if (grepl(".zip",
                   uploadedFiles,
                   fixed = TRUE)) {
-
           csvLocation <- tempdir()
-
           unzip(uploadedFiles, exdir = csvLocation)
-
           csvFiles <- list.files(path = csvLocation,
                                  pattern = ".csv",
                                  full.names = TRUE)
-
+        } else {
+          csvFiles <- uploadedFiles
         }
-
         return(csvFiles)
-
       }
-
     })
 
     # Test to UI
@@ -272,63 +260,38 @@ reportGenerator <- function() {
     # Uploaded object: Incidence Attrition
 
     incidence_attrition <- reactive({
-
+      result <- NULL
       for (i in uploadedFiles()) {
-
         configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-
           dplyr::filter(name == "incidence_attrition")
-
         configColumns <- configColumns$variables
-
         csvData <- read_csv(i)
-
         resultsColumns <- names(csvData)
-
         if (length(configColumns) == length(resultsColumns)) {
-
           if (identical(configColumns, resultsColumns)) {
-
             result <- csvData
-
           }
-
         }
-
-        }
-
+      }
       return(result)
-
     })
 
     # Uploaded object: Prevalence Attrition
 
     prevalence_attrition <- reactive({
-
+      result <- NULL
       for (i in uploadedFiles()) {
-
         configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-
           dplyr::filter(name == "prevalence_attrition")
-
         configColumns <- configColumns$variables
-
         csvData <- read_csv(i)
-
         resultsColumns <- names(csvData)
-
         if (length(configColumns) == length(resultsColumns)) {
-
           if (identical(configColumns, resultsColumns)) {
-
             result <- csvData
-
           }
-
         }
-
       }
-
       return(result)
 
     })
@@ -336,31 +299,19 @@ reportGenerator <- function() {
     # Uploaded object: Incidence Estimates
 
     incidence_estimates <- reactive({
-
+      result <- NULL
       for (i in uploadedFiles()) {
-
         configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-
           dplyr::filter(name == "incidence_estimates")
-
         configColumns <- configColumns$variables
-
         csvData <- read_csv(i)
-
         resultsColumns <- names(csvData)
-
         if (length(configColumns) == length(resultsColumns)) {
-
           if (identical(configColumns, resultsColumns)) {
-
             result <- csvData
-
           }
-
         }
-
       }
-
       return(result)
 
     })
