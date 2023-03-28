@@ -17,3 +17,6 @@ dataShiny.RData
 notes1.R
 notes2.R
 itemsConfig - Copy.csv
+prevalenceResults/
+incidenceResults/
+results_zip/

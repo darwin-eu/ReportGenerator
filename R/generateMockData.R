@@ -21,10 +21,7 @@
 #' @importFrom utils head write.csv
 #' @importFrom stats time
 #' @return CSV files inside inst/csv duckdb
-generateMockData <- function(databaseName = c("SYNTHEA",
-                                              "IPCI",
-                                              "CPRD",
-                                              "SIDIAP")) {
+generateMockData <- function(databaseName = "IPCI") {
 
 cdm <- mockIncidencePrevalenceRef(sampleSize = 50000)
 
@@ -107,10 +104,10 @@ for (i in databaseName) {
 
   # Results
 
-  studyResults <- gatherIncidencePrevalenceResults(cdm=cdm,
-                                                   resultList=list(incidence,
-                                                                   prevalencePoint,
-                                                                   prevalencePeriod))
+  studyResults <- gatherIncidencePrevalenceResults(cdm = cdm,
+                                                   resultList = list(incidence,
+                                                                     prevalencePoint,
+                                                                     prevalencePeriod))
 
   # studyResults[1] # prevalence_estimates_
   # studyResults[2] # prevalence_attrition_
@@ -120,12 +117,9 @@ for (i in databaseName) {
 
   ## Writing prevalence data into csv
 
-  if (!file.exists(here("inst/csv/mock/prevalenceResults"))) {
+  if (!file.exists(here("prevalenceResults"))) {
 
-    subDir <- here("inst",
-                   "csv",
-                   "mock",
-                   "prevalenceResults")
+    subDir <- here("prevalenceResults")
 
     dir.create(file.path(subDir),
                recursive = TRUE)
@@ -134,8 +128,8 @@ for (i in databaseName) {
   studyResults$prevalence_estimates <- studyResults$prevalence_estimates %>% mutate(database_name = i)
 
   write.csv(studyResults$prevalence_estimates,
-            paste(here("inst/csv/mock/prevalenceResults/"),
-                  "prevalence_mock_estimates_",
+            paste(here("prevalenceResults"),
+                  "/prevalence_mock_estimates_",
                   i,
                   ".csv",
                   sep = ""),
@@ -143,12 +137,9 @@ for (i in databaseName) {
 
   ## Writing incidence data into csv
 
-  if (!file.exists(here("inst/csv/mock/incidenceResults"))) {
+  if (!file.exists(here("incidenceResults"))) {
 
-    subDir <- here("inst",
-                   "csv",
-                   "mock",
-                   "incidenceResults")
+    subDir <- here("incidenceResults")
 
     dir.create(file.path(subDir),
                recursive = TRUE)
@@ -158,68 +149,64 @@ for (i in databaseName) {
   studyResults$incidence_estimates <- studyResults$incidence_estimates %>% mutate(database_name = i)
 
   write.csv(studyResults$incidence_estimates,
-            paste(here("inst/csv/mock/incidenceResults/"),
-                  "incidence_mock_estimates_",
+            paste(here("incidenceResults"),
+                  "/incidence_mock_estimates_",
                   i,
                   ".csv",
                   sep = ""),
             row.names = FALSE)
 
+
   ## Exporting whole results into zip folder
 
-  if (!file.exists(here("inst/csv/mock/results_zip"))) {
+  if (!file.exists(here("results_zip"))) {
 
-    subDir <- here("inst",
-                   "csv",
-                   "mock",
-                   "results_zip")
+    subDir <- here("results_zip")
 
     dir.create(file.path(subDir),
                recursive = TRUE)
 
   }
 
-  exportIncidencePrevalenceResults(result = studyResults,
-                                   zipName = paste0("mock_results",
-                                                    "_",
-                                                    i),
-                                   outputFolder = here::here("inst/csv/mock/results_zip"))
+  result <- studyResults
 
-  # To write in csv the denominator data in csv ---------------
+  zipName <-  paste0("mock_results", "_", i)
 
-  # if (!file.exists(here("inst/csv/denominatorMockData"))) {
-  #
-  #   subDir <- here("inst",
-  #                  "csv",
-  #                  "denominatorMockData")
-  #
-  #   dir.create(file.path(subDir),
-  #              recursive = TRUE)
-  # }
-  #
-  # write.csv(cdm$denominator,
-  #           paste(here("inst/csv/denominatorMockData/denominatorMockData"),
-  #                 i,
-  #                 ".csv",
-  #                 sep = ""),
-  #           row.names = FALSE)
+  outputFolder <- here::here("results_zip")
 
-  # Left join of incidence with settings() ---------------
+  errorMessage <- checkmate::makeAssertCollection()
 
-  # incidenceEstimates <- incidence %>%
-  #   left_join(settings(incidenceEstimates)) %>%
-  #   # left_join(settings(cdm$denominator),
-  #   #           by=c("analysis_id" = "cohort_definition_id")) %>%
-  #   mutate(database_name = i)
+  checkmate::assertTRUE(
+    inherits(result, "IncidencePrevalenceGatheredResult"),
+    add = errorMessage
+  )
+  checkmate::assertCharacter(zipName, len = 1,
+                             add = errorMessage)
+  checkmate::assertDirectoryExists(outputFolder,
+                                   add = errorMessage)
+  checkmate::reportAssertions(collection = errorMessage)
 
-  # Left join of prevalence with settings() ---------------
+  tempDir <- tempdir()
 
-  # prevalenceResultsSettings <- prevalenceEstimates %>%
-  #   left_join(settings(prevalenceEstimates)) %>%
-  #   # left_join(dpop$denominator_settings,
-  #   #           by=c("denominator_id" = "cohort_definition_id")) %>%
-  #   mutate(database_name = i)
+  # write results to disk
+  lapply(names(result), FUN = function(checkResultName) {
+    checkResult <- result[[checkResultName]]
+    utils::write.csv(checkResult,
+                     file = file.path(
+                       tempDir,
+                       paste0(attr(result, "cdm_name"), "_",
+                              checkResultName, "_",
+                              format(Sys.Date(), format="%Y%m%d"),
+                              ".csv")),
+                     row.names = FALSE
+    )
+  })
 
+  zip::zip(zipfile = file.path(outputFolder, paste0(zipName, ".zip")),
+           files = list.files(tempDir, full.names = TRUE),
+           mode = "cherry-pick")
+
+  unlink(tempDir, recursive = TRUE)
 
 }
 
