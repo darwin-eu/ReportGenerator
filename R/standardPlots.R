@@ -21,6 +21,11 @@
 #' @import ggplot2
 #' @export
 incidenceRatePerYearPlot <- function(incidence_estimates) {
+
+  # TEST reportGenerator app
+  # incidence_mock_estimates_IPCI <- read_csv("incidenceResults/incidence_mock_estimates_IPCI.csv")
+  # incidence_estimates <- incidence_mock_estimates_IPCI
+
   incidence_estimates %>%
     ggplot(aes(x = incidence_start_date,
                y = incidence_100000_pys,
