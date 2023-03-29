@@ -24,47 +24,52 @@ reportGenerator <- function() {
   # set max file upload size
   options(shiny.maxRequestSize = 30*1024^2)
 
-  ui <- fluidPage(
-    fluidRow(column(width = 12, uiOutput("studyDesign"))),
-    fluidRow(
-      column(width = 12, tags$b("Load data"),
-        column(width = 12,
-               # File input field
-               fileInput("datasetLoad",
-                         "Upload zip folder or csv file",
-                         accept = c(".zip", ".csv"),
-                         multiple = TRUE),
-               # Print to monitor
-               verbatimTextOutput("uploadedFiles"),
+  ui <- dashboardPage(
+    dashboardHeader(title = "Report Generator"),
+    dashboardSidebar(
+      sidebarMenu(uiOutput("studyDesign"))
+    ),
+    dashboardBody(
+      fluidRow(
+        column(width = 12, tags$b("Load data"),
+          column(width = 12,
+                 # File input field
+                 fileInput("datasetLoad",
+                           "Upload zip folder or csv file",
+                           accept = c(".zip", ".csv"),
+                           multiple = TRUE),
+                 # Print to monitor
+                 verbatimTextOutput("uploadedFiles"),
 
-               # Reset data button
-               actionButton('resetData', 'Reset data')
-               )
-        )
+                 # Reset data button
+                 actionButton('resetData', 'Reset data')
+                 )
+          )
+        ),
+
+      fluidRow(
+        # Item selection menu
+        uiOutput("itemSelectionMenu")
+
       ),
 
-    fluidRow(
-      # Item selection menu
-      uiOutput("itemSelectionMenu")
+      fluidRow(
 
-    ),
+        column(width = 12,
+               tags$b("Item preview"),
 
-    fluidRow(
+          fluidRow(
 
-      column(width = 12,
-             tags$b("Item preview"),
+            column(width = 4,
+              fluidRow(DT::dataTableOutput("tableContents")),
+              fluidRow(actionButton("generateReport", "Generate Report"))),
 
-        fluidRow(
+            column(width = 8,
+                   uiOutput("itemPreview"))
 
-          column(width = 4,
-            fluidRow(DT::dataTableOutput("tableContents")),
-            fluidRow(actionButton("generateReport", "Generate Report"))),
-
-          column(width = 8,
-                 uiOutput("itemPreview"))
+          )
 
         )
-
       )
     )
   )
@@ -334,7 +339,7 @@ reportGenerator <- function() {
                                      "Disease Epidemiology",
                                      "Routine Repeated Analysis",
                                      "Drug/Vaccine Safety or Comparative Effectiveness Studies"),
-                         inline = TRUE)
+                         inline = FALSE)
     })
 
     # 4. Word report generator

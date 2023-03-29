@@ -17,4 +17,4 @@ library(ReportGenerator)
 
 # Run app
 
-resultsDashboard()
+reportGenerator()
