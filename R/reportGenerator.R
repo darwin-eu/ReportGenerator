@@ -43,11 +43,11 @@ reportGenerator <- function() {
         )
       ),
 
-    fluidRow(
-      # Item selection menu
-      uiOutput("itemSelectionMenu")
-
-    ),
+    # fluidRow(
+    #   # Item selection menu
+    #   uiOutput("itemSelectionMenu")
+    #
+    # ),
 
     fluidRow(
 
@@ -168,23 +168,23 @@ reportGenerator <- function() {
       }
     })
 
-    output$itemSelectionMenu <- renderUI({
-
-      column(tags$b("Item selection"),
-             width = 12,
-             bucket_list(header = "Select the figures you want in the report",
-                         group_name = "bucket_list_group",
-                         orientation = "horizontal",
-                         add_rank_list(text = "Drag from here",
-                                       labels = itemsList()$title,
-                                       input_id = "objectMenu"),
-                         add_rank_list(text = "to here",
-                                       labels = NULL,
-                                       input_id = "objectSelection"
-                           )
-                         )
-             )
-      })
+    # output$itemSelectionMenu <- renderUI({
+    #
+    #   column(tags$b("Item selection"),
+    #          width = 12,
+    #          bucket_list(header = "Select the figures you want in the report",
+    #                      group_name = "bucket_list_group",
+    #                      orientation = "horizontal",
+    #                      add_rank_list(text = "Drag from here",
+    #                                    labels = itemsList()$title,
+    #                                    input_id = "objectMenu"),
+    #                      add_rank_list(text = "to here",
+    #                                    labels = NULL,
+    #                                    input_id = "objectSelection"
+    #                        )
+    #                      )
+    #          )
+    #   })
 
     # 2.3 Load Data variables
 
@@ -278,7 +278,10 @@ reportGenerator <- function() {
 
     # Table of contents to the UI
 
-    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(menu()))
+
+    # output$tableContents <- DT::renderDataTable(createPreviewMenuTable(menu()))
+    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(data.frame(itemsList()$title)))
+
 
     # Item choice data
 
