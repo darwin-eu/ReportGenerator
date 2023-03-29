@@ -377,16 +377,18 @@ reportGenerator <- function() {
 
     observe({
 
-      if (objectChoice() == "Table - Incidence overall") {
+      # if (objectChoice() == "Table - Incidence overall") {
+      #
+      #   updateSelectInput(inputId = "sexIncidence",
+      #                     choices = c("All", unique(incidence_estimates()$denominator_sex)))
+      #
+      #   updateSelectInput(inputId = "ageIncidence",
+      #                     choices = c("All",
+      #                                 unique(incidence_estimates()$denominator_age_group)))
+      #
+      # } else
 
-        updateSelectInput(inputId = "sexIncidence",
-                          choices = c("All", unique(incidence_estimates()$denominator_sex)))
-
-        updateSelectInput(inputId = "ageIncidence",
-                          choices = c("All",
-                                      unique(incidence_estimates()$denominator_age_group)))
-
-      } else if (objectChoice() == "Plot - Incidence rate per year") {
+        if (objectChoice() == "Plot - Incidence rate per year") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = unique(incidence_estimates()$denominator_sex))
@@ -446,23 +448,7 @@ reportGenerator <- function() {
     output$previewTable <- renderUI({
       req(objectChoice())
 
-      menuFun  <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";")
-      menuFun$arguments <- gsub("incidence_attrition",
-                                "incidence_attrition()",
-                                menuFun$arguments)
-
-      menuFun$arguments <- gsub("prevalence_attrition",
-                                "prevalence_attrition()",
-                                menuFun$arguments)
-
-      menuFun$arguments <- gsub("incidence_estimates",
-                                "incidence_estimates()",
-                                menuFun$arguments)
-
-      menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-
-
-      object <- eval(parse(text = menuFun %>%
+      object <- eval(parse(text = menuFun() %>%
                              dplyr::filter(title == objectChoice()) %>%
                              dplyr::pull(signature)))
 
@@ -476,7 +462,7 @@ reportGenerator <- function() {
 
       req(objectChoice())
 
-      if (grepl("Plot", objectChoice())) {
+      # if (grepl("Plot", objectChoice())) {
         fluidRow(
           fluidRow(
             column(4,
@@ -534,7 +520,7 @@ reportGenerator <- function() {
                    )
             )
         )
-        }
+        # }
       })
 
     output$previewPlot<- renderPlotly({
