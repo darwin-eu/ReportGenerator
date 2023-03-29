@@ -52,7 +52,7 @@ reportGenerator <- function() {
     fluidRow(
 
       column(width = 12,
-             tags$b("Item preview"),
+             # tags$b("Item preview"),
 
         fluidRow(
 
@@ -250,7 +250,7 @@ reportGenerator <- function() {
     # 3.1 Objects list. From the sortable menu.
 
     menu <- reactive({
-      contents  <- input$objectSelection
+      contents  <- itemsList()$title
       objectsDataFrame <- data.frame(contents)
       objectsDataFrame
     })
