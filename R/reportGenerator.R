@@ -18,6 +18,7 @@
 #'
 #' @export
 #' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable
+#' @importFrom sortable bucket_list add_rank_list
 reportGenerator <- function() {
 
   # set max file upload size
