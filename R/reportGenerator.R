@@ -437,7 +437,7 @@ reportGenerator <- function() {
       req(objectChoice())
 
       if (grepl("Table", objectChoice())) {
-        tableOutput("previewTable")
+        DT::dataTableOutput("previewTable")
       } else {
         plotlyOutput("previewPlot")
       }
@@ -445,16 +445,21 @@ reportGenerator <- function() {
 
     # Objects to be rendered in the UI
 
-    output$previewTable <- renderUI({
+    output$previewTable <- DT::renderDataTable({
       req(objectChoice())
 
       object <- eval(parse(text = menuFun() %>%
                              dplyr::filter(title == objectChoice()) %>%
                              dplyr::pull(signature)))
 
-      if (grepl("Table", objectChoice())) {
-        htmltools_value(object)
+      if (is(objectChoice, "flextable")) {
+        data <- object$body$dataset
       }
+      createPreviewTable(data)
+
+      # if (grepl("Table", objectChoice())) {
+      #   htmltools_value(object)
+      # }
 
     })
 
