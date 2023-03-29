@@ -24,7 +24,6 @@ Imports:
     shiny,
     shinydashboard,
     shinyWidgets,
-    sortable,
     tidyr,
     checkmate,
     webshot2 (>= 0.1.0),
@@ -33,7 +32,9 @@ Imports:
     rjson,
     googleVis,
     data.table,
-    huxtable
+    huxtable,
+    DT,
+    zip
 Suggests: 
     testthat
 Remotes:
