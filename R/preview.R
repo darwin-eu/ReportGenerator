@@ -30,6 +30,7 @@ createPreviewMenuTable <- function(data) {
 #'
 #' @param data the input data
 createPreviewTable <- function(data) {
+
   DT::datatable(data,
                 options = list(pageLength = 10,
                                lengthMenu = c(5, 10, 15, 20)),

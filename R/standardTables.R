@@ -113,15 +113,17 @@ table1NumPar <- function (incidence_attrition,
 #' @export
 table2IncOver <- function (incidence_estimates) {
 
-  incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
+  # incidence_estimates <- test_database_incidence_estimates_20230328 <- read_csv("results_zip/mock_results_IPCI/test database_incidence_estimates_20230328.csv")
+
+  # incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
 
   tableIncidence <- incidence_estimates %>%
-    filter(n_persons %in% c(8215316,
-                            2283830,
-                            14854799,
-                            7310575,
-                            339946,
-                            925321)) %>%
+    # filter(n_persons %in% c(8215316,
+    #                         2283830,
+    #                         14854799,
+    #                         7310575,
+    #                         339946,
+    #                         925321)) %>%
     group_by(outcome_cohort_name,
              database_name,
              n_persons,
@@ -145,19 +147,19 @@ table3IncYear <- function (incidence_estimates) {
   #
   # names(incidence_estimates)
 
-  incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
+  # incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
 
   # databaseNamePrev <- unique(prevalence_attrition$database_name)
   #
   # databaseNamePrev <- databaseNamePrev[1:3]
 
   tableIncidence <- incidence_estimates %>%
-    filter(n_persons %in% c(8215316,
-                            2283830,
-                            14854799,
-                            7310575,
-                            339946,
-                            925321)) %>%
+    # filter(n_persons %in% c(8215316,
+    #                         2283830,
+    #                         14854799,
+    #                         7310575,
+    #                         339946,
+    #                         925321)) %>%
     group_by(outcome_cohort_name,
              database_name,
              incidence_start_date,
@@ -182,19 +184,19 @@ table4IncAge <- function (incidence_estimates) {
   #
   # names(incidence_estimates)
 
-  incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
+  # incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
 
   # databaseNamePrev <- unique(prevalence_attrition$database_name)
   #
   # databaseNamePrev <- databaseNamePrev[1:3]
 
   tableIncidence <- incidence_estimates %>%
-    filter(n_persons %in% c(8215316,
-                            2283830,
-                            14854799,
-                            7310575,
-                            339946,
-                            925321)) %>%
+    # filter(n_persons %in% c(8215316,
+    #                         2283830,
+    #                         14854799,
+    #                         7310575,
+    #                         339946,
+    #                         925321)) %>%
     group_by(outcome_cohort_name,
              database_name,
              denominator_age_group,
@@ -217,19 +219,19 @@ table4IncAge <- function (incidence_estimates) {
 #' @export
 table5IncSex <- function (incidence_estimates) {
 
-  incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
+  # incidence_estimates <- incidence_estimates[grep("\\(", incidence_estimates[["outcome_cohort_name"]]), ]
 
   # databaseNamePrev <- unique(prevalence_attrition$database_name)
   #
   # databaseNamePrev <- databaseNamePrev[1:3]
 
   tableIncidence <- incidence_estimates %>%
-    filter(n_persons %in% c(8215316,
-                            2283830,
-                            14854799,
-                            7310575,
-                            339946,
-                            925321)) %>%
+    # filter(n_persons %in% c(8215316,
+    #                         2283830,
+    #                         14854799,
+    #                         7310575,
+    #                         339946,
+    #                         925321)) %>%
     group_by(outcome_cohort_name,
              database_name,
              denominator_sex,
@@ -239,7 +241,7 @@ table5IncSex <- function (incidence_estimates) {
              incidence_100000_pys) %>%
     summarise()
 
-  unique(tableIncidence$n_persons)
+  # unique(tableIncidence$n_persons)
 
   return(flextable(tableIncidence))
 }
