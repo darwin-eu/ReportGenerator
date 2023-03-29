@@ -1,7 +1,7 @@
 #' This application displays an automated and interactive report of the results from the IncidencePrevalence package.
 #'
 #' @export
-#' @import dplyr CDMConnector rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets
+#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets
 #' @return Dashboard
 resultsDashboard <- function() {
 

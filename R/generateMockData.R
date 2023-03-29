@@ -20,6 +20,7 @@
 #' @import dplyr rmarkdown here tidyr IncidencePrevalence
 #' @importFrom utils head write.csv
 #' @importFrom stats time
+#' @importFrom zip zip
 #' @return CSV files inside inst/csv duckdb
 generateMockData <- function(databaseName = "IPCI") {
 
