@@ -24,9 +24,16 @@ reportGenerator <- function() {
   # set max file upload size
   options(shiny.maxRequestSize = 30*1024^2)
 
-  ui <- fluidPage(
+  ui <- dashboardPage(
+
+    dashboardHeader(title = "Report Generator"),
+    dashboardSidebar(),
+
+    dashboardBody(
     fluidRow(column(width = 12, uiOutput("studyDesign"))),
     fluidRow(
+
+      box(
       column(width = 12, tags$b("Load data"),
         column(width = 12,
                # File input field
@@ -41,6 +48,7 @@ reportGenerator <- function() {
                actionButton('resetData', 'Reset data')
                )
         )
+      )
       ),
 
     # fluidRow(
@@ -53,24 +61,24 @@ reportGenerator <- function() {
 
       column(width = 12,
              # tags$b("Item preview"),
-
+             box(
         fluidRow(
 
           column(width = 4,
             fluidRow(DT::dataTableOutput("tableContents")),
             fluidRow(actionButton("generateReport", "Generate Report"))),
-
           column(width = 8,
                  # verbatimTextOutput("objectChoiceTest"),
                  uiOutput("plotFilters"),
                  uiOutput("itemPreview"))
+          )
 
         )
 
       )
     )
   )
-
+)
 
   server <- function(input,output) {
 
@@ -542,12 +550,14 @@ reportGenerator <- function() {
 
     # studyDesign
     output$studyDesign <- renderUI({
+      box(
       checkboxGroupInput(inputId = "studyDesignGroup", label = "Select study type",
                          choices = c("Drug Utilisation Studies (DUS)",
                                      "Disease Epidemiology",
                                      "Routine Repeated Analysis",
                                      "Drug/Vaccine Safety or Comparative Effectiveness Studies"),
                          inline = TRUE)
+      )
     })
 
     # 4. Word report generator
