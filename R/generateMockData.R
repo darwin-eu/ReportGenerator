@@ -118,9 +118,9 @@ for (i in databaseName) {
 
   ## Writing prevalence data into csv
 
-  if (!file.exists(here("prevalenceResults"))) {
+  if (!dir.exists(here("Results", "prevalenceResults"))) {
 
-    subDir <- here("prevalenceResults")
+    subDir <- here("Results", "prevalenceResults")
 
     dir.create(file.path(subDir),
                recursive = TRUE)
@@ -129,7 +129,7 @@ for (i in databaseName) {
   studyResults$prevalence_estimates <- studyResults$prevalence_estimates %>% mutate(database_name = i)
 
   write.csv(studyResults$prevalence_estimates,
-            paste(here("prevalenceResults"),
+            paste(here("Results", "prevalenceResults"),
                   "/prevalence_mock_estimates_",
                   i,
                   ".csv",
@@ -138,9 +138,9 @@ for (i in databaseName) {
 
   ## Writing incidence data into csv
 
-  if (!file.exists(here("incidenceResults"))) {
+  if (!dir.exists(here("Results", "incidenceResults"))) {
 
-    subDir <- here("incidenceResults")
+    subDir <- here("Results", "incidenceResults")
 
     dir.create(file.path(subDir),
                recursive = TRUE)
@@ -150,7 +150,7 @@ for (i in databaseName) {
   studyResults$incidence_estimates <- studyResults$incidence_estimates %>% mutate(database_name = i)
 
   write.csv(studyResults$incidence_estimates,
-            paste(here("incidenceResults"),
+            paste(here("Results", "incidenceResults"),
                   "/incidence_mock_estimates_",
                   i,
                   ".csv",
@@ -160,9 +160,9 @@ for (i in databaseName) {
 
   ## Exporting whole results into zip folder
 
-  if (!file.exists(here("results_zip"))) {
+  if (!file.exists(here("Results"))) {
 
-    subDir <- here("results_zip")
+    subDir <- here("Results")
 
     dir.create(file.path(subDir),
                recursive = TRUE)
@@ -171,9 +171,9 @@ for (i in databaseName) {
 
   result <- studyResults
 
-  zipName <-  paste0("mock_results", "_", i)
+  zipName <-  paste0("resultsMock", "_", i)
 
-  outputFolder <- here::here("results_zip")
+  outputFolder <- here::here("Results")
 
   errorMessage <- checkmate::makeAssertCollection()
 
@@ -187,7 +187,13 @@ for (i in databaseName) {
                                    add = errorMessage)
   checkmate::reportAssertions(collection = errorMessage)
 
-  tempDir <- tempdir()
+  tempDir <- zipName
+
+  tempDirCreated <- FALSE
+  if (!dir.exists(tempDir)) {
+    dir.create(tempDir)
+    tempDirCreated <- TRUE
+  }
 
   # write results to disk
   lapply(names(result), FUN = function(checkResultName) {
@@ -207,8 +213,9 @@ for (i in databaseName) {
            files = list.files(tempDir, full.names = TRUE),
            mode = "cherry-pick")
 
-
-  lapply(list.files(tempDir, full.names = TRUE), file.remove)
+  if (tempDirCreated) {
+    unlink(tempDir, recursive = TRUE)
+  }
 
 }
 }
