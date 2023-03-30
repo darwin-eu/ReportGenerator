@@ -14,6 +14,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#' Create the table in which a user can choose the item for a preview.
+#'
+#' @param data the input data
+createPreviewMenuTable <- function(data) {
+  DT::datatable(data,
+                extensions = 'RowReorder',
+                options = list(dom = "t", rowReorder = FALSE),
+                selection = list(mode = "single", target = "cell"),
+                rownames = FALSE,
+                colnames = "Items to select")
+}
+
+#' Create the preview table.
+#'
+#' @param data the input data
+createPreviewTable <- function(data) {
+  DT::datatable(data,
+                options = list(pageLength = 10,
+                               lengthMenu = c(5, 10, 15, 20)),
+                rownames = FALSE)
+}
+
 #' table1NumParPreview
 #'
 #' @param incidence_attrition incidence of the attrition
@@ -23,7 +45,7 @@
 #' @importFrom huxtable as_hux
 #' @export
 table1NumParPreview <- function (incidence_attrition,
-                          prevalence_attrition) {
+                                 prevalence_attrition) {
 
   # load(here("inst/data/antibioticsProcessed/dataShiny.RData"))
 

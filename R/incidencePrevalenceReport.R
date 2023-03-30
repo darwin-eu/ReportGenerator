@@ -28,7 +28,7 @@
 #' @param byCondition TRUE if study is related to a condition, FALSE if it is related to drug utilisation.
 #' @export
 #' @import dplyr rmarkdown here officer
-#' @importFrom utils head globalVariables
+#' @importFrom utils head
 #' @importFrom scales percent
 #' @importFrom readr read_csv
 #' @importFrom stats time
@@ -426,23 +426,3 @@ incidencePrevalenceReport <- function(title = NULL,
     )
   }
 }
-if(getRversion() >= "2.15.1")    utils::globalVariables(c("age_strata",
-                                                          "database_name",
-                                                          "denominator",
-                                                          "ir_100000_pys",
-                                                          "ir_100000_pys_high",
-                                                          "ir_100000_pys_low",
-                                                          "n_persons",
-                                                          "numerator",
-                                                          "person_years",
-                                                          "sex_strata",
-                                                          "prev",
-                                                          "prev_high",
-                                                          "prev_low",
-                                                          "subject_id",
-                                                          "n_events"))
-
-
-
-
-

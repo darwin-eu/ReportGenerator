@@ -1,0 +1,73 @@
+# Copyright 2023 DARWIN EU®
+#
+# This file is part of ReportGenerator
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+utils::globalVariables(c("age_strata",
+                         "database_name",
+                         "denominator",
+                         "ir_100000_pys",
+                         "ir_100000_pys_high",
+                         "ir_100000_pys_low",
+                         "n_persons",
+                         "numerator",
+                         "person_years",
+                         "sex_strata",
+                         "prev",
+                         "prev_high",
+                         "prev_low",
+                         "subject_id",
+                         "n_events",
+                         "incidence_estimates",
+                         "prevalence_estimates",
+                         "cdm_snapshot",
+                         "denominator_age_group",
+                         "generateDenominatorCohortSet",
+                         "estimateIncidence",
+                         "estimatePointPrevalence",
+                         "estimatePeriodPrevalence",
+                         "gatherIncidencePrevalenceResults",
+                         "exportIncidencePrevalenceResults",
+                         "denominator_sex",
+                         "incidence_start_date",
+                         "incidence_100000_pys_95CI_lower",
+                         "incidence_100000_pys_95CI_upper",
+                         "incidence_100000_pys",
+                         "prevalence_start_date",
+                         "prevalence",
+                         "incidenceData",
+                         "n_cases",
+                         "n_population",
+                         "freq",
+                         "combination",
+                         "event_cohort_name1",
+                         "event_cohort_name2",
+                         "event_cohort_name3",
+                         "prevalence_95CI_lower",
+                         "prevalence_95CI_upper",
+                         "incidence_attrition",
+                         "prevalence_attrition",
+                         "incidence_end_date",
+                         "outcome_cohort_id",
+                         "analysis_interval",
+                         "analysis_repeated_events",
+                         "prevalence_end_date",
+                         "denominator_days_prior_history",
+                         "analysis_type",
+                         "analysis_full_contribution",
+                         "step",
+                         "reason",
+                         "current_n",
+                         "excluded",
+                         "outcome_cohort_name"))

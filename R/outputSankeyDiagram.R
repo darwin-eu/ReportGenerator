@@ -138,7 +138,3 @@ outputSankeyDiagram <- function(
     con = normalizePath(paste0(outputFolder, fileName), mustWork = FALSE)
   )
 }
-
-utils::globalVariables(
-  c("freq", "combination", "event_cohort_name1",
-    "event_cohort_name2","event_cohort_name3"))

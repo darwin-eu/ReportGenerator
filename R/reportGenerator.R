@@ -25,54 +25,36 @@ reportGenerator <- function() {
   options(shiny.maxRequestSize = 30*1024^2)
 
   ui <- dashboardPage(
-
     dashboardHeader(title = "Report Generator"),
-    dashboardSidebar(),
-
+    dashboardSidebar(
+      sidebarMenu(
+        tagList(tags$br(),
+                uiOutput("studyDesign"),
+                tags$br(),
+                tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
+                fileInput("datasetLoad",
+                          "Upload zip folder or csv file",
+                          accept = c(".zip", ".csv"),
+                          multiple = TRUE),
+                actionButton('resetData', 'Reset data')
+        ))
+    ),
     dashboardBody(
-    fluidRow(column(width = 12, uiOutput("studyDesign"))),
-    fluidRow(
+      # Item selection menu
+      fluidRow(uiOutput("itemSelectionMenu")),
 
-      box(
-      column(width = 12, tags$b("Load data"),
-        column(width = 12,
-               # File input field
-               fileInput("datasetLoad",
-                         "Upload zip folder or csv file",
-                         accept = c(".zip", ".csv"),
-                         multiple = TRUE),
-               # Print to monitor
-               verbatimTextOutput("uploadedFiles"),
-
-               # Reset data button
-               actionButton('resetData', 'Reset data')
-               )
-        )
-      )
-      ),
-
-    fluidRow(
-
-      column(width = 12,
-             # tags$b("Item preview"),
-             box(
-        fluidRow(
-
-          column(width = 4,
-            fluidRow(DT::dataTableOutput("tableContents")),
-            fluidRow(actionButton("generateReport", "Generate Report"))),
-          column(width = 8,
-                 # verbatimTextOutput("objectChoiceTest"),
-                 uiOutput("plotFilters"),
-                 uiOutput("itemPreview"))
-          )
-
-        )
-
+      fluidRow(
+          box(DT::dataTableOutput("tableContents"),
+              tags$br(),
+              actionButton("generateReport", "Generate Report"),
+              width = 4),
+          box(uiOutput("plotFilters"),
+              uiOutput("itemPreview"),
+              width = 8)
       )
     )
   )
-)
+
 
   server <- function(input,output) {
 
@@ -85,26 +67,17 @@ reportGenerator <- function() {
     resetDatasetLoad <- reactiveValues(data = NULL)
 
     observeEvent(input$datasetLoad, {
-
       resetDatasetLoad$data <- NULL
-
-      })
+    })
 
     observeEvent(input$resetData, {
-
       if (!is.null(uploadedFiles())) {
-
         lapply(uploadedFiles(), file.remove)
-
         resetDatasetLoad$data <- "resetDatasetLoad"
-
       } else {
-
         resetDatasetLoad$data <- "resetDatasetLoad"
-
       }
-
-      })
+    })
 
     # 1.2 Upload files
     uploadedFiles <- reactive({
@@ -131,20 +104,11 @@ reportGenerator <- function() {
       }
     })
 
-    # Test to UI
-
-    output$uploadedFiles <- renderPrint(
-        uploadedFiles()
-      )
 
     # 2. Item selection menu
-
     # 2.1 Items list
-
     itemsList <- reactive({
-
       inFile <- input$datasetLoad
-
       applyReset <- resetDatasetLoad$data
 
       if (is.null(inFile)) {
@@ -175,7 +139,6 @@ reportGenerator <- function() {
     # 2.3 Load Data variables
 
     # Uploaded object: Incidence Attrition
-
     incidence_attrition <- reactive({
       result <- NULL
       for (i in uploadedFiles()) {
@@ -194,7 +157,6 @@ reportGenerator <- function() {
     })
 
     # Uploaded object: Prevalence Attrition
-
     prevalence_attrition <- reactive({
       result <- NULL
       for (i in uploadedFiles()) {
@@ -213,7 +175,6 @@ reportGenerator <- function() {
     })
 
     # Uploaded object: Incidence Estimates
-
     incidence_estimates <- reactive({
       result <- NULL
       for (i in uploadedFiles()) {
@@ -232,15 +193,11 @@ reportGenerator <- function() {
     })
 
     # IncidenceCommonData
-
     incidenceCommonData <- reactive({
-
       commonData <- incidence_estimates()
-
       commonData[is.na(commonData)] = 0
 
       # Database
-
       if (length(input$databaseIncidence) == 1 && input$databaseIncidence == "All") {
         commonData
       } else {
@@ -249,12 +206,10 @@ reportGenerator <- function() {
       }
 
       # Outcome
-
       commonData <- commonData %>%
         filter(outcome_cohort_id == input$outcomeIncidence)
 
       # Sex
-
       if (input$sexIncidence == "All") {
         commonData
       } else {
@@ -263,7 +218,6 @@ reportGenerator <- function() {
       }
 
       # Age group
-
       if (input$ageIncidence == "All") {
         commonData
       } else {
@@ -272,7 +226,6 @@ reportGenerator <- function() {
       }
 
       # Start Time
-
       commonData <- commonData %>%
         filter(between(incidence_start_date,
                        as.Date(input$timeFromIncidence),
@@ -281,22 +234,17 @@ reportGenerator <- function() {
       # Analysis
 
       # Interval
-
       commonData <- commonData %>%
         filter(analysis_interval == input$intervalIncidence)
 
       # Repeated events
-
       commonData <- commonData %>%
         filter(analysis_repeated_events == input$repeatedIncidence)
-
     })
-
 
     # 3. Item preview
 
     # 3.1 Objects list. From the sortable menu.
-
     menu <- reactive({
       contents  <- itemsList()$title
       objectsDataFrame <- data.frame(contents)
@@ -325,25 +273,17 @@ reportGenerator <- function() {
     # 3.2 Preview Table
 
     # Table of contents to the UI
-
-
-    # output$tableContents <- DT::renderDataTable(createPreviewMenuTable(menu()))
     output$tableContents <- DT::renderDataTable(createPreviewMenuTable(data.frame(itemsList()$title)))
 
-
     # Item choice data
-
     objectChoice  <- reactive({
       req(input$tableContents_cells_selected)
 
       objectChoiceTitle  <- menu()[input$tableContents_cells_selected,]
-
       objectChoiceTitle
-
     })
 
     observe({
-
         if (objectChoice() == "Plot - Incidence rate per year") {
 
         updateSelectInput(inputId = "sexIncidence",
@@ -385,9 +325,7 @@ reportGenerator <- function() {
     })
 
     # Renders item preview depending on the object class
-
     output$itemPreview <- renderUI({
-
       req(objectChoice())
 
       if (grepl("Table", objectChoice())) {
@@ -414,11 +352,9 @@ reportGenerator <- function() {
     })
 
     output$plotFilters <- renderUI({
-
       req(objectChoice())
 
-      # if (grepl("Plot", objectChoice())) {
-        fluidRow(
+      tagList(
           fluidRow(
             column(4,
                pickerInput(inputId = "databaseIncidence",
@@ -475,8 +411,7 @@ reportGenerator <- function() {
                    )
             )
         )
-        # }
-      })
+    })
 
     output$previewPlot<- renderPlotly({
       req(objectChoice())
@@ -492,14 +427,12 @@ reportGenerator <- function() {
 
     # studyDesign
     output$studyDesign <- renderUI({
-      box(
       checkboxGroupInput(inputId = "studyDesignGroup", label = "Select study type",
                          choices = c("Drug Utilisation Studies (DUS)",
                                      "Disease Epidemiology",
                                      "Routine Repeated Analysis",
                                      "Drug/Vaccine Safety or Comparative Effectiveness Studies"),
-                         inline = TRUE)
-      )
+                         inline = FALSE)
     })
 
     # 4. Word report generator
@@ -541,37 +474,4 @@ reportGenerator <- function() {
     })
   }
   shinyApp(ui, server)
-  }
-
-if(getRversion() >= "2.15.1")    utils::globalVariables(c("incidence_attrition",
-                                                          "prevalence_attrition",
-                                                          "incidence_estimates"))
-
-
-#' Get the items that the user can choose from in the report generator. The list is loaded from the configuration file
-#' and filtered by the files that have been uploaded.
-#'
-#' @param uploadedFiles vector of uploaded filenames.
-#'
-#' @return a dataframe with the properties of the items
-getItemsList <- function(uploadedFiles) {
-  menuFunctions <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"),
-                       sep = ";") %>%
-    dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-
-  checkNeeds <- function(menuFunctions, uploadedFiles) {
-    unlist(lapply(menuFunctions, FUN = function(menuFunction) {
-      required <- trimws(unlist(strsplit(menuFunction , ",")))
-      exists <- required %in% uploadedFiles
-
-      if (TRUE %in% exists) {
-        return(TRUE)
-      } else {
-        return(FALSE)
-      }
-    }))
-  }
-  menuFunctions  %>%
-    dplyr::filter(checkNeeds(menuFunctions$arguments, uploadedFiles)) %>%
-    dplyr::select(title, signature)
 }

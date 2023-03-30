@@ -379,5 +379,3 @@ prevalenceExtractionToRDS <- function (importFolderPrevalence = here("inst/csv/p
 #                "prevalence_attrition.rds"))
 #
 # }
-utils::globalVariables(c("denominator_age_group",
-                         "denominator_age_group"))

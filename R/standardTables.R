@@ -245,21 +245,3 @@ table5IncSex <- function (incidence_estimates) {
 
   return(flextable(tableIncidence))
 }
-if(getRversion() >= "2.15.1")    utils::globalVariables(c("step",
-                                                          "reason",
-                                                          "denominator",
-                                                          "current_n",
-                                                          "excluded",
-                                                          "outcome_cohort_name",
-                                                          "n_persons",
-                                                          "numerator",
-                                                          "person_years",
-                                                          "sex_strata",
-                                                          "prev",
-                                                          "prev_high",
-                                                          "prev_low",
-                                                          "subject_id",
-                                                          "n_events",
-                                                          "incidence_estimates",
-                                                          "prevalence_estimates",
-                                                          "cdm_snapshot"))

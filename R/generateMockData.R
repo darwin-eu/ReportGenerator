@@ -211,12 +211,4 @@ for (i in databaseName) {
   lapply(list.files(tempDir, full.names = TRUE), file.remove)
 
 }
-
 }
-utils::globalVariables(c("generateDenominatorCohortSet",
-                         "estimateIncidence",
-                         "estimatePointPrevalence",
-                         "estimatePeriodPrevalence",
-                         "gatherIncidencePrevalenceResults",
-                         "exportIncidencePrevalenceResults"))
-
