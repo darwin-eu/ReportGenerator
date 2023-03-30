@@ -355,7 +355,7 @@ reportGenerator <- function() {
                              dplyr::filter(title == objectChoice()) %>%
                              dplyr::pull(signature)))
 
-      if (is(objectChoice, "flextable")) {
+      if ((grepl("Table", objectChoice()))) {
         data <- object$body$dataset
       }
       createPreviewTable(data)
