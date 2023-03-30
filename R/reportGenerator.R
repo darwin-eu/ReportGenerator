@@ -51,12 +51,6 @@ reportGenerator <- function() {
       )
       ),
 
-    # fluidRow(
-    #   # Item selection menu
-    #   uiOutput("itemSelectionMenu")
-    #
-    # ),
-
     fluidRow(
 
       column(width = 12,
@@ -178,24 +172,6 @@ reportGenerator <- function() {
       }
     })
 
-    # output$itemSelectionMenu <- renderUI({
-    #
-    #   column(tags$b("Item selection"),
-    #          width = 12,
-    #          bucket_list(header = "Select the figures you want in the report",
-    #                      group_name = "bucket_list_group",
-    #                      orientation = "horizontal",
-    #                      add_rank_list(text = "Drag from here",
-    #                                    labels = itemsList()$title,
-    #                                    input_id = "objectMenu"),
-    #                      add_rank_list(text = "to here",
-    #                                    labels = NULL,
-    #                                    input_id = "objectSelection"
-    #                        )
-    #                      )
-    #          )
-    #   })
-
     # 2.3 Load Data variables
 
     # Uploaded object: Incidence Attrition
@@ -302,13 +278,6 @@ reportGenerator <- function() {
                        as.Date(input$timeFromIncidence),
                        as.Date(input$timeToIncidence)))
 
-      # if (input$timeIncidence == "All") {
-      #   commonData
-      # } else {
-      #   commonData <- commonData %>%
-      #     filter(incidence_start_date == input$timeIncidence)
-      # }
-
       # Analysis
 
       # Interval
@@ -371,30 +340,9 @@ reportGenerator <- function() {
 
       objectChoiceTitle
 
-
-      # # FUNCTION OBJECT
-      # if (length(objectSelection) >= 1) {
-      #   object <- eval(parse(text = menuFun() %>%
-      #                          dplyr::filter(title == objectSelection) %>%
-      #                          dplyr::pull(signature)))
-      #
-      #   object
-      # }
-
     })
 
     observe({
-
-      # if (objectChoice() == "Table - Incidence overall") {
-      #
-      #   updateSelectInput(inputId = "sexIncidence",
-      #                     choices = c("All", unique(incidence_estimates()$denominator_sex)))
-      #
-      #   updateSelectInput(inputId = "ageIncidence",
-      #                     choices = c("All",
-      #                                 unique(incidence_estimates()$denominator_age_group)))
-      #
-      # } else
 
         if (objectChoice() == "Plot - Incidence rate per year") {
 
@@ -436,8 +384,6 @@ reportGenerator <- function() {
 
     })
 
-    # output$objectChoiceTest <- renderPrint(objectChoice())
-
     # Renders item preview depending on the object class
 
     output$itemPreview <- renderUI({
@@ -464,10 +410,6 @@ reportGenerator <- function() {
         data <- object$body$dataset
       }
       createPreviewTable(data)
-
-      # if (grepl("Table", objectChoice())) {
-      #   htmltools_value(object)
-      # }
 
     })
 
