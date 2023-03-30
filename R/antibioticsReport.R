@@ -28,7 +28,7 @@
 #' @param byCondition TRUE if study is related to a condition, FALSE if it is related to drug utilisation.
 #' @export
 #' @import dplyr rmarkdown here officer
-#' @importFrom utils head globalVariables
+#' @importFrom utils head
 #' @importFrom scales percent
 #' @importFrom readr read_csv
 #' @importFrom stats time

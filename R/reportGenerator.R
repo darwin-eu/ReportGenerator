@@ -45,17 +45,12 @@ reportGenerator <- function() {
       fluidRow(uiOutput("itemSelectionMenu")),
 
       fluidRow(
-        column(width = 12,
-               tags$b("Item preview"),
-          fluidRow(
-            column(width = 4,
-              fluidRow(DT::dataTableOutput("tableContents")),
-              fluidRow(actionButton("generateReport", "Generate Report"))),
-            column(width = 8,
-                   uiOutput("plotFilters"),
-                   uiOutput("itemPreview"))
-          )
-        )
+        column(width = 4,
+          box(fluidRow(DT::dataTableOutput("tableContents")),
+              fluidRow(actionButton("generateReport", "Generate Report")))),
+          box(column(width = 8,
+               uiOutput("plotFilters"),
+               uiOutput("itemPreview")))
       )
     )
   )
