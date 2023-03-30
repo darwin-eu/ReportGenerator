@@ -19,15 +19,18 @@
 #' @param data the input data
 createPreviewMenuTable <- function(data) {
   DT::datatable(data,
-                options = list(dom = "t"),
+                extensions = 'RowReorder',
+                options = list(dom = "t", rowReorder = FALSE),
                 selection = list(mode = "single", target = "cell"),
-                rownames = FALSE)
+                rownames = FALSE,
+                colnames = "Items to select")
 }
 
 #' Create the preview table.
 #'
 #' @param data the input data
 createPreviewTable <- function(data) {
+
   DT::datatable(data,
                 options = list(pageLength = 10,
                                lengthMenu = c(5, 10, 15, 20)),
