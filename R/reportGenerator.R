@@ -31,12 +31,11 @@ reportGenerator <- function() {
         tagList(tags$br(),
                 uiOutput("studyDesign"),
                 tags$br(),
-                tags$div(tags$h3("Load data"), class = "form-group shiny-input-container"),
+                tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
                 fileInput("datasetLoad",
                           "Upload zip folder or csv file",
                           accept = c(".zip", ".csv"),
                           multiple = TRUE),
-                tags$div(uiOutput("uploadedFiles"), class = "form-group shiny-input-container"),
                 actionButton('resetData', 'Reset data')
         ))
     ),
@@ -46,9 +45,11 @@ reportGenerator <- function() {
 
       fluidRow(
           box(DT::dataTableOutput("tableContents"),
-              actionButton("generateReport", "Generate Report")),
+              actionButton("generateReport", "Generate Report"),
+              width = 4),
           box(uiOutput("plotFilters"),
-              uiOutput("itemPreview"))
+              uiOutput("itemPreview"),
+              width = 8)
       )
     )
   )
@@ -102,24 +103,11 @@ reportGenerator <- function() {
       }
     })
 
-    # Print uploaded files
-    output$uploadedFiles <- renderUI({
-      result <- NULL
-      files <- uploadedFiles()
-      if (!is.null(files)) {
-        result <- renderPrint(basename(uploadedFiles()))
-      }
-      result
-    })
 
     # 2. Item selection menu
-
     # 2.1 Items list
-
     itemsList <- reactive({
-
       inFile <- input$datasetLoad
-
       applyReset <- resetDatasetLoad$data
 
       if (is.null(inFile)) {
@@ -365,8 +353,7 @@ reportGenerator <- function() {
     output$plotFilters <- renderUI({
       req(objectChoice())
 
-      # if (grepl("Plot", objectChoice())) {
-        fluidRow(
+      tagList(
           fluidRow(
             column(4,
                pickerInput(inputId = "databaseIncidence",
@@ -423,8 +410,7 @@ reportGenerator <- function() {
                    )
             )
         )
-        # }
-      })
+    })
 
     output$previewPlot<- renderPlotly({
       req(objectChoice())
