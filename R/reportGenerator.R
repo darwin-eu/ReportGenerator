@@ -27,48 +27,33 @@ reportGenerator <- function() {
   ui <- dashboardPage(
     dashboardHeader(title = "Report Generator"),
     dashboardSidebar(
-      sidebarMenu(uiOutput("studyDesign"))
+      sidebarMenu(
+        tagList(tags$br(),
+                uiOutput("studyDesign"),
+                tags$br(),
+                tags$div(tags$h3("Load data"), class = "form-group shiny-input-container"),
+                fileInput("datasetLoad",
+                          "Upload zip folder or csv file",
+                          accept = c(".zip", ".csv"),
+                          multiple = TRUE),
+                tags$div(uiOutput("uploadedFiles"), class = "form-group shiny-input-container"),
+                actionButton('resetData', 'Reset data')
+        ))
     ),
     dashboardBody(
-      fluidRow(
-        column(width = 12, tags$b("Load data"),
-          column(width = 12,
-                 # File input field
-                 fileInput("datasetLoad",
-                           "Upload zip folder or csv file",
-                           accept = c(".zip", ".csv"),
-                           multiple = TRUE),
-                 # Print to monitor
-                 verbatimTextOutput("uploadedFiles"),
-
-                 # Reset data button
-                 actionButton('resetData', 'Reset data')
-                 )
-          )
-        ),
+      # Item selection menu
+      fluidRow(uiOutput("itemSelectionMenu")),
 
       fluidRow(
-        # Item selection menu
-        uiOutput("itemSelectionMenu")
-
-      ),
-
-      fluidRow(
-
         column(width = 12,
                tags$b("Item preview"),
-
           fluidRow(
-
             column(width = 4,
               fluidRow(DT::dataTableOutput("tableContents")),
               fluidRow(actionButton("generateReport", "Generate Report"))),
-
             column(width = 8,
                    uiOutput("itemPreview"))
-
           )
-
         )
       )
     )
@@ -86,26 +71,17 @@ reportGenerator <- function() {
     resetDatasetLoad <- reactiveValues(data = NULL)
 
     observeEvent(input$datasetLoad, {
-
       resetDatasetLoad$data <- NULL
-
-      })
+    })
 
     observeEvent(input$resetData, {
-
       if (!is.null(uploadedFiles())) {
-
         lapply(uploadedFiles(), file.remove)
-
         resetDatasetLoad$data <- "resetDatasetLoad"
-
       } else {
-
         resetDatasetLoad$data <- "resetDatasetLoad"
-
       }
-
-      })
+    })
 
     # 1.2 Upload files
     uploadedFiles <- reactive({
@@ -132,11 +108,15 @@ reportGenerator <- function() {
       }
     })
 
-    # Test to UI
-
-    output$uploadedFiles <- renderPrint(
-        uploadedFiles()
-      )
+    # Print uploaded files
+    output$uploadedFiles <- renderUI({
+      result <- NULL
+      files <- uploadedFiles()
+      if (!is.null(files)) {
+        result <- renderPrint(basename(uploadedFiles()))
+      }
+      result
+    })
 
     # 2. Item selection menu
 
