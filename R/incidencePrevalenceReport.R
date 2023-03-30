@@ -426,23 +426,3 @@ incidencePrevalenceReport <- function(title = NULL,
     )
   }
 }
-if(getRversion() >= "2.15.1")    utils::globalVariables(c("age_strata",
-                                                          "database_name",
-                                                          "denominator",
-                                                          "ir_100000_pys",
-                                                          "ir_100000_pys_high",
-                                                          "ir_100000_pys_low",
-                                                          "n_persons",
-                                                          "numerator",
-                                                          "person_years",
-                                                          "sex_strata",
-                                                          "prev",
-                                                          "prev_high",
-                                                          "prev_low",
-                                                          "subject_id",
-                                                          "n_events"))
-
-
-
-
-

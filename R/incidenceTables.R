@@ -62,11 +62,3 @@ table2Incidence <- function(incidenceData) {
                             "IR 10000 pys")
   return(table2Data)
 }
-utils::globalVariables(c("incidenceData",
-                         "n_cases",
-                         "n_population",
-                         "incidence_100000_pys_95CI_lower",
-                         "incidence_100000_pys_95CI_upper",
-                         "incidence_100000_pys",
-                         "prevalence_start_date",
-                         "prevalence"))

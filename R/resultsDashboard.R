@@ -1034,13 +1034,3 @@ resultsDashboard <- function() {
   shinyApp(ui, server)
 
 }
-utils::globalVariables(c("incidence_end_date",
-                         "outcome_cohort_id",
-                         "analysis_interval",
-                         "analysis_repeated_events",
-                         "prevalence_end_date",
-                         "denominator_days_prior_history",
-                         "analysis_type",
-                         "analysis_full_contribution",
-                         "prevalence_95CI_lower",
-                         "prevalence_95CI_upper"))

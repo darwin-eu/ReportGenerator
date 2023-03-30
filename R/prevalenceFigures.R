@@ -102,5 +102,3 @@ prevalenceFigure8 <- function(prevalenceData) {
 
   return(prevalenceFigureData)
 }
-utils::globalVariables(c("prevalence_95CI_lower",
-                         "prevalence_95CI_upper"))

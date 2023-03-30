@@ -103,11 +103,3 @@ incidenceFigure4 <- function(incidenceData) {
 
   return(incidenceFigureData)
 }
-utils::globalVariables(c("denominator_sex",
-                         "denominator_age_group",
-                         "incidence_start_date",
-                         "incidence_100000_pys_95CI_lower",
-                         "incidence_100000_pys_95CI_upper",
-                         "incidence_100000_pys",
-                         "prevalence_start_date",
-                         "prevalence"))

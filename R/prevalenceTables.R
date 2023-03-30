@@ -53,5 +53,3 @@ table4Prevalence <- function(prevalenceData) {
                             "Prevalence")
   return(table4Data)
 }
-utils::globalVariables(c("n_cases",
-                         "n_population"))

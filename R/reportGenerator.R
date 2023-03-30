@@ -52,6 +52,7 @@ reportGenerator <- function() {
               fluidRow(DT::dataTableOutput("tableContents")),
               fluidRow(actionButton("generateReport", "Generate Report"))),
             column(width = 8,
+                   uiOutput("plotFilters"),
                    uiOutput("itemPreview"))
           )
         )
@@ -153,28 +154,9 @@ reportGenerator <- function() {
       }
     })
 
-    output$itemSelectionMenu <- renderUI({
-
-      column(tags$b("Item selection"),
-             width = 12,
-             bucket_list(header = "Select the figures you want in the report",
-                         group_name = "bucket_list_group",
-                         orientation = "horizontal",
-                         add_rank_list(text = "Drag from here",
-                                       labels = itemsList()$title,
-                                       input_id = "objectMenu"),
-                         add_rank_list(text = "to here",
-                                       labels = NULL,
-                                       input_id = "objectSelection"
-                           )
-                         )
-             )
-      })
-
     # 2.3 Load Data variables
 
     # Uploaded object: Incidence Attrition
-
     incidence_attrition <- reactive({
       result <- NULL
       for (i in uploadedFiles()) {
@@ -193,7 +175,6 @@ reportGenerator <- function() {
     })
 
     # Uploaded object: Prevalence Attrition
-
     prevalence_attrition <- reactive({
       result <- NULL
       for (i in uploadedFiles()) {
@@ -212,7 +193,6 @@ reportGenerator <- function() {
     })
 
     # Uploaded object: Incidence Estimates
-
     incidence_estimates <- reactive({
       result <- NULL
       for (i in uploadedFiles()) {
@@ -230,12 +210,61 @@ reportGenerator <- function() {
       return(result)
     })
 
+    # IncidenceCommonData
+    incidenceCommonData <- reactive({
+      commonData <- incidence_estimates()
+      commonData[is.na(commonData)] = 0
+
+      # Database
+      if (length(input$databaseIncidence) == 1 && input$databaseIncidence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(database_name %in% c(input$databaseIncidence))
+      }
+
+      # Outcome
+      commonData <- commonData %>%
+        filter(outcome_cohort_id == input$outcomeIncidence)
+
+      # Sex
+      if (input$sexIncidence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(denominator_sex == input$sexIncidence)
+      }
+
+      # Age group
+      if (input$ageIncidence == "All") {
+        commonData
+      } else {
+        commonData <- commonData %>%
+          filter(denominator_age_group == input$ageIncidence)
+      }
+
+      # Start Time
+      commonData <- commonData %>%
+        filter(between(incidence_start_date,
+                       as.Date(input$timeFromIncidence),
+                       as.Date(input$timeToIncidence)))
+
+      # Analysis
+
+      # Interval
+      commonData <- commonData %>%
+        filter(analysis_interval == input$intervalIncidence)
+
+      # Repeated events
+      commonData <- commonData %>%
+        filter(analysis_repeated_events == input$repeatedIncidence)
+    })
+
     # 3. Item preview
 
     # 3.1 Objects list. From the sortable menu.
-
     menu <- reactive({
-      contents  <- input$objectSelection
+      contents  <- itemsList()$title
       objectsDataFrame <- data.frame(contents)
       objectsDataFrame
     })
@@ -252,7 +281,7 @@ reportGenerator <- function() {
                                 menuFun$arguments)
 
       menuFun$arguments <- gsub("incidence_estimates",
-                                "incidence_estimates()",
+                                "incidenceCommonData()",
                                 menuFun$arguments)
 
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
@@ -262,53 +291,157 @@ reportGenerator <- function() {
     # 3.2 Preview Table
 
     # Table of contents to the UI
-
-    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(menu()))
+    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(data.frame(itemsList()$title)))
 
     # Item choice data
-
     objectChoice  <- reactive({
       req(input$tableContents_cells_selected)
 
-      objectSelection  <- menu()[input$tableContents_cells_selected,]
-      if (length(objectSelection) >= 1) {
-        object <- eval(parse(text = menuFun() %>%
-                               dplyr::filter(title == objectSelection) %>%
-                               dplyr::pull(signature)))
+      objectChoiceTitle  <- menu()[input$tableContents_cells_selected,]
+      objectChoiceTitle
+    })
 
-        object
+    observe({
+        if (objectChoice() == "Plot - Incidence rate per year") {
+
+        updateSelectInput(inputId = "sexIncidence",
+                          choices = unique(incidence_estimates()$denominator_sex))
+
+        updateSelectInput(inputId = "ageIncidence",
+                          choices = unique(incidence_estimates()$denominator_age_group))
+
+      } else if (objectChoice()== "Plot - Incidence rate per year group by sex") {
+
+        updateSelectInput(inputId = "sexIncidence",
+                          choices = c("All",
+                                      unique(incidence_estimates()$denominator_sex)))
+
+        updateSelectInput(inputId = "ageIncidence",
+                          choices = unique(incidence_estimates()$denominator_age_group))
+
+      } else if (objectChoice() == "Plot - Incidence rate per year color by age") {
+
+        updateSelectInput(inputId = "sexIncidence",
+                          choices = unique(incidence_estimates()$denominator_sex))
+
+        updateSelectInput(inputId = "ageIncidence",
+                          choices = c("All",
+                                      unique(incidence_estimates()$denominator_age_group)))
+
+      } else if (objectChoice() == "Plot - Incidence rate per year facet by database, age group") {
+
+        updateSelectInput(inputId = "sexIncidence",
+                          choices = c("All",
+                                      unique(incidence_estimates()$denominator_sex)))
+
+        updateSelectInput(inputId = "ageIncidence",
+                          choices = c("All",
+                                      unique(incidence_estimates()$denominator_age_group)))
+
       }
+
     })
 
     # Renders item preview depending on the object class
-
     output$itemPreview <- renderUI({
       req(objectChoice())
 
-      if (is(objectChoice(), "flextable")) {
-        DT::dataTableOutput("tableContentTable")
+      if (grepl("Table", objectChoice())) {
+        DT::dataTableOutput("previewTable")
       } else {
-        plotlyOutput("tableContentPlot")
+        plotlyOutput("previewPlot")
       }
     })
 
     # Objects to be rendered in the UI
 
-    output$tableContentTable <- DT::renderDataTable({
-      objectChoice <- objectChoice()
-      req(objectChoice)
-
-      if (is(objectChoice, "flextable")) {
-        data <- objectChoice$body$dataset
-      }
-      createPreviewTable(data)
-    })
-
-    output$tableContentPlot<- renderPlotly({
+    output$previewTable <- DT::renderDataTable({
       req(objectChoice())
 
-      if (!is(objectChoice(), "flextable")) {
-        objectChoice()
+      object <- eval(parse(text = menuFun() %>%
+                             dplyr::filter(title == objectChoice()) %>%
+                             dplyr::pull(signature)))
+
+      if (is(objectChoice, "flextable")) {
+        data <- object$body$dataset
+      }
+      createPreviewTable(data)
+
+    })
+
+    output$plotFilters <- renderUI({
+      req(objectChoice())
+
+      # if (grepl("Plot", objectChoice())) {
+        fluidRow(
+          fluidRow(
+            column(4,
+               pickerInput(inputId = "databaseIncidence",
+                           label = "Database",
+                           choices = c("All", unique(incidence_estimates()$database_name)),
+                           selected = "All",
+                           multiple = TRUE)
+               ),
+            column(4,
+               selectInput(inputId = "outcomeIncidence",
+                           label = "Outcome",
+                           choices = unique(incidence_estimates()$outcome_cohort_id))
+               )
+            ),
+          h4("Population settings"),
+          fluidRow(
+            column(4,
+                   selectInput(inputId = "sexIncidence",
+                               label = "Sex",
+                               choices = c("All", unique(incidence_estimates()$denominator_sex)))
+                   ),
+            column(4,
+                   selectInput(inputId = "ageIncidence",
+                               label = "Age",
+                               choices = c("All", unique(incidence_estimates()$denominator_age_group)))
+                   ),
+            ),
+          h4("Analysis settings"),
+          fluidRow(
+            column(4,
+                   selectInput(inputId = "intervalIncidence",
+                               label = "Interval",
+                               choices = unique(incidence_estimates()$analysis_interval)),
+                   ),
+            column(4,
+                   selectInput(inputId = "repeatedIncidence",
+                               label = "Repeated Events",
+                               choices = unique(incidence_estimates()$analysis_repeated_events)),
+                   )
+            ),
+          h4("Start Time"),
+          fluidRow(
+            column(4,
+                   selectInput(inputId = "timeFromIncidence",
+                               label = "From",
+                               choices = unique(incidence_estimates()$incidence_start_date),
+                               selected = min(unique(incidence_estimates()$incidence_start_date)))
+                   ),
+            column(4,
+                   selectInput(inputId = "timeToIncidence",
+                               label = "To",
+                               choices = unique(incidence_estimates()$incidence_start_date),
+                               selected = max(unique(incidence_estimates()$incidence_start_date)))
+                   )
+            )
+        )
+        # }
+      })
+
+    output$previewPlot<- renderPlotly({
+      req(objectChoice())
+
+        object <- eval(parse(text = menuFun() %>%
+                               dplyr::filter(title == objectChoice()) %>%
+                               dplyr::pull(signature)))
+
+      if (grepl("Plot", objectChoice())) {
+        object
       }
     })
 
@@ -326,7 +459,7 @@ reportGenerator <- function() {
 
     observeEvent(input$generateReport, {
       incidencePrevalenceDocx <- read_docx(path = here("inst/templates/word/darwinTemplate.docx"))
-      reverseList <- rev(input$objectSelection)
+      reverseList <- rev(itemsList()$title)
       for (i in reverseList) {
         object <- eval(parse(text = menuFun() %>%
                                dplyr::filter(title == i) %>%
@@ -361,37 +494,4 @@ reportGenerator <- function() {
     })
   }
   shinyApp(ui, server)
-  }
-
-if(getRversion() >= "2.15.1")    utils::globalVariables(c("incidence_attrition",
-                                                          "prevalence_attrition",
-                                                          "incidence_estimates"))
-
-
-#' Get the items that the user can choose from in the report generator. The list is loaded from the configuration file
-#' and filtered by the files that have been uploaded.
-#'
-#' @param uploadedFiles vector of uploaded filenames.
-#'
-#' @return a dataframe with the properties of the items
-getItemsList <- function(uploadedFiles) {
-  menuFunctions <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"),
-                       sep = ";") %>%
-    dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-
-  checkNeeds <- function(menuFunctions, uploadedFiles) {
-    unlist(lapply(menuFunctions, FUN = function(menuFunction) {
-      required <- trimws(unlist(strsplit(menuFunction , ",")))
-      exists <- required %in% uploadedFiles
-
-      if (TRUE %in% exists) {
-        return(TRUE)
-      } else {
-        return(FALSE)
-      }
-    }))
-  }
-  menuFunctions  %>%
-    dplyr::filter(checkNeeds(menuFunctions$arguments, uploadedFiles)) %>%
-    dplyr::select(title, signature)
 }
