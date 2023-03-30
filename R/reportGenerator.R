@@ -45,6 +45,7 @@ reportGenerator <- function() {
 
       fluidRow(
           box(DT::dataTableOutput("tableContents"),
+              tags$br(),
               actionButton("generateReport", "Generate Report"),
               width = 4),
           box(uiOutput("plotFilters"),
