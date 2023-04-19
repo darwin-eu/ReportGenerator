@@ -33,20 +33,17 @@ install.packages("remotes")
 remotes::install_github("darwin-eu-dev/reportGenerator")
 ```
 
-To test the package, generate first the mock data with mockSampleCSV()
+To test the package, generate first the mock data with `generateMockData()`. It will create a "Results" folder in the working directory that contains IncidencePrevalence data in csv and zip format. 
 
 ``` r
-
- generateMockData()
+ generateMockData(databaseName = c("Synthea", "IPCI", "CPRD"))
 ```
 
-It generates an WORD document in the reports folder. 
+`reportGenerator()` takes as an input zip or csv files with results from IncidencePrevalence.  
 
-To launch the Shiny app use reportDashboard(). It automatically takes as an input a zip folders with CSV files.
+To launch the Shiny app just type in the console:
 
 ```{r }
-
 reportGenerator()
-
 
 ```
