@@ -10,7 +10,13 @@
 [![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
 
-Automatic report generator of the Darwin EU studies.
+## Overview
+
+The ReportGenerator R package creates automatic study reports from
+DARWIN EU® research. It includes a Shiny app where the user can select a
+specific type of study according to the Complete Catalogue of Standard
+Data Analyses (D1.3.8.2), and what tables/figures to produce out of a
+set menu of outputs.
 
 ## Installation
 
