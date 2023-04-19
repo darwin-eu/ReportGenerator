@@ -28,7 +28,7 @@ The ReportGenerator R package creates automatic study reports from DARWIN EU® r
 
 ## Installation
 
-You can install the development version of reportGenerator like so:
+You can install the development version of ReportGenerator like so:
 
 ``` r
 install.packages("remotes")
