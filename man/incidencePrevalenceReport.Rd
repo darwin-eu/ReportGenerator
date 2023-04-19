@@ -36,5 +36,5 @@ incidencePrevalenceReport(
 A WORD, PDF or HTML document.
 }
 \description{
-Creates a written report from IncidencePrevalence.
+`incidencePrevalenceReport()` prints data from parameters and from the IncidencePrevalence package into a Word or PDF document.
 }

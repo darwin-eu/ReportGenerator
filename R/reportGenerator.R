@@ -16,6 +16,8 @@
 
 #' ReportGenerator Shiny App
 #'
+#' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
+#'
 #' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable
 #' @importFrom sortable bucket_list add_rank_list
 #' @export

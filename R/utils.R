@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#' Checks items available for ReportGenerator
+#'
 #' Get the items that the user can choose from in the report generator. The list is loaded from the configuration file
 #' and filtered by the files that have been uploaded.
 #'
