@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/darwin-eu-dev/ReportGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/ReportGenerator/actions/workflows/R-CMD-check.yaml)
-[![R-CMD-check:Develop](https://github.com/darwin-eu-dev/ReportGenerator/actions/workflows/R-CMD-check.yaml/badge.svg?branch=develop)](https://github.com/darwin-eu-dev/ReportGenerator/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check:Develop](https://github.com/darwin-eu-dev/ReportGenerator/actions/workflows/R-CMD-check.yaml/badge.svg?branch=develop)](https://github.com/darwin-eu-dev/ReportGenerator/actions/workflows/R-CMD-check.yaml?branch=develop)
 [![codecov.io](https://codecov.io/github/darwin-eu-dev/ReportGenerator/coverage.svg?branch=main)](https://codecov.io/github/darwin-eu-dev/ReportGenerator/coverage.svg?branch=main)
 [![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
