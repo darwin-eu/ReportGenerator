@@ -32,7 +32,7 @@ directory that contains IncidencePrevalence data in csv and zip format.
 `reportGenerator()` takes as an input zip or csv files with results from
 IncidencePrevalence.
 
-To launch the Shiny app just type in the console `reportDashboard()`.
+To launch the Shiny app just type in the console:
 
 ``` r
 reportGenerator()
