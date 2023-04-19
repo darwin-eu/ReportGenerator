@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' incidenceRatePerYearPlot
+#' Incidence Rate Per Year Plot
 #'
 #' @param incidence_estimates estimates of of the incidence
 #'
@@ -41,8 +41,7 @@ incidenceRatePerYearPlot <- function(incidence_estimates) {
          y = "Incidence rate per 100000 person-years",
          col = "Database name")
 }
-
-#' incidenceRatePerYearGroupBySexPlot
+#' Incidence Rate Per Year by Sex Plot
 #'
 #' @param incidence_estimates estimates of of the incidence
 #'
@@ -64,8 +63,7 @@ incidenceRatePerYearGroupBySexPlot <- function(incidence_estimates) {
          y = "Incidence rate per 100000 person-years",
          col = "Database name")
 }
-
-#' incidenceRatePerYearColorByAgePlot
+#' Incidence Rate Per Year by Age Plot
 #'
 #' @param incidence_estimates estimates of of the incidence
 #'
@@ -85,8 +83,7 @@ incidenceRatePerYearColorByAgePlot <- function(incidence_estimates) {
          y = "Incidence rate per 100000 person-years",
          colour = "Age group")
 }
-
-#' incidenceRatePerYearFacetByDBAgeGroupPlot
+#' Incidence Rate Per Year by Age Group
 #'
 #' @param incidence_estimates estimates of of the incidence
 #'
@@ -111,8 +108,7 @@ incidenceRatePerYearFacetByDBAgeGroupPlot <- function(incidence_estimates) {
     theme(axis.text.x = element_text(angle = 90,
                                      hjust = 1))
 }
-
-#' prevalenceRatePerYearPlot
+#' Prevalence Rate Per Year Plot
 #'
 #' @param prevalence_estimates estimates of of the prevalence
 #'
@@ -135,8 +131,7 @@ prevalenceRatePerYearPlot <- function (prevalence_estimates) {
          y = "Prevalence",
          col = "Database name")
 }
-
-#' prevalenceRatePerYearGroupBySexPlot
+#' Prevalence Rate Per Year by Sex Plot
 #'
 #' @param prevalence_estimates estimates of of the prevalence
 #'
@@ -159,8 +154,7 @@ prevalenceRatePerYearGroupBySexPlot <- function (prevalence_estimates) {
          y = "Prevalence ",
          col = "Database name")
 }
-
-#' prevalenceRatePerYearFacetByDBOutcomePlot
+#' Prevalence Rate Per Year by Database
 #'
 #' @param prevalence_estimates estimates of of the prevalence
 #'
@@ -181,8 +175,7 @@ prevalenceRatePerYearFacetByDBOutcomePlot <- function (prevalence_estimates) {
          y = "Prevalence",
          colour = "Age group")
 }
-
-#' prevalenceRatePerYearFacetByDBAgeGroupPlot
+#' Prevalence Rate Per Year by Age Group
 #'
 #' @param prevalence_estimates estimates of of the prevalence
 #'

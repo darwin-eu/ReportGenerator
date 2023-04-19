@@ -2,16 +2,16 @@
 % Please edit documentation in R/generateMockData.R
 \name{generateMockData}
 \alias{generateMockData}
-\title{This function uses data mockIncidencePrevalenceRef function to simulate three databases in CSV format to test the ReportGenerator}
+\title{Creates a mock data set for ReportGenerator}
 \usage{
-generateMockData(databaseName = "IPCI")
+generateMockData(databaseName = c("Synthea", "IPCI", "CPRD"))
 }
 \arguments{
-\item{databaseName}{A vector that specifies the name of each database.}
+\item{databaseName}{A vector with the name in characters of each database.}
 }
 \value{
-CSV files inside inst/csv duckdb
+csv files
 }
 \description{
-This function uses data mockIncidencePrevalenceRef function to simulate three databases in CSV format to test the ReportGenerator
+`generateMockData()` uses [IncidencePrevalence::mockIncidencePrevalenceRef()] function to create csv files to test ReportGenerator.
 }

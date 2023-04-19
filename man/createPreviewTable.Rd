@@ -2,7 +2,7 @@
 % Please edit documentation in R/previewTables.R
 \name{createPreviewTable}
 \alias{createPreviewTable}
-\title{Create the preview table.}
+\title{Create preview table.}
 \usage{
 createPreviewTable(data)
 }
@@ -10,5 +10,5 @@ createPreviewTable(data)
 \item{data}{the input data}
 }
 \description{
-Create the preview table.
+Create preview table.
 }

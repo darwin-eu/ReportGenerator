@@ -14,19 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' This function uses data mockIncidencePrevalenceRef function to simulate three databases in CSV format to test the ReportGenerator
-#' @param databaseName A vector that specifies the name of each database.
-#' @export
+#' Creates a mock data set for ReportGenerator
+#'
+#' `generateMockData()` uses [IncidencePrevalence::mockIncidencePrevalenceRef()] function to create csv files to test ReportGenerator.
+#'
+#' @param databaseName A vector with the name in characters of each database.
 #' @import dplyr rmarkdown here tidyr IncidencePrevalence
 #' @importFrom utils head write.csv
 #' @importFrom stats time
 #' @importFrom zip zip
-#' @return CSV files inside inst/csv duckdb
-generateMockData <- function(databaseName = "IPCI") {
+#' @return csv files
+#' @export
+generateMockData <- function(databaseName = c("Synthea", "IPCI", "CPRD")) {
 
 cdm <- mockIncidencePrevalenceRef(sampleSize = 50000)
-
-# databaseName <- c("Synthea", "IPCI", "CPRD")
 
 for (i in databaseName) {
   print(i)
@@ -109,12 +110,6 @@ for (i in databaseName) {
                                                    resultList = list(incidence,
                                                                      prevalencePoint,
                                                                      prevalencePeriod))
-
-  # studyResults[1] # prevalence_estimates_
-  # studyResults[2] # prevalence_attrition_
-  # studyResults[3] # incidence_estimates_
-  # studyResults[4] # incidence_attrition_
-  # studyResults[5] # $cdm_snapshot_
 
   ## Writing prevalence data into csv
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/incidencePrevalenceReport.R
 \name{incidencePrevalenceReport}
 \alias{incidencePrevalenceReport}
-\title{Creates an HTML report taking the prevalence and incidence estimates from IncidencePrevalence.}
+\title{Creates a written report from IncidencePrevalence.}
 \usage{
 incidencePrevalenceReport(
   title = NULL,
@@ -36,5 +36,5 @@ incidencePrevalenceReport(
 A WORD, PDF or HTML document.
 }
 \description{
-Creates an HTML report taking the prevalence and incidence estimates from IncidencePrevalence.
+Creates a written report from IncidencePrevalence.
 }

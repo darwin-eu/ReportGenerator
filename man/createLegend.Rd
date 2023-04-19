@@ -2,7 +2,7 @@
 % Please edit documentation in R/createLegend.R
 \name{createLegend}
 \alias{createLegend}
-\title{createLegend}
+\title{Write html file for the sunburst plot legend.}
 \usage{
 createLegend(inputJSON, fileName)
 }

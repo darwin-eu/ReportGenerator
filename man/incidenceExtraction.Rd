@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataExtraction.R
 \name{incidenceExtraction}
 \alias{incidenceExtraction}
-\title{Extracts incidence data from files in CSV format and saves the result in RDS.}
+\title{Extracts data from csv files and saves rds}
 \usage{
 incidenceExtraction(
   importFolderIndcidence = here("inst/csv/incidenceMockResults"),
@@ -10,13 +10,13 @@ incidenceExtraction(
 )
 }
 \arguments{
-\item{importFolderIndcidence}{Location of incidence results.}
+\item{importFolderIndcidence}{Location of csv files.}
 
-\item{studyName}{In a string, the name of the study.}
+\item{studyName}{Name of the study.}
 }
 \value{
 A tibble
 }
 \description{
-Extracts incidence data from files in CSV format and saves the result in RDS.
+Extracts data from csv files and saves rds
 }

@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' createLegend
-#'
 #' Write html file for the sunburst plot legend.
 #'
 #' @param fileName Output file name for the legend.

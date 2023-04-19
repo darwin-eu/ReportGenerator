@@ -2,7 +2,7 @@
 % Please edit documentation in R/outputSankeyDiagram.R
 \name{groupInfrequentCombinations}
 \alias{groupInfrequentCombinations}
-\title{groupInfrequentCombinations}
+\title{Help function to group combinations}
 \usage{
 groupInfrequentCombinations(data, groupCombinations)
 }

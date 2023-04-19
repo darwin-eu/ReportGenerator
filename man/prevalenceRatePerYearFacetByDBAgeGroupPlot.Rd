@@ -2,7 +2,7 @@
 % Please edit documentation in R/standardPlots.R
 \name{prevalenceRatePerYearFacetByDBAgeGroupPlot}
 \alias{prevalenceRatePerYearFacetByDBAgeGroupPlot}
-\title{prevalenceRatePerYearFacetByDBAgeGroupPlot}
+\title{Prevalence Rate Per Year by Age Group}
 \usage{
 prevalenceRatePerYearFacetByDBAgeGroupPlot(prevalence_estimates)
 }
@@ -10,5 +10,5 @@ prevalenceRatePerYearFacetByDBAgeGroupPlot(prevalence_estimates)
 \item{prevalence_estimates}{estimates of of the prevalence}
 }
 \description{
-prevalenceRatePerYearFacetByDBAgeGroupPlot
+Prevalence Rate Per Year by Age Group
 }

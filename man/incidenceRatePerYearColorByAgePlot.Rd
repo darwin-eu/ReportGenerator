@@ -2,7 +2,7 @@
 % Please edit documentation in R/standardPlots.R
 \name{incidenceRatePerYearColorByAgePlot}
 \alias{incidenceRatePerYearColorByAgePlot}
-\title{incidenceRatePerYearColorByAgePlot}
+\title{Incidence Rate Per Year by Age Plot}
 \usage{
 incidenceRatePerYearColorByAgePlot(incidence_estimates)
 }
@@ -10,5 +10,5 @@ incidenceRatePerYearColorByAgePlot(incidence_estimates)
 \item{incidence_estimates}{estimates of of the incidence}
 }
 \description{
-incidenceRatePerYearColorByAgePlot
+Incidence Rate Per Year by Age Plot
 }

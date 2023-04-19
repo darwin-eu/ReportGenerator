@@ -2,7 +2,7 @@
 % Please edit documentation in R/standardPlots.R
 \name{incidenceRatePerYearGroupBySexPlot}
 \alias{incidenceRatePerYearGroupBySexPlot}
-\title{incidenceRatePerYearGroupBySexPlot}
+\title{Incidence Rate Per Year by Sex Plot}
 \usage{
 incidenceRatePerYearGroupBySexPlot(incidence_estimates)
 }
@@ -10,5 +10,5 @@ incidenceRatePerYearGroupBySexPlot(incidence_estimates)
 \item{incidence_estimates}{estimates of of the incidence}
 }
 \description{
-incidenceRatePerYearGroupBySexPlot
+Incidence Rate Per Year by Sex Plot
 }

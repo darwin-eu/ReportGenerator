@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' This application displays an automated and interactive report of the results from the IncidencePrevalence package.
+#' Results Data Visualisation Dashboard
 #'
-#' @export
 #' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets
 #' @importFrom plotly plotlyOutput renderPlotly
-#' @return Dashboard
+#' @return Shiny app.
+#' @export
 resultsDashboard <- function() {
 
   # denominatorData <- denominatorExtraction(importFolderDenominator)

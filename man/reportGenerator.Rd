@@ -2,10 +2,10 @@
 % Please edit documentation in R/reportGenerator.R
 \name{reportGenerator}
 \alias{reportGenerator}
-\title{This application offers a visualization of the figures available to fill in a study report in Word format.}
+\title{ReportGenerator Shiny App}
 \usage{
 reportGenerator()
 }
 \description{
-This application offers a visualization of the figures available to fill in a study report in Word format.
+ReportGenerator Shiny App
 }

@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' Create the table in which a user can choose the item for a preview.
+#' Create the table to choose item for preview.
 #'
 #' @param data the input data
 createPreviewMenuTable <- function(data) {
@@ -26,7 +26,7 @@ createPreviewMenuTable <- function(data) {
                 colnames = "Items to select")
 }
 
-#' Create the preview table.
+#' Create preview table.
 #'
 #' @param data the input data
 createPreviewTable <- function(data) {
@@ -35,7 +35,6 @@ createPreviewTable <- function(data) {
                                lengthMenu = c(5, 10, 15, 20)),
                 rownames = FALSE)
 }
-
 #' table1NumParPreview
 #'
 #' @param incidence_attrition incidence of the attrition

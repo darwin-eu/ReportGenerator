@@ -2,7 +2,7 @@
 % Please edit documentation in R/standardPlots.R
 \name{prevalenceRatePerYearPlot}
 \alias{prevalenceRatePerYearPlot}
-\title{prevalenceRatePerYearPlot}
+\title{Prevalence Rate Per Year Plot}
 \usage{
 prevalenceRatePerYearPlot(prevalence_estimates)
 }
@@ -10,5 +10,5 @@ prevalenceRatePerYearPlot(prevalence_estimates)
 \item{prevalence_estimates}{estimates of of the prevalence}
 }
 \description{
-prevalenceRatePerYearPlot
+Prevalence Rate Per Year Plot
 }

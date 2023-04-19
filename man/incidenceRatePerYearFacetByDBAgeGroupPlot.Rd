@@ -2,7 +2,7 @@
 % Please edit documentation in R/standardPlots.R
 \name{incidenceRatePerYearFacetByDBAgeGroupPlot}
 \alias{incidenceRatePerYearFacetByDBAgeGroupPlot}
-\title{incidenceRatePerYearFacetByDBAgeGroupPlot}
+\title{Incidence Rate Per Year by Age Group}
 \usage{
 incidenceRatePerYearFacetByDBAgeGroupPlot(incidence_estimates)
 }
@@ -10,5 +10,5 @@ incidenceRatePerYearFacetByDBAgeGroupPlot(incidence_estimates)
 \item{incidence_estimates}{estimates of of the incidence}
 }
 \description{
-incidenceRatePerYearFacetByDBAgeGroupPlot
+Incidence Rate Per Year by Age Group
 }

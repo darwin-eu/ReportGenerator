@@ -2,7 +2,7 @@
 % Please edit documentation in R/createSunburstPlot.R
 \name{stripname}
 \alias{stripname}
-\title{stripname}
+\title{Removes the name from all levels of list.}
 \usage{
 stripname(x, name)
 }
@@ -15,5 +15,5 @@ stripname(x, name)
 list with removed names
 }
 \description{
-Recursive function to remove name from all levels of list.
+Removes the name from all levels of list.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/createSunburstPlot.R
 \name{transformCSVtoJSON}
 \alias{transformCSVtoJSON}
-\title{transformCSVtoJSON}
+\title{Transforms CSV into JSON for HTML}
 \usage{
 transformCSVtoJSON(data, outcomes, folder, fileName)
 }
@@ -19,6 +19,5 @@ transformCSVtoJSON(data, outcomes, folder, fileName)
 the transformed csv as a json string
 }
 \description{
-Help function to transform data in csv format to required JSON format for
-HTML.
+Transforms CSV into JSON for HTML
 }

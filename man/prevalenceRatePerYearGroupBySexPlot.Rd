@@ -2,7 +2,7 @@
 % Please edit documentation in R/standardPlots.R
 \name{prevalenceRatePerYearGroupBySexPlot}
 \alias{prevalenceRatePerYearGroupBySexPlot}
-\title{prevalenceRatePerYearGroupBySexPlot}
+\title{Prevalence Rate Per Year by Sex Plot}
 \usage{
 prevalenceRatePerYearGroupBySexPlot(prevalence_estimates)
 }
@@ -10,5 +10,5 @@ prevalenceRatePerYearGroupBySexPlot(prevalence_estimates)
 \item{prevalence_estimates}{estimates of of the prevalence}
 }
 \description{
-prevalenceRatePerYearGroupBySexPlot
+Prevalence Rate Per Year by Sex Plot
 }

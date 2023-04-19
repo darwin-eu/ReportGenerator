@@ -2,7 +2,7 @@
 % Please edit documentation in R/standardPlots.R
 \name{prevalenceRatePerYearFacetByDBOutcomePlot}
 \alias{prevalenceRatePerYearFacetByDBOutcomePlot}
-\title{prevalenceRatePerYearFacetByDBOutcomePlot}
+\title{Prevalence Rate Per Year by Database}
 \usage{
 prevalenceRatePerYearFacetByDBOutcomePlot(prevalence_estimates)
 }
@@ -10,5 +10,5 @@ prevalenceRatePerYearFacetByDBOutcomePlot(prevalence_estimates)
 \item{prevalence_estimates}{estimates of of the prevalence}
 }
 \description{
-prevalenceRatePerYearFacetByDBOutcomePlot
+Prevalence Rate Per Year by Database
 }

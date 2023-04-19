@@ -14,9 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' depth
-#'
-#' Function to find depth of a list element.
+#' Finds the depth of a list element.
 #'
 #' @param x input list (element)
 #' @param thisdepth current list depth
@@ -35,11 +33,7 @@ depth <- function(x, thisdepth = 0) {
     )))
   }
 }
-
-
-#' stripname
-#'
-#' Recursive function to remove name from all levels of list.
+#' Removes the name from all levels of list.
 #'
 #' @param x input list
 #' @param name the name of the list item from which the names will be removed
@@ -59,11 +53,7 @@ stripname <- function(x, name) {
   }
   return(lapply(x, stripname, name))
 }
-
-
-#' buildHierarchy
-#'
-#' Help function to create hierarchical data structure.
+#' Creates a hierarchical data structure.
 #'
 #' @param csv
 #'     CSV
@@ -155,12 +145,7 @@ buildHierarchy <- function(csv) {
   json <- rjson::toJSON(root)
   return(json)
 }
-
-
-#' transformCSVtoJSON
-#'
-#' Help function to transform data in csv format to required JSON format for
-#' HTML.
+#' Transforms CSV into JSON for HTML
 #'
 #' @param data input data.frame
 #' @param outcomes character vector containing all event cohorts
@@ -236,9 +221,7 @@ transformCSVtoJSON <- function(data, outcomes, folder, fileName) {
   return(result)
 }
 
-#' createSunburstPlot
-#'
-#' Export a sunburst plot from a data.frame object.
+#' Export sunburst plot from a data.frame
 #'
 #' @param data
 #'     A data frame containing two columns: 1) column "path" should specify the

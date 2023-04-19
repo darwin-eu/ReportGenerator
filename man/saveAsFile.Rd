@@ -2,7 +2,7 @@
 % Please edit documentation in R/saveAsFile.R
 \name{saveAsFile}
 \alias{saveAsFile}
-\title{saveAsFile}
+\title{Save an SVG-image from a html-file}
 \usage{
 saveAsFile(fileName, fileNameOut, zoom = 3, vwidth = 430, selector = NULL, ...)
 }
@@ -23,7 +23,7 @@ saveAsFile(fileName, fileNameOut, zoom = 3, vwidth = 430, selector = NULL, ...)
 Invisibly returns the normalized path to all screenshots taken. The character vector will have a class of '"webshot"'.
 }
 \description{
-Save an SVG-image from a html-file as a PNG, - or PDF-file.
+Save an SVG-image from a html-file
 }
 \examples{
 \dontrun{

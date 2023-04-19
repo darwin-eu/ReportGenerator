@@ -2,7 +2,7 @@
 % Please edit documentation in R/createSunburstPlot.R
 \name{depth}
 \alias{depth}
-\title{depth}
+\title{Finds the depth of a list element.}
 \usage{
 depth(x, thisdepth = 0)
 }
@@ -15,5 +15,5 @@ depth(x, thisdepth = 0)
 the depth of the list element
 }
 \description{
-Function to find depth of a list element.
+Finds the depth of a list element.
 }

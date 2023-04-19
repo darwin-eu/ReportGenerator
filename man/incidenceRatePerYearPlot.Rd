@@ -2,7 +2,7 @@
 % Please edit documentation in R/standardPlots.R
 \name{incidenceRatePerYearPlot}
 \alias{incidenceRatePerYearPlot}
-\title{incidenceRatePerYearPlot}
+\title{Incidence Rate Per Year Plot}
 \usage{
 incidenceRatePerYearPlot(incidence_estimates)
 }
@@ -10,5 +10,5 @@ incidenceRatePerYearPlot(incidence_estimates)
 \item{incidence_estimates}{estimates of of the incidence}
 }
 \description{
-incidenceRatePerYearPlot
+Incidence Rate Per Year Plot
 }

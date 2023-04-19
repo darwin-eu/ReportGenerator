@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataExtraction.R
 \name{prevalenceExtractionToRDS}
 \alias{prevalenceExtractionToRDS}
-\title{Extracts prevalence data from files in CSV format nd saves the result in RDS.}
+\title{Extracts data from csv files and saves rds}
 \usage{
 prevalenceExtractionToRDS(
   importFolderPrevalence = here("inst/csv/prevalenceMockResults"),
@@ -12,11 +12,11 @@ prevalenceExtractionToRDS(
 \arguments{
 \item{importFolderPrevalence}{Location of prevalence results.}
 
-\item{studyName}{In a string, the name of the study.}
+\item{studyName}{Name of the study.}
 }
 \value{
 A tibble
 }
 \description{
-Extracts prevalence data from files in CSV format nd saves the result in RDS.
+Extracts data from csv files and saves rds
 }

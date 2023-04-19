@@ -14,11 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' This application offers a visualization of the figures available to fill in a study report in Word format.
+#' ReportGenerator Shiny App
 #'
-#' @export
 #' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable
 #' @importFrom sortable bucket_list add_rank_list
+#' @export
 reportGenerator <- function() {
 
   # set max file upload size

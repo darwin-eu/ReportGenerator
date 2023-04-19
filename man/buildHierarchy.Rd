@@ -2,7 +2,7 @@
 % Please edit documentation in R/createSunburstPlot.R
 \name{buildHierarchy}
 \alias{buildHierarchy}
-\title{buildHierarchy}
+\title{Creates a hierarchical data structure.}
 \usage{
 buildHierarchy(csv)
 }
@@ -13,5 +13,5 @@ buildHierarchy(csv)
 JSON
 }
 \description{
-Help function to create hierarchical data structure.
+Creates a hierarchical data structure.
 }

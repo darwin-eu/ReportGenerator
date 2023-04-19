@@ -2,7 +2,7 @@
 % Please edit documentation in R/previewTables.R
 \name{createPreviewMenuTable}
 \alias{createPreviewMenuTable}
-\title{Create the table in which a user can choose the item for a preview.}
+\title{Create the table to choose item for preview.}
 \usage{
 createPreviewMenuTable(data)
 }
@@ -10,5 +10,5 @@ createPreviewMenuTable(data)
 \item{data}{the input data}
 }
 \description{
-Create the table in which a user can choose the item for a preview.
+Create the table to choose item for preview.
 }

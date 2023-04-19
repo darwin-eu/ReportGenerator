@@ -11,10 +11,10 @@ resultsDashboard()
 \value{
 Dashboard
 
-Dashboard
+Shiny app.
 }
 \description{
 This application displays an automated and interactive report of the results from the IncidencePrevalence package.
 
-This application displays an automated and interactive report of the results from the IncidencePrevalence package.
+Results Data Visualisation Dashboard
 }

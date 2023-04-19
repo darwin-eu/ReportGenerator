@@ -2,18 +2,18 @@
 % Please edit documentation in R/dataExtraction.R
 \name{denominatorExtraction}
 \alias{denominatorExtraction}
-\title{Extracts denominator data from files in CSV format.}
+\title{Extracts data from csv files}
 \usage{
 denominatorExtraction(
   importFolderDenominator = here("inst/csv/denominatorMockData")
 )
 }
 \arguments{
-\item{importFolderDenominator}{Location of denominator data.}
+\item{importFolderDenominator}{Location of csv files.}
 }
 \value{
-A tibble
+A tibble.
 }
 \description{
-Extracts denominator data from files in CSV format.
+Extracts data from csv files
 }

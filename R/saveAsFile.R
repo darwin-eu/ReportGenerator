@@ -14,9 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' saveAsFile
-#'
-#' Save an SVG-image from a html-file as a PNG, - or PDF-file.
+#' Save an SVG-image from a html-file
 #'
 #' @param fileName HTML-Filename.
 #' @param fileNameOut Filename of image, either with .pdf or .png extension.

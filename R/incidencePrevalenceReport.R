@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' Creates an HTML report taking the prevalence and incidence estimates from IncidencePrevalence.
+#' Creates a written report from IncidencePrevalence.
+#'
 #' @param title Title of the study in <chr>.
 #' @param authors Name of the author in <chr>.
 #' @param authorsInstitution Name of the institution performing the study in <chr>.
