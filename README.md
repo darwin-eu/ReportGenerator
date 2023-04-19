@@ -20,7 +20,7 @@ set menu of outputs.
 
 ## Installation
 
-You can install the development version of reportGenerator like so:
+You can install the development version of ReportGenerator like so:
 
 ``` r
 install.packages("remotes")
