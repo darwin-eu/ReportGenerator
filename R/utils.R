@@ -31,13 +31,14 @@ getItemsList <- function(uploadedFiles) {
     unlist(lapply(menuFunctions, FUN = function(menuFunction) {
       required <- trimws(unlist(strsplit(menuFunction , ",")))
       exists <- required %in% uploadedFiles
-
       if (TRUE %in% exists) {
         return(TRUE)
       } else {
         return(FALSE)
       }
-    }))
+    }
+    )
+    )
   }
   menuFunctions  %>%
     dplyr::filter(checkNeeds(menuFunctions$arguments, uploadedFiles)) %>%
