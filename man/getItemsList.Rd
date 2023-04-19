@@ -2,8 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{getItemsList}
 \alias{getItemsList}
-\title{Get the items that the user can choose from in the report generator. The list is loaded from the configuration file
-and filtered by the files that have been uploaded.}
+\title{Checks items available for ReportGenerator}
 \usage{
 getItemsList(uploadedFiles)
 }

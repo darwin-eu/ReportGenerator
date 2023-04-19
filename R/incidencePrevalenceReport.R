@@ -24,9 +24,6 @@
 #' @param date Date relevant to the study in <chr>.
 #' @param countries Country or countries that participated in the study.
 #' @param abstractText Abstract in character.
-# @param denominatorData A tibble from IncidencePrevalence.
-# @param incidenceData A tibble from IncidencePrevalence.
-# @param prevalenceData A tibble from IncidencePrevalence.
 #' @param format A string. Options are "word", "pdf" or "html".
 #' @param byCondition TRUE if study is related to a condition, FALSE if it is related to drug utilisation.
 #' @export
@@ -42,9 +39,6 @@ incidencePrevalenceReport <- function(title = NULL,
                                       date = NULL,
                                       countries = NULL,
                                       abstractText = NULL,
-                                      # denominatorData = NULL,
-                                      # incidenceData = NULL,
-                                      # prevalenceData = NULL,
                                       byCondition = TRUE,
                                       format = "word") {
 
@@ -420,10 +414,6 @@ incidencePrevalenceReport <- function(title = NULL,
                      "/rmarkdown/templates/IncidencePrevalenceReport.Rmd"),
       output_format = "html_document",
       output_file = here("Reports/IncidencePrevalenceReport"),
-      # params = list(titleParam = title,
-      #               authorParam = authors,
-      #               prevalenceParam = prevalenceData,
-      #               incidenceParam = incidenceData),
       encoding = 'UTF-8'
 
     )
