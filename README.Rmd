@@ -30,19 +30,20 @@ The ReportGenerator R package creates automatic study reports from DARWIN EU® r
 
 You can install the development version of ReportGenerator like so:
 
-``` r
+```{r}
 install.packages("remotes")
 remotes::install_github("darwin-eu-dev/ReportGenerator")
 ```
 
 To test the package, generate first the mock data with `generateMockData()`. It will create a "Results" folder in the working directory that contains IncidencePrevalence data in csv and zip format. 
 
-```r
+```{r}
  generateMockData(databaseName = c("Synthea", "IPCI", "CPRD"))
 ```
 
 `reportGenerator()` takes as an input zip or csv files with results from IncidencePrevalence. To launch the Shiny app just type in the console:
 
-```r 
+```{r} 
 reportGenerator()
 ```
+

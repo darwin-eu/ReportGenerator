@@ -24,7 +24,7 @@ You can install the development version of ReportGenerator like so:
 
 ``` r
 install.packages("remotes")
-remotes::install_github("darwin-eu-dev/reportGenerator")
+remotes::install_github("darwin-eu-dev/ReportGenerator")
 ```
 
 To test the package, generate first the mock data with
