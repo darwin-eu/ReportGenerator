@@ -39,7 +39,8 @@ Imports:
     DT,
     zip
 Suggests: 
-    testthat
+    testthat,
+    glue
 Remotes:
     darwin-eu/IncidencePrevalence
 Config/testthat/edition: 3

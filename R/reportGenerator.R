@@ -143,10 +143,10 @@ reportGenerator <- function() {
     # Uploaded object: Incidence Attrition
     incidence_attrition <- reactive({
       result <- NULL
+      configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
+        dplyr::filter(name == "incidence_attrition")
+      configColumns <- configColumns$variables
       for (i in uploadedFiles()) {
-        configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-          dplyr::filter(name == "incidence_attrition")
-        configColumns <- configColumns$variables
         csvData <- read_csv(i)
         resultsColumns <- names(csvData)
         if (length(configColumns) == length(resultsColumns)) {
@@ -161,10 +161,10 @@ reportGenerator <- function() {
     # Uploaded object: Prevalence Attrition
     prevalence_attrition <- reactive({
       result <- NULL
+      configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
+        dplyr::filter(name == "prevalence_attrition")
+      configColumns <- configColumns$variables
       for (i in uploadedFiles()) {
-        configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-          dplyr::filter(name == "prevalence_attrition")
-        configColumns <- configColumns$variables
         csvData <- read_csv(i)
         resultsColumns <- names(csvData)
         if (length(configColumns) == length(resultsColumns)) {
@@ -179,10 +179,10 @@ reportGenerator <- function() {
     # Uploaded object: Incidence Estimates
     incidence_estimates <- reactive({
       result <- NULL
+      configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
+        dplyr::filter(name == "incidence_estimates")
+      configColumns <- configColumns$variables
       for (i in uploadedFiles()) {
-        configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-          dplyr::filter(name == "incidence_estimates")
-        configColumns <- configColumns$variables
         csvData <- read_csv(i)
         resultsColumns <- names(csvData)
         if (length(configColumns) == length(resultsColumns)) {
@@ -279,6 +279,7 @@ reportGenerator <- function() {
 
     # Item choice data
     objectChoice  <- reactive({
+      req(uploadedFiles())
       req(input$tableContents_cells_selected)
 
       objectChoiceTitle  <- menu()[input$tableContents_cells_selected,]
@@ -286,7 +287,9 @@ reportGenerator <- function() {
     })
 
     observe({
-        if (objectChoice() == "Plot - Incidence rate per year") {
+      req(objectChoice())
+
+      if (objectChoice() == "Plot - Incidence rate per year") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = unique(incidence_estimates()$denominator_sex))
@@ -321,9 +324,7 @@ reportGenerator <- function() {
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
                                       unique(incidence_estimates()$denominator_age_group)))
-
       }
-
     })
 
     # Renders item preview depending on the object class
@@ -333,7 +334,16 @@ reportGenerator <- function() {
       if (grepl("Table", objectChoice())) {
         DT::dataTableOutput("previewTable")
       } else {
-        plotlyOutput("previewPlot")
+        plotOptions <- menuFun() %>%
+          dplyr::filter(title == objectChoice()) %>%
+          getItemOptions()
+        if (identical(plotOptions, character(0))) {
+          plotlyOutput("previewPlot")
+        } else {
+          names(plotOptions) <- as.character(glue::glue("{toupper(letters)[1:length(plotOptions)]}: {plotOptions}"))
+          tagList(selectizeInput("previewPlotOption", "Select plot type", choices = plotOptions, width = "32%"),
+                  plotlyOutput("previewPlot"))
+        }
       }
     })
 
@@ -418,27 +428,23 @@ reportGenerator <- function() {
     output$previewPlot<- renderPlotly({
       req(objectChoice())
 
-        object <- eval(parse(text = menuFun() %>%
-                               dplyr::filter(title == objectChoice()) %>%
-                               dplyr::pull(signature)))
+      menuFunction <- menuFun() %>%
+        dplyr::filter(title == objectChoice())
+      itemOptions <- menuFunction %>% getItemOptions()
+      expression <- menuFunction %>%
+        dplyr::pull(signature)
+      if (!identical(itemOptions, character(0))) {
+        expression <- expression %>%
+          addPreviewItemType(input$previewPlotOption)
+      }
+      object <- eval(parse(text = expression))
 
       if (grepl("Plot", objectChoice())) {
         object
       }
     })
 
-    # # studyDesign
-    # output$studyDesign <- renderUI({
-    #   checkboxGroupInput(inputId = "studyDesignGroup", label = "Select study type",
-    #                      choices = c("Drug Utilisation Studies (DUS)",
-    #                                  "Disease Epidemiology",
-    #                                  "Routine Repeated Analysis",
-    #                                  "Drug/Vaccine Safety or Comparative Effectiveness Studies"),
-    #                      inline = FALSE)
-    # })
-
     # 4. Word report generator
-
     observeEvent(input$generateReport, {
       incidencePrevalenceDocx <- read_docx(path = file.path(system.file("templates/word/darwinTemplate.docx", package = "ReportGenerator")))
       reverseList <- rev(itemsList()$title)
