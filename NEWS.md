@@ -1,5 +1,9 @@
 # ReportGenerator 1.1.0
 
+* Check out the new logo!
+
+* Figure 1 now has a drop down menu tu select either Option A or Option B (Facet by Outcome, Facet by Database).
+
 # ReportGenerator 1.0.1
 
 * Improvements to `generateMockData()`
