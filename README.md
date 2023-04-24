@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ReportGenerator <img src="man/figures/logo.png" align="right" height="104" />
+# ReportGenerator <img src="man/figures/logo.png" align="right" height="200" />
 
 <!-- badges: start -->
 
@@ -32,7 +32,6 @@ To test the package, generate first the mock data with
 directory that contains IncidencePrevalence data in csv and zip format.
 
 ``` r
- library(ReportGenerator)
  generateMockData(databaseName = c("Synthea"))
 ```
 
