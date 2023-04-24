@@ -127,6 +127,7 @@
 "incidence_attrition","denominator_strata_cohort_definition_id"
 "incidence_attrition","denominator_strata_cohort_name"
 "incidence_attrition","cdm_name"
+"incidence_attrition","database_name"
 "prevalence_attrition","result_id"
 "prevalence_attrition","analysis_id"
 "prevalence_attrition","number_records"
@@ -154,3 +155,4 @@
 "prevalence_attrition","denominator_strata_cohort_definition_id"
 "prevalence_attrition","denominator_strata_cohort_name"
 "prevalence_attrition","cdm_name"
+"prevalence_attrition","database_name"

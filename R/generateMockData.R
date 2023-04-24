@@ -110,6 +110,22 @@ for (i in databaseName) {
                                                    resultList = list(incidence,
                                                                      prevalencePoint,
                                                                      prevalencePeriod))
+  # # Adding database_name to attrition files
+  # # Incidence
+  #
+  # dataName <- studyResults$incidence_attrition
+  #
+  # dataName <- dataName %>% mutate(database_name = i)
+  #
+  # studyResults$incidence_attrition <- dataName
+  #
+  # # Prevalence
+  #
+  # dataName <- studyResults$prevalence_attrition
+  #
+  # dataName <- dataName %>% mutate(database_name = i)
+  #
+  # studyResults$prevalence_attrition <- dataName
 
   ## Writing prevalence data into csv
 

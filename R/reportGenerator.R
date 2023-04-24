@@ -440,7 +440,7 @@ reportGenerator <- function() {
     # 4. Word report generator
 
     observeEvent(input$generateReport, {
-      incidencePrevalenceDocx <- read_docx(path = here("inst/templates/word/darwinTemplate.docx"))
+      incidencePrevalenceDocx <- read_docx(path = file.path(system.file("templates/word/darwinTemplate.docx", package = "ReportGenerator")))
       reverseList <- rev(itemsList()$title)
       for (i in reverseList) {
         object <- eval(parse(text = menuFun() %>%
@@ -472,7 +472,7 @@ reportGenerator <- function() {
         }
       body_add_toc(incidencePrevalenceDocx)
       print(incidencePrevalenceDocx,
-            target = here("Reports/generatedReport.docx"))
+            target = here("generatedReport.docx"))
     })
   }
   shinyApp(ui, server)
