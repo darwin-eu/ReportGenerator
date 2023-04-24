@@ -25,6 +25,7 @@ Imports:
     scales,
     shiny,
     shinydashboard,
+    shinyWidgets,
     tidyr,
     checkmate,
     webshot2 (>= 0.1.0),
@@ -36,10 +37,10 @@ Imports:
     huxtable,
     sortable,
     DT,
-    zip,
-    glue
+    zip
 Suggests: 
-    testthat
+    testthat,
+    glue
 Remotes:
     darwin-eu/IncidencePrevalence
 Config/testthat/edition: 3
