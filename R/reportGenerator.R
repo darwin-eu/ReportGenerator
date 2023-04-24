@@ -31,7 +31,7 @@ reportGenerator <- function() {
     dashboardSidebar(
       sidebarMenu(
         tagList(tags$br(),
-                uiOutput("studyDesign"),
+                # uiOutput("studyDesign"),
                 tags$br(),
                 tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
                 fileInput("datasetLoad",
@@ -427,15 +427,15 @@ reportGenerator <- function() {
       }
     })
 
-    # studyDesign
-    output$studyDesign <- renderUI({
-      checkboxGroupInput(inputId = "studyDesignGroup", label = "Select study type",
-                         choices = c("Drug Utilisation Studies (DUS)",
-                                     "Disease Epidemiology",
-                                     "Routine Repeated Analysis",
-                                     "Drug/Vaccine Safety or Comparative Effectiveness Studies"),
-                         inline = FALSE)
-    })
+    # # studyDesign
+    # output$studyDesign <- renderUI({
+    #   checkboxGroupInput(inputId = "studyDesignGroup", label = "Select study type",
+    #                      choices = c("Drug Utilisation Studies (DUS)",
+    #                                  "Disease Epidemiology",
+    #                                  "Routine Repeated Analysis",
+    #                                  "Drug/Vaccine Safety or Comparative Effectiveness Studies"),
+    #                      inline = FALSE)
+    # })
 
     # 4. Word report generator
 
