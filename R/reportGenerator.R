@@ -18,7 +18,7 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
-#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard officer flextable
+#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable
 #' @importFrom sortable bucket_list add_rank_list
 #' @export
 reportGenerator <- function() {
@@ -143,10 +143,10 @@ reportGenerator <- function() {
     # Uploaded object: Incidence Attrition
     incidence_attrition <- reactive({
       result <- NULL
+      configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
+        dplyr::filter(name == "incidence_attrition")
+      configColumns <- configColumns$variables
       for (i in uploadedFiles()) {
-        configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-          dplyr::filter(name == "incidence_attrition")
-        configColumns <- configColumns$variables
         csvData <- read_csv(i)
         resultsColumns <- names(csvData)
         if (length(configColumns) == length(resultsColumns)) {
@@ -161,10 +161,10 @@ reportGenerator <- function() {
     # Uploaded object: Prevalence Attrition
     prevalence_attrition <- reactive({
       result <- NULL
+      configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
+        dplyr::filter(name == "prevalence_attrition")
+      configColumns <- configColumns$variables
       for (i in uploadedFiles()) {
-        configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-          dplyr::filter(name == "prevalence_attrition")
-        configColumns <- configColumns$variables
         csvData <- read_csv(i)
         resultsColumns <- names(csvData)
         if (length(configColumns) == length(resultsColumns)) {
@@ -179,10 +179,10 @@ reportGenerator <- function() {
     # Uploaded object: Incidence Estimates
     incidence_estimates <- reactive({
       result <- NULL
+      configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
+        dplyr::filter(name == "incidence_estimates")
+      configColumns <- configColumns$variables
       for (i in uploadedFiles()) {
-        configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-          dplyr::filter(name == "incidence_estimates")
-        configColumns <- configColumns$variables
         csvData <- read_csv(i)
         resultsColumns <- names(csvData)
         if (length(configColumns) == length(resultsColumns)) {
@@ -279,6 +279,7 @@ reportGenerator <- function() {
 
     # Item choice data
     objectChoice  <- reactive({
+      req(uploadedFiles())
       req(input$tableContents_cells_selected)
 
       objectChoiceTitle  <- menu()[input$tableContents_cells_selected,]
@@ -286,7 +287,9 @@ reportGenerator <- function() {
     })
 
     observe({
-        if (objectChoice() == "Plot - Incidence rate per year") {
+      req(objectChoice())
+
+      if (objectChoice() == "Plot - Incidence rate per year") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = unique(incidence_estimates()$denominator_sex))
@@ -321,9 +324,7 @@ reportGenerator <- function() {
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
                                       unique(incidence_estimates()$denominator_age_group)))
-
       }
-
     })
 
     # Renders item preview depending on the object class
