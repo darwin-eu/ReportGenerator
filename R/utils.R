@@ -53,7 +53,7 @@ getItemsList <- function(uploadedFiles) {
 #' @return the updated preview item string
 addPreviewItemType <- function(previewItemString, previewItemType) {
   result <- previewItemString
-  if (class(previewItemString) == "character" && grepl(")", previewItemString) && !is.null(previewItemType)) {
+  if ("character" %in% is(previewItemString) && grepl(")", previewItemString) && !is.null(previewItemType)) {
     lastBracketStartPos <- stringi::stri_locate_last_fixed(previewItemString, ")")[1]
     result <- as.character(glue::glue('{substr(previewItemString, 0, lastBracketStartPos - 1)}, "{previewItemType}")'))
   }

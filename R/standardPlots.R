@@ -17,7 +17,7 @@
 #' Incidence Rate Per Year Plot
 #'
 #' @param incidence_estimates estimates of of the incidence
-#' @param plot type
+#' @param type plot type
 #'
 #' @import ggplot2
 #' @export

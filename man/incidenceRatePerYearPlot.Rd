@@ -9,7 +9,7 @@ incidenceRatePerYearPlot(incidence_estimates, type)
 \arguments{
 \item{incidence_estimates}{estimates of of the incidence}
 
-\item{plot}{type}
+\item{type}{plot type}
 }
 \description{
 Incidence Rate Per Year Plot
