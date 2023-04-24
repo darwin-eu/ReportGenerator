@@ -17,29 +17,39 @@
 #' Incidence Rate Per Year Plot
 #'
 #' @param incidence_estimates estimates of of the incidence
+#' @param plot type
 #'
 #' @import ggplot2
 #' @export
-incidenceRatePerYearPlot <- function(incidence_estimates) {
+incidenceRatePerYearPlot <- function(incidence_estimates, type) {
 
-  # TEST reportGenerator app
-  # incidence_mock_estimates_IPCI <- read_csv("incidenceResults/incidence_mock_estimates_IPCI.csv")
-  # incidence_estimates <- incidence_mock_estimates_IPCI
-
-  incidence_estimates %>%
-    ggplot(aes(x = incidence_start_date,
-               y = incidence_100000_pys,
-               col = database_name)) +
-    # scale_y_continuous(labels = scales::percent,
-    #                    limits = c(0,NA)) +
-    geom_line(aes(group = 1)) +
-    geom_point() +
-    geom_errorbar(aes(ymin = incidence_100000_pys_95CI_lower,
-                      ymax = incidence_100000_pys_95CI_upper)) +
-    theme_bw() +
-    labs(x = "Calendar year",
-         y = "Incidence rate per 100000 person-years",
-         col = "Database name")
+  if (type == "Facet by outcome") {
+    incidence_estimates %>%
+      ggplot(aes(x = incidence_start_date,
+                 y = incidence_100000_pys,
+                 col = database_name)) +
+      geom_line(aes(group = 1)) +
+      geom_point() +
+      geom_errorbar(aes(ymin = incidence_100000_pys_95CI_lower,
+                        ymax = incidence_100000_pys_95CI_upper)) +
+      theme_bw() +
+      labs(x = "Calendar year",
+           y = "Incidence rate per 100000 person-years",
+           col = "Database name")
+  } else if (type == "Facet by database") {
+    incidence_estimates %>%
+      ggplot(aes(x = incidence_start_date,
+                 y = incidence_100000_pys,
+                 col = database_name)) +
+      geom_line(aes(group = 1)) +
+      geom_point() +
+      geom_errorbar(aes(ymin = incidence_100000_pys_95CI_lower,
+                        ymax = incidence_100000_pys_95CI_upper)) +
+      theme_bw() +
+      labs(x = "Calendar year",
+           y = "Incidence rate per 100000 person-years",
+           col = "Database name")
+  }
 }
 #' Incidence Rate Per Year by Sex Plot
 #'

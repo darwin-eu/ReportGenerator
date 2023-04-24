@@ -44,3 +44,31 @@ getItemsList <- function(uploadedFiles) {
     dplyr::filter(checkNeeds(menuFunctions$arguments, uploadedFiles)) %>%
     dplyr::select(title, signature)
 }
+
+#' Adds the given type to the current previewItem string.
+#'
+#' @param previewItemString string representing the previewItem
+#' @param previewItemType preview item type
+#'
+#' @return the updated preview item string
+addPreviewItemType <- function(previewItemString, previewItemType) {
+  result <- previewItemString
+  if (class(previewItemString) == "character" && grepl(")", previewItemString) && !is.null(previewItemType)) {
+    lastBracketStartPos <- stringi::stri_locate_last_fixed(previewItemString, ")")[1]
+    result <- as.character(glue::glue('{substr(previewItemString, 0, lastBracketStartPos - 1)}, "{previewItemType}")'))
+  }
+  return(result)
+}
+
+#' Get options for given item.
+#'
+#' @param item the menu item
+#'
+#' @return the options
+getItemOptions <- function(item) {
+  item %>%
+    dplyr::pull(options) %>%
+    strsplit(split = ", ") %>%
+    unlist()
+}
+

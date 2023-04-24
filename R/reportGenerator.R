@@ -333,7 +333,15 @@ reportGenerator <- function() {
       if (grepl("Table", objectChoice())) {
         DT::dataTableOutput("previewTable")
       } else {
-        plotlyOutput("previewPlot")
+        plotOptions <- menuFun() %>%
+          dplyr::filter(title == objectChoice()) %>%
+          getItemOptions()
+        if (identical(plotOptions, character(0))) {
+          plotlyOutput("previewPlot")
+        } else {
+          tagList(selectizeInput("previewPlotOption", "Select plot type", choices = plotOptions, width = "32%"),
+                  plotlyOutput("previewPlot"))
+        }
       }
     })
 
@@ -418,27 +426,23 @@ reportGenerator <- function() {
     output$previewPlot<- renderPlotly({
       req(objectChoice())
 
-        object <- eval(parse(text = menuFun() %>%
-                               dplyr::filter(title == objectChoice()) %>%
-                               dplyr::pull(signature)))
+      menuFunction <- menuFun() %>%
+        dplyr::filter(title == objectChoice())
+      itemOptions <- menuFunction %>% getItemOptions()
+      expression <- menuFunction %>%
+        dplyr::pull(signature)
+      if (!identical(itemOptions, character(0))) {
+        expression <- expression %>%
+          addPreviewItemType(input$previewPlotOption)
+      }
+      object <- eval(parse(text = expression))
 
       if (grepl("Plot", objectChoice())) {
         object
       }
     })
 
-    # # studyDesign
-    # output$studyDesign <- renderUI({
-    #   checkboxGroupInput(inputId = "studyDesignGroup", label = "Select study type",
-    #                      choices = c("Drug Utilisation Studies (DUS)",
-    #                                  "Disease Epidemiology",
-    #                                  "Routine Repeated Analysis",
-    #                                  "Drug/Vaccine Safety or Comparative Effectiveness Studies"),
-    #                      inline = FALSE)
-    # })
-
     # 4. Word report generator
-
     observeEvent(input$generateReport, {
       incidencePrevalenceDocx <- read_docx(path = file.path(system.file("templates/word/darwinTemplate.docx", package = "ReportGenerator")))
       reverseList <- rev(itemsList()$title)
