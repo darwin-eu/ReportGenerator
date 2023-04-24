@@ -32,7 +32,7 @@ To test the package, generate first the mock data with
 directory that contains IncidencePrevalence data in csv and zip format.
 
 ``` r
- generateMockData(databaseName = c("Synthea", "IPCI", "CPRD"))
+ generateMockData(databaseName = c("Synthea"))
 ```
 
 `reportGenerator()` takes as an input zip or csv files with results from
