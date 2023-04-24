@@ -1,3 +1,5 @@
+# ReportGenerator 1.1.0
+
 # ReportGenerator 1.0.1
 
 * Improvements to `generateMockData()`
