@@ -25,7 +25,6 @@ Imports:
     scales,
     shiny,
     shinydashboard,
-    shinyWidgets,
     tidyr,
     checkmate,
     webshot2 (>= 0.1.0),
@@ -37,7 +36,8 @@ Imports:
     huxtable,
     sortable,
     DT,
-    zip
+    zip,
+    glue
 Suggests: 
     testthat
 Remotes:
