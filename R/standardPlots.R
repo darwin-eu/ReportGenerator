@@ -22,7 +22,6 @@
 #' @import ggplot2
 #' @export
 incidenceRatePerYearPlot <- function(incidence_estimates, type) {
-
   if (type == "Facet by outcome") {
     incidence_estimates %>%
       ggplot(aes(x = incidence_start_date,
@@ -32,6 +31,7 @@ incidenceRatePerYearPlot <- function(incidence_estimates, type) {
       geom_point() +
       geom_errorbar(aes(ymin = incidence_100000_pys_95CI_lower,
                         ymax = incidence_100000_pys_95CI_upper)) +
+      facet_wrap(~outcome_cohort_name) +
       theme_bw() +
       labs(x = "Calendar year",
            y = "Incidence rate per 100000 person-years",
@@ -40,15 +40,16 @@ incidenceRatePerYearPlot <- function(incidence_estimates, type) {
     incidence_estimates %>%
       ggplot(aes(x = incidence_start_date,
                  y = incidence_100000_pys,
-                 col = database_name)) +
+                 col = outcome_cohort_name)) +
       geom_line(aes(group = 1)) +
       geom_point() +
       geom_errorbar(aes(ymin = incidence_100000_pys_95CI_lower,
                         ymax = incidence_100000_pys_95CI_upper)) +
+      facet_wrap(~database_name) +
       theme_bw() +
       labs(x = "Calendar year",
            y = "Incidence rate per 100000 person-years",
-           col = "Database name")
+           col = "Outcome")
   }
 }
 #' Incidence Rate Per Year by Sex Plot

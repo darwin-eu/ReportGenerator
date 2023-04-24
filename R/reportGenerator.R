@@ -339,6 +339,7 @@ reportGenerator <- function() {
         if (identical(plotOptions, character(0))) {
           plotlyOutput("previewPlot")
         } else {
+          names(plotOptions) <- as.character(glue::glue("{toupper(letters)[1:length(plotOptions)]}: {plotOptions}"))
           tagList(selectizeInput("previewPlotOption", "Select plot type", choices = plotOptions, width = "32%"),
                   plotlyOutput("previewPlot"))
         }
