@@ -20,3 +20,5 @@ itemsConfig - Copy.csv
 prevalenceResults/
 incidenceResults/
 results_zip/
+generatedReport.docx
+extras/
