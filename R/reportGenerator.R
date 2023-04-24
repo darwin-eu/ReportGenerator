@@ -279,6 +279,7 @@ reportGenerator <- function() {
 
     # Item choice data
     objectChoice  <- reactive({
+      req(uploadedFiles())
       req(input$tableContents_cells_selected)
 
       objectChoiceTitle  <- menu()[input$tableContents_cells_selected,]
@@ -286,7 +287,9 @@ reportGenerator <- function() {
     })
 
     observe({
-        if (objectChoice() == "Plot - Incidence rate per year") {
+      req(objectChoice())
+
+      if (objectChoice() == "Plot - Incidence rate per year") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = unique(incidence_estimates()$denominator_sex))
@@ -321,9 +324,7 @@ reportGenerator <- function() {
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
                                       unique(incidence_estimates()$denominator_age_group)))
-
       }
-
     })
 
     # Renders item preview depending on the object class
