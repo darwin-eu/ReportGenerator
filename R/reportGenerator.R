@@ -356,8 +356,8 @@ reportGenerator <- function() {
                                dplyr::filter(title == objectChoice()) %>%
                                dplyr::pull(signature)))
         data <- object$body$dataset
+        createPreviewTable(data)
       }
-      createPreviewTable(data)
     })
 
     output$plotFilters <- renderUI({
