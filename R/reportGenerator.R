@@ -348,19 +348,16 @@ reportGenerator <- function() {
     })
 
     # Objects to be rendered in the UI
-
     output$previewTable <- DT::renderDataTable({
       req(objectChoice())
 
-      object <- eval(parse(text = menuFun() %>%
-                             dplyr::filter(title == objectChoice()) %>%
-                             dplyr::pull(signature)))
-
       if ((grepl("Table", objectChoice()))) {
+        object <- eval(parse(text = menuFun() %>%
+                               dplyr::filter(title == objectChoice()) %>%
+                               dplyr::pull(signature)))
         data <- object$body$dataset
       }
       createPreviewTable(data)
-
     })
 
     output$plotFilters <- renderUI({
