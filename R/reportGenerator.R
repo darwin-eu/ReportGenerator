@@ -95,6 +95,7 @@ reportGenerator <- function() {
                   uploadedFiles,
                   fixed = TRUE)) {
           csvLocation <- tempdir()
+          lapply(list.files(path = csvLocation, full.names = TRUE), file.remove)
           unzip(uploadedFiles, exdir = csvLocation)
           csvFiles <- list.files(path = csvLocation,
                                  pattern = ".csv",
