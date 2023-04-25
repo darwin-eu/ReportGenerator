@@ -88,9 +88,7 @@ incidenceRatePerYearGroupBySexPlot <- function(incidence_estimates, type) {
            y = "Incidence rate per 100000 person-years",
            col = "Outcome")
   }
-  result %>%
-    plotly::ggplotly() %>%
-    increaseFacetStripSize()
+  return(result)
 }
 #' Incidence Rate Per Year by Age Plot
 #'
