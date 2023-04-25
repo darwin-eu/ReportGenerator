@@ -130,28 +130,26 @@ incidenceRatePerYearFacetByDBAgeGroupPlot <- function(incidence_estimates, type)
                  y = incidence_100000_pys,
                  col = database_name)) +
       facet_wrap(~ denominator_age_group + outcome_cohort_name) +
-      geom_line(aes(linetype = denominator_sex)) +
+      geom_line(aes(group = 1)) +
       geom_point() +
       theme_bw() +
       labs(x = "Calendar year",
            y = "Incidence rate per 100000 person-years",
-           col = "Database name",
-           linetype = "Sex") +
+           col = "Database name") +
       theme(axis.text.x = element_text(angle = 90,
                                        hjust = 1))
   } else if (type == "Facet by database") {
     result <- incidence_estimates %>%
       ggplot(aes(x = incidence_start_date,
                  y = incidence_100000_pys,
-                 col = database_name)) +
+                 col = outcome_cohort_name)) +
       facet_wrap(~ denominator_age_group + database_name) +
-      geom_line(aes(linetype = denominator_sex)) +
+      geom_line(aes(group = 1)) +
       geom_point() +
       theme_bw() +
       labs(x = "Calendar year",
            y = "Incidence rate per 100000 person-years",
-           col = "Outcome",
-           linetype = "Sex") +
+           col = "Outcome") +
       theme(axis.text.x = element_text(angle = 90,
                                        hjust = 1))
   }
