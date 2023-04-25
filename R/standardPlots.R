@@ -60,8 +60,9 @@ incidenceRatePerYearPlot <- function(incidence_estimates, type) {
 #' @param type plot type
 #' @export
 incidenceRatePerYearGroupBySexPlot <- function(incidence_estimates, type) {
+  result <- NULL
   if (type == "Facet by outcome") {
-    incidence_estimates %>%
+    result <- incidence_estimates %>%
       ggplot(aes(x = incidence_start_date,
                  y = incidence_100000_pys,
                  group = denominator_sex,
@@ -74,7 +75,7 @@ incidenceRatePerYearGroupBySexPlot <- function(incidence_estimates, type) {
            y = "Incidence rate per 100000 person-years",
            col = "Database name")
   } else if (type == "Facet by database") {
-    incidence_estimates %>%
+    result <- incidence_estimates %>%
       ggplot(aes(x = incidence_start_date,
                  y = incidence_100000_pys,
                  group = denominator_sex,
@@ -87,6 +88,9 @@ incidenceRatePerYearGroupBySexPlot <- function(incidence_estimates, type) {
            y = "Incidence rate per 100000 person-years",
            col = "Outcome")
   }
+  result %>%
+    plotly::ggplotly() %>%
+    increaseFacetStripSize()
 }
 #' Incidence Rate Per Year by Age Plot
 #'
