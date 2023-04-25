@@ -4,10 +4,12 @@
 \alias{incidenceRatePerYearFacetByDBAgeGroupPlot}
 \title{Incidence Rate Per Year by Age Group}
 \usage{
-incidenceRatePerYearFacetByDBAgeGroupPlot(incidence_estimates)
+incidenceRatePerYearFacetByDBAgeGroupPlot(incidence_estimates, type)
 }
 \arguments{
 \item{incidence_estimates}{estimates of of the incidence}
+
+\item{type}{plot type}
 }
 \description{
 Incidence Rate Per Year by Age Group
