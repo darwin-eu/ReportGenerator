@@ -201,9 +201,7 @@ reportGenerator <- function() {
       commonData[is.na(commonData)] = 0
 
       # Database
-      if (length(input$databaseIncidence) == 1 && input$databaseIncidence == "All") {
-        commonData
-      } else {
+      if (length(input$databaseIncidence) != 1 || input$databaseIncidence != "All") {
         commonData <- commonData %>%
           filter(database_name %in% c(input$databaseIncidence))
       }
@@ -213,17 +211,13 @@ reportGenerator <- function() {
         filter(outcome_cohort_id == input$outcomeIncidence)
 
       # Sex
-      if (input$sexIncidence == "All") {
-        commonData
-      } else {
+      if (input$sexIncidence != "All") {
         commonData <- commonData %>%
           filter(denominator_sex == input$sexIncidence)
       }
 
       # Age group
-      if (input$ageIncidence == "All") {
-        commonData
-      } else {
+      if (input$ageIncidence != "All") {
         commonData <- commonData %>%
           filter(denominator_age_group == input$ageIncidence)
       }
