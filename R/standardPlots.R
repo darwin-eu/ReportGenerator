@@ -22,8 +22,9 @@
 #' @import ggplot2
 #' @export
 incidenceRatePerYearPlot <- function(incidence_estimates, type) {
+  result <- NULL
   if (type == "Facet by outcome") {
-    incidence_estimates %>%
+    result <- incidence_estimates %>%
       ggplot(aes(x = incidence_start_date,
                  y = incidence_100000_pys,
                  col = database_name)) +
@@ -37,7 +38,7 @@ incidenceRatePerYearPlot <- function(incidence_estimates, type) {
            y = "Incidence rate per 100000 person-years",
            col = "Database name")
   } else if (type == "Facet by database") {
-    incidence_estimates %>%
+    result <- incidence_estimates %>%
       ggplot(aes(x = incidence_start_date,
                  y = incidence_100000_pys,
                  col = outcome_cohort_name)) +
@@ -51,7 +52,9 @@ incidenceRatePerYearPlot <- function(incidence_estimates, type) {
            y = "Incidence rate per 100000 person-years",
            col = "Outcome")
   }
+  return(result)
 }
+
 #' Incidence Rate Per Year by Sex Plot
 #'
 #' @param incidence_estimates estimates of of the incidence
@@ -90,51 +93,85 @@ incidenceRatePerYearGroupBySexPlot <- function(incidence_estimates, type) {
   }
   return(result)
 }
+
 #' Incidence Rate Per Year by Age Plot
 #'
 #' @param incidence_estimates estimates of of the incidence
+#' @param type plot type
 #'
 #' @import ggplot2
 #' @export
-incidenceRatePerYearColorByAgePlot <- function(incidence_estimates) {
-  incidence_estimates %>%
-    ggplot(aes(x = incidence_start_date,
-               y = incidence_100000_pys)) +
-    facet_grid(rows = vars(database_name)) +
-    # scale_y_continuous(labels = scales::percent,
-    #                    limits = c(0,NA)) +
-    geom_line(aes(colour = denominator_age_group)) +
-    geom_point() +
-    theme_bw() +
-    labs(x = "Calendar year",
-         y = "Incidence rate per 100000 person-years",
-         colour = "Age group")
+incidenceRatePerYearColorByAgePlot <- function(incidence_estimates, type) {
+  result <- NULL
+  if (type == "Facet by outcome") {
+    result <- incidence_estimates %>%
+      ggplot(aes(x = incidence_start_date,
+                 y = incidence_100000_pys)) +
+      facet_grid(cols = vars(outcome_cohort_name),
+                 rows = vars(database_name)) +
+      geom_line(aes(colour = denominator_age_group)) +
+      geom_point() +
+      theme_bw() +
+      labs(x = "Calendar year",
+           y = "Incidence rate per 100000 person-years",
+           colour = "Age group")
+  } else if (type == "Facet by database") {
+    result <- incidence_estimates %>%
+      ggplot(aes(x = incidence_start_date,
+                 y = incidence_100000_pys)) +
+      facet_grid(cols = vars(database_name),
+                 rows = vars(outcome_cohort_name)) +
+      geom_line(aes(colour = denominator_age_group)) +
+      geom_point() +
+      theme_bw() +
+      labs(x = "Calendar year",
+           y = "Incidence rate per 100000 person-years",
+           colour = "Age group")
+  }
+  return(result)
 }
+
 #' Incidence Rate Per Year by Age Group
 #'
 #' @param incidence_estimates estimates of of the incidence
+#' @param type plot type
 #'
 #' @import ggplot2
 #' @export
-incidenceRatePerYearFacetByDBAgeGroupPlot <- function(incidence_estimates) {
-  incidence_estimates %>%
-    ggplot(aes(x = incidence_start_date,
-               y = incidence_100000_pys,
-               col = database_name)) +
-    facet_grid(rows = vars(database_name),
-               cols = vars(denominator_age_group)) +
-    # scale_y_continuous(labels = scales::percent,
-    #                    limits = c(0,NA)) +
-    geom_line(aes(linetype = denominator_sex)) +
-    geom_point() +
-    theme_bw() +
-    labs(x = "Calendar year",
-         y = "Incidence rate per 100000 person-years",
-         col = "Database name",
-         linetype = "Sex") +
-    theme(axis.text.x = element_text(angle = 90,
-                                     hjust = 1))
+incidenceRatePerYearFacetByDBAgeGroupPlot <- function(incidence_estimates, type) {
+  result <- NULL
+  if (type == "Facet by outcome") {
+    result <- incidence_estimates %>%
+      ggplot(aes(x = incidence_start_date,
+                 y = incidence_100000_pys,
+                 col = database_name)) +
+      facet_wrap(~ denominator_age_group + outcome_cohort_name) +
+      geom_line(aes(group = 1)) +
+      geom_point() +
+      theme_bw() +
+      labs(x = "Calendar year",
+           y = "Incidence rate per 100000 person-years",
+           col = "Database name") +
+      theme(axis.text.x = element_text(angle = 90,
+                                       hjust = 1))
+  } else if (type == "Facet by database") {
+    result <- incidence_estimates %>%
+      ggplot(aes(x = incidence_start_date,
+                 y = incidence_100000_pys,
+                 col = outcome_cohort_name)) +
+      facet_wrap(~ denominator_age_group + database_name) +
+      geom_line(aes(group = 1)) +
+      geom_point() +
+      theme_bw() +
+      labs(x = "Calendar year",
+           y = "Incidence rate per 100000 person-years",
+           col = "Outcome") +
+      theme(axis.text.x = element_text(angle = 90,
+                                       hjust = 1))
+  }
+  return(result)
 }
+
 #' Prevalence Rate Per Year Plot
 #'
 #' @param prevalence_estimates estimates of of the prevalence
@@ -158,6 +195,7 @@ prevalenceRatePerYearPlot <- function (prevalence_estimates) {
          y = "Prevalence",
          col = "Database name")
 }
+
 #' Prevalence Rate Per Year by Sex Plot
 #'
 #' @param prevalence_estimates estimates of of the prevalence
@@ -181,6 +219,7 @@ prevalenceRatePerYearGroupBySexPlot <- function (prevalence_estimates) {
          y = "Prevalence ",
          col = "Database name")
 }
+
 #' Prevalence Rate Per Year by Database
 #'
 #' @param prevalence_estimates estimates of of the prevalence
@@ -202,6 +241,7 @@ prevalenceRatePerYearFacetByDBOutcomePlot <- function (prevalence_estimates) {
          y = "Prevalence",
          colour = "Age group")
 }
+
 #' Prevalence Rate Per Year by Age Group
 #'
 #' @param prevalence_estimates estimates of of the prevalence

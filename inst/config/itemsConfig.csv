@@ -6,5 +6,5 @@ table4IncAge;Table - Incidence by age group;incidence_estimates;
 table5IncSex;Table - Incidence by sex;incidence_estimates;
 incidenceRatePerYearPlot;Plot - Incidence rate per year;incidence_estimates;Facet by outcome, Facet by database
 incidenceRatePerYearGroupBySexPlot;Plot - Incidence rate per year group by sex;incidence_estimates;Facet by outcome, Facet by database
-incidenceRatePerYearColorByAgePlot;Plot - Incidence rate per year color by age;incidence_estimates;
-incidenceRatePerYearFacetByDBAgeGroupPlot;Plot - Incidence rate per year facet by database, age group;incidence_estimates;
+incidenceRatePerYearColorByAgePlot;Plot - Incidence rate per year color by age;incidence_estimates;Facet by outcome, Facet by database
+incidenceRatePerYearFacetByDBAgeGroupPlot;Plot - Incidence rate per year facet by database, age group;incidence_estimates;Facet by outcome, Facet by database
