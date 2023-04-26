@@ -440,7 +440,9 @@ reportGenerator <- function() {
       object <- eval(parse(text = expression))
 
       if (grepl("Plot", objectChoice())) {
-        object
+        object %>%
+          plotly::ggplotly() %>%
+          increaseFacetStripSize()
       }
     })
 
@@ -449,33 +451,39 @@ reportGenerator <- function() {
       incidencePrevalenceDocx <- read_docx(path = file.path(system.file("templates/word/darwinTemplate.docx", package = "ReportGenerator")))
       reverseList <- rev(itemsList()$title)
       for (i in reverseList) {
-        object <- eval(parse(text = menuFun() %>%
-                               dplyr::filter(title == i) %>%
-                               dplyr::pull(signature)))
-
+        menuFunction <- menuFun() %>%
+          dplyr::filter(title == i)
+        itemOptions <- menuFunction %>% getItemOptions()
+        expression <- menuFunction %>%
+          dplyr::pull(signature)
+        if (!identical(itemOptions, character(0))) {
+          expression <- expression %>%
+            addPreviewItemType(input$previewPlotOption)
+        }
+        object <- eval(parse(text = expression))
         if ("flextable" %in% class(object)) {
           body_add_flextable(incidencePrevalenceDocx, value = object)
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
 
-          } else if ("ggplot" %in% class(object)) {
-            body_add_gg(x = incidencePrevalenceDocx,
-                        value = object,
-                        style = "Normal")
-            body_add(incidencePrevalenceDocx,
-                     value = i,
-                     style = "Heading 1 (Agency)")
+        } else if ("ggplot" %in% class(object)) {
+          body_add_gg(x = incidencePrevalenceDocx,
+                      value = object,
+                      style = "Normal")
+          body_add(incidencePrevalenceDocx,
+                   value = i,
+                   style = "Heading 1 (Agency)")
 
-            } else {
-              body_add_table(incidencePrevalenceDocx,
-                             value = object,
-                             style = "TableOverall")
-              body_add(incidencePrevalenceDocx,
-                       value = i,
-                       style = "Heading 1 (Agency)")
-            }
+        } else {
+          body_add_table(incidencePrevalenceDocx,
+                         value = object,
+                         style = "TableOverall")
+          body_add(incidencePrevalenceDocx,
+                   value = i,
+                   style = "Heading 1 (Agency)")
         }
+      }
       body_add_toc(incidencePrevalenceDocx)
       print(incidencePrevalenceDocx,
             target = here("generatedReport.docx"))

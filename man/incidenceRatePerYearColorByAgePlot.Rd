@@ -4,10 +4,12 @@
 \alias{incidenceRatePerYearColorByAgePlot}
 \title{Incidence Rate Per Year by Age Plot}
 \usage{
-incidenceRatePerYearColorByAgePlot(incidence_estimates)
+incidenceRatePerYearColorByAgePlot(incidence_estimates, type)
 }
 \arguments{
 \item{incidence_estimates}{estimates of of the incidence}
+
+\item{type}{plot type}
 }
 \description{
 Incidence Rate Per Year by Age Plot
