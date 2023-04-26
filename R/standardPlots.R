@@ -60,22 +60,38 @@ incidenceRatePerYearPlot <- function(incidence_estimates, type) {
 #' @param incidence_estimates estimates of of the incidence
 #'
 #' @import ggplot2
+#' @param type plot type
 #' @export
-incidenceRatePerYearGroupBySexPlot <- function(incidence_estimates) {
-  incidence_estimates %>%
-    ggplot(aes(x = incidence_start_date,
-               y = incidence_100000_pys,
-               group = denominator_sex,
-               col = database_name)) +
-    facet_grid(cols = vars(denominator_sex)) +
-    # scale_y_continuous(labels = scales::percent,
-    #                    limits = c(0,NA)) +
-    geom_line() +
-    geom_point() +
-    theme_bw() +
-    labs(x = "Calendar year",
-         y = "Incidence rate per 100000 person-years",
-         col = "Database name")
+incidenceRatePerYearGroupBySexPlot <- function(incidence_estimates, type) {
+  result <- NULL
+  if (type == "Facet by outcome") {
+    result <- incidence_estimates %>%
+      ggplot(aes(x = incidence_start_date,
+                 y = incidence_100000_pys,
+                 group = denominator_sex,
+                 col = database_name)) +
+      facet_wrap(~ denominator_sex + outcome_cohort_name) +
+      geom_line() +
+      geom_point() +
+      theme_bw() +
+      labs(x = "Calendar year",
+           y = "Incidence rate per 100000 person-years",
+           col = "Database name")
+  } else if (type == "Facet by database") {
+    result <- incidence_estimates %>%
+      ggplot(aes(x = incidence_start_date,
+                 y = incidence_100000_pys,
+                 group = denominator_sex,
+                 col = outcome_cohort_name)) +
+      facet_wrap(~ denominator_sex + database_name) +
+      geom_line() +
+      geom_point() +
+      theme_bw() +
+      labs(x = "Calendar year",
+           y = "Incidence rate per 100000 person-years",
+           col = "Outcome")
+  }
+  return(result)
 }
 
 #' Incidence Rate Per Year by Age Plot
