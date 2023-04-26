@@ -95,6 +95,7 @@ reportGenerator <- function() {
                   uploadedFiles,
                   fixed = TRUE)) {
           csvLocation <- tempdir()
+          lapply(list.files(path = csvLocation, full.names = TRUE), file.remove)
           unzip(uploadedFiles, exdir = csvLocation)
           csvFiles <- list.files(path = csvLocation,
                                  pattern = ".csv",
@@ -348,19 +349,16 @@ reportGenerator <- function() {
     })
 
     # Objects to be rendered in the UI
-
     output$previewTable <- DT::renderDataTable({
       req(objectChoice())
 
-      object <- eval(parse(text = menuFun() %>%
-                             dplyr::filter(title == objectChoice()) %>%
-                             dplyr::pull(signature)))
-
       if ((grepl("Table", objectChoice()))) {
+        object <- eval(parse(text = menuFun() %>%
+                               dplyr::filter(title == objectChoice()) %>%
+                               dplyr::pull(signature)))
         data <- object$body$dataset
+        createPreviewTable(data)
       }
-      createPreviewTable(data)
-
     })
 
     output$plotFilters <- renderUI({
