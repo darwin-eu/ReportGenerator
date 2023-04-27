@@ -19,7 +19,8 @@
 #' @param incidence_attrition incidence of the attrition
 #' @param prevalence_attrition prevalence of the attrition
 #'
-#' @import here huxtable flextable dplyr
+#' @import here flextable dplyr
+#' @importFrom huxtable as_hux set_contents insert_row set_align
 #' @export
 table1NumPar <- function (incidence_attrition,
                           prevalence_attrition) {
