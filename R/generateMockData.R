@@ -42,11 +42,8 @@ for (i in databaseName) {
   cdm$denominator <- generateDenominatorCohortSet(cdm = cdm,
                                                   startDate  = as.Date("2008-01-01"),
                                                   endDate  = as.Date("2018-01-01"),
-                                                  ageGroup  = list(c(20, 29),
-                                                                   c(30, 39),
-                                                                   c(40, 49),
-                                                                   c(50, 59),
-                                                                   c(60, 69),
+                                                  ageGroup  = list(c(20, 39),
+                                                                   c(40, 59),
                                                                    c(0,99)),
                                                   sex  = c("Female", "Male", "Both"),
                                                   daysPriorHistory  = 180) %>% mutate(database_name = i)
@@ -57,9 +54,7 @@ for (i in databaseName) {
     denominatorTable = "denominator",
     outcomeTable = "outcome",
     denominatorCohortId  = as.integer(c("1", "2", "3", "4", "5",
-                                        "6", "7", "8", "9", "10",
-                                        "11", "12", "13", "14",
-                                        "15", "16", "17", "18")),
+                                        "6", "7", "8", "9")),
     outcomeCohortId = as.integer(1),
     interval = "years",
     completeDatabaseIntervals = TRUE,
@@ -76,9 +71,7 @@ for (i in databaseName) {
     denominatorTable = "denominator",
     outcomeTable = "outcome",
     denominatorCohortId = as.integer(c("1", "2", "3", "4", "5",
-                                       "6", "7", "8", "9", "10",
-                                       "11", "12", "13", "14",
-                                       "15", "16", "17", "18")),
+                                       "6", "7", "8", "9")),
     outcomeCohortId   = as.integer(1),
     outcomeLookbackDays = 0,
     interval = "years",
@@ -92,9 +85,7 @@ for (i in databaseName) {
     denominatorTable = "denominator",
     outcomeTable = "outcome",
     denominatorCohortId = as.integer(c("1", "2", "3", "4", "5",
-                                       "6", "7", "8", "9", "10",
-                                       "11", "12", "13", "14",
-                                       "15", "16", "17", "18")),
+                                       "6", "7", "8", "9")),
     outcomeCohortId   = as.integer(1),
     outcomeLookbackDays = 0,
     interval = "years",
@@ -110,37 +101,22 @@ for (i in databaseName) {
                                                    resultList = list(incidence,
                                                                      prevalencePoint,
                                                                      prevalencePeriod))
-  # # Adding database_name to attrition files
-  # # Incidence
-  #
-  # dataName <- studyResults$incidence_attrition
-  #
-  # dataName <- dataName %>% mutate(database_name = i)
-  #
-  # studyResults$incidence_attrition <- dataName
-  #
-  # # Prevalence
-  #
-  # dataName <- studyResults$prevalence_attrition
-  #
-  # dataName <- dataName %>% mutate(database_name = i)
-  #
-  # studyResults$prevalence_attrition <- dataName
 
-  ## Writing prevalence data into csv
+  studyResults$prevalence_attrition <- studyResults$prevalence_attrition %>% mutate(database_name = i)
+  studyResults$prevalence_estimates <- studyResults$prevalence_estimates %>% mutate(database_name = i)
+  studyResults$incidence_attrition <- studyResults$incidence_attrition %>% mutate(database_name = i)
+  studyResults$incidence_estimates <- studyResults$incidence_estimates %>% mutate(database_name = i)
 
-  if (!dir.exists(here("Results", "prevalenceResults"))) {
+  if (!dir.exists(here("results", "prevalenceResults"))) {
 
-    subDir <- here("Results", "prevalenceResults")
+    subDir <- here("results", "prevalenceResults")
 
     dir.create(file.path(subDir),
                recursive = TRUE)
   }
 
-  studyResults$prevalence_estimates <- studyResults$prevalence_estimates %>% mutate(database_name = i)
-
   write.csv(studyResults$prevalence_estimates,
-            paste(here("Results", "prevalenceResults"),
+            paste(here("results", "prevalenceResults"),
                   "/prevalence_mock_estimates_",
                   i,
                   ".csv",
@@ -149,53 +125,41 @@ for (i in databaseName) {
 
   ## Writing incidence data into csv
 
-  if (!dir.exists(here("Results", "incidenceResults"))) {
+  if (!dir.exists(here("results", "incidenceResults"))) {
 
-    subDir <- here("Results", "incidenceResults")
+    subDir <- here("results", "incidenceResults")
 
     dir.create(file.path(subDir),
                recursive = TRUE)
 
   }
 
-  studyResults$incidence_estimates <- studyResults$incidence_estimates %>% mutate(database_name = i)
+
 
   write.csv(studyResults$incidence_estimates,
-            paste(here("Results", "incidenceResults"),
+            paste(here("results", "incidenceResults"),
                   "/incidence_mock_estimates_",
                   i,
                   ".csv",
                   sep = ""),
             row.names = FALSE)
 
-
   ## Exporting whole results into zip folder
 
-  if (!file.exists(here("Results"))) {
-
-    subDir <- here("Results")
-
+  if (!file.exists(here("results"))) {
+    subDir <- here("results")
     dir.create(file.path(subDir),
                recursive = TRUE)
-
   }
 
   result <- studyResults
-
   zipName <-  paste0("resultsMock", "_", i)
-
-  outputFolder <- here::here("Results")
-
+  outputFolder <- here::here("results")
   errorMessage <- checkmate::makeAssertCollection()
 
-  checkmate::assertTRUE(
-    inherits(result, "IncidencePrevalenceGatheredResult"),
-    add = errorMessage
-  )
-  checkmate::assertCharacter(zipName, len = 1,
-                             add = errorMessage)
-  checkmate::assertDirectoryExists(outputFolder,
-                                   add = errorMessage)
+  checkmate::assertTRUE(inherits(result, "IncidencePrevalenceGatheredResult"), add = errorMessage)
+  checkmate::assertCharacter(zipName, len = 1, add = errorMessage)
+  checkmate::assertDirectoryExists(outputFolder, add = errorMessage)
   checkmate::reportAssertions(collection = errorMessage)
 
   tempDir <- zipName

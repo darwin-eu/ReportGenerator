@@ -332,7 +332,8 @@ reportGenerator <- function() {
       req(objectChoice())
 
       if (grepl("Table", objectChoice())) {
-        DT::dataTableOutput("previewTable")
+        tableOutput("previewTable")
+        # DT::dataTableOutput("previewTable")
       } else {
         plotOptions <- menuFun() %>%
           dplyr::filter(title == objectChoice()) %>%
@@ -349,19 +350,41 @@ reportGenerator <- function() {
 
     # Objects to be rendered in the UI
 
-    output$previewTable <- DT::renderDataTable({
+    output$previewTable <- renderTable({
       req(objectChoice())
+
 
       object <- eval(parse(text = menuFun() %>%
                              dplyr::filter(title == objectChoice()) %>%
                              dplyr::pull(signature)))
 
-      if ((grepl("Table", objectChoice()))) {
-        data <- object$body$dataset
-      }
-      createPreviewTable(data)
+
+      object
+
+      # if ((grepl("Table", objectChoice()))) {
+      #   data <- object$body$dataset
+      # }
+      # createPreviewTable(data)
 
     })
+
+    # output$previewTable <- DT::renderDataTable({
+    #   req(objectChoice())
+    #
+    #
+    #   object <- eval(parse(text = menuFun() %>%
+    #                          dplyr::filter(title == objectChoice()) %>%
+    #                          dplyr::pull(signature)))
+    #
+    #
+    #   object
+    #
+    #   # if ((grepl("Table", objectChoice()))) {
+    #   #   data <- object$body$dataset
+    #   # }
+    #   # createPreviewTable(data)
+    #
+    # }, options = list(pageLength = 15))
 
     output$plotFilters <- renderUI({
       req(objectChoice())

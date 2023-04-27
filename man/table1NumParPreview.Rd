@@ -7,7 +7,7 @@
 table1NumParPreview(incidence_attrition, prevalence_attrition)
 }
 \arguments{
-\item{incidence_attrition}{incidence of the attrition}
+\item{incidence_attrition}{incidence of the attritionr}
 
 \item{prevalence_attrition}{prevalence of the attrition}
 }
