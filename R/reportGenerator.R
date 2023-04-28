@@ -358,13 +358,19 @@ reportGenerator <- function() {
                              dplyr::filter(title == objectChoice()) %>%
                              dplyr::pull(signature)))
 
-
       object
 
-      # if ((grepl("Table", objectChoice()))) {
+
+      # if ((grepl("Table - Number of participants", objectChoice()))) {
+      #
+      #   object
+      #
+      # } else if ((grepl("Table", objectChoice()))) {
       #   data <- object$body$dataset
+      #
+      #   createPreviewTable(data)
       # }
-      # createPreviewTable(data)
+
 
     })
 
