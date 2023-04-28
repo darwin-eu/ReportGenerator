@@ -4,10 +4,12 @@
 \alias{incidenceRatePerYearGroupBySexPlot}
 \title{Incidence Rate Per Year by Sex Plot}
 \usage{
-incidenceRatePerYearGroupBySexPlot(incidence_estimates)
+incidenceRatePerYearGroupBySexPlot(incidence_estimates, type)
 }
 \arguments{
 \item{incidence_estimates}{estimates of of the incidence}
+
+\item{type}{plot type}
 }
 \description{
 Incidence Rate Per Year by Sex Plot

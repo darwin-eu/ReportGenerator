@@ -95,6 +95,7 @@ reportGenerator <- function() {
                   uploadedFiles,
                   fixed = TRUE)) {
           csvLocation <- tempdir()
+          lapply(list.files(path = csvLocation, full.names = TRUE), file.remove)
           unzip(uploadedFiles, exdir = csvLocation)
           csvFiles <- list.files(path = csvLocation,
                                  pattern = ".csv",
@@ -200,9 +201,7 @@ reportGenerator <- function() {
       commonData[is.na(commonData)] = 0
 
       # Database
-      if (length(input$databaseIncidence) == 1 && input$databaseIncidence == "All") {
-        commonData
-      } else {
+      if (length(input$databaseIncidence) != 1 || input$databaseIncidence != "All") {
         commonData <- commonData %>%
           filter(database_name %in% c(input$databaseIncidence))
       }
@@ -212,17 +211,13 @@ reportGenerator <- function() {
         filter(outcome_cohort_id == input$outcomeIncidence)
 
       # Sex
-      if (input$sexIncidence == "All") {
-        commonData
-      } else {
+      if (input$sexIncidence != "All") {
         commonData <- commonData %>%
           filter(denominator_sex == input$sexIncidence)
       }
 
       # Age group
-      if (input$ageIncidence == "All") {
-        commonData
-      } else {
+      if (input$ageIncidence != "All") {
         commonData <- commonData %>%
           filter(denominator_age_group == input$ageIncidence)
       }
@@ -332,7 +327,8 @@ reportGenerator <- function() {
       req(objectChoice())
 
       if (grepl("Table", objectChoice())) {
-        DT::dataTableOutput("previewTable")
+        tableOutput("previewTable")
+        # DT::dataTableOutput("previewTable")
       } else {
         plotOptions <- menuFun() %>%
           dplyr::filter(title == objectChoice()) %>%
@@ -349,17 +345,15 @@ reportGenerator <- function() {
 
     # Objects to be rendered in the UI
 
-    output$previewTable <- DT::renderDataTable({
+    output$previewTable <- renderTable({
       req(objectChoice())
+
 
       object <- eval(parse(text = menuFun() %>%
                              dplyr::filter(title == objectChoice()) %>%
                              dplyr::pull(signature)))
 
-      if ((grepl("Table", objectChoice()))) {
-        data <- object$body$dataset
-      }
-      createPreviewTable(data)
+      object
 
     })
 
@@ -440,7 +434,9 @@ reportGenerator <- function() {
       object <- eval(parse(text = expression))
 
       if (grepl("Plot", objectChoice())) {
-        object
+        object %>%
+          plotly::ggplotly() %>%
+          increaseFacetStripSize()
       }
     })
 
@@ -449,33 +445,39 @@ reportGenerator <- function() {
       incidencePrevalenceDocx <- read_docx(path = file.path(system.file("templates/word/darwinTemplate.docx", package = "ReportGenerator")))
       reverseList <- rev(itemsList()$title)
       for (i in reverseList) {
-        object <- eval(parse(text = menuFun() %>%
-                               dplyr::filter(title == i) %>%
-                               dplyr::pull(signature)))
-
+        menuFunction <- menuFun() %>%
+          dplyr::filter(title == i)
+        itemOptions <- menuFunction %>% getItemOptions()
+        expression <- menuFunction %>%
+          dplyr::pull(signature)
+        if (!identical(itemOptions, character(0))) {
+          expression <- expression %>%
+            addPreviewItemType(input$previewPlotOption)
+        }
+        object <- eval(parse(text = expression))
         if ("flextable" %in% class(object)) {
           body_add_flextable(incidencePrevalenceDocx, value = object)
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
 
-          } else if ("ggplot" %in% class(object)) {
-            body_add_gg(x = incidencePrevalenceDocx,
-                        value = object,
-                        style = "Normal")
-            body_add(incidencePrevalenceDocx,
-                     value = i,
-                     style = "Heading 1 (Agency)")
+        } else if ("ggplot" %in% class(object)) {
+          body_add_gg(x = incidencePrevalenceDocx,
+                      value = object,
+                      style = "Normal")
+          body_add(incidencePrevalenceDocx,
+                   value = i,
+                   style = "Heading 1 (Agency)")
 
-            } else {
-              body_add_table(incidencePrevalenceDocx,
-                             value = object,
-                             style = "TableOverall")
-              body_add(incidencePrevalenceDocx,
-                       value = i,
-                       style = "Heading 1 (Agency)")
-            }
+        } else {
+          body_add_table(incidencePrevalenceDocx,
+                         value = object,
+                         style = "TableOverall")
+          body_add(incidencePrevalenceDocx,
+                   value = i,
+                   style = "Heading 1 (Agency)")
         }
+      }
       body_add_toc(incidencePrevalenceDocx)
       print(incidencePrevalenceDocx,
             target = here("generatedReport.docx"))

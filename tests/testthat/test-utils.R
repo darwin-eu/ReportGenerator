@@ -37,6 +37,13 @@ test_that("addPreviewItemType happy flow", {
 
   expect_equal(class(result), "character")
   expect_equal(result, "incidenceRatePerYearPlot(incidence_estimates, \"Facet by outcome\")")
+
+  # type might be empty, set default
+  result <- addPreviewItemType(previewItemString = "incidenceRatePerYearPlot(incidence_estimates)",
+                               previewItemType = NULL)
+
+  expect_equal(class(result), "character")
+  expect_equal(result, "incidenceRatePerYearPlot(incidence_estimates, \"Facet by outcome\")")
 })
 
 

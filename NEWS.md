@@ -1,3 +1,17 @@
+# ReportGenerator 1.3.0
+
+* Tables now use the package Huxtable.
+
+* Table 1 now is available on preview and to print it in the report. 
+
+* Data is cleaned now every time a new zip is uploaded to the file input. 
+
+* Fixes to the reset. 
+
+# ReportGenerator 1.2.0
+
+* Figures for incidence now have a drop down menu to select the facet, either by database or outcome. 
+
 # ReportGenerator 1.1.0
 
 * Check out the new logo!

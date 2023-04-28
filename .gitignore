@@ -9,6 +9,7 @@ Reports/
 inst/csv
 inst/data
 Results/
+results/
 rsconnect/
 RunApp.R
 CodeToRun.R
@@ -22,3 +23,4 @@ incidenceResults/
 results_zip/
 generatedReport.docx
 extras/
+OtherResults/
