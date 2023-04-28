@@ -1,3 +1,7 @@
+# ReportGenerator 1.2.0
+
+* Figures for incidence now have a drop down menu to select the facet, either by database or outcome. 
+
 # ReportGenerator 1.1.0
 
 * Check out the new logo!
