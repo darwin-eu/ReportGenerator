@@ -360,37 +360,7 @@ reportGenerator <- function() {
 
       object
 
-
-      # if ((grepl("Table - Number of participants", objectChoice()))) {
-      #
-      #   object
-      #
-      # } else if ((grepl("Table", objectChoice()))) {
-      #   data <- object$body$dataset
-      #
-      #   createPreviewTable(data)
-      # }
-
-
     })
-
-    # output$previewTable <- DT::renderDataTable({
-    #   req(objectChoice())
-    #
-    #
-    #   object <- eval(parse(text = menuFun() %>%
-    #                          dplyr::filter(title == objectChoice()) %>%
-    #                          dplyr::pull(signature)))
-    #
-    #
-    #   object
-    #
-    #   # if ((grepl("Table", objectChoice()))) {
-    #   #   data <- object$body$dataset
-    #   # }
-    #   # createPreviewTable(data)
-    #
-    # }, options = list(pageLength = 15))
 
     output$plotFilters <- renderUI({
       req(objectChoice())
