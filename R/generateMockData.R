@@ -31,13 +31,13 @@ generateMockData <- function(databaseName = c("Synthea", "IPCI", "CPRD")) {
   for (i in databaseName) {
     # Denominator data
     cdm$denominator <- generateDenominatorCohortSet(cdm = cdm,
-                                                  startDate  = as.Date("2008-01-01"),
-                                                  endDate  = as.Date("2018-01-01"),
-                                                  ageGroup  = list(c(20, 39),
-                                                                   c(40, 59),
-                                                                   c(0,99)),
-                                                  sex  = c("Female", "Male", "Both"),
-                                                  daysPriorHistory  = 180) %>% mutate(database_name = i)
+                                                    startDate  = as.Date("2008-01-01"),
+                                                    endDate  = as.Date("2018-01-01"),
+                                                    ageGroup  = list(c(20, 39),
+                                                                     c(40, 59),
+                                                                     c(0,99)),
+                                                    sex  = c("Female", "Male", "Both"),
+                                                    daysPriorHistory  = 180) %>% mutate(database_name = i)
     # Incidence data
     incidence <- estimateIncidence(
       cdm = cdm,
@@ -51,11 +51,9 @@ generateMockData <- function(databaseName = c("Synthea", "IPCI", "CPRD")) {
       outcomeWashout = 180,
       repeatedEvents = FALSE,
       minCellCount = 5,
-      verbose = TRUE
-    )
+      verbose = TRUE)
 
     # Prevalence data, both point and period
-
     prevalencePoint <- estimatePointPrevalence(
       cdm = cdm,
       denominatorTable = "denominator",
@@ -67,8 +65,7 @@ generateMockData <- function(databaseName = c("Synthea", "IPCI", "CPRD")) {
       interval = "years",
       timePoint = "start",
       minCellCount = 5,
-      verbose = TRUE
-    )
+      verbose = TRUE)
 
     prevalencePeriod <- estimatePeriodPrevalence(
       cdm = cdm,
@@ -82,11 +79,9 @@ generateMockData <- function(databaseName = c("Synthea", "IPCI", "CPRD")) {
       completeDatabaseIntervals = TRUE,
       fullContribution = FALSE,
       minCellCount = 0,
-      verbose = TRUE
-    )
+      verbose = TRUE)
 
     # Results
-
     studyResults <- gatherIncidencePrevalenceResults(cdm = cdm,
                                                      resultList = list(incidence,
                                                                        prevalencePoint,
@@ -98,9 +93,7 @@ generateMockData <- function(databaseName = c("Synthea", "IPCI", "CPRD")) {
     studyResults$incidence_estimates <- studyResults$incidence_estimates %>% mutate(database_name = i)
 
     if (!dir.exists(here("results", "prevalenceResults"))) {
-
       subDir <- here("results", "prevalenceResults")
-
       dir.create(file.path(subDir),
                  recursive = TRUE)
     }
@@ -114,17 +107,11 @@ generateMockData <- function(databaseName = c("Synthea", "IPCI", "CPRD")) {
               row.names = FALSE)
 
     ## Writing incidence data into csv
-
     if (!dir.exists(here("results", "incidenceResults"))) {
-
       subDir <- here("results", "incidenceResults")
-
       dir.create(file.path(subDir),
                  recursive = TRUE)
-
     }
-
-
 
     write.csv(studyResults$incidence_estimates,
               paste(here("results", "incidenceResults"),
@@ -135,7 +122,6 @@ generateMockData <- function(databaseName = c("Synthea", "IPCI", "CPRD")) {
               row.names = FALSE)
 
     ## Exporting whole results into zip folder
-
     if (!file.exists(here("results"))) {
       subDir <- here("results")
       dir.create(file.path(subDir),
