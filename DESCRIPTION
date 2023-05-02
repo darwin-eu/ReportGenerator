@@ -17,7 +17,7 @@ Imports:
     ggplot2,
     plotly,
     here,
-    IncidencePrevalence (>= 0.2.1),
+    IncidencePrevalence (>= 0.2.0),
     officer,
     quarto,
     readr,
