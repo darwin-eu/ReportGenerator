@@ -37,7 +37,8 @@ Imports:
     huxtable,
     sortable,
     DT,
-    zip
+    zip,
+    waldo
 Suggests: 
     testthat,
     glue
