@@ -43,19 +43,27 @@ reportGenerator <- function() {
     ),
     dashboardBody(
       # Item selection menu
-      fluidRow(uiOutput("itemSelectionMenu")),
+      fluidRow(
+        box(fluidRow(uiOutput("itemSelectionMenu")))
+      ),
 
       fluidRow(
-          box(DT::dataTableOutput("tableContents"),
-              tags$br(),
-              actionButton("generateReport", "Generate Report"),
-              width = 4),
-          box(uiOutput("plotFilters"),
-              uiOutput("itemPreview"),
-              width = 8)
+        column(width = 12,
+
+               fluidRow(
+                 box(tags$b("Item preview"),
+                     DT::dataTableOutput("tableContents"),
+                     tags$br(),
+                     actionButton("generateReport", "Generate Report"),
+                     width = 4),
+                 box(uiOutput("plotFilters"),
+                     uiOutput("itemPreview"),
+                     width = 8)
+                 )
+               )
+        )
       )
     )
-  )
 
 
   server <- function(input,output) {
@@ -211,6 +219,24 @@ reportGenerator <- function() {
       }
     })
 
+    output$itemSelectionMenu <- renderUI({
+
+      column(tags$b("Item selection"),
+             width = 12,
+             bucket_list(header = "Select the figures you want in the report",
+                         group_name = "bucket_list_group",
+                         orientation = "horizontal",
+                         add_rank_list(text = "Drag from here",
+                                       labels = itemsList()$title,
+                                       input_id = "objectMenu"),
+                         add_rank_list(text = "to here",
+                                       labels = NULL,
+                                       input_id = "objectSelection"
+                         )
+             )
+      )
+    })
+
     # 2.3 Load Data variables
 
     # Uploaded object: Incidence Attrition
@@ -315,7 +341,7 @@ reportGenerator <- function() {
 
     # 3.1 Objects list. From the sortable menu.
     menu <- reactive({
-      contents  <- itemsList()$title
+      contents  <- input$objectSelection
       objectsDataFrame <- data.frame(contents)
       objectsDataFrame
     })
@@ -342,7 +368,7 @@ reportGenerator <- function() {
     # 3.2 Preview Table
 
     # Table of contents to the UI
-    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(data.frame(itemsList()$title)))
+    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(menu()))
 
     # Item choice data
     objectChoice  <- reactive({
