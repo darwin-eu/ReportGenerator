@@ -98,8 +98,7 @@ reportGenerator <- function() {
                     uploadedFiles,
                     fixed = TRUE)) {
             csvLocation <- tempdir()
-            # lapply(list.files(path = csvLocation, full.names = TRUE),
-            #        file.remove)
+            lapply(list.files(path = csvLocation, full.names = TRUE), file.remove)
             unzip(uploadedFiles, exdir = csvLocation)
             csvFiles <- list.files(path = csvLocation,
                                    pattern = ".csv",
@@ -108,13 +107,13 @@ reportGenerator <- function() {
             csvFiles <- uploadedFiles
           }
       } else if (length(uploadedFiles) > 1) {
+
         if (grepl(".zip",
                   uploadedFiles[1],
                   fixed = TRUE)) {
+
           csvLocation <- tempdir()
-
-          # lapply(list.files(path = csvLocation, full.names = TRUE), file.remove)
-
+          lapply(list.files(path = csvLocation, full.names = TRUE), file.remove)
           folderNumber <- 0
 
           for (fileLocation in uploadedFiles) {
