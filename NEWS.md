@@ -1,3 +1,9 @@
+# ReportGenerator 1.4.0
+
+* The file input now accepts multiple zip folders, i.e. data from several databases.
+
+* Bug related to the type of graph that prevented the generation of the report was solved. 
+
 # ReportGenerator 1.3.0
 
 * Tables now use the package Huxtable.
