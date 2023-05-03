@@ -460,63 +460,6 @@ reportGenerator <- function() {
 
       selectionPlotFilter()
 
-      # tagList(
-      #     fluidRow(
-      #       column(4,
-      #          pickerInput(inputId = "databaseIncidence",
-      #                      label = "Database",
-      #                      choices = c("All", unique(incidence_estimates()$database_name)),
-      #                      selected = "All",
-      #                      multiple = TRUE)
-      #          ),
-      #       column(4,
-      #          selectInput(inputId = "outcomeIncidence",
-      #                      label = "Outcome",
-      #                      choices = unique(incidence_estimates()$outcome_cohort_id))
-      #          )
-      #       ),
-      #     h4("Population settings"),
-      #     fluidRow(
-      #       column(4,
-      #              selectInput(inputId = "sexIncidence",
-      #                          label = "Sex",
-      #                          choices = c("All", unique(incidence_estimates()$denominator_sex)))
-      #              ),
-      #       column(4,
-      #              selectInput(inputId = "ageIncidence",
-      #                          label = "Age",
-      #                          choices = c("All", unique(incidence_estimates()$denominator_age_group)))
-      #              ),
-      #       ),
-      #     h4("Analysis settings"),
-      #     fluidRow(
-      #       column(4,
-      #              selectInput(inputId = "intervalIncidence",
-      #                          label = "Interval",
-      #                          choices = unique(incidence_estimates()$analysis_interval)),
-      #              ),
-      #       column(4,
-      #              selectInput(inputId = "repeatedIncidence",
-      #                          label = "Repeated Events",
-      #                          choices = unique(incidence_estimates()$analysis_repeated_events)),
-      #              )
-      #       ),
-      #     h4("Start Time"),
-      #     fluidRow(
-      #       column(4,
-      #              selectInput(inputId = "timeFromIncidence",
-      #                          label = "From",
-      #                          choices = unique(incidence_estimates()$incidence_start_date),
-      #                          selected = min(unique(incidence_estimates()$incidence_start_date)))
-      #              ),
-      #       column(4,
-      #              selectInput(inputId = "timeToIncidence",
-      #                          label = "To",
-      #                          choices = unique(incidence_estimates()$incidence_start_date),
-      #                          selected = max(unique(incidence_estimates()$incidence_start_date)))
-      #              )
-      #       )
-      #   )
     })
 
     selectionPlotFilter <- reactive({
