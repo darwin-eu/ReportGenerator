@@ -74,7 +74,7 @@ reportGenerator <- function() {
 
     observeEvent(input$resetData, {
       if (!is.null(uploadedFiles())) {
-        lapply(uploadedFiles(), file.remove)
+        lapply(uploadedFiles(), unlink)
         resetDatasetLoad$data <- "resetDatasetLoad"
       } else {
         resetDatasetLoad$data <- "resetDatasetLoad"
@@ -98,7 +98,7 @@ reportGenerator <- function() {
                     uploadedFiles,
                     fixed = TRUE)) {
             csvLocation <- tempdir()
-            lapply(list.files(path = csvLocation, full.names = TRUE), file.remove)
+            lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
             unzip(uploadedFiles, exdir = csvLocation)
             csvFiles <- list.files(path = csvLocation,
                                    pattern = ".csv",
@@ -113,7 +113,7 @@ reportGenerator <- function() {
                   fixed = TRUE)) {
 
           csvLocation <- tempdir()
-          lapply(list.files(path = csvLocation, full.names = TRUE), file.remove)
+          lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
           folderNumber <- 0
 
           for (fileLocation in uploadedFiles) {
