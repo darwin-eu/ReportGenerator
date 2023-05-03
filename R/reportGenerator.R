@@ -172,7 +172,6 @@ reportGenerator <- function() {
                          fixed = TRUE)) {
           csvFiles <- uploadedFiles
         }
-
       }
       }
       return(csvFiles)
