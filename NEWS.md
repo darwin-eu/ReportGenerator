@@ -2,6 +2,8 @@
 
 * The file input now accepts multiple zip folders, i.e. data from several databases.
 
+* Drag and drop menu is back. 
+
 * Bug related to the type of graph that prevented the generation of the report was solved. 
 
 # ReportGenerator 1.3.0
