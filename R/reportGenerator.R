@@ -108,13 +108,9 @@ reportGenerator <- function() {
             csvFiles <- uploadedFiles
           }
       } else if (length(uploadedFiles) > 1) {
-
-
-
         if (grepl(".zip",
                   uploadedFiles[1],
                   fixed = TRUE)) {
-
           csvLocation <- tempdir()
 
           # lapply(list.files(path = csvLocation, full.names = TRUE), file.remove)
@@ -128,14 +124,12 @@ reportGenerator <- function() {
           }
 
           databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
-
           incidence_estimates <- data.frame()
           incidence_attrition <- data.frame()
           prevalence_estimates <- data.frame()
           prevalence_attrition <-  data.frame()
 
           for (folderLocation in databaseFolders) {
-
             incidence_estimate_file <- list.files(folderLocation,
                                                   pattern = "incidence_estimates",
                                                   full.names = TRUE)
@@ -159,7 +153,6 @@ reportGenerator <- function() {
                                                     full.names = TRUE)
             prevalence_attrition_file <- read.csv(prevalence_attrition_file)
             prevalence_attrition <- bind_rows(prevalence_attrition, prevalence_attrition_file)
-
           }
 
           dir.create(path = paste0(csvLocation, "//", "csvFilesFolder"))
@@ -182,7 +175,6 @@ reportGenerator <- function() {
         }
 
       }
-
       }
       return(csvFiles)
     })
