@@ -18,7 +18,7 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
-#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable
+#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable waldo
 #' @importFrom sortable bucket_list add_rank_list
 #' @export
 reportGenerator <- function() {
@@ -31,7 +31,6 @@ reportGenerator <- function() {
     dashboardSidebar(
       sidebarMenu(
         tagList(tags$br(),
-                # uiOutput("studyDesign"),
                 tags$br(),
                 tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
                 fileInput("datasetLoad",
@@ -42,17 +41,28 @@ reportGenerator <- function() {
         ))
     ),
     dashboardBody(
-      # Item selection menu
-      fluidRow(uiOutput("itemSelectionMenu")),
-
-      fluidRow(
-          box(DT::dataTableOutput("tableContents"),
-              tags$br(),
-              actionButton("generateReport", "Generate Report"),
-              width = 4),
-          box(uiOutput("plotFilters"),
-              uiOutput("itemPreview"),
-              width = 8)
+      tabsetPanel(
+        tabPanel("Item selection",
+        # Item selection menu
+        fluidRow(
+          box(uiOutput("itemSelectionMenu"),
+              tags$br())
+        )),
+        tabPanel("Item preview",
+          fluidRow(
+          column(width = 12,
+                 fluidRow(
+                   box(tags$b("Item preview"),
+                       DT::dataTableOutput("tableContents"),
+                       actionButton("generateReport", "Generate Report"),
+                       width = 4),
+                   box(uiOutput("plotFilters"),
+                       uiOutput("itemPreview"),
+                       width = 8)
+                   )
+                 )
+          )
+        )
       )
     )
   )
@@ -74,7 +84,7 @@ reportGenerator <- function() {
 
     observeEvent(input$resetData, {
       if (!is.null(uploadedFiles())) {
-        lapply(uploadedFiles(), file.remove)
+        lapply(uploadedFiles(), unlink)
         resetDatasetLoad$data <- "resetDatasetLoad"
       } else {
         resetDatasetLoad$data <- "resetDatasetLoad"
@@ -91,20 +101,90 @@ reportGenerator <- function() {
         return(NULL)
       } else if (!is.null(inFile)) {
         uploadedFiles <- inFile$datapath
+
+        if (length(uploadedFiles) == 1) {
+
+          if (grepl(".zip",
+                    uploadedFiles,
+                    fixed = TRUE)) {
+            csvLocation <- tempdir()
+            lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
+            unzip(uploadedFiles, exdir = csvLocation)
+            csvFiles <- list.files(path = csvLocation,
+                                   pattern = ".csv",
+                                   full.names = TRUE)
+          } else {
+            csvFiles <- uploadedFiles
+          }
+      } else if (length(uploadedFiles) > 1) {
+
         if (grepl(".zip",
-                  uploadedFiles,
+                  uploadedFiles[1],
                   fixed = TRUE)) {
+
           csvLocation <- tempdir()
-          lapply(list.files(path = csvLocation, full.names = TRUE), file.remove)
-          unzip(uploadedFiles, exdir = csvLocation)
-          csvFiles <- list.files(path = csvLocation,
-                                 pattern = ".csv",
+          lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
+          folderNumber <- 0
+
+          for (fileLocation in uploadedFiles) {
+            folderNumber <- folderNumber + 1
+            unzip(zipfile = fileLocation,
+                  exdir = paste0(csvLocation, "/", "database", as.character(folderNumber)))
+          }
+
+          databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
+          incidence_estimates <- data.frame()
+          incidence_attrition <- data.frame()
+          prevalence_estimates <- data.frame()
+          prevalence_attrition <-  data.frame()
+
+          for (folderLocation in databaseFolders) {
+            incidence_estimate_file <- list.files(folderLocation,
+                                                  pattern = "incidence_estimates",
+                                                  full.names = TRUE)
+            incidence_estimate_file <- read.csv(incidence_estimate_file)
+            incidence_estimates <- bind_rows(incidence_estimates, incidence_estimate_file)
+
+            incidence_attrition_file <- list.files(folderLocation,
+                                                   pattern = "incidence_attrition",
+                                                   full.names = TRUE)
+            incidence_attrition_file <- read.csv(incidence_attrition_file)
+            incidence_attrition <- bind_rows(incidence_attrition, incidence_attrition_file)
+
+            prevalence_estimates_file <- list.files(folderLocation,
+                                                    pattern = "prevalence_estimates",
+                                                    full.names = TRUE)
+            prevalence_estimates_file <- read.csv(prevalence_estimates_file)
+            prevalence_estimates <- bind_rows(prevalence_estimates, prevalence_estimates_file)
+
+            prevalence_attrition_file <- list.files(folderLocation,
+                                                    pattern = "prevalence_attrition",
+                                                    full.names = TRUE)
+            prevalence_attrition_file <- read.csv(prevalence_attrition_file)
+            prevalence_attrition <- bind_rows(prevalence_attrition, prevalence_attrition_file)
+          }
+
+          dir.create(path = paste0(csvLocation, "//", "csvFilesFolder"))
+          csvFilesLocation <- paste0(csvLocation, "//", "csvFilesFolder")
+
+          if (dir.exists(csvFilesLocation)) {
+            write.csv(incidence_estimates, file = paste0(csvFilesLocation, "//", "incidence_estimates.csv"), row.names = FALSE)
+            write.csv(incidence_attrition, file = paste0(csvFilesLocation, "//", "incidence_attrition.csv"), row.names = FALSE)
+            write.csv(prevalence_estimates, file = paste0(csvFilesLocation, "//", "prevalence_estimates.csv"), row.names = FALSE)
+            write.csv(prevalence_attrition, file = paste0(csvFilesLocation, "//", "prevalence_attrition.csv"), row.names = FALSE)
+          }
+
+          csvFiles <- list.files(csvFilesLocation, pattern = ".csv",
                                  full.names = TRUE)
-        } else {
+
+        } else if (grepl(".csv",
+                         uploadedFiles[1],
+                         fixed = TRUE)) {
           csvFiles <- uploadedFiles
         }
-        return(csvFiles)
       }
+      }
+      return(csvFiles)
     })
 
 
@@ -114,13 +194,15 @@ reportGenerator <- function() {
       inFile <- input$datasetLoad
       applyReset <- resetDatasetLoad$data
 
+      uploadedFiles <- uploadedFiles()
+
       if (is.null(inFile)) {
         return(NULL)
       } else if (!is.null(applyReset)) {
         return(NULL)
       } else if (!is.null(inFile)) {
         itemsList <- c()
-        for (i in uploadedFiles()) {
+        for (i in uploadedFiles) {
           resultsData <- read_csv(i)
           resultsColumns <- names(resultsData)
           configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
@@ -137,6 +219,24 @@ reportGenerator <- function() {
         }
         result <- getItemsList(itemsList)
       }
+    })
+
+    output$itemSelectionMenu <- renderUI({
+
+      column(tags$b("Item selection"),
+             width = 12,
+             bucket_list(header = "Select the figures you want in the report",
+                         group_name = "bucket_list_group",
+                         orientation = "horizontal",
+                         add_rank_list(text = "Drag from here",
+                                       labels = itemsList()$title,
+                                       input_id = "objectMenu"),
+                         add_rank_list(text = "to here",
+                                       labels = NULL,
+                                       input_id = "objectSelection"
+                         )
+             )
+      )
     })
 
     # 2.3 Load Data variables
@@ -243,7 +343,7 @@ reportGenerator <- function() {
 
     # 3.1 Objects list. From the sortable menu.
     menu <- reactive({
-      contents  <- itemsList()$title
+      contents <- input$objectSelection
       objectsDataFrame <- data.frame(contents)
       objectsDataFrame
     })
@@ -270,14 +370,14 @@ reportGenerator <- function() {
     # 3.2 Preview Table
 
     # Table of contents to the UI
-    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(data.frame(itemsList()$title)))
+    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(menu()))
 
     # Item choice data
     objectChoice  <- reactive({
       req(uploadedFiles())
       req(input$tableContents_cells_selected)
 
-      objectChoiceTitle  <- menu()[input$tableContents_cells_selected,]
+      objectChoiceTitle <- menu()[input$tableContents_cells_selected,]
       objectChoiceTitle
     })
 
@@ -328,7 +428,6 @@ reportGenerator <- function() {
 
       if (grepl("Table", objectChoice())) {
         tableOutput("previewTable")
-        # DT::dataTableOutput("previewTable")
       } else {
         plotOptions <- menuFun() %>%
           dplyr::filter(title == objectChoice()) %>%
@@ -348,75 +447,102 @@ reportGenerator <- function() {
     output$previewTable <- renderTable({
       req(objectChoice())
 
+      if (grepl("Table", objectChoice())) {
+        object <- eval(parse(text = menuFun() %>%
+                               dplyr::filter(title == objectChoice()) %>%
+                               dplyr::pull(signature)))
 
-      object <- eval(parse(text = menuFun() %>%
-                             dplyr::filter(title == objectChoice()) %>%
-                             dplyr::pull(signature)))
-
-      object
-
+        object
+      }
     })
 
     output$plotFilters <- renderUI({
       req(objectChoice())
 
+      selectionPlotFilter()
+
+    })
+
+    selectionPlotFilter <- reactive({
+
+      if (req(objectChoice()) == "Table - Number of participants") {
+
       tagList(
+        fluidRow(
+          column(4,
+                 pickerInput(inputId = "databaseIncidence",
+                             label = "Database",
+                             choices = c("All", unique(incidence_estimates()$database_name)),
+                             selected = "All",
+                             multiple = TRUE)
+          ),
+          column(4,
+                 selectInput(inputId = "outcomeIncidence",
+                             label = "Outcome",
+                             choices = unique(incidence_estimates()$outcome_cohort_id))
+          )
+        )
+      )
+
+      } else {
+
+        tagList(
           fluidRow(
             column(4,
-               pickerInput(inputId = "databaseIncidence",
-                           label = "Database",
-                           choices = c("All", unique(incidence_estimates()$database_name)),
-                           selected = "All",
-                           multiple = TRUE)
-               ),
-            column(4,
-               selectInput(inputId = "outcomeIncidence",
-                           label = "Outcome",
-                           choices = unique(incidence_estimates()$outcome_cohort_id))
-               )
+                   pickerInput(inputId = "databaseIncidence",
+                               label = "Database",
+                               choices = c("All", unique(incidence_estimates()$database_name)),
+                               selected = "All",
+                               multiple = TRUE)
             ),
-          h4("Population settings"),
+            column(4,
+                   selectInput(inputId = "outcomeIncidence",
+                               label = "Outcome",
+                               choices = unique(incidence_estimates()$outcome_cohort_id))
+            )
+          ),
           fluidRow(
             column(4,
                    selectInput(inputId = "sexIncidence",
                                label = "Sex",
                                choices = c("All", unique(incidence_estimates()$denominator_sex)))
-                   ),
+            ),
             column(4,
                    selectInput(inputId = "ageIncidence",
                                label = "Age",
                                choices = c("All", unique(incidence_estimates()$denominator_age_group)))
-                   ),
             ),
-          h4("Analysis settings"),
+          ),
           fluidRow(
             column(4,
                    selectInput(inputId = "intervalIncidence",
                                label = "Interval",
                                choices = unique(incidence_estimates()$analysis_interval)),
-                   ),
+            ),
             column(4,
                    selectInput(inputId = "repeatedIncidence",
                                label = "Repeated Events",
                                choices = unique(incidence_estimates()$analysis_repeated_events)),
-                   )
-            ),
-          h4("Start Time"),
+            )
+          ),
           fluidRow(
             column(4,
                    selectInput(inputId = "timeFromIncidence",
                                label = "From",
                                choices = unique(incidence_estimates()$incidence_start_date),
                                selected = min(unique(incidence_estimates()$incidence_start_date)))
-                   ),
+            ),
             column(4,
                    selectInput(inputId = "timeToIncidence",
                                label = "To",
                                choices = unique(incidence_estimates()$incidence_start_date),
                                selected = max(unique(incidence_estimates()$incidence_start_date)))
-                   )
             )
+          )
         )
+
+      }
+
     })
 
     output$previewPlot<- renderPlotly({
@@ -443,7 +569,7 @@ reportGenerator <- function() {
     # 4. Word report generator
     observeEvent(input$generateReport, {
       incidencePrevalenceDocx <- read_docx(path = file.path(system.file("templates/word/darwinTemplate.docx", package = "ReportGenerator")))
-      reverseList <- rev(itemsList()$title)
+      reverseList <- rev(menu()$contents)
       for (i in reverseList) {
         menuFunction <- menuFun() %>%
           dplyr::filter(title == i)
@@ -472,7 +598,8 @@ reportGenerator <- function() {
         } else {
           body_add_table(incidencePrevalenceDocx,
                          value = object,
-                         style = "TableOverall")
+                         style = "TableOverall",
+                         header = FALSE)
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")

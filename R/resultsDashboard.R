@@ -22,38 +22,6 @@
 #' @export
 resultsDashboard <- function() {
 
-  # denominatorData <- denominatorExtraction(importFolderDenominator)
-
-  # incidenceData <- readRDS(here("inst",
-  #                               "data",
-  #                               "incidence",
-  #                               "mock_data.rds"))
-
-  # incidenceData <- readRDS(here("inst",
-  #                               "data",
-  #                               "incidence",
-  #                               "pso_data.rds"))
-
-  # prevalenceData <- readRDS(here("inst",
-  #                                "data",
-  #                                "prevalence",
-  #                                "mock_data.rds"))
-
-  # prevalenceData <- readRDS(here("inst",
-  #                                "data",
-  #                                "prevalence",
-  #                                "blood_cancer_IPCI.rds"))
-
-  # prevalenceData <- readRDS(here("inst",
-  #                                "data",
-  #                                "prevalence",
-  #                                "blood_cancer_direct.rds"))
-
-  # prevalenceData <- readRDS(here("inst",
-  #                                "data",
-  #                                "prevalence",
-  #                                "blood_cancer.rds"))
-
   ui <- dashboardPage(
     dashboardHeader(title = "Study Results"),
     dashboardSidebar(
@@ -215,27 +183,6 @@ resultsDashboard <- function() {
 
     })
 
-    # Select data (dropdown menu)
-
-    # incidenceData <- reactive({
-    #
-    #   inFile <- input$datasetIncidence
-    #
-    #     if (is.null(inFile)) {
-    #
-    #       return(NULL)
-    #
-    #     } else {
-    #
-    #       readRDS(here("inst",
-    #                    "data",
-    #                    "incidence",
-    #                    input$datasetIncidence))
-    #
-    #     }
-    #
-    # })
-
     # Check if incidence data is null
 
     output$fileUploadIncidence <- reactive({
@@ -269,33 +216,12 @@ resultsDashboard <- function() {
                  actionButton('resetIncidence',
                               'Reset data')
 
-
-
-        # Dropdown selection
-
-                 # selectInput("datasetIncidence",
-                 #             label = "Dataset Incidence",
-                 #             choices = list.files(
-                 #               here("inst",
-                 #                     "data",
-                 #                     "incidence"),
-                 #                pattern = ".rds",
-                 #                full.names = FALSE
-                 #                )
-                 #              ),
-
-
-
-        # --------------------------------------
           ),
 
 
 
 
         ),
-
-        # conditionalPanel shows settings when a file is loaded
-
 
         conditionalPanel(
           condition = "output.fileUploadIncidence",
@@ -410,13 +336,6 @@ resultsDashboard <- function() {
         filter(between(incidence_start_date,
                        as.Date(input$timeFromIncidence),
                        as.Date(input$timeToIncidence)))
-
-      # if (input$timeIncidence == "All") {
-      #   commonData
-      # } else {
-      #   commonData <- commonData %>%
-      #     filter(incidence_start_date == input$timeIncidence)
-      # }
 
       # Analysis
 
@@ -659,27 +578,6 @@ resultsDashboard <- function() {
 
     })
 
-    # Select database (dropdown menu method)
-
-    # prevalenceData <- reactive({
-    #
-    #   inFile <- input$datasetPrevalence
-    #
-    #   if (is.null(inFile)) {
-    #
-    #     return(NULL)
-    #
-    #   } else {
-    #
-    #     readRDS(here("inst",
-    #                  "data",
-    #                  "prevalence",
-    #                  input$datasetPrevalence))
-    #
-    #   }
-    #
-    # })
-
     # Check if prevalence data is null
 
     output$fileUploadPrevalence <- reactive({
@@ -710,22 +608,6 @@ resultsDashboard <- function() {
                            ),
                  actionButton('resetPrevalence',
                               'Reset data')
-
-                 # Dropdown selection
-
-                 # selectInput("datasetPrevalence",
-                 #             label = "Dataset Prevalence",
-                 #             choices = list.files(
-                 #               here("inst",
-                 #                    "data",
-                 #                    "mockPrevalence"),
-                 #               pattern = ".rds",
-                 #               full.names = FALSE
-                 #             ))
-
-
-
-                 # -----------------
                  )
           ),
 

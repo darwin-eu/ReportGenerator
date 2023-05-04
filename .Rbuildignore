@@ -22,3 +22,6 @@ itemsConfig - Copy.csv
 ^results_zip/$
 ^results/$
 ^OtherResults/$
+Report.html
+^Reports/$
+^.*\.docx$
