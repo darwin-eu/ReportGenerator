@@ -46,8 +46,7 @@ reportGenerator <- function() {
         # Item selection menu
         fluidRow(
           box(uiOutput("itemSelectionMenu"),
-              tags$br(),
-              actionButton("generateReport", "Generate Report"))
+              tags$br())
         )),
         tabPanel("Item preview",
           fluidRow(
@@ -55,6 +54,7 @@ reportGenerator <- function() {
                  fluidRow(
                    box(tags$b("Item preview"),
                        DT::dataTableOutput("tableContents"),
+                       actionButton("generateReport", "Generate Report"),
                        width = 4),
                    box(uiOutput("plotFilters"),
                        uiOutput("itemPreview"),
@@ -343,7 +343,7 @@ reportGenerator <- function() {
 
     # 3.1 Objects list. From the sortable menu.
     menu <- reactive({
-      contents  <- itemsList()$title
+      contents <- input$objectSelection
       objectsDataFrame <- data.frame(contents)
       objectsDataFrame
     })
@@ -370,7 +370,7 @@ reportGenerator <- function() {
     # 3.2 Preview Table
 
     # Table of contents to the UI
-    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(data.frame(itemsList()$title)))
+    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(menu()))
 
     # Item choice data
     objectChoice  <- reactive({
