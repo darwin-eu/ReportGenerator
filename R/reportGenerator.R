@@ -31,7 +31,6 @@ reportGenerator <- function() {
     dashboardSidebar(
       sidebarMenu(
         tagList(tags$br(),
-                # uiOutput("studyDesign"),
                 tags$br(),
                 tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
                 fileInput("datasetLoad",
@@ -42,28 +41,31 @@ reportGenerator <- function() {
         ))
     ),
     dashboardBody(
-      # Item selection menu
-      fluidRow(
-        box(fluidRow(uiOutput("itemSelectionMenu")))
-      ),
-
-      fluidRow(
-        column(width = 12,
-
-               fluidRow(
-                 box(tags$b("Item preview"),
-                     DT::dataTableOutput("tableContents"),
-                     tags$br(),
-                     actionButton("generateReport", "Generate Report"),
-                     width = 4),
-                 box(uiOutput("plotFilters"),
-                     uiOutput("itemPreview"),
-                     width = 8)
+      tabsetPanel(
+        tabPanel("Item selection",
+        # Item selection menu
+        fluidRow(
+          box(uiOutput("itemSelectionMenu"),
+              tags$br(),
+              actionButton("generateReport", "Generate Report"))
+        )),
+        tabPanel("Item preview",
+          fluidRow(
+          column(width = 12,
+                 fluidRow(
+                   box(tags$b("Item preview"),
+                       DT::dataTableOutput("tableContents"),
+                       width = 4),
+                   box(uiOutput("plotFilters"),
+                       uiOutput("itemPreview"),
+                       width = 8)
+                   )
                  )
-               )
+          )
         )
       )
     )
+  )
 
 
   server <- function(input,output) {
@@ -341,7 +343,7 @@ reportGenerator <- function() {
 
     # 3.1 Objects list. From the sortable menu.
     menu <- reactive({
-      contents  <- input$objectSelection
+      contents  <- itemsList()$title
       objectsDataFrame <- data.frame(contents)
       objectsDataFrame
     })
@@ -368,14 +370,14 @@ reportGenerator <- function() {
     # 3.2 Preview Table
 
     # Table of contents to the UI
-    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(menu()))
+    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(data.frame(itemsList()$title)))
 
     # Item choice data
     objectChoice  <- reactive({
       req(uploadedFiles())
       req(input$tableContents_cells_selected)
 
-      objectChoiceTitle  <- menu()[input$tableContents_cells_selected,]
+      objectChoiceTitle <- menu()[input$tableContents_cells_selected,]
       objectChoiceTitle
     })
 
@@ -426,7 +428,6 @@ reportGenerator <- function() {
 
       if (grepl("Table", objectChoice())) {
         tableOutput("previewTable")
-        # DT::dataTableOutput("previewTable")
       } else {
         plotOptions <- menuFun() %>%
           dplyr::filter(title == objectChoice()) %>%
@@ -446,13 +447,13 @@ reportGenerator <- function() {
     output$previewTable <- renderTable({
       req(objectChoice())
 
+      if (grepl("Table", objectChoice())) {
+        object <- eval(parse(text = menuFun() %>%
+                               dplyr::filter(title == objectChoice()) %>%
+                               dplyr::pull(signature)))
 
-      object <- eval(parse(text = menuFun() %>%
-                             dplyr::filter(title == objectChoice()) %>%
-                             dplyr::pull(signature)))
-
-      object
-
+        object
+      }
     })
 
     output$plotFilters <- renderUI({
@@ -500,7 +501,6 @@ reportGenerator <- function() {
                                choices = unique(incidence_estimates()$outcome_cohort_id))
             )
           ),
-          h4("Population settings"),
           fluidRow(
             column(4,
                    selectInput(inputId = "sexIncidence",
@@ -513,7 +513,6 @@ reportGenerator <- function() {
                                choices = c("All", unique(incidence_estimates()$denominator_age_group)))
             ),
           ),
-          h4("Analysis settings"),
           fluidRow(
             column(4,
                    selectInput(inputId = "intervalIncidence",
@@ -526,7 +525,6 @@ reportGenerator <- function() {
                                choices = unique(incidence_estimates()$analysis_repeated_events)),
             )
           ),
-          h4("Start Time"),
           fluidRow(
             column(4,
                    selectInput(inputId = "timeFromIncidence",
