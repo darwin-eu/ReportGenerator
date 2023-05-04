@@ -600,7 +600,8 @@ reportGenerator <- function() {
         } else {
           body_add_table(incidencePrevalenceDocx,
                          value = object,
-                         style = "TableOverall")
+                         style = "TableOverall",
+                         header = FALSE)
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")

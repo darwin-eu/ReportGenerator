@@ -25,6 +25,14 @@
 table1NumPar <- function (incidence_attrition,
                           prevalence_attrition) {
 
+  prevalence_attrition$reason <- gsub("Prior history requirement not fullfilled during study period",
+                                      "Prior history requirement not fulfilled during study period ",
+                                      prevalence_attrition$reason)
+
+  incidence_attrition$reason <- gsub("Prior history requirement not fullfilled during study period",
+                                     "Prior history requirement not fulfilled during study period ",
+                                     incidence_attrition$reason)
+
   if (!("reason_id" %in% names(prevalence_attrition))) {
 
     prevalence_attrition <- prevalence_attrition %>%
@@ -123,6 +131,8 @@ table1NumPar <- function (incidence_attrition,
 
   tablePrevalenceAtt <- tablePrevalenceAtt %>%
     select(analysis_step, everything())
+
+  # tablePrevalenceAtt
 
   # Table data incidence
 
@@ -231,6 +241,7 @@ table1NumPar <- function (incidence_attrition,
     tablePrevIncData <- union(tablePrevalenceAtt, tableIncidenceAtt)
 
     # tablePrevIncData
+
     # for (i in databaseNamePrev[2:3]) {
     for (i in databaseNamePrev[2:length(databaseNamePrev)]) {
 
