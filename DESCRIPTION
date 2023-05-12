@@ -1,7 +1,7 @@
 Package: ReportGenerator
 Type: Package
 Title: Automatic report generator of the Darwin EU studies
-Version: 1.3.0
+Version: 1.4.0
 Author: CE BARBOZA
 Maintainer: CE BARBOZA <c.barbozagutierrez@erasmusmc.nl>
 Description: This package creates a report in docx, html and pdf formats from Darwin studies. 
@@ -17,7 +17,7 @@ Imports:
     ggplot2,
     plotly,
     here,
-    IncidencePrevalence,
+    IncidencePrevalence (>= 0.2.0),
     officer,
     quarto,
     readr,
@@ -37,7 +37,8 @@ Imports:
     huxtable,
     sortable,
     DT,
-    zip
+    zip,
+    waldo
 Suggests: 
     testthat,
     glue

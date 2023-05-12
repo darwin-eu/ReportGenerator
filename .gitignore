@@ -25,4 +25,9 @@ generatedReport.docx
 extras/
 OtherResults/
 Report.html
+<<<<<<< HEAD
 report.tex
+=======
+.Ink
+.docx
+>>>>>>> 8a62b11414107f4a3df807c27b48a152c1dd9c41
