@@ -25,3 +25,4 @@ itemsConfig - Copy.csv
 Report.html
 ^Reports/$
 ^.*\.docx$
+report.tex

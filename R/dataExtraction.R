@@ -165,3 +165,82 @@ prevalenceExtractionToRDS <- function (importFolderPrevalence = here("inst/csv/p
   )
 
 }
+
+
+joinZipFiles <- function(filesLocation = NULL) {
+
+  uploadedFiles <- list.files(path = filesLocation, full.names = TRUE)
+
+  # fileLocation <- "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/onlyZip"
+
+  # uploadedFiles <- list.files(path = "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/onlyZip", full.names = TRUE)
+
+  if (grepl(".zip",
+            uploadedFiles[1],
+            fixed = TRUE)) {
+
+    csvLocation <- tempdir()
+    lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
+    folderNumber <- 0
+
+    for (fileLocation in uploadedFiles) {
+      folderNumber <- folderNumber + 1
+      unzip(zipfile = fileLocation,
+            exdir = paste0(csvLocation, "/", "database", as.character(folderNumber)))
+    }
+
+    databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
+    incidence_estimates <- data.frame()
+    incidence_attrition <- data.frame()
+    prevalence_estimates <- data.frame()
+    prevalence_attrition <-  data.frame()
+
+    for (folderLocation in databaseFolders) {
+      incidence_estimate_file <- list.files(folderLocation,
+                                            pattern = "incidence_estimates",
+                                            full.names = TRUE)
+      incidence_estimate_file <- read.csv(incidence_estimate_file)
+      incidence_estimates <- bind_rows(incidence_estimates, incidence_estimate_file)
+
+      incidence_attrition_file <- list.files(folderLocation,
+                                             pattern = "incidence_attrition",
+                                             full.names = TRUE)
+      incidence_attrition_file <- read.csv(incidence_attrition_file)
+      incidence_attrition <- bind_rows(incidence_attrition, incidence_attrition_file)
+
+      prevalence_estimates_file <- list.files(folderLocation,
+                                              pattern = "prevalence_estimates",
+                                              full.names = TRUE)
+      prevalence_estimates_file <- read.csv(prevalence_estimates_file)
+      prevalence_estimates <- bind_rows(prevalence_estimates, prevalence_estimates_file)
+
+      prevalence_attrition_file <- list.files(folderLocation,
+                                              pattern = "prevalence_attrition",
+                                              full.names = TRUE)
+      prevalence_attrition_file <- read.csv(prevalence_attrition_file)
+      prevalence_attrition <- bind_rows(prevalence_attrition, prevalence_attrition_file)
+    }
+
+    dir.create(path = paste0(csvLocation, "//", "csvFilesFolder"))
+    csvFilesLocation <- paste0(csvLocation, "//", "csvFilesFolder")
+
+    if (dir.exists(csvFilesLocation)) {
+      write.csv(incidence_estimates, file = paste0(csvFilesLocation, "//", "incidence_estimates.csv"), row.names = FALSE)
+      write.csv(incidence_attrition, file = paste0(csvFilesLocation, "//", "incidence_attrition.csv"), row.names = FALSE)
+      write.csv(prevalence_estimates, file = paste0(csvFilesLocation, "//", "prevalence_estimates.csv"), row.names = FALSE)
+      write.csv(prevalence_attrition, file = paste0(csvFilesLocation, "//", "prevalence_attrition.csv"), row.names = FALSE)
+    }
+
+    csvFiles <- list.files(csvFilesLocation, pattern = ".csv",
+                           full.names = TRUE)
+
+  } else if (grepl(".csv",
+                   uploadedFiles[1],
+                   fixed = TRUE)) {
+    csvFiles <- uploadedFiles
+  }
+
+  return(csvFiles)
+}
+
+
