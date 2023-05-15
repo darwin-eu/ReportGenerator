@@ -6,7 +6,7 @@
 #' @return Automatic text as a character string
 #' @export
 #'
-#' @import rLDCP here
+#' @import rLDCP here glue
 table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 
   # variables for aut text
@@ -14,7 +14,49 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
   incidence_attrition <- read.csv("C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpMR0civ//csvFilesFolder/incidence_attrition.csv")
   prevalence_attrition <- read.csv("C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpMR0civ//csvFilesFolder/prevalence_attrition.csv")
 
-  table1NumPar(incidence_attrition, prevalence_attrition)
+  names(incidence_attrition)
+
+
+
+  tablePrevalenceAtt <- prevalence_attrition %>%
+    filter(reason == "Starting population") %>%
+    group_by(database_name,
+             reason) %>%
+    summarise(current_n = unique(number_subjects))
+
+  totalParticipants <- format(sum(tablePrevalenceAtt$current_n), big.mark=",", scientific=FALSE)
+
+  autoText <- cat(totalParticipants)
+
+  glue("Table 1. A total of {totalParticipants} study participants were included from all databases combined.",
+       "The starting populations ranged from minParticipants (in databaseNameMin) to XXX (in databaseMax).",
+       "Of those, XXX and XXX were female, and had been included in the database for at least 1 year prior to the index date.",
+       "XXX and XXX were excluded from [insert database] [insert database] from the prevalence calculations due to not being observed for at least a full calendar year (January to December) during the study period.",
+       .sep = " ")
+
+  # Table 1: "A total of {totalParticipants} study participants were
+  # included from all databases combined. The starting populations ranged from
+  # minParticipants (in databaseNameMin) to XXX (in databaseMax). Of those, XXX and
+  # XXX were female, and had been included in the database for at least 1 year
+  # prior to the index date. XXX and XXX were excluded from [insert database]
+  # and [insert database] from the prevalence calculations due to not being
+  # observed for at least a full calendar year (January to December) during
+  # the study period. XXX and XXX were excluded from [insert database] and
+  # [insert database] from the incidence calculations due to having a previous
+  # prescription of XXX. A further XXX and XXX were excluded from [insert
+  # database] and [insert database] (depends on how many databases are included
+  # in Table 1) due to not having been observed for a complete database interval
+  # (at least one full calendar year, different for incidence vs prevalence,
+  # depending on the specified database interval requirement (which could be
+  # different for these parameters)
+
+
+  tablePrevalenceAtt <- tablePrevalenceAtt[,-1]
+
+  tablePrevalenceAtt <- tablePrevalenceAtt %>%
+    select(analysis_step, everything())
+
+
 
   # Style Guide example
 
@@ -70,7 +112,7 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
     y$w <- degree_mf(fuzzy_partitions(trapezoid_mf(-10, -10, 10, 20),
                                       triangle_mf(10, 20, 25),
                                       triangle_mf(20, 30, 35),
-                                      trapezoid_mf(30, 35, 50, 50)), u)
+                                      trapezoid_mf(30, 35, 60, 60)), u)
     # y$w <- degree_mf(fuzzy_partitions(trapezoid_mf(-10, -10, 10, 20),
     #                                   triangle_mf(10, 20, 25),
     #                                   trapezoid_mf(20, 25, 40, 40)), u)
@@ -92,7 +134,7 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
     y }
 
   t_pm_light<- function(y){
-    templates <- c(" the light intensity is low", " the light intensity is medium", " the light intensity is high")
+    templates <- c(" the light intensity is low", " the light intensity is medium", " the light intensity is high", " the light intensity is extremely high")
     return(templates[which.max(y$w)])
   }
 
