@@ -9,30 +9,48 @@
 #' @import rLDCP here glue
 table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 
-  # variables for aut text
+  # Total participants: filtering starting pop.
 
-  incidence_attrition <- read.csv("C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpMR0civ//csvFilesFolder/incidence_attrition.csv")
-  prevalence_attrition <- read.csv("C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpMR0civ//csvFilesFolder/prevalence_attrition.csv")
-
-  names(incidence_attrition)
-
-
-
-  tablePrevalenceAtt <- prevalence_attrition %>%
+  tablePrevalenceAttTotal <- prevalence_attrition %>%
     filter(reason == "Starting population") %>%
     group_by(database_name,
              reason) %>%
-    summarise(current_n = unique(number_subjects))
+    summarise(current_n = unique(number_records))
 
-  totalParticipants <- format(sum(tablePrevalenceAtt$current_n), big.mark=",", scientific=FALSE)
+  tablePrevalenceAttFem <- prevalence_attrition %>%
+    filter(reason == "Not Male") %>%
+    group_by(database_name,
+             reason) %>%
+    summarise(current_n = unique(number_records))
 
-  autoText <- cat(totalParticipants)
 
-  glue("Table 1. A total of {totalParticipants} study participants were included from all databases combined.",
-       "The starting populations ranged from minParticipants (in databaseNameMin) to XXX (in databaseMax).",
-       "Of those, XXX and XXX were female, and had been included in the database for at least 1 year prior to the index date.",
-       "XXX and XXX were excluded from [insert database] [insert database] from the prevalence calculations due to not being observed for at least a full calendar year (January to December) during the study period.",
-       .sep = " ")
+  table1NumPar(incidence_attrition, prevalence_attrition)
+
+  totalParticipants <- format(sum(tablePrevalenceAtt$current_n), big.mark=",", scientific = FALSE)
+  minParticipants <- format(tablePrevalenceAtt$current_n[which.min(tablePrevalenceAtt$current_n)], big.mark=",", scientific = FALSE)
+  databaseNameMin <- tablePrevalenceAtt$database_name[which.min(tablePrevalenceAtt$current_n)]
+  maxParticipants <- format(tablePrevalenceAtt$current_n[which.max(tablePrevalenceAtt$current_n)], big.mark=",", scientific = FALSE)
+  databaseNameMax <- tablePrevalenceAtt$database_name[which.max(tablePrevalenceAtt$current_n)]
+
+  # Text variables:
+  # {totalParticipants}
+  # {minParticipants}
+  # {databaseNameMin}
+  # {maxParticipants}
+  # {databaseNameMax}
+
+  autoText <- glue(
+    # Total number of participants
+    "Table 1. A total of {totalParticipants} study participants were included from all databases combined.",
+    #  Max and Min participant databases
+    "The starting populations ranged from {minParticipants} (in {databaseNameMin}) to {maxParticipants} (in {databaseNameMax}).",
+    # Proportion female participants
+    "Of those, XXX and XXX were female, and had been included in the database for at least 1 year prior to the index date.",
+    #
+    "XXX and XXX were excluded from [insert database] [insert database] from the prevalence calculations due to not being observed for at least a full calendar year (January to December) during the study period.",
+                   .sep = " ")
+
+  autoText
 
   # Table 1: "A total of {totalParticipants} study participants were
   # included from all databases combined. The starting populations ranged from

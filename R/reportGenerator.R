@@ -18,7 +18,7 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
-#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable waldo
+#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable waldo readr yaml data.tree
 #' @importFrom sortable bucket_list add_rank_list
 #' @export
 reportGenerator <- function() {
@@ -76,121 +76,120 @@ reportGenerator <- function() {
 
     # 1.1 Reset data variables
 
-    resetDatasetLoad <- reactiveValues(data = NULL)
+    uploadedFiles <- reactiveValues()
+    itemsList <- reactiveValues(items = NULL)
 
     observeEvent(input$datasetLoad, {
-      resetDatasetLoad$data <- NULL
-    })
+
+      fileDataPath <- inFile$datapath
+
+      if (length(fileDataPath) == 1) {
+        if (grepl(".zip",
+                  fileDataPath,
+                  fixed = TRUE)) {
+          # unlink(tempdir(), recursive = TRUE, force = TRUE)
+          csvLocation <- tempdir()
+
+          # lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
+          unzip(fileDataPath, exdir = csvLocation)
+          csvFiles <- list.files(path = csvLocation,
+                                 pattern = ".csv",
+                                 full.names = TRUE)
+          for (fileLocation in csvFiles) {
+            resultsData <- read_csv(fileLocation)
+            resultsColumns <- names(resultsData)
+            configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
+            configDataTypes <- unique(configData$name)
+            uploadedFiles <- list()
+            for (val in configDataTypes) {
+              configColumns <- configData %>% filter(name == val)
+              configColumns <- configColumns$variables
+              if (length(configColumns) == length(resultsColumns)) {
+                if (identical(configColumns, resultsColumns)) {
+                  uploadedFiles[[val]] <- resultsData
+                  itemsList[["items"]] <- append()
+                  }
+                }
+              }
+            }
+          } else {
+            csvFiles <- list.files(path = csvLocation,
+                                   pattern = ".csv",
+                                   full.names = TRUE)
+            for (fileLocation in csvFiles) {
+              resultsData <- read_csv(uploadedFiles)
+              resultsColumns <- names(resultsData)
+              configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
+              configDataTypes <- unique(configData$name)
+            # uploadedFiles <- list()
+              for (val in configDataTypes) {
+                configColumns <- configData %>% filter(name == val)
+                configColumns <- configColumns$variables
+                if (length(configColumns) == length(resultsColumns)) {
+                  if (identical(configColumns, resultsColumns)) {
+                    uploadedFiles[[val]] <- resultsData
+                  }
+                }
+              }
+            }
+          }
+        }
+      })
 
     observeEvent(input$resetData, {
       if (!is.null(uploadedFiles())) {
         lapply(uploadedFiles(), unlink)
-        resetDatasetLoad$data <- "resetDatasetLoad"
-      } else {
-        resetDatasetLoad$data <- "resetDatasetLoad"
+        # resetDatasetLoad$data <- "resetDatasetLoad"
       }
+
+      # else {
+      #   resetDatasetLoad$data <- "resetDatasetLoad"
+      # }
     })
 
-    # 1.2 Upload files
-    uploadedFiles <- reactive({
-      inFile <- input$datasetLoad
-      applyReset <- resetDatasetLoad$data
-      if (is.null(inFile)) {
-        return(NULL)
-      } else if (!is.null(applyReset)) {
-        return(NULL)
-      } else if (!is.null(inFile)) {
-        uploadedFiles <- inFile$datapath
-
-        if (length(uploadedFiles) == 1) {
-
-          if (grepl(".zip",
-                    uploadedFiles,
-                    fixed = TRUE)) {
-            csvLocation <- tempdir()
-            lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
-            unzip(uploadedFiles, exdir = csvLocation)
-            csvFiles <- list.files(path = csvLocation,
-                                   pattern = ".csv",
-                                   full.names = TRUE)
-          } else {
-            csvFiles <- uploadedFiles
-          }
-      } else if (length(uploadedFiles) > 1) {
-
-        if (grepl(".zip",
-                  uploadedFiles[1],
-                  fixed = TRUE)) {
-
-          csvLocation <- tempdir()
-          lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
-          folderNumber <- 0
-
-          for (fileLocation in uploadedFiles) {
-            folderNumber <- folderNumber + 1
-            unzip(zipfile = fileLocation,
-                  exdir = paste0(csvLocation, "/", "database", as.character(folderNumber)))
-          }
-
-          databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
-          incidence_estimates <- data.frame()
-          incidence_attrition <- data.frame()
-          prevalence_estimates <- data.frame()
-          prevalence_attrition <-  data.frame()
-
-          for (folderLocation in databaseFolders) {
-            incidence_estimate_file <- list.files(folderLocation,
-                                                  pattern = "incidence_estimates",
-                                                  full.names = TRUE)
-            incidence_estimate_file <- read.csv(incidence_estimate_file)
-            incidence_estimates <- bind_rows(incidence_estimates, incidence_estimate_file)
-
-            incidence_attrition_file <- list.files(folderLocation,
-                                                   pattern = "incidence_attrition",
-                                                   full.names = TRUE)
-            incidence_attrition_file <- read.csv(incidence_attrition_file)
-            incidence_attrition <- bind_rows(incidence_attrition, incidence_attrition_file)
-
-            prevalence_estimates_file <- list.files(folderLocation,
-                                                    pattern = "prevalence_estimates",
-                                                    full.names = TRUE)
-            prevalence_estimates_file <- read.csv(prevalence_estimates_file)
-            prevalence_estimates <- bind_rows(prevalence_estimates, prevalence_estimates_file)
-
-            prevalence_attrition_file <- list.files(folderLocation,
-                                                    pattern = "prevalence_attrition",
-                                                    full.names = TRUE)
-            prevalence_attrition_file <- read.csv(prevalence_attrition_file)
-            prevalence_attrition <- bind_rows(prevalence_attrition, prevalence_attrition_file)
-          }
-
-          dir.create(path = paste0(csvLocation, "//", "csvFilesFolder"))
-          csvFilesLocation <- paste0(csvLocation, "//", "csvFilesFolder")
-
-          if (dir.exists(csvFilesLocation)) {
-            write.csv(incidence_estimates, file = paste0(csvFilesLocation, "//", "incidence_estimates.csv"), row.names = FALSE)
-            write.csv(incidence_attrition, file = paste0(csvFilesLocation, "//", "incidence_attrition.csv"), row.names = FALSE)
-            write.csv(prevalence_estimates, file = paste0(csvFilesLocation, "//", "prevalence_estimates.csv"), row.names = FALSE)
-            write.csv(prevalence_attrition, file = paste0(csvFilesLocation, "//", "prevalence_attrition.csv"), row.names = FALSE)
-          }
-
-          csvFiles <- list.files(csvFilesLocation, pattern = ".csv",
-                                 full.names = TRUE)
-
-        } else if (grepl(".csv",
-                         uploadedFiles[1],
-                         fixed = TRUE)) {
-          csvFiles <- uploadedFiles
-        }
-      }
-      }
-      return(csvFiles)
-    })
+    # # 1.2 Upload files
+    # uploadedFiles <- reactive({
+    #   inFile <- input$datasetLoad
+    #   applyReset <- resetDatasetLoad$data
+    #   if (is.null(inFile)) {
+    #     return(NULL)
+    #   } else if (!is.null(applyReset)) {
+    #     return(NULL)
+    #   } else if (!is.null(inFile)) {
+    #     uploadedFiles <- inFile$datapath
+    #
+    #     if (length(uploadedFiles) == 1) {
+    #
+    #       if (grepl(".zip",
+    #                 uploadedFiles,
+    #                 fixed = TRUE)) {
+    #         csvLocation <- tempdir()
+    #         lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
+    #         unzip(uploadedFiles, exdir = csvLocation)
+    #         csvFiles <- list.files(path = csvLocation,
+    #                                pattern = ".csv",
+    #                                full.names = TRUE)
+    #
+    #
+    #
+    #       } else {
+    #         csvFiles <- uploadedFiles
+    #       }
+    #     } else if (length(uploadedFiles) > 1) {
+    #
+    #     csvFiles <- joinZipFiles(uploadedFiles)
+    #
+    #     }
+    #   }
+    #   return(csvFiles)
+    # })
 
 
     # 2. Item selection menu
     # 2.1 Items list
     itemsList <- reactive({
+      req(uploadedFiles())
+
       inFile <- input$datasetLoad
       applyReset <- resetDatasetLoad$data
 

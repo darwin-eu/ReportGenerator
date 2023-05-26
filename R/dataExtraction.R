@@ -166,14 +166,21 @@ prevalenceExtractionToRDS <- function (importFolderPrevalence = here("inst/csv/p
 
 }
 
+#' Joins zip databases
+#'
+#' `joinZipFiles()` joins data from multiple datapartners and returns a list of condensed files in a temp dir
+#'
+#' @param filesLocation Location of zip files
+#' @return A list of files
+#' @import dplyr
+#' @export
+joinZipFiles <- function(uploadedFiles = NULL) {
 
-joinZipFiles <- function(filesLocation = NULL) {
+  # Results
+  # uploadedFiles <- list.files(here("results"), full.names = TRUE, pattern = ".zip")
 
-  uploadedFiles <- list.files(path = filesLocation, full.names = TRUE)
-
-  # fileLocation <- "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/onlyZip"
-
-  # uploadedFiles <- list.files(path = "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/onlyZip", full.names = TRUE)
+  # Other results
+  # uploadedFiles <- list.files(here("OtherResults"), full.names = TRUE, pattern = ".zip")
 
   if (grepl(".zip",
             uploadedFiles[1],
@@ -196,27 +203,35 @@ joinZipFiles <- function(filesLocation = NULL) {
     prevalence_attrition <-  data.frame()
 
     for (folderLocation in databaseFolders) {
+
+      # folderLocation <- databaseFolders[3]
+
       incidence_estimate_file <- list.files(folderLocation,
                                             pattern = "incidence_estimates",
-                                            full.names = TRUE)
+                                            full.names = TRUE,
+                                            recursive = TRUE)
       incidence_estimate_file <- read.csv(incidence_estimate_file)
       incidence_estimates <- bind_rows(incidence_estimates, incidence_estimate_file)
 
+
       incidence_attrition_file <- list.files(folderLocation,
                                              pattern = "incidence_attrition",
-                                             full.names = TRUE)
+                                             full.names = TRUE,
+                                             recursive = TRUE)
       incidence_attrition_file <- read.csv(incidence_attrition_file)
       incidence_attrition <- bind_rows(incidence_attrition, incidence_attrition_file)
 
       prevalence_estimates_file <- list.files(folderLocation,
                                               pattern = "prevalence_estimates",
-                                              full.names = TRUE)
+                                              full.names = TRUE,
+                                              recursive = TRUE)
       prevalence_estimates_file <- read.csv(prevalence_estimates_file)
       prevalence_estimates <- bind_rows(prevalence_estimates, prevalence_estimates_file)
 
       prevalence_attrition_file <- list.files(folderLocation,
                                               pattern = "prevalence_attrition",
-                                              full.names = TRUE)
+                                              full.names = TRUE,
+                                              recursive = TRUE)
       prevalence_attrition_file <- read.csv(prevalence_attrition_file)
       prevalence_attrition <- bind_rows(prevalence_attrition, prevalence_attrition_file)
     }
