@@ -77,147 +77,137 @@ reportGenerator <- function() {
     # 1.1 Reset data variables
 
     uploadedFiles <- reactiveValues()
-    itemsList <- reactiveValues(items = NULL)
+    # Test
+    # uploadedFiles <- list()
+
+    itemsList <- reactiveValues(objects = NULL)
+    # Test
+    # itemsList <- list()
 
     observeEvent(input$datasetLoad, {
 
+      inFile <- input$datasetLoad
+
       fileDataPath <- inFile$datapath
 
-      if (length(fileDataPath) == 1) {
-        if (grepl(".zip",
-                  fileDataPath,
-                  fixed = TRUE)) {
-          # unlink(tempdir(), recursive = TRUE, force = TRUE)
-          csvLocation <- tempdir()
+      # Test
+      # fileDataPath <- here("OtherResults", "resultsMock_CPRD.zip")
 
-          # lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
+      # If a single file is loaded
+
+      if (length(fileDataPath) == 1) {
+        # If a zip file is loaded
+        if (grepl(".zip", fileDataPath, fixed = TRUE)) {
+          # Creates a temp dir to allocate files
+          csvLocation <- tempdir()
+          # Unlinks previous files to the temp dir
+          lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
+          # Unzips files
           unzip(fileDataPath, exdir = csvLocation)
-          csvFiles <- list.files(path = csvLocation,
-                                 pattern = ".csv",
-                                 full.names = TRUE)
+          # Lists unzipped files
+          csvFiles <- list.files(path = csvLocation, pattern = ".csv", full.names = TRUE)
+          # Empty items list
+          items <- list()
+          # Gets the config file that is used to define the type of uploaded file
+          configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
+          # Lists all datatypes available to compare
+          configDataTypes <- unique(configData$name)
+          # Iterated through all uploaded files
           for (fileLocation in csvFiles) {
+            # Reads the first uploaded file
             resultsData <- read_csv(fileLocation)
+            # Get the columns of the first loaded file
             resultsColumns <- names(resultsData)
-            configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
-            configDataTypes <- unique(configData$name)
-            uploadedFiles <- list()
+            # Checks if the columns of the file matches with the config file
             for (val in configDataTypes) {
+              # Gets the columns from the config file
               configColumns <- configData %>% filter(name == val)
               configColumns <- configColumns$variables
+              # Searches for a match comparing the number of columns
               if (length(configColumns) == length(resultsColumns)) {
+                # Then checks if the names of the columns are identical
                 if (identical(configColumns, resultsColumns)) {
+                  # Transfers the data from the file into the reactiveValues variable with the proper label name
                   uploadedFiles[[val]] <- resultsData
-                  itemsList[["items"]] <- append()
+                  # A list of all available items
+                  items <- append(items, val)
                   }
                 }
               }
-            }
-          } else {
-            csvFiles <- list.files(path = csvLocation,
-                                   pattern = ".csv",
-                                   full.names = TRUE)
-            for (fileLocation in csvFiles) {
-              resultsData <- read_csv(uploadedFiles)
+          }
+          # Gets items list
+          itemsList$objects[["items"]] <- getItemsList(items)
+          } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
+              resultsData <- read_csv(fileDataPath)
               resultsColumns <- names(resultsData)
               configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
               configDataTypes <- unique(configData$name)
-            # uploadedFiles <- list()
+              items <- list()
               for (val in configDataTypes) {
                 configColumns <- configData %>% filter(name == val)
                 configColumns <- configColumns$variables
                 if (length(configColumns) == length(resultsColumns)) {
                   if (identical(configColumns, resultsColumns)) {
                     uploadedFiles[[val]] <- resultsData
+                    items <- append(items, val)
                   }
+                }
+              }
+            itemsList$objects[["items"]] <- getItemsList(items)
+          }
+      }
+
+      else if (length(fileDataPath) > 1) {
+        if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
+          csvFiles <- joinZipFiles(fileDataPath)
+          items <- list()
+          configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
+          configDataTypes <- unique(configData$name)
+          for (fileLocation in csvFiles) {
+            resultsData <- read_csv(fileLocation)
+            resultsColumns <- names(resultsData)
+            for (val in configDataTypes) {
+              configColumns <- configData %>% filter(name == val)
+              configColumns <- configColumns$variables
+              if (length(configColumns) == length(resultsColumns)) {
+                if (identical(configColumns, resultsColumns)) {
+                  uploadedFiles[[val]] <- resultsData
+                  items <- append(items, val)
                 }
               }
             }
           }
+          itemsList$objects[["items"]] <- getItemsList(items)
+        } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
+          csvFiles <- joinZipFiles(fileDataPath)
+          items <- list()
+          configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
+          configDataTypes <- unique(configData$name)
+          for (fileLocation in csvFiles) {
+            resultsData <- read_csv(fileLocation)
+            resultsColumns <- names(resultsData)
+            for (val in configDataTypes) {
+              configColumns <- configData %>% filter(name == val)
+              configColumns <- configColumns$variables
+              if (length(configColumns) == length(resultsColumns)) {
+                if (identical(configColumns, resultsColumns)) {
+                  uploadedFiles[[val]] <- resultsData
+                  items <- append(items, val)
+                }
+              }
+            }
+          }
+          itemsList$objects[["items"]] <- getItemsList(items)
+        }
         }
       })
 
     observeEvent(input$resetData, {
-      if (!is.null(uploadedFiles())) {
-        lapply(uploadedFiles(), unlink)
-        # resetDatasetLoad$data <- "resetDatasetLoad"
+      if (!is.null(uploadedFiles)) {
+        # uploadedFiles <- reactiveValues()
+        itemsList$objects <- NULL
       }
 
-      # else {
-      #   resetDatasetLoad$data <- "resetDatasetLoad"
-      # }
-    })
-
-    # # 1.2 Upload files
-    # uploadedFiles <- reactive({
-    #   inFile <- input$datasetLoad
-    #   applyReset <- resetDatasetLoad$data
-    #   if (is.null(inFile)) {
-    #     return(NULL)
-    #   } else if (!is.null(applyReset)) {
-    #     return(NULL)
-    #   } else if (!is.null(inFile)) {
-    #     uploadedFiles <- inFile$datapath
-    #
-    #     if (length(uploadedFiles) == 1) {
-    #
-    #       if (grepl(".zip",
-    #                 uploadedFiles,
-    #                 fixed = TRUE)) {
-    #         csvLocation <- tempdir()
-    #         lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
-    #         unzip(uploadedFiles, exdir = csvLocation)
-    #         csvFiles <- list.files(path = csvLocation,
-    #                                pattern = ".csv",
-    #                                full.names = TRUE)
-    #
-    #
-    #
-    #       } else {
-    #         csvFiles <- uploadedFiles
-    #       }
-    #     } else if (length(uploadedFiles) > 1) {
-    #
-    #     csvFiles <- joinZipFiles(uploadedFiles)
-    #
-    #     }
-    #   }
-    #   return(csvFiles)
-    # })
-
-
-    # 2. Item selection menu
-    # 2.1 Items list
-    itemsList <- reactive({
-      req(uploadedFiles())
-
-      inFile <- input$datasetLoad
-      applyReset <- resetDatasetLoad$data
-
-      uploadedFiles <- uploadedFiles()
-
-      if (is.null(inFile)) {
-        return(NULL)
-      } else if (!is.null(applyReset)) {
-        return(NULL)
-      } else if (!is.null(inFile)) {
-        itemsList <- c()
-        for (i in uploadedFiles) {
-          resultsData <- read_csv(i)
-          resultsColumns <- names(resultsData)
-          configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
-          configDataTypes <- unique(configData$name)
-          for (val in configDataTypes) {
-            configColumns <- configData %>% filter(name == val)
-            configColumns <- configColumns$variables
-            if (length(configColumns) == length(resultsColumns)) {
-              if (identical(configColumns, resultsColumns)) {
-                itemsList <- append(itemsList, val)
-              }
-            }
-          }
-        }
-        result <- getItemsList(itemsList)
-      }
     })
 
     output$itemSelectionMenu <- renderUI({
@@ -228,7 +218,7 @@ reportGenerator <- function() {
                          group_name = "bucket_list_group",
                          orientation = "horizontal",
                          add_rank_list(text = "Drag from here",
-                                       labels = itemsList()$title,
+                                       labels = itemsList$objects$items$title,
                                        input_id = "objectMenu"),
                          add_rank_list(text = "to here",
                                        labels = NULL,
@@ -238,65 +228,9 @@ reportGenerator <- function() {
       )
     })
 
-    # 2.3 Load Data variables
-
-    # Uploaded object: Incidence Attrition
-    incidence_attrition <- reactive({
-      result <- NULL
-      configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-        dplyr::filter(name == "incidence_attrition")
-      configColumns <- configColumns$variables
-      for (i in uploadedFiles()) {
-        csvData <- read_csv(i)
-        resultsColumns <- names(csvData)
-        if (length(configColumns) == length(resultsColumns)) {
-          if (identical(configColumns, resultsColumns)) {
-            result <- csvData
-          }
-        }
-      }
-      return(result)
-    })
-
-    # Uploaded object: Prevalence Attrition
-    prevalence_attrition <- reactive({
-      result <- NULL
-      configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-        dplyr::filter(name == "prevalence_attrition")
-      configColumns <- configColumns$variables
-      for (i in uploadedFiles()) {
-        csvData <- read_csv(i)
-        resultsColumns <- names(csvData)
-        if (length(configColumns) == length(resultsColumns)) {
-          if (identical(configColumns, resultsColumns)) {
-            result <- csvData
-          }
-        }
-      }
-      return(result)
-    })
-
-    # Uploaded object: Incidence Estimates
-    incidence_estimates <- reactive({
-      result <- NULL
-      configColumns <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator")) %>%
-        dplyr::filter(name == "incidence_estimates")
-      configColumns <- configColumns$variables
-      for (i in uploadedFiles()) {
-        csvData <- read_csv(i)
-        resultsColumns <- names(csvData)
-        if (length(configColumns) == length(resultsColumns)) {
-          if (identical(configColumns, resultsColumns)) {
-            result <- csvData
-          }
-        }
-      }
-      return(result)
-    })
-
     # IncidenceCommonData
     incidenceCommonData <- reactive({
-      commonData <- incidence_estimates()
+      commonData <- uploadedFiles$incidence_estimates
       commonData[is.na(commonData)] = 0
 
       # Database
@@ -373,7 +307,7 @@ reportGenerator <- function() {
 
     # Item choice data
     objectChoice  <- reactive({
-      req(uploadedFiles())
+      req(uploadedFiles)
       req(input$tableContents_cells_selected)
 
       objectChoiceTitle <- menu()[input$tableContents_cells_selected,]
@@ -386,38 +320,38 @@ reportGenerator <- function() {
       if (objectChoice() == "Plot - Incidence rate per year") {
 
         updateSelectInput(inputId = "sexIncidence",
-                          choices = unique(incidence_estimates()$denominator_sex))
+                          choices = unique(uploadedFiles$incidence_estimates$denominator_sex))
 
         updateSelectInput(inputId = "ageIncidence",
-                          choices = unique(incidence_estimates()$denominator_age_group))
+                          choices = unique(uploadedFiles$incidence_estimates$denominator_age_group))
 
       } else if (objectChoice()== "Plot - Incidence rate per year group by sex") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = c("All",
-                                      unique(incidence_estimates()$denominator_sex)))
+                                      unique(uploadedFiles$incidence_estimates$denominator_sex)))
 
         updateSelectInput(inputId = "ageIncidence",
-                          choices = unique(incidence_estimates()$denominator_age_group))
+                          choices = unique(uploadedFiles$incidence_estimates$denominator_age_group))
 
       } else if (objectChoice() == "Plot - Incidence rate per year color by age") {
 
         updateSelectInput(inputId = "sexIncidence",
-                          choices = unique(incidence_estimates()$denominator_sex))
+                          choices = unique(uploadedFiles$incidence_estimates$denominator_sex))
 
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
-                                      unique(incidence_estimates()$denominator_age_group)))
+                                      unique(uploadedFiles$incidence_estimates$denominator_age_group)))
 
       } else if (objectChoice() == "Plot - Incidence rate per year facet by database, age group") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = c("All",
-                                      unique(incidence_estimates()$denominator_sex)))
+                                      unique(uploadedFiles$incidence_estimates$denominator_sex)))
 
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
-                                      unique(incidence_estimates()$denominator_age_group)))
+                                      unique(uploadedFiles$incidence_estimates$denominator_age_group)))
       }
     })
 
@@ -471,14 +405,14 @@ reportGenerator <- function() {
           column(4,
                  pickerInput(inputId = "databaseIncidence",
                              label = "Database",
-                             choices = c("All", unique(incidence_estimates()$database_name)),
+                             choices = c("All", unique(uploadedFiles$incidence_estimates$database_name)),
                              selected = "All",
                              multiple = TRUE)
           ),
           column(4,
                  selectInput(inputId = "outcomeIncidence",
                              label = "Outcome",
-                             choices = unique(incidence_estimates()$outcome_cohort_id))
+                             choices = unique(uploadedFiles$incidence_estimates$outcome_cohort_id))
           )
         )
       )
@@ -490,52 +424,52 @@ reportGenerator <- function() {
             column(4,
                    pickerInput(inputId = "databaseIncidence",
                                label = "Database",
-                               choices = c("All", unique(incidence_estimates()$database_name)),
+                               choices = c("All", unique(uploadedFiles$incidence_estimates$database_name)),
                                selected = "All",
                                multiple = TRUE)
             ),
             column(4,
                    selectInput(inputId = "outcomeIncidence",
                                label = "Outcome",
-                               choices = unique(incidence_estimates()$outcome_cohort_id))
+                               choices = unique(uploadedFiles$incidence_estimates$outcome_cohort_id))
             )
           ),
           fluidRow(
             column(4,
                    selectInput(inputId = "sexIncidence",
                                label = "Sex",
-                               choices = c("All", unique(incidence_estimates()$denominator_sex)))
+                               choices = c("All", unique(uploadedFiles$incidence_estimates$denominator_sex)))
             ),
             column(4,
                    selectInput(inputId = "ageIncidence",
                                label = "Age",
-                               choices = c("All", unique(incidence_estimates()$denominator_age_group)))
+                               choices = c("All", unique(uploadedFiles$incidence_estimates$denominator_age_group)))
             ),
           ),
           fluidRow(
             column(4,
                    selectInput(inputId = "intervalIncidence",
                                label = "Interval",
-                               choices = unique(incidence_estimates()$analysis_interval)),
+                               choices = unique(uploadedFiles$incidence_estimates$analysis_interval)),
             ),
             column(4,
                    selectInput(inputId = "repeatedIncidence",
                                label = "Repeated Events",
-                               choices = unique(incidence_estimates()$analysis_repeated_events)),
+                               choices = unique(uploadedFiles$incidence_estimates$analysis_repeated_events)),
             )
           ),
           fluidRow(
             column(4,
                    selectInput(inputId = "timeFromIncidence",
                                label = "From",
-                               choices = unique(incidence_estimates()$incidence_start_date),
-                               selected = min(unique(incidence_estimates()$incidence_start_date)))
+                               choices = unique(uploadedFiles$incidence_estimates$incidence_start_date),
+                               selected = min(unique(uploadedFiles$incidence_estimates$incidence_start_date)))
             ),
             column(4,
                    selectInput(inputId = "timeToIncidence",
                                label = "To",
-                               choices = unique(incidence_estimates()$incidence_start_date),
-                               selected = max(unique(incidence_estimates()$incidence_start_date)))
+                               choices = unique(uploadedFiles$incidence_estimates$incidence_start_date),
+                               selected = max(unique(uploadedFiles$incidence_estimates$incidence_start_date)))
             )
           )
         )

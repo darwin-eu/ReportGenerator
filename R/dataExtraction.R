@@ -259,3 +259,5 @@ joinZipFiles <- function(uploadedFiles = NULL) {
 }
 
 
+# writeVariablesConfig <- function()
+
