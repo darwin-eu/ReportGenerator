@@ -76,7 +76,7 @@ reportGenerator <- function() {
 
     # 1.1 Reset data variables
 
-    uploadedFiles <- reactiveValues()
+    uploadedFiles <- reactiveValues(data = NULL)
     # Test
     # uploadedFiles <- list()
 
@@ -128,7 +128,7 @@ reportGenerator <- function() {
                 # Then checks if the names of the columns are identical
                 if (identical(configColumns, resultsColumns)) {
                   # Transfers the data from the file into the reactiveValues variable with the proper label name
-                  uploadedFiles[[val]] <- resultsData
+                  uploadedFiles$data[[val]] <- resultsData
                   # A list of all available items
                   items <- append(items, val)
                   }
@@ -148,7 +148,7 @@ reportGenerator <- function() {
                 configColumns <- configColumns$variables
                 if (length(configColumns) == length(resultsColumns)) {
                   if (identical(configColumns, resultsColumns)) {
-                    uploadedFiles[[val]] <- resultsData
+                    uploadedFiles$data[[val]] <- resultsData
                     items <- append(items, val)
                   }
                 }
@@ -171,7 +171,7 @@ reportGenerator <- function() {
               configColumns <- configColumns$variables
               if (length(configColumns) == length(resultsColumns)) {
                 if (identical(configColumns, resultsColumns)) {
-                  uploadedFiles[[val]] <- resultsData
+                  uploadedFiles$data[[val]] <- resultsData
                   items <- append(items, val)
                 }
               }
@@ -191,7 +191,7 @@ reportGenerator <- function() {
               configColumns <- configColumns$variables
               if (length(configColumns) == length(resultsColumns)) {
                 if (identical(configColumns, resultsColumns)) {
-                  uploadedFiles[[val]] <- resultsData
+                  uploadedFiles$data[[val]] <- resultsData
                   items <- append(items, val)
                 }
               }
@@ -204,7 +204,7 @@ reportGenerator <- function() {
 
     observeEvent(input$resetData, {
       if (!is.null(uploadedFiles)) {
-        # uploadedFiles <- reactiveValues()
+        uploadedFiles$data <- NULL
         itemsList$objects <- NULL
       }
 
@@ -230,7 +230,7 @@ reportGenerator <- function() {
 
     # IncidenceCommonData
     incidenceCommonData <- reactive({
-      commonData <- uploadedFiles$incidence_estimates
+      commonData <- uploadedFiles$data$incidence_estimates
       commonData[is.na(commonData)] = 0
 
       # Database
@@ -320,38 +320,38 @@ reportGenerator <- function() {
       if (objectChoice() == "Plot - Incidence rate per year") {
 
         updateSelectInput(inputId = "sexIncidence",
-                          choices = unique(uploadedFiles$incidence_estimates$denominator_sex))
+                          choices = unique(uploadedFiles$data$incidence_estimates$denominator_sex))
 
         updateSelectInput(inputId = "ageIncidence",
-                          choices = unique(uploadedFiles$incidence_estimates$denominator_age_group))
+                          choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
 
       } else if (objectChoice()== "Plot - Incidence rate per year group by sex") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = c("All",
-                                      unique(uploadedFiles$incidence_estimates$denominator_sex)))
+                                      unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
 
         updateSelectInput(inputId = "ageIncidence",
-                          choices = unique(uploadedFiles$incidence_estimates$denominator_age_group))
+                          choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
 
       } else if (objectChoice() == "Plot - Incidence rate per year color by age") {
 
         updateSelectInput(inputId = "sexIncidence",
-                          choices = unique(uploadedFiles$incidence_estimates$denominator_sex))
+                          choices = unique(uploadedFiles$data$incidence_estimates$denominator_sex))
 
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
-                                      unique(uploadedFiles$incidence_estimates$denominator_age_group)))
+                                      unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
 
       } else if (objectChoice() == "Plot - Incidence rate per year facet by database, age group") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = c("All",
-                                      unique(uploadedFiles$incidence_estimates$denominator_sex)))
+                                      unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
 
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
-                                      unique(uploadedFiles$incidence_estimates$denominator_age_group)))
+                                      unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
       }
     })
 
@@ -405,14 +405,14 @@ reportGenerator <- function() {
           column(4,
                  pickerInput(inputId = "databaseIncidence",
                              label = "Database",
-                             choices = c("All", unique(uploadedFiles$incidence_estimates$database_name)),
+                             choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
                              selected = "All",
                              multiple = TRUE)
           ),
           column(4,
                  selectInput(inputId = "outcomeIncidence",
                              label = "Outcome",
-                             choices = unique(uploadedFiles$incidence_estimates$outcome_cohort_id))
+                             choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id))
           )
         )
       )
@@ -424,52 +424,52 @@ reportGenerator <- function() {
             column(4,
                    pickerInput(inputId = "databaseIncidence",
                                label = "Database",
-                               choices = c("All", unique(uploadedFiles$incidence_estimates$database_name)),
+                               choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
                                selected = "All",
                                multiple = TRUE)
             ),
             column(4,
                    selectInput(inputId = "outcomeIncidence",
                                label = "Outcome",
-                               choices = unique(uploadedFiles$incidence_estimates$outcome_cohort_id))
+                               choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id))
             )
           ),
           fluidRow(
             column(4,
                    selectInput(inputId = "sexIncidence",
                                label = "Sex",
-                               choices = c("All", unique(uploadedFiles$incidence_estimates$denominator_sex)))
+                               choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
             ),
             column(4,
                    selectInput(inputId = "ageIncidence",
                                label = "Age",
-                               choices = c("All", unique(uploadedFiles$incidence_estimates$denominator_age_group)))
+                               choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
             ),
           ),
           fluidRow(
             column(4,
                    selectInput(inputId = "intervalIncidence",
                                label = "Interval",
-                               choices = unique(uploadedFiles$incidence_estimates$analysis_interval)),
+                               choices = unique(uploadedFiles$data$incidence_estimates$analysis_interval)),
             ),
             column(4,
                    selectInput(inputId = "repeatedIncidence",
                                label = "Repeated Events",
-                               choices = unique(uploadedFiles$incidence_estimates$analysis_repeated_events)),
+                               choices = unique(uploadedFiles$data$incidence_estimates$analysis_repeated_events)),
             )
           ),
           fluidRow(
             column(4,
                    selectInput(inputId = "timeFromIncidence",
                                label = "From",
-                               choices = unique(uploadedFiles$incidence_estimates$incidence_start_date),
-                               selected = min(unique(uploadedFiles$incidence_estimates$incidence_start_date)))
+                               choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
+                               selected = min(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
             ),
             column(4,
                    selectInput(inputId = "timeToIncidence",
                                label = "To",
-                               choices = unique(uploadedFiles$incidence_estimates$incidence_start_date),
-                               selected = max(unique(uploadedFiles$incidence_estimates$incidence_start_date)))
+                               choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
+                               selected = max(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
             )
           )
         )
