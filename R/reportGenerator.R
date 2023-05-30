@@ -105,7 +105,10 @@ reportGenerator <- function() {
           # Unzips files
           unzip(fileDataPath, exdir = csvLocation)
           # Lists unzipped files
-          csvFiles <- list.files(path = csvLocation, pattern = ".csv", full.names = TRUE)
+          csvFiles <- list.files(path = csvLocation,
+                                 pattern = ".csv",
+                                 full.names = TRUE,
+                                 recursive = TRUE)
           # Empty items list
           items <- list()
           # Gets the config file that is used to define the type of uploaded file
@@ -285,11 +288,11 @@ reportGenerator <- function() {
     menuFun  <- reactive({
       menuFun  <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";")
       menuFun$arguments <- gsub("incidence_attrition",
-                                "incidence_attrition()",
+                                "uploadedFiles$data$incidence_attrition",
                                 menuFun$arguments)
 
       menuFun$arguments <- gsub("prevalence_attrition",
-                                "prevalence_attrition()",
+                                "uploadedFiles$data$prevalence_attrition",
                                 menuFun$arguments)
 
       menuFun$arguments <- gsub("incidence_estimates",
