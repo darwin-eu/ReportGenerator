@@ -275,7 +275,13 @@ columnCheck <- function(csvFiles,
       }
     }
   }
-  return(data)
+  if (is.null(data)) {
+    warning("No correspondance in columns was detected")
+    return(data)
+  } else {
+    message("Correspondance detected")
+    return(data)
+  }
 }
 
 # writeVariablesConfig <- function()
