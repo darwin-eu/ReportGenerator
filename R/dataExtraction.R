@@ -254,10 +254,29 @@ joinZipFiles <- function(uploadedFiles = NULL) {
                    fixed = TRUE)) {
     csvFiles <- uploadedFiles
   }
-
+  unlink(csvLocation)
   return(csvFiles)
 }
 
+columnCheck <- function(csvFiles,
+                        configData,
+                        configDataTypes) {
+  data <- list()
+  for (fileLocation in csvFiles) {
+    resultsData <- read_csv(fileLocation)
+    resultsColumns <- names(resultsData)
+    for (val in configDataTypes) {
+      configColumns <- configData %>% filter(name == val)
+      configColumns <- configColumns$variables
+      if (length(configColumns) == length(resultsColumns)) {
+        if (identical(configColumns, resultsColumns)) {
+          data[[val]] <- resultsData
+        }
+      }
+    }
+  }
+  return(data)
+}
 
 # writeVariablesConfig <- function()
 

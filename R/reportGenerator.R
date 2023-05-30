@@ -74,8 +74,7 @@ reportGenerator <- function() {
 
     # 1. Load files
 
-    # 1.1 Reset data variables
-
+    # ReactiveValues
     uploadedFiles <- reactiveValues(data = NULL)
     # Test
     # uploadedFiles <- list()
@@ -85,121 +84,53 @@ reportGenerator <- function() {
     # itemsList <- list()
 
     observeEvent(input$datasetLoad, {
-
+      # Data path from file input
       inFile <- input$datasetLoad
-
       fileDataPath <- inFile$datapath
 
       # Test
       # fileDataPath <- here("OtherResults", "resultsMock_CPRD.zip")
 
-      # If a single file is loaded
-
+      # Gets the config file that is used to define the type of uploaded file
+      configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
+      # Lists all datatypes available to compare
+      configDataTypes <- unique(configData$name)
+      # Checks if single or multiple files
       if (length(fileDataPath) == 1) {
         # If a zip file is loaded
         if (grepl(".zip", fileDataPath, fixed = TRUE)) {
-          # Creates a temp dir to allocate files
+          # Temp dir to allocate unzipped files
           csvLocation <- tempdir()
-          # Unlinks previous files to the temp dir
+          # Unlinks previous files in the temp dir
           lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
-          # Unzips files
+          # Unzip files into temp dir location
           unzip(fileDataPath, exdir = csvLocation)
-          # Lists unzipped files
+          # List unzipped files
           csvFiles <- list.files(path = csvLocation,
                                  pattern = ".csv",
                                  full.names = TRUE,
                                  recursive = TRUE)
-          # Empty items list
-          items <- list()
-          # Gets the config file that is used to define the type of uploaded file
-          configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
-          # Lists all datatypes available to compare
-          configDataTypes <- unique(configData$name)
-          # Iterated through all uploaded files
-          for (fileLocation in csvFiles) {
-            # Reads the first uploaded file
-            resultsData <- read_csv(fileLocation)
-            # Get the columns of the first loaded file
-            resultsColumns <- names(resultsData)
-            # Checks if the columns of the file matches with the config file
-            for (val in configDataTypes) {
-              # Gets the columns from the config file
-              configColumns <- configData %>% filter(name == val)
-              configColumns <- configColumns$variables
-              # Searches for a match comparing the number of columns
-              if (length(configColumns) == length(resultsColumns)) {
-                # Then checks if the names of the columns are identical
-                if (identical(configColumns, resultsColumns)) {
-                  # Transfers the data from the file into the reactiveValues variable with the proper label name
-                  uploadedFiles$data[[val]] <- resultsData
-                  # A list of all available items
-                  items <- append(items, val)
-                  }
-                }
-              }
-          }
-          # Gets items list
+          # Check columns and items; add data to reactiveValues
+          uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
+          items <- names(uploadedFiles$data)
           itemsList$objects[["items"]] <- getItemsList(items)
+          # Unlink tempdir
+          unlink(csvLocation)
           } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
-              resultsData <- read_csv(fileDataPath)
-              resultsColumns <- names(resultsData)
-              configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
-              configDataTypes <- unique(configData$name)
-              items <- list()
-              for (val in configDataTypes) {
-                configColumns <- configData %>% filter(name == val)
-                configColumns <- configColumns$variables
-                if (length(configColumns) == length(resultsColumns)) {
-                  if (identical(configColumns, resultsColumns)) {
-                    uploadedFiles$data[[val]] <- resultsData
-                    items <- append(items, val)
-                  }
-                }
-              }
-            itemsList$objects[["items"]] <- getItemsList(items)
+              uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+              items <- names(uploadedFiles$data)
+              itemsList$objects[["items"]] <- getItemsList(items)
           }
       }
-
       else if (length(fileDataPath) > 1) {
         if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
           csvFiles <- joinZipFiles(fileDataPath)
-          items <- list()
-          configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
-          configDataTypes <- unique(configData$name)
-          for (fileLocation in csvFiles) {
-            resultsData <- read_csv(fileLocation)
-            resultsColumns <- names(resultsData)
-            for (val in configDataTypes) {
-              configColumns <- configData %>% filter(name == val)
-              configColumns <- configColumns$variables
-              if (length(configColumns) == length(resultsColumns)) {
-                if (identical(configColumns, resultsColumns)) {
-                  uploadedFiles$data[[val]] <- resultsData
-                  items <- append(items, val)
-                }
-              }
-            }
-          }
+          uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
+          items <- names(uploadedFiles$data)
           itemsList$objects[["items"]] <- getItemsList(items)
         } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
-          csvFiles <- joinZipFiles(fileDataPath)
-          items <- list()
-          configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
-          configDataTypes <- unique(configData$name)
-          for (fileLocation in csvFiles) {
-            resultsData <- read_csv(fileLocation)
-            resultsColumns <- names(resultsData)
-            for (val in configDataTypes) {
-              configColumns <- configData %>% filter(name == val)
-              configColumns <- configColumns$variables
-              if (length(configColumns) == length(resultsColumns)) {
-                if (identical(configColumns, resultsColumns)) {
-                  uploadedFiles$data[[val]] <- resultsData
-                  items <- append(items, val)
-                }
-              }
-            }
-          }
+          uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+          items <- names(uploadedFiles$data)
           itemsList$objects[["items"]] <- getItemsList(items)
         }
         }
@@ -209,6 +140,7 @@ reportGenerator <- function() {
       if (!is.null(uploadedFiles)) {
         uploadedFiles$data <- NULL
         itemsList$objects <- NULL
+        unlink(tempdir())
       }
 
     })
