@@ -211,6 +211,50 @@ reportGenerator <- function() {
         filter(analysis_repeated_events == input$repeatedIncidence)
     })
 
+    # PrevalenceCommonData
+    prevalenceCommonData <- reactive({
+      commonData <- uploadedFiles$data$prevalence_estimates
+      class(commonData) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
+      commonData[is.na(commonData)] = 0
+
+      # Database
+      if (length(input$databasePrevalence) != 1 || input$databasePrevalence != "All") {
+        commonData <- commonData %>%
+          filter(database_name %in% c(input$databasePrevalence))
+      }
+
+      # Outcome
+      commonData <- commonData %>%
+        filter(outcome_cohort_name == input$outcomePrevalence)
+
+      # Sex
+      if (input$sexPrevalence != "All") {
+        commonData <- commonData %>%
+          filter(denominator_sex == input$sexPrevalence)
+      }
+
+      # Age group
+      if (input$agePrevalence != "All") {
+        commonData <- commonData %>%
+          filter(denominator_age_group == input$agePrevalence)
+      }
+
+      # Start Time
+      commonData <- commonData %>%
+        filter(between(prevalence_start_date,
+                       as.Date(input$timeFromPrevalence),
+                       as.Date(input$timeToPrevalence)))
+
+      # Analysis
+
+      # Interval
+      commonData <- commonData %>%
+        filter(analysis_interval == input$intervalPrevalence)
+
+      # Repeated events
+      commonData <- commonData %>%
+        filter(analysis_type == input$typePrevalence)
+    })
     # 3. Item preview
 
     # 3.1 Objects list. From the sortable menu.
@@ -234,6 +278,10 @@ reportGenerator <- function() {
 
       menuFun$arguments <- gsub("incidence_estimates",
                                 "incidenceCommonData()",
+                                menuFun$arguments)
+
+      menuFun$arguments <- gsub("prevalence_estimates",
+                                "prevalenceCommonData()",
                                 menuFun$arguments)
 
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
@@ -265,7 +313,7 @@ reportGenerator <- function() {
         updateSelectInput(inputId = "ageIncidence",
                           choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
 
-      } else if (objectChoice()== "Plot - Incidence rate per year group by sex") {
+      } else if (objectChoice() == "Plot - Incidence rate per year group by sex") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = c("All",
@@ -292,19 +340,20 @@ reportGenerator <- function() {
         updateSelectInput(inputId = "ageIncidence",
                           choices = c("All",
                                       unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
+      } else if (objectChoice() == "Plot - Prevalence rate per year") {
+
+        updateSelectInput(inputId = "sexPrevalence",
+                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_sex))
+
+        updateSelectInput(inputId = "agePrevalence",
+                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_age_group))
+
       }
     })
 
     # Renders item preview depending on the object class
     output$itemPreview <- renderUI({
       req(objectChoice())
-
-      # if (grepl("Table", objectChoice())) {
-      #   tableOutput("previewTable")
-      # } else if (grepl("Plot", objectChoice())) {
-      #   plotOutput("previewPlot")
-      # }
-
 
 
       if (grepl("Table", objectChoice())) {
@@ -424,59 +473,59 @@ reportGenerator <- function() {
           )
         )
 
-      } else if (grepl("Incidence", objectChoice())) {
+      } else if (grepl("Prevalence", objectChoice())) {
 
         tagList(
           fluidRow(
             column(4,
-                   pickerInput(inputId = "databaseIncidence",
+                   pickerInput(inputId = "databasePrevalence",
                                label = "Database",
-                               choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
+                               choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
                                selected = "All",
                                multiple = TRUE)
             ),
             column(4,
-                   selectInput(inputId = "outcomeIncidence",
+                   selectInput(inputId = "outcomePrevalence",
                                label = "Outcome",
-                               choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id))
+                               choices = unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name))
             )
           ),
           fluidRow(
             column(4,
-                   selectInput(inputId = "sexIncidence",
+                   selectInput(inputId = "sexPrevalence",
                                label = "Sex",
-                               choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
+                               choices = c("All", unique(uploadedFiles$data$prevalence_estimates$denominator_sex)))
             ),
             column(4,
-                   selectInput(inputId = "ageIncidence",
+                   selectInput(inputId = "agePrevalence",
                                label = "Age",
-                               choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
+                               choices = c("All", unique(uploadedFiles$data$prevalence_estimates$denominator_age_group)))
             ),
           ),
           fluidRow(
             column(4,
-                   selectInput(inputId = "intervalIncidence",
+                   selectInput(inputId = "intervalPrevalence",
                                label = "Interval",
-                               choices = unique(uploadedFiles$data$incidence_estimates$analysis_interval)),
+                               choices = unique(uploadedFiles$data$prevalence_estimates$analysis_interval)),
             ),
             column(4,
-                   selectInput(inputId = "repeatedIncidence",
-                               label = "Repeated Events",
-                               choices = unique(uploadedFiles$data$incidence_estimates$analysis_repeated_events)),
+                   selectInput(inputId = "typePrevalence",
+                               label = "Analysis type",
+                               choices = unique(uploadedFiles$data$prevalence_estimates$analysis_type)),
             )
           ),
           fluidRow(
             column(4,
-                   selectInput(inputId = "timeFromIncidence",
+                   selectInput(inputId = "timeFromPrevalence",
                                label = "From",
-                               choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
-                               selected = min(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
+                               choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
+                               selected = min(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
             ),
             column(4,
-                   selectInput(inputId = "timeToIncidence",
+                   selectInput(inputId = "timeToPrevalence",
                                label = "To",
-                               choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
-                               selected = max(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
+                               choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
+                               selected = max(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
             )
           )
         )
@@ -488,6 +537,24 @@ reportGenerator <- function() {
 
     output$previewPlot <- renderPlot({
       req(objectChoice())
+
+      ###
+
+      # objectChoice <- "Plot - Prevalence rate per year"
+      #
+      # menuFunction <- menuFun %>%
+      #   dplyr::filter(title == objectChoice)
+      # itemOptions <- menuFunction %>% getItemOptions()
+      # expression <- menuFunction %>%
+      #   dplyr::pull(signature)
+      #
+      # if (!identical(itemOptions, character(0))) {
+      #   expression <- expression %>%
+      #     addPreviewItemType("Facet by outcome")
+      # }
+
+      ###
+
 
       menuFunction <- menuFun() %>%
         dplyr::filter(title == objectChoice())

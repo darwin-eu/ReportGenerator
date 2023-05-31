@@ -8,4 +8,4 @@ plotIncidence;Plot - Incidence rate per year;incidence_estimates, colour, facet;
 plotIncidence;Plot - Incidence rate per year group by sex;incidence_estimates;Facet by outcome, Facet by database
 plotIncidence;Plot - Incidence rate per year color by age;incidence_estimates;Facet by outcome, Facet by database
 plotIncidence;Plot - Incidence rate per year facet by database, age group;incidence_estimates;Facet by outcome, Facet by database
-plotPrevalence;Plot - Prevalence rate per year;prevalence_estimates;Facet by outcome, Facet by database
+plotPrevalence;Plot - Prevalence rate per year;prevalence_estimates, colour, facet;Facet by outcome, Facet by database
