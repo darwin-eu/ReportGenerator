@@ -20,6 +20,7 @@
 #'
 #' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable waldo readr yaml data.tree
 #' @importFrom sortable bucket_list add_rank_list
+#' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @export
 reportGenerator <- function() {
 
@@ -90,6 +91,8 @@ reportGenerator <- function() {
 
       # Test
       # fileDataPath <- here("OtherResults", "resultsMock_CPRD.zip")
+      # Test
+      # fileDataPath <- here("results", "mock_data_ReportGenerator_SIDIAP.zip")
 
       # Gets the config file that is used to define the type of uploaded file
       configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
@@ -166,6 +169,7 @@ reportGenerator <- function() {
     # IncidenceCommonData
     incidenceCommonData <- reactive({
       commonData <- uploadedFiles$data$incidence_estimates
+      class(commonData) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
       commonData[is.na(commonData)] = 0
 
       # Database
@@ -218,7 +222,8 @@ reportGenerator <- function() {
 
     # Functions available from the configuration file
     menuFun  <- reactive({
-      menuFun  <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";")
+      # menuFun  <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";")
+      menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
       menuFun$arguments <- gsub("incidence_attrition",
                                 "uploadedFiles$data$incidence_attrition",
                                 menuFun$arguments)
@@ -294,6 +299,14 @@ reportGenerator <- function() {
     output$itemPreview <- renderUI({
       req(objectChoice())
 
+      # if (grepl("Table", objectChoice())) {
+      #   tableOutput("previewTable")
+      # } else if (grepl("Plot", objectChoice())) {
+      #   plotOutput("previewPlot")
+      # }
+
+
+
       if (grepl("Table", objectChoice())) {
         tableOutput("previewTable")
       } else {
@@ -301,11 +314,11 @@ reportGenerator <- function() {
           dplyr::filter(title == objectChoice()) %>%
           getItemOptions()
         if (identical(plotOptions, character(0))) {
-          plotlyOutput("previewPlot")
+          plotOutput("previewPlot")
         } else {
           names(plotOptions) <- as.character(glue::glue("{toupper(letters)[1:length(plotOptions)]}: {plotOptions}"))
           tagList(selectizeInput("previewPlotOption", "Select plot type", choices = plotOptions, width = "32%"),
-                  plotlyOutput("previewPlot"))
+                  plotOutput("previewPlot"))
         }
       }
     })
@@ -413,7 +426,8 @@ reportGenerator <- function() {
 
     })
 
-    output$previewPlot<- renderPlotly({
+
+    output$previewPlot <- renderPlot({
       req(objectChoice())
 
       menuFunction <- menuFun() %>%
@@ -421,16 +435,17 @@ reportGenerator <- function() {
       itemOptions <- menuFunction %>% getItemOptions()
       expression <- menuFunction %>%
         dplyr::pull(signature)
+
       if (!identical(itemOptions, character(0))) {
         expression <- expression %>%
           addPreviewItemType(input$previewPlotOption)
       }
+
       object <- eval(parse(text = expression))
 
       if (grepl("Plot", objectChoice())) {
-        object %>%
-          plotly::ggplotly() %>%
-          increaseFacetStripSize()
+        object
+
       }
     })
 

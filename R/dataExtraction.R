@@ -263,18 +263,26 @@ columnCheck <- function(csvFiles,
                         configDataTypes) {
   data <- list()
   for (fileLocation in csvFiles) {
+    # csvFiles <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\Rtmpq6GAZu/mock_data_ReportGenerator_SIDIAP/test_database_incidence_attrition_2023_05_24.csv"
+
     resultsData <- read_csv(fileLocation)
     resultsColumns <- names(resultsData)
     for (val in configDataTypes) {
       configColumns <- configData %>% filter(name == val)
       configColumns <- configColumns$variables
       if (length(configColumns) == length(resultsColumns)) {
+        message("Length correspondance yes")
         if (identical(configColumns, resultsColumns)) {
+          message("Length correspondance yes")
           data[[val]] <- resultsData
-        }
+          } else {
+            message("Length correspondance no")
+            }
+        } else {
+          message("Length correspondance no")
+          }
       }
     }
-  }
   if (is.null(data)) {
     warning("No correspondance in columns was detected")
     return(data)
@@ -284,5 +292,123 @@ columnCheck <- function(csvFiles,
   }
 }
 
-# writeVariablesConfig <- function()
+#' Writes variablesConfig file
+#'
+#' `variablesConfigWriter()` takes a list of csv files, extract their columns and writes de variables config file
+#'
+#' @param fileDataPath A list of csv files
+#'
+#' @return Writes a csv file into the config folder of ReportGenerator
+#' @export
+#' @import dplyr
+variablesConfigWriter <- function(fileDataPath = NULL) {
+
+  # fileDataPath <- here("results", "mock_data_ReportGenerator_SIDIAP.zip")
+
+  csvLocation <- tempdir()
+
+  unzip(fileDataPath, exdir = csvLocation)
+
+  csvFiles <- list.files(path = csvLocation,
+                         pattern = ".csv",
+                         full.names = TRUE,
+                         recursive = TRUE)
+
+  for (fileLocation in csvFiles) {
+
+    if (grepl("incidence_attrition", fileLocation)) {
+      variablesConfig <- read_csv("inst/config/variablesConfig.csv")
+      variablesConfig <- filter(variablesConfig, name != "incidence_attrition")
+      incidence_attrition <- read_csv(fileLocation)
+      tempNames <- list(names(incidence_attrition))
+      tempTitle <- "incidence_attrition"
+      itemDataFrame <- data.frame(name = tempTitle, variables = tempNames[[1]])
+      itemsVariables <- bind_rows(variablesConfig, itemDataFrame)
+      itemsVariablesExport <- itemsVariables %>% filter(name %in% c("incidence_attrition",
+                                                                    "incidence_estimates",
+                                                                    "prevalence_attrition",
+                                                                    "prevalence_estimates"))
+      write.csv(itemsVariablesExport, file = here("inst",
+                                                  "config",
+                                                  "variablesConfig.csv"), row.names = FALSE)
+
+    } else if(grepl("incidence_estimates", fileLocation)) {
+      variablesConfig <- read.csv("inst/config/variablesConfig.csv")
+      variablesConfig <- filter(variablesConfig, name != "incidence_estimates")
+      incidence_estimates <- read_csv(fileLocation)
+      tempNames <- list(names(incidence_estimates))
+      tempTitle <- "incidence_estimates"
+      itemDataFrame <- data.frame(name = tempTitle, variables = tempNames[[1]])
+      itemsVariables <- bind_rows(variablesConfig, itemDataFrame)
+      itemsVariablesExport <- itemsVariables %>% filter(name %in% c("incidence_attrition",
+                                                                    "incidence_estimates",
+                                                                    "prevalence_attrition",
+                                                                    "prevalence_estimates"))
+      write.csv(itemsVariablesExport, file = here("inst",
+                                                  "config",
+                                                  "variablesConfig.csv"), row.names = FALSE)
+
+    } else if(grepl("prevalence_attrition", fileLocation)) {
+      variablesConfig <- read.csv("inst/config/variablesConfig.csv")
+      variablesConfig <- filter(variablesConfig, name != "prevalence_attrition")
+      prevalence_attrition <- read_csv(fileLocation)
+      tempNames <- list(names(prevalence_attrition))
+      tempTitle <- "prevalence_attrition"
+      itemDataFrame <- data.frame(name = tempTitle, variables = tempNames[[1]])
+      itemsVariables <- bind_rows(variablesConfig, itemDataFrame)
+      itemsVariablesExport <- itemsVariables %>% filter(name %in% c("incidence_attrition",
+                                                                    "incidence_estimates",
+                                                                    "prevalence_attrition",
+                                                                    "prevalence_estimates"))
+      write.csv(itemsVariablesExport, file = here("inst",
+                                                  "config",
+                                                  "variablesConfig.csv"), row.names = FALSE)
+
+    } else if(grepl("prevalence_estimates", fileLocation)) {
+      variablesConfig <- read.csv("inst/config/variablesConfig.csv")
+      variablesConfig <- filter(variablesConfig, name != "prevalence_estimates")
+      prevalence_estimates <- read_csv(fileLocation)
+      tempNames <- list(names(prevalence_estimates))
+      tempTitle <- "prevalence_estimates"
+      itemDataFrame <- data.frame(name = tempTitle, variables = tempNames[[1]])
+      itemsVariables <- bind_rows(variablesConfig, itemDataFrame)
+      itemsVariablesExport <- itemsVariables %>% filter(name %in% c("incidence_attrition",
+                                                                    "incidence_estimates",
+                                                                    "prevalence_attrition",
+                                                                    "prevalence_estimates"))
+      write.csv(itemsVariablesExport, file = here("inst",
+                                                  "config",
+                                                  "variablesConfig.csv"), row.names = FALSE)
+
+    }
+
+
+
+  }
+
+  # variablesIncidence <- filter(variablesConfig, name == "incidence_estimates")
+
+
+
+
+
+  tempNames <- list(names(prevalence_estimates))
+
+  tempTitle <- "prevalence_estimates"
+
+  itemDataFrame <- data.frame(name = tempTitle, variables = tempNames[[1]])
+
+  itemsVariables <- bind_rows(variablesConfig, itemDataFrame)
+
+
+  itemsVariablesExport <- itemsVariables %>% filter(name %in% c("cdm_snapshot", "doseSummaryWide", "incidence_attrition", "incidence_estimates",
+                                                                "indicationSummaryWide", "largeScaleSummary", "LSC", "prevalence_attrition",
+                                                                "prevalence_estimates", "stratification" ))
+
+  write.csv(itemsVariablesExport, file = here("inst",
+                                              "config",
+                                              "variablesConfig.csv"), row.names = FALSE)
+
+
+}
 
