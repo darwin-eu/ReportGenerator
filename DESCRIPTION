@@ -38,10 +38,11 @@ Imports:
     sortable,
     DT,
     zip,
-    waldo
+    waldo,
+    glue,
+    rLDCP
 Suggests: 
-    testthat,
-    glue
+    testthat
 Remotes:
     darwin-eu/IncidencePrevalence
 Config/testthat/edition: 3

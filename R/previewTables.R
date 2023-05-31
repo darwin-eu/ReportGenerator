@@ -37,7 +37,7 @@ createPreviewTable <- function(data) {
 }
 #' table1NumParPreview
 #'
-#' @param incidence_attrition incidence of the attritionr
+#' @param incidence_attrition incidence of the attrition
 #' @param prevalence_attrition prevalence of the attrition
 #'
 #' @import here flextable dplyr

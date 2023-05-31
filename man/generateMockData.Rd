@@ -4,7 +4,10 @@
 \alias{generateMockData}
 \title{Creates a mock data set for ReportGenerator}
 \usage{
-generateMockData(databaseName = c("Synthea", "IPCI", "CPRD"))
+generateMockData(
+  databaseName = c("CHUBX", "CPRD GOLD", "IMASIS", "IPCI", "SIDIAP"),
+  simulatePopulation = FALSE
+)
 }
 \arguments{
 \item{databaseName}{A vector with the name in characters of each database.}

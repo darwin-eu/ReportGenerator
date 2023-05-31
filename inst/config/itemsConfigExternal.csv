@@ -1,0 +1,11 @@
+name;title;arguments;options
+table1NumPar;Table - Number of participants;incidence_attrition, prevalence_attrition;
+table2IncOver;Table - Incidence overall;incidence_estimates;
+table3IncYear;Table - Incidence by year;incidence_estimates;
+table4IncAge;Table - Incidence by age group;incidence_estimates;
+table5IncSex;Table - Incidence by sex;incidence_estimates;
+plotIncidence;Plot - Incidence rate per year;incidence_estimates, colour, facet;Facet by outcome, Facet by database
+plotIncidence;Plot - Incidence rate per year group by sex;incidence_estimates;Facet by outcome, Facet by database
+plotIncidence;Plot - Incidence rate per year color by age;incidence_estimates;Facet by outcome, Facet by database
+plotIncidence;Plot - Incidence rate per year facet by database, age group;incidence_estimates;Facet by outcome, Facet by database
+plotPrevalence;Plot - Prevalence rate per year;prevalence_estimates, colour, facet;Facet by outcome, Facet by database
