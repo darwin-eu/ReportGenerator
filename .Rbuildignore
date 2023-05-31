@@ -26,3 +26,4 @@ report.tex
 Report.html
 ^Reports/$
 ^.*\.docx$
+report.tex

@@ -25,21 +25,64 @@
 #' @importFrom zip zip
 #' @return csv files
 #' @export
-generateMockData <- function(databaseName = c("Synthea", "IPCI", "CPRD")) {
-  cdm <- mockIncidencePrevalenceRef(sampleSize = 50000)
+generateMockData <- function(databaseName = c("CHUBX",
+                                              "CPRD GOLD",
+                                              "IMASIS",
+                                              "IPCI",
+                                              "SIDIAP"),
+                             simulatePopulation = FALSE) {
 
   for (i in databaseName) {
+
+    if (simulatePopulation == TRUE) {
+
+        if (i == "CHUBX") {
+
+          sampleSize <- 2152385
+
+        } else if (i == "CPRD GOLD") {
+
+          sampleSize <- 15662217
+
+        } else if (i == "IMASIS") {
+
+          sampleSize <- 1014735
+
+        } else if (i == "IPCI") {
+
+          sampleSize <- 2674547
+
+        } else if (i == "SIDIAP") {
+
+          sampleSize <- 8265343
+
+        }
+
+      } else {
+
+        sampleSize <- 50000
+
+        }
+
+    cdm <- mockIncidencePrevalenceRef(
+      sampleSize = sampleSize,
+      outPre = 0.5
+    )
+
     # Denominator data
-    cdm$denominator <- generateDenominatorCohortSet(cdm = cdm,
-                                                    startDate  = as.Date("2008-01-01"),
-                                                    endDate  = as.Date("2018-01-01"),
-                                                    ageGroup  = list(c(20, 39),
-                                                                     c(40, 59),
-                                                                     c(0,99)),
-                                                    sex  = c("Female", "Male", "Both"),
-                                                    daysPriorHistory  = 180) %>% mutate(database_name = i)
+    cdm <- generateDenominatorCohortSet(cdm = cdm,
+                                        name = "denominator",
+                                        cohortDateRange = c(as.Date("2008-01-01"), as.Date("2012-01-01")),
+                                        ageGroup  = list(c(20, 39),
+                                                         c(40, 59),
+                                                         c(0,99)),
+                                        sex  = c("Female", "Male", "Both"),
+                                        daysPriorHistory  = 365)
+
+    # %>% mutate(database_name = i)
+
     # Incidence data
-    incidence <- estimateIncidence(
+    incidence_estimates <- estimateIncidence(
       cdm = cdm,
       denominatorTable = "denominator",
       outcomeTable = "outcome",
@@ -51,7 +94,10 @@ generateMockData <- function(databaseName = c("Synthea", "IPCI", "CPRD")) {
       outcomeWashout = 180,
       repeatedEvents = FALSE,
       minCellCount = 5,
-      verbose = TRUE)
+      temporary = TRUE,
+      returnParticipants = FALSE)
+
+    incidence_attrition <- IncidencePrevalence::incidenceAttrition(incidence_estimates)
 
     # Prevalence data, both point and period
     prevalencePoint <- estimatePointPrevalence(
@@ -64,8 +110,9 @@ generateMockData <- function(databaseName = c("Synthea", "IPCI", "CPRD")) {
       outcomeLookbackDays = 0,
       interval = "years",
       timePoint = "start",
-      minCellCount = 5,
-      verbose = TRUE)
+      minCellCount = 5)
+
+    prevalence_point_attrition <- prevalenceAttrition(prevalencePoint)
 
     prevalencePeriod <- estimatePeriodPrevalence(
       cdm = cdm,
@@ -78,94 +125,125 @@ generateMockData <- function(databaseName = c("Synthea", "IPCI", "CPRD")) {
       interval = "years",
       completeDatabaseIntervals = TRUE,
       fullContribution = FALSE,
-      minCellCount = 0,
-      verbose = TRUE)
+      minCellCount = 0)
+
+    prevalence_period_attrition <- prevalenceAttrition(prevalencePeriod)
+    prevalence_estimates <- rbind(prevalencePoint, prevalencePeriod)
+    prevalence_attrition <- rbind(prevalence_point_attrition, prevalence_period_attrition)
+
+    # Add database label
+
+    incidence_estimates <- incidence_estimates %>% mutate(database_name = i)
+    incidence_attrition <- incidence_attrition %>% mutate(database_name = i)
+    prevalence_estimates <- prevalence_estimates %>% mutate(database_name = i)
+    prevalence_attrition <- prevalence_attrition %>% mutate(database_name = i)
+
+    class(incidence_attrition) <- c("IncidencePrevalenceResult",
+                                    "IncidenceResult",
+                                    "tbl_df",
+                                    "tbl",
+                                    "data.frame")
+
+    class(prevalence_attrition) <- c("IncidencePrevalenceResult",
+                                    "PrevalenceResult",
+                                    "tbl_df",
+                                    "tbl",
+                                    "data.frame")
 
     # Results
-    studyResults <- gatherIncidencePrevalenceResults(cdm = cdm,
-                                                     resultList = list(incidence,
-                                                                       prevalencePoint,
-                                                                       prevalencePeriod))
 
-    studyResults$prevalence_attrition <- studyResults$prevalence_attrition %>% mutate(database_name = i)
-    studyResults$prevalence_estimates <- studyResults$prevalence_estimates %>% mutate(database_name = i)
-    studyResults$incidence_attrition <- studyResults$incidence_attrition %>% mutate(database_name = i)
-    studyResults$incidence_estimates <- studyResults$incidence_estimates %>% mutate(database_name = i)
+    exportIncidencePrevalenceResults(resultList = list("incidence_estimates" = incidence_estimates,
+                                                       "prevalence_estimates" = prevalence_estimates,
+                                                       "incidence_attrition" = incidence_attrition,
+                                                       "prevalence_attrition" = incidence_attrition),
+                                     zipName = paste0("mock_data_ReportGenerator_", i),
+                                     outputFolder = here::here("results"))
 
-    if (!dir.exists(here("results", "prevalenceResults"))) {
-      subDir <- here("results", "prevalenceResults")
-      dir.create(file.path(subDir),
-                 recursive = TRUE)
-    }
+    # cohortAttrition(cdm$denominator)
+    # studyResults <- gatherIncidencePrevalenceResults(cdm = cdm,
+    #                                                  resultList = list(incidence,
+    #                                                                    prevalencePoint,
+    #                                                                    prevalencePeriod))
+    # studyResults$prevalence_attrition <- studyResults$prevalence_attrition %>% mutate(database_name = i)
+    # studyResults$prevalence_estimates <- studyResults$prevalence_estimates %>% mutate(database_name = i)
+    # studyResults$incidence_attrition <- studyResults$incidence_attrition %>% mutate(database_name = i)
+    # studyResults$incidence_estimates <- studyResults$incidence_estimates %>% mutate(database_name = i)
+    #
+    # if (!dir.exists(here("results", "prevalenceResults"))) {
+    #   subDir <- here("results", "prevalenceResults")
+    #   dir.create(file.path(subDir),
+    #              recursive = TRUE)
+    # }
+    #
+    # write.csv(studyResults$prevalence_estimates,
+    #           paste(here("results", "prevalenceResults"),
+    #                 "/prevalence_mock_estimates_",
+    #                 i,
+    #                 ".csv",
+    #                 sep = ""),
+    #           row.names = FALSE)
+    #
+    # ## Writing incidence data into csv
+    # if (!dir.exists(here("results", "incidenceResults"))) {
+    #   subDir <- here("results", "incidenceResults")
+    #   dir.create(file.path(subDir),
+    #              recursive = TRUE)
+    # }
+    #
+    # write.csv(studyResults$incidence_estimates,
+    #           paste(here("results", "incidenceResults"),
+    #                 "/incidence_mock_estimates_",
+    #                 i,
+    #                 ".csv",
+    #                 sep = ""),
+    #           row.names = FALSE)
+    #
+    # ## Exporting whole results into zip folder
+    # if (!file.exists(here("results"))) {
+    #   subDir <- here("results")
+    #   dir.create(file.path(subDir),
+    #              recursive = TRUE)
+    # }
+    #
+    # result <- studyResults
+    # zipName <-  paste0("resultsMock", "_", i)
+    # outputFolder <- here::here("results")
+    # errorMessage <- checkmate::makeAssertCollection()
+    #
+    # checkmate::assertTRUE(inherits(result, "IncidencePrevalenceGatheredResult"), add = errorMessage)
+    # checkmate::assertCharacter(zipName, len = 1, add = errorMessage)
+    # checkmate::assertDirectoryExists(outputFolder, add = errorMessage)
+    # checkmate::reportAssertions(collection = errorMessage)
+    #
+    # tempDir <- zipName
+    #
+    # tempDirCreated <- FALSE
+    # if (!dir.exists(tempDir)) {
+    #   dir.create(tempDir)
+    #   tempDirCreated <- TRUE
+    # }
+    #
+    # # write results to disk
+    # lapply(names(result), FUN = function(checkResultName) {
+    #   checkResult <- result[[checkResultName]]
+    #   utils::write.csv(checkResult,
+    #                    file = file.path(
+    #                      tempDir,
+    #                      paste0(attr(result, "cdm_name"), "_",
+    #                             checkResultName, "_",
+    #                             format(Sys.Date(), format="%Y%m%d"),
+    #                             ".csv")),
+    #                    row.names = FALSE
+    #   )
+    # })
+    #
+    # zip::zip(zipfile = file.path(outputFolder, paste0(zipName, ".zip")),
+    #          files = list.files(tempDir, full.names = TRUE),
+    #          mode = "cherry-pick")
+    #
+    # if (tempDirCreated) {
+    #   unlink(tempDir, recursive = TRUE)
+    # }
 
-    write.csv(studyResults$prevalence_estimates,
-              paste(here("results", "prevalenceResults"),
-                    "/prevalence_mock_estimates_",
-                    i,
-                    ".csv",
-                    sep = ""),
-              row.names = FALSE)
-
-    ## Writing incidence data into csv
-    if (!dir.exists(here("results", "incidenceResults"))) {
-      subDir <- here("results", "incidenceResults")
-      dir.create(file.path(subDir),
-                 recursive = TRUE)
-    }
-
-    write.csv(studyResults$incidence_estimates,
-              paste(here("results", "incidenceResults"),
-                    "/incidence_mock_estimates_",
-                    i,
-                    ".csv",
-                    sep = ""),
-              row.names = FALSE)
-
-    ## Exporting whole results into zip folder
-    if (!file.exists(here("results"))) {
-      subDir <- here("results")
-      dir.create(file.path(subDir),
-                 recursive = TRUE)
-    }
-
-    result <- studyResults
-    zipName <-  paste0("resultsMock", "_", i)
-    outputFolder <- here::here("results")
-    errorMessage <- checkmate::makeAssertCollection()
-
-    checkmate::assertTRUE(inherits(result, "IncidencePrevalenceGatheredResult"), add = errorMessage)
-    checkmate::assertCharacter(zipName, len = 1, add = errorMessage)
-    checkmate::assertDirectoryExists(outputFolder, add = errorMessage)
-    checkmate::reportAssertions(collection = errorMessage)
-
-    tempDir <- zipName
-
-    tempDirCreated <- FALSE
-    if (!dir.exists(tempDir)) {
-      dir.create(tempDir)
-      tempDirCreated <- TRUE
-    }
-
-    # write results to disk
-    lapply(names(result), FUN = function(checkResultName) {
-      checkResult <- result[[checkResultName]]
-      utils::write.csv(checkResult,
-                       file = file.path(
-                         tempDir,
-                         paste0(attr(result, "cdm_name"), "_",
-                                checkResultName, "_",
-                                format(Sys.Date(), format="%Y%m%d"),
-                                ".csv")),
-                       row.names = FALSE
-      )
-    })
-
-    zip::zip(zipfile = file.path(outputFolder, paste0(zipName, ".zip")),
-             files = list.files(tempDir, full.names = TRUE),
-             mode = "cherry-pick")
-
-    if (tempDirCreated) {
-      unlink(tempDir, recursive = TRUE)
-    }
   }
 }

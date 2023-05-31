@@ -23,7 +23,8 @@
 #'
 #' @return a dataframe with the properties of the items
 getItemsList <- function(uploadedFiles) {
-  menuFunctions <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"),
+  # Reads the fi
+  menuFunctions <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"),
                             sep = ";") %>%
     dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
 
@@ -52,13 +53,29 @@ getItemsList <- function(uploadedFiles) {
 #'
 #' @return the updated preview item string
 addPreviewItemType <- function(previewItemString, previewItemType) {
+
+  # previewItemString <- "plotIncidence(incidenceCommonData(), colour, facet)"
+  # previewItemType <- "Facet by database"
+  #
+  #
   result <- previewItemString
   if (is.null(previewItemType)) {
     previewItemType <- "Facet by outcome"
   }
-  if ("character" %in% is(previewItemString) && grepl(")", previewItemString)) {
-    lastBracketStartPos <- stringi::stri_locate_last_fixed(previewItemString, ")")[1]
-    result <- as.character(glue::glue('{substr(previewItemString, 0, lastBracketStartPos - 1)}, "{previewItemType}")'))
+
+  if (previewItemType == "Facet by outcome") {
+    facet <- "facet = 'outcome_cohort_name'"
+    colour <- "colour = 'database_name'"
+    result <- gsub("colour", colour, previewItemString)
+    result <- gsub("facet", facet, result)
+
+  } else if (previewItemType == "Facet by database"){
+
+    facet <- "facet = 'database_name'"
+    colour <- "colour = 'outcome_cohort_name'"
+    result <- gsub("colour", colour, previewItemString)
+    result <- gsub("facet", facet, result)
+
   }
   return(result)
 }
