@@ -11,6 +11,9 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 
   # Total participants: filtering starting pop.
 
+  incidence_attrition <- uploadedFiles$data$prevalence_attrition
+  prevalence_attrition <- uploadedFiles$data$prevalence_attrition
+
   tablePrevalenceAttTotal <- prevalence_attrition %>%
     filter(reason == "Starting population") %>%
     group_by(database_name,
@@ -26,11 +29,11 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 
   table1NumPar(incidence_attrition, prevalence_attrition)
 
-  totalParticipants <- format(sum(tablePrevalenceAtt$current_n), big.mark=",", scientific = FALSE)
-  minParticipants <- format(tablePrevalenceAtt$current_n[which.min(tablePrevalenceAtt$current_n)], big.mark=",", scientific = FALSE)
-  databaseNameMin <- tablePrevalenceAtt$database_name[which.min(tablePrevalenceAtt$current_n)]
-  maxParticipants <- format(tablePrevalenceAtt$current_n[which.max(tablePrevalenceAtt$current_n)], big.mark=",", scientific = FALSE)
-  databaseNameMax <- tablePrevalenceAtt$database_name[which.max(tablePrevalenceAtt$current_n)]
+  totalParticipants <- format(sum(tablePrevalenceAttTotal$current_n), big.mark=",", scientific = FALSE)
+  minParticipants <- format(tablePrevalenceAttTotal$current_n[which.min(tablePrevalenceAttTotal$current_n)], big.mark=",", scientific = FALSE)
+  databaseNameMin <- tablePrevalenceAttTotal$database_name[which.min(tablePrevalenceAttTotal$current_n)]
+  maxParticipants <- format(tablePrevalenceAttTotal$current_n[which.max(tablePrevalenceAttTotal$current_n)], big.mark=",", scientific = FALSE)
+  databaseNameMax <- tablePrevalenceAttTotal$database_name[which.max(tablePrevalenceAttTotal$current_n)]
 
   # Text variables:
   # {totalParticipants}

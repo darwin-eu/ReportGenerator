@@ -263,8 +263,6 @@ columnCheck <- function(csvFiles,
                         configDataTypes) {
   data <- list()
   for (fileLocation in csvFiles) {
-    # csvFiles <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\Rtmpq6GAZu/mock_data_ReportGenerator_SIDIAP/test_database_incidence_attrition_2023_05_24.csv"
-
     resultsData <- read_csv(fileLocation)
     resultsColumns <- names(resultsData)
     for (val in configDataTypes) {
