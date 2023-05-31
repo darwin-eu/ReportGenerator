@@ -387,9 +387,6 @@ variablesConfigWriter <- function(fileDataPath = NULL) {
   # variablesIncidence <- filter(variablesConfig, name == "incidence_estimates")
 
 
-
-
-
   tempNames <- list(names(prevalence_estimates))
 
   tempTitle <- "prevalence_estimates"

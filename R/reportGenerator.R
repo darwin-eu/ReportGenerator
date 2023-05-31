@@ -88,12 +88,6 @@ reportGenerator <- function() {
       # Data path from file input
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
-
-      # Test
-      # fileDataPath <- here("OtherResults", "resultsMock_CPRD.zip")
-      # Test
-      # fileDataPath <- here("results", "mock_data_ReportGenerator_SIDIAP.zip")
-
       # Gets the config file that is used to define the type of uploaded file
       configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
       # Lists all datatypes available to compare
@@ -413,7 +407,13 @@ reportGenerator <- function() {
                              label = "Outcome",
                              choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id))
           )
+        ),
+        fluidRow(
+          column(8,
+                 textAreaInput("caption", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
+          )
         )
+
       )
 
       } else if (grepl("Incidence", objectChoice())) {
@@ -537,24 +537,6 @@ reportGenerator <- function() {
 
     output$previewPlot <- renderPlot({
       req(objectChoice())
-
-      ###
-
-      # objectChoice <- "Plot - Prevalence rate per year"
-      #
-      # menuFunction <- menuFun %>%
-      #   dplyr::filter(title == objectChoice)
-      # itemOptions <- menuFunction %>% getItemOptions()
-      # expression <- menuFunction %>%
-      #   dplyr::pull(signature)
-      #
-      # if (!identical(itemOptions, character(0))) {
-      #   expression <- expression %>%
-      #     addPreviewItemType("Facet by outcome")
-      # }
-
-      ###
-
 
       menuFunction <- menuFun() %>%
         dplyr::filter(title == objectChoice())
