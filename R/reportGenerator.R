@@ -346,7 +346,9 @@ reportGenerator <- function() {
 
     selectionPlotFilter <- reactive({
 
-      if (req(objectChoice()) == "Table - Number of participants") {
+      req(objectChoice())
+
+      if (objectChoice() == "Table - Number of participants") {
 
       tagList(
         fluidRow(
@@ -365,7 +367,64 @@ reportGenerator <- function() {
         )
       )
 
-      } else {
+      } else if (grepl("Incidence", objectChoice())) {
+
+        tagList(
+          fluidRow(
+            column(4,
+                   pickerInput(inputId = "databaseIncidence",
+                               label = "Database",
+                               choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
+                               selected = "All",
+                               multiple = TRUE)
+            ),
+            column(4,
+                   selectInput(inputId = "outcomeIncidence",
+                               label = "Outcome",
+                               choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id))
+            )
+          ),
+          fluidRow(
+            column(4,
+                   selectInput(inputId = "sexIncidence",
+                               label = "Sex",
+                               choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
+            ),
+            column(4,
+                   selectInput(inputId = "ageIncidence",
+                               label = "Age",
+                               choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
+            ),
+          ),
+          fluidRow(
+            column(4,
+                   selectInput(inputId = "intervalIncidence",
+                               label = "Interval",
+                               choices = unique(uploadedFiles$data$incidence_estimates$analysis_interval)),
+            ),
+            column(4,
+                   selectInput(inputId = "repeatedIncidence",
+                               label = "Repeated Events",
+                               choices = unique(uploadedFiles$data$incidence_estimates$analysis_repeated_events)),
+            )
+          ),
+          fluidRow(
+            column(4,
+                   selectInput(inputId = "timeFromIncidence",
+                               label = "From",
+                               choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
+                               selected = min(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
+            ),
+            column(4,
+                   selectInput(inputId = "timeToIncidence",
+                               label = "To",
+                               choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
+                               selected = max(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
+            )
+          )
+        )
+
+      } else if (grepl("Incidence", objectChoice())) {
 
         tagList(
           fluidRow(
