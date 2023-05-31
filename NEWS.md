@@ -1,3 +1,11 @@
+# ReportGenerator 1.5.0
+
+* Plotting now uses functions from IncidencePrevalence package. 
+
+* Improved code efficiency using reactiveValues to gather data. 
+
+* Fixes to the mock data generator; now it generates mock populations of different sizes. 
+
 # ReportGenerator 1.4.0
 
 * The file input now accepts multiple zip folders, i.e. data from several databases.
