@@ -11,20 +11,34 @@
 table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 
   # Total participants: filtering starting pop.
-  # incidence_attrition <- uploadedFiles$data$incidence_attrition
-  # prevalence_attrition <- uploadedFiles$data$prevalence_attrition
+  incidence_attrition <- uploadedFiles$data$incidence_attrition
+  prevalence_attrition <- uploadedFiles$data$prevalence_attrition
+
   tablePrevalenceAttTotal <- prevalence_attrition %>%
     filter(reason == "Starting population") %>%
     group_by(database_name,
              reason) %>%
-    summarise(current_n = unique(number_records))
+    summarise(current_n = unique(number_records)) %>%
+    arrange(desc(current_n))
+
   tablePrevalenceAttFem <- prevalence_attrition %>%
     filter(reason == "Not Male") %>%
     group_by(database_name,
              reason) %>%
-    summarise(current_n = unique(number_records))
+    summarise(current_n = unique(number_records)) %>%
+    arrange(desc(current_n))
+
+  tablePrevNotObs <- prevalence_attrition %>%
+    filter(reason == "Not observed during the complete database interval") %>%
+    group_by(database_name,
+             reason) %>%
+    summarise(excluded = sum(excluded_subjects)) %>%
+    arrange(desc(excluded))
+  #
   # table1NumPar(incidence_attrition, prevalence_attrition)
-  totalParticipants <- format(sum(tablePrevalenceAttTotal$current_n), big.mark=",", scientific = FALSE)
+  #
+  totalParticipants <- sum(tablePrevalenceAttTotal$current_n)
+  totalParticipantsChar <- format(sum(tablePrevalenceAttTotal$current_n), big.mark=",", scientific = FALSE)
   minParticipants <- tablePrevalenceAttTotal$current_n[which.min(tablePrevalenceAttTotal$current_n)]
   minParticipantsChar <- format(tablePrevalenceAttTotal$current_n[which.min(tablePrevalenceAttTotal$current_n)], big.mark=",", scientific = FALSE)
   databaseNameMin <- tablePrevalenceAttTotal$database_name[which.min(tablePrevalenceAttTotal$current_n)]
@@ -38,26 +52,42 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
   minFemaleProp <- label_percent(accuracy = 0.01)(minFemaleProp)
   maxFemaleProp <- label_percent(accuracy = 0.01)(maxFemaleProp)
 
-  # Text variables:
-  # {totalParticipants}
-  # {minParticipants}
-  # {databaseNameMin}
-  # {maxParticipants}
-  # {databaseNameMax}
+  numberDatabaseChar <- phraseList(initialPhrase = " of which ",
+                                   adjective = "",
+                                   totalParticipants,
+                                   databaseName,
+                                   individuals)
+
+  femPropChar <- phraseList(initialPhrase = " From those, ",
+                            adjective = "female",
+                            totalParticipants,
+                            databaseName = tablePrevalenceAttFem$database_name,
+                            individuals = tablePrevalenceAttFem$current_n)
+
+  excludedRec <- phraseList(initialPhrase = " A further ",
+                            adjective = "excluded due to not having been observed for the complete database interval ",
+                            totalParticipants,
+                            databaseName = tablePrevNotObs$database_name,
+                            individuals = tablePrevNotObs$excluded)
+
 
   autoText <- glue(
     # Total number of participants
-    "Table 1. A total of {totalParticipants} study participants were included from all databases combined.",
+    "Table 1. A total of {totalParticipantsChar} study participants were included from all databases combined,",
+    # Total number of participants, by database
+    "{numberDatabaseChar}",
     #  Max and Min participant databases
-    "The starting populations ranged from {minParticipantsChar} (in {databaseNameMin}) to {maxParticipantsChar} (in {databaseNameMax}).",
+    "The starting populations ranged from {minParticipantsChar} ({label_percent(accuracy = 0.01)(minParticipants/totalParticipants)} in {databaseNameMin}) to {maxParticipantsChar} ({label_percent(accuracy = 0.01)(maxParticipants/totalParticipants)} in {databaseNameMax}).",
     # Proportion female participants
-    "Of those, {minFemaleProp} and {maxFemaleProp} were female, and had been included in the database for at least 1 year prior to the index date.",
+    "{femPropChar}",
     #
-    "XXX and XXX were excluded from [insert database] [insert database] from the prevalence calculations due to not being observed for at least a full calendar year (January to December) during the study period.",
-
+    "{excludedRec}",
     .sep = " ")
 
+  autoText <- gsub("  ", " ", autoText)
+
   return(autoText)
+
 
   # # Table 1: "A total of {totalParticipants} study participants were
   # # included from all databases combined. The starting populations ranged from
@@ -70,7 +100,7 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
   # # [insert database] from the incidence calculations due to having a previous
   # # prescription of XXX. A further XXX and XXX were excluded from [insert
   # # database] and [insert database] (depends on how many databases are included
-  # # in Table 1) due to not having been observed for a complete database interval
+  # # in Table 1) due to not having been observed for the complete database interval
   # # (at least one full calendar year, different for incidence vs prevalence,
   # # depending on the specified database interval requirement (which could be
   # # different for these parameters)
@@ -238,5 +268,58 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
   #   cat(fill = TRUE)
   #   #file.show("report.pdf")
   # }
+
+}
+
+phraseList <- function(initialPhrase,
+                       adjective = "",
+                       totalParticipants,
+                       databaseName,
+                       individuals) {
+
+  # initialPhrase <- "of which "
+  # adjective <- ""
+  # totalParticipants <- sum(tablePrevalenceAttTotal$current_n)
+  # databaseName <- tablePrevalenceAttTotal$database_name
+  # individuals <- tablePrevalenceAttTotal$current_n
+
+  databaseNameMid <- head(tail(databaseName, -1), -1)
+  individualsMid <- head(tail(individuals, -1), -1)
+
+  firstPhrase <- paste0(initialPhrase,
+                        format(individuals[1], big.mark=",", scientific = FALSE),
+                        " (",
+                        label_percent(accuracy = 0.01)(individuals[1]/totalParticipants[1]),
+                        ") ",
+                        " were ",
+                        adjective,
+                        " from ",
+                        databaseName[1],
+                        ", ",
+                        collapse = ", ")
+
+  secondPhrase <- paste0(format(individualsMid,
+                                 big.mark=",",
+                                 scientific = FALSE),
+                          " (",
+                          label_percent(accuracy = 0.01)(individualsMid/totalParticipants),
+                          ") ",
+                          "from ",
+                          databaseNameMid,
+                          collapse = ", ")
+  secondPhrase <- paste0(secondPhrase, ",")
+
+  thirdPhrase <- paste0(" and ",
+                        paste0(format(tail(individuals, 1),
+                               big.mark=",",
+                               scientific = FALSE),
+                        " (",
+                        label_percent(accuracy = 0.01)(tail(individuals, 1)/totalParticipants),
+                        ") ",
+                        "from ",
+                        tail(databaseNameMid, 1),
+                        "."))
+  result <- gsub("  ", " ", paste(firstPhrase, secondPhrase, thirdPhrase))
+  return(result)
 
 }
