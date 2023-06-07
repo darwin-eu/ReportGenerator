@@ -10,9 +10,9 @@
 #' @importFrom scales label_percent
 table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 
-  # Total participants: filtering starting pop.
-  incidence_attrition <- uploadedFiles$data$incidence_attrition
-  prevalence_attrition <- uploadedFiles$data$prevalence_attrition
+  # # Total participants: filtering starting pop.
+  # incidence_attrition <- uploadedFiles$data$incidence_attrition
+  # prevalence_attrition <- uploadedFiles$data$prevalence_attrition
 
   tablePrevalenceAttTotal <- prevalence_attrition %>%
     filter(reason == "Starting population") %>%
@@ -55,8 +55,8 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
   numberDatabaseChar <- phraseList(initialPhrase = " of which ",
                                    adjective = "",
                                    totalParticipants,
-                                   databaseName,
-                                   individuals)
+                                   databaseName = tablePrevalenceAttTotal$database_name,
+                                   individuals = tablePrevalenceAttTotal$current_n)
 
   femPropChar <- phraseList(initialPhrase = " From those, ",
                             adjective = "female",
@@ -282,44 +282,75 @@ phraseList <- function(initialPhrase,
   # totalParticipants <- sum(tablePrevalenceAttTotal$current_n)
   # databaseName <- tablePrevalenceAttTotal$database_name
   # individuals <- tablePrevalenceAttTotal$current_n
+  if (length(databaseName) == 2) {
 
-  databaseNameMid <- head(tail(databaseName, -1), -1)
-  individualsMid <- head(tail(individuals, -1), -1)
+    firstPhrase <- paste0(initialPhrase,
+                          format(individuals[1], big.mark=",", scientific = FALSE),
+                          " (",
+                          label_percent(accuracy = 0.01)(individuals[1]/totalParticipants[1]),
+                          ") ",
+                          " were ",
+                          adjective,
+                          " from ",
+                          databaseName[1],
+                          ", ",
+                          collapse = ", ")
 
-  firstPhrase <- paste0(initialPhrase,
-                        format(individuals[1], big.mark=",", scientific = FALSE),
-                        " (",
-                        label_percent(accuracy = 0.01)(individuals[1]/totalParticipants[1]),
-                        ") ",
-                        " were ",
-                        adjective,
-                        " from ",
-                        databaseName[1],
-                        ", ",
-                        collapse = ", ")
+    secondPhrase <- paste0(" and ",
+                          paste0(format(tail(individuals, 1),
+                                        big.mark=",",
+                                        scientific = FALSE),
+                                 " (",
+                                 label_percent(accuracy = 0.01)(tail(individuals, 1)/totalParticipants),
+                                 ") ",
+                                 "from ",
+                                 tail(databaseName, 1),
+                                 "."))
 
-  secondPhrase <- paste0(format(individualsMid,
+    result <- gsub("  ", " ", paste(firstPhrase, secondPhrase))
+
+  } else if (length(databaseName) >= 3) {
+
+    databaseNameMid <- head(tail(databaseName, -1), -1)
+    individualsMid <- head(tail(individuals, -1), -1)
+
+    firstPhrase <- paste0(initialPhrase,
+                          format(individuals[1], big.mark=",", scientific = FALSE),
+                          " (",
+                          label_percent(accuracy = 0.01)(individuals[1]/totalParticipants[1]),
+                          ") ",
+                          " were ",
+                          adjective,
+                          " from ",
+                          databaseName[1],
+                          ", ",
+                          collapse = ", ")
+
+    secondPhrase <- paste0(format(individualsMid,
+                                   big.mark=",",
+                                   scientific = FALSE),
+                            " (",
+                            label_percent(accuracy = 0.01)(individualsMid/totalParticipants),
+                            ") ",
+                            "from ",
+                            databaseNameMid,
+                            collapse = ", ")
+    secondPhrase <- paste0(secondPhrase, ",")
+
+    thirdPhrase <- paste0(" and ",
+                          paste0(format(tail(individuals, 1),
                                  big.mark=",",
                                  scientific = FALSE),
                           " (",
-                          label_percent(accuracy = 0.01)(individualsMid/totalParticipants),
+                          label_percent(accuracy = 0.01)(tail(individuals, 1)/totalParticipants),
                           ") ",
                           "from ",
-                          databaseNameMid,
-                          collapse = ", ")
-  secondPhrase <- paste0(secondPhrase, ",")
+                          tail(databaseName, 1),
+                          "."))
+    result <- gsub("  ", " ", paste(firstPhrase, secondPhrase, thirdPhrase))
 
-  thirdPhrase <- paste0(" and ",
-                        paste0(format(tail(individuals, 1),
-                               big.mark=",",
-                               scientific = FALSE),
-                        " (",
-                        label_percent(accuracy = 0.01)(tail(individuals, 1)/totalParticipants),
-                        ") ",
-                        "from ",
-                        tail(databaseNameMid, 1),
-                        "."))
-  result <- gsub("  ", " ", paste(firstPhrase, secondPhrase, thirdPhrase))
+  }
+
   return(result)
 
 }

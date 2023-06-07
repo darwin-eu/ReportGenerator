@@ -97,9 +97,17 @@ reportGenerator <- function() {
         # If a zip file is loaded
         if (grepl(".zip", fileDataPath, fixed = TRUE)) {
           # Temp dir to allocate unzipped files
-          csvLocation <- tempdir()
+          # fileDataPath <- list.files(here("results"), full.names = TRUE, pattern = ".zip")
+          # fileDataPath <- fileDataPath[1]
+          csvLocation <- file.path(tempdir(), "dataLocation")
+
+          dir.create(csvLocation)
+
+          # dir.exists(csvLocation)
+          # unlink(csvLocation, recursive = TRUE)
+          # dir.exists(csvLocation)
           # Unlinks previous files in the temp dir
-          lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
+          # lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
           # Unzip files into temp dir location
           unzip(fileDataPath, exdir = csvLocation)
           # List unzipped files
@@ -112,7 +120,7 @@ reportGenerator <- function() {
           items <- names(uploadedFiles$data)
           itemsList$objects[["items"]] <- getItemsList(items)
           # Unlink tempdir
-          unlink(csvLocation)
+          unlink(csvLocation, recursive = TRUE)
           } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
               uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
               items <- names(uploadedFiles$data)
@@ -121,10 +129,12 @@ reportGenerator <- function() {
       }
       else if (length(fileDataPath) > 1) {
         if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
-          csvFiles <- joinZipFiles(fileDataPath)
+          csvLocation <- file.path(tempdir(), "dataLocation")
+          csvFiles <- joinZipFiles(fileDataPath, csvLocation)
           uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
           items <- names(uploadedFiles$data)
           itemsList$objects[["items"]] <- getItemsList(items)
+          unlink(csvLocation, recursive = TRUE)
         } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
           uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
           items <- names(uploadedFiles$data)
@@ -137,7 +147,7 @@ reportGenerator <- function() {
       if (!is.null(uploadedFiles)) {
         uploadedFiles$data <- NULL
         itemsList$objects <- NULL
-        unlink(tempdir())
+        # unlink(tempdir())
       }
 
     })
@@ -378,7 +388,7 @@ reportGenerator <- function() {
 
         object
       }
-    })
+    }, colnames = FALSE)
 
     output$plotFilters <- renderUI({
       req(objectChoice())
@@ -410,7 +420,7 @@ reportGenerator <- function() {
         ),
         fluidRow(
           column(8,
-                 textAreaInput("caption", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
+                 textAreaInput("captionTable1", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
           )
         )
 
@@ -591,6 +601,8 @@ reportGenerator <- function() {
                          value = object,
                          style = "TableOverall",
                          header = FALSE)
+          body_add(incidencePrevalenceDocx,
+                   value = input$captionTable1)
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")

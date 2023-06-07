@@ -1,5 +1,6 @@
 name;title;arguments;options
-table1NumPar;Table - Number of participants;incidence_attrition, prevalence_attrition;
+table1PopA;Table 1 - A Number of participants;incidence_attrition, prevalence_attrition;
+table1PopB;Table 1 - B Number of participants;incidence_attrition, prevalence_attrition;
 table2IncOver;Table - Incidence overall;incidence_estimates;
 table3IncYear;Table - Incidence by year;incidence_estimates;
 table4IncAge;Table - Incidence by age group;incidence_estimates;
