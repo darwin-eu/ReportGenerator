@@ -1,3 +1,9 @@
+# ReportGenerator 1.5.1
+
+* Automatic text corrections
+
+* Fixed error when loading files into temp dir
+
 # ReportGenerator 1.5.0
 
 * Plotting now uses functions from IncidencePrevalence package. 
