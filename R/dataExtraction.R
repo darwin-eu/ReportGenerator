@@ -171,10 +171,11 @@ prevalenceExtractionToRDS <- function (importFolderPrevalence = here("inst/csv/p
 #' `joinZipFiles()` joins data from multiple datapartners and returns a list of condensed files in a temp dir
 #'
 #' @param filesLocation Location of zip files
+#' @param csvLocation A string with the location to export the unzipped CSV files
 #' @return A list of files
 #' @import dplyr
 #' @export
-joinZipFiles <- function(uploadedFiles = NULL) {
+joinZipFiles <- function(uploadedFiles = NULL, csvLocation) {
 
   # Results
   # uploadedFiles <- list.files(here("results"), full.names = TRUE, pattern = ".zip")
@@ -186,8 +187,8 @@ joinZipFiles <- function(uploadedFiles = NULL) {
             uploadedFiles[1],
             fixed = TRUE)) {
 
-    csvLocation <- tempdir()
-    lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
+    # csvLocation <- file.path(tempdir(), "dataLocation")
+    # lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
     folderNumber <- 0
 
     for (fileLocation in uploadedFiles) {
@@ -254,7 +255,7 @@ joinZipFiles <- function(uploadedFiles = NULL) {
                    fixed = TRUE)) {
     csvFiles <- uploadedFiles
   }
-  unlink(csvLocation)
+
   return(csvFiles)
 }
 
@@ -263,8 +264,6 @@ columnCheck <- function(csvFiles,
                         configDataTypes) {
   data <- list()
   for (fileLocation in csvFiles) {
-    # csvFiles <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\Rtmpq6GAZu/mock_data_ReportGenerator_SIDIAP/test_database_incidence_attrition_2023_05_24.csv"
-
     resultsData <- read_csv(fileLocation)
     resultsColumns <- names(resultsData)
     for (val in configDataTypes) {
@@ -387,9 +386,6 @@ variablesConfigWriter <- function(fileDataPath = NULL) {
   }
 
   # variablesIncidence <- filter(variablesConfig, name == "incidence_estimates")
-
-
-
 
 
   tempNames <- list(names(prevalence_estimates))

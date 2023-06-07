@@ -88,12 +88,6 @@ reportGenerator <- function() {
       # Data path from file input
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
-
-      # Test
-      # fileDataPath <- here("OtherResults", "resultsMock_CPRD.zip")
-      # Test
-      # fileDataPath <- here("results", "mock_data_ReportGenerator_SIDIAP.zip")
-
       # Gets the config file that is used to define the type of uploaded file
       configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
       # Lists all datatypes available to compare
@@ -103,9 +97,17 @@ reportGenerator <- function() {
         # If a zip file is loaded
         if (grepl(".zip", fileDataPath, fixed = TRUE)) {
           # Temp dir to allocate unzipped files
-          csvLocation <- tempdir()
+          # fileDataPath <- list.files(here("results"), full.names = TRUE, pattern = ".zip")
+          # fileDataPath <- fileDataPath[1]
+          csvLocation <- file.path(tempdir(), "dataLocation")
+
+          dir.create(csvLocation)
+
+          # dir.exists(csvLocation)
+          # unlink(csvLocation, recursive = TRUE)
+          # dir.exists(csvLocation)
           # Unlinks previous files in the temp dir
-          lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
+          # lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
           # Unzip files into temp dir location
           unzip(fileDataPath, exdir = csvLocation)
           # List unzipped files
@@ -118,7 +120,7 @@ reportGenerator <- function() {
           items <- names(uploadedFiles$data)
           itemsList$objects[["items"]] <- getItemsList(items)
           # Unlink tempdir
-          unlink(csvLocation)
+          unlink(csvLocation, recursive = TRUE)
           } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
               uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
               items <- names(uploadedFiles$data)
@@ -127,10 +129,12 @@ reportGenerator <- function() {
       }
       else if (length(fileDataPath) > 1) {
         if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
-          csvFiles <- joinZipFiles(fileDataPath)
+          csvLocation <- file.path(tempdir(), "dataLocation")
+          csvFiles <- joinZipFiles(fileDataPath, csvLocation)
           uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
           items <- names(uploadedFiles$data)
           itemsList$objects[["items"]] <- getItemsList(items)
+          unlink(csvLocation, recursive = TRUE)
         } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
           uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
           items <- names(uploadedFiles$data)
@@ -143,7 +147,7 @@ reportGenerator <- function() {
       if (!is.null(uploadedFiles)) {
         uploadedFiles$data <- NULL
         itemsList$objects <- NULL
-        unlink(tempdir())
+        # unlink(tempdir())
       }
 
     })
@@ -384,7 +388,7 @@ reportGenerator <- function() {
 
         object
       }
-    })
+    }, colnames = FALSE)
 
     output$plotFilters <- renderUI({
       req(objectChoice())
@@ -413,7 +417,13 @@ reportGenerator <- function() {
                              label = "Outcome",
                              choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id))
           )
+        ),
+        fluidRow(
+          column(8,
+                 textAreaInput("captionTable1", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
+          )
         )
+
       )
 
       } else if (grepl("Incidence", objectChoice())) {
@@ -538,24 +548,6 @@ reportGenerator <- function() {
     output$previewPlot <- renderPlot({
       req(objectChoice())
 
-      ###
-
-      # objectChoice <- "Plot - Prevalence rate per year"
-      #
-      # menuFunction <- menuFun %>%
-      #   dplyr::filter(title == objectChoice)
-      # itemOptions <- menuFunction %>% getItemOptions()
-      # expression <- menuFunction %>%
-      #   dplyr::pull(signature)
-      #
-      # if (!identical(itemOptions, character(0))) {
-      #   expression <- expression %>%
-      #     addPreviewItemType("Facet by outcome")
-      # }
-
-      ###
-
-
       menuFunction <- menuFun() %>%
         dplyr::filter(title == objectChoice())
       itemOptions <- menuFunction %>% getItemOptions()
@@ -609,6 +601,8 @@ reportGenerator <- function() {
                          value = object,
                          style = "TableOverall",
                          header = FALSE)
+          body_add(incidencePrevalenceDocx,
+                   value = input$captionTable1)
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
