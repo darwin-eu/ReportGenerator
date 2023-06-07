@@ -77,12 +77,7 @@ reportGenerator <- function() {
 
     # ReactiveValues
     uploadedFiles <- reactiveValues(data = NULL)
-    # Test
-    # uploadedFiles <- list()
-
     itemsList <- reactiveValues(objects = NULL)
-    # Test
-    # itemsList <- list()
 
     observeEvent(input$datasetLoad, {
       # Data path from file input
@@ -96,21 +91,8 @@ reportGenerator <- function() {
       if (length(fileDataPath) == 1) {
         # If a zip file is loaded
         if (grepl(".zip", fileDataPath, fixed = TRUE)) {
-          # Temp dir to allocate unzipped files
-          # fileDataPath <- list.files(here("results"), full.names = TRUE, pattern = ".zip")
-          # fileDataPath <- fileDataPath[1]
           csvLocation <- file.path(tempdir(), "dataLocation")
-
           dir.create(csvLocation)
-
-          # dir.exists(csvLocation)
-          # unlink(csvLocation, recursive = TRUE)
-          # dir.exists(csvLocation)
-          # Unlinks previous files in the temp dir
-          # lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
-          # Unzip files into temp dir location
-          unzip(fileDataPath, exdir = csvLocation)
-          # List unzipped files
           csvFiles <- list.files(path = csvLocation,
                                  pattern = ".csv",
                                  full.names = TRUE,
@@ -147,7 +129,6 @@ reportGenerator <- function() {
       if (!is.null(uploadedFiles)) {
         uploadedFiles$data <- NULL
         itemsList$objects <- NULL
-        # unlink(tempdir())
       }
 
     })
@@ -270,24 +251,19 @@ reportGenerator <- function() {
 
     # Functions available from the configuration file
     menuFun  <- reactive({
-      # menuFun  <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";")
       menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
       menuFun$arguments <- gsub("incidence_attrition",
                                 "uploadedFiles$data$incidence_attrition",
                                 menuFun$arguments)
-
       menuFun$arguments <- gsub("prevalence_attrition",
                                 "uploadedFiles$data$prevalence_attrition",
                                 menuFun$arguments)
-
       menuFun$arguments <- gsub("incidence_estimates",
                                 "incidenceCommonData()",
                                 menuFun$arguments)
-
       menuFun$arguments <- gsub("prevalence_estimates",
                                 "prevalenceCommonData()",
                                 menuFun$arguments)
-
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
       menuFun
     })
@@ -358,8 +334,6 @@ reportGenerator <- function() {
     # Renders item preview depending on the object class
     output$itemPreview <- renderUI({
       req(objectChoice())
-
-
       if (grepl("Table", objectChoice())) {
         tableOutput("previewTable")
       } else {
@@ -377,7 +351,6 @@ reportGenerator <- function() {
     })
 
     # Objects to be rendered in the UI
-
     output$previewTable <- renderTable({
       req(objectChoice())
 
@@ -398,11 +371,8 @@ reportGenerator <- function() {
     })
 
     selectionPlotFilter <- reactive({
-
       req(objectChoice())
-
       if (objectChoice() == "Table - Number of participants") {
-
       tagList(
         fluidRow(
           column(4,
@@ -423,9 +393,7 @@ reportGenerator <- function() {
                  textAreaInput("captionTable1", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
           )
         )
-
       )
-
       } else if (grepl("Incidence", objectChoice())) {
 
         tagList(
@@ -482,9 +450,7 @@ reportGenerator <- function() {
             )
           )
         )
-
       } else if (grepl("Prevalence", objectChoice())) {
-
         tagList(
           fluidRow(
             column(4,
@@ -539,31 +505,23 @@ reportGenerator <- function() {
             )
           )
         )
-
       }
-
     })
-
 
     output$previewPlot <- renderPlot({
       req(objectChoice())
-
       menuFunction <- menuFun() %>%
         dplyr::filter(title == objectChoice())
       itemOptions <- menuFunction %>% getItemOptions()
       expression <- menuFunction %>%
         dplyr::pull(signature)
-
       if (!identical(itemOptions, character(0))) {
         expression <- expression %>%
           addPreviewItemType(input$previewPlotOption)
       }
-
       object <- eval(parse(text = expression))
-
       if (grepl("Plot", objectChoice())) {
         object
-
       }
     })
 
