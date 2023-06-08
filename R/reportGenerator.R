@@ -34,15 +34,13 @@ reportGenerator <- function() {
         tagList(tags$br(),
                 tags$br(),
                 tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
-                fileInput("datasetLoad",
-                          "Upload zip folder or csv file",
-                          accept = c(".zip", ".csv"),
-                          multiple = TRUE),
+                uiOutput("datasetLoadUI"),
                 actionButton('resetData', 'Reset data')
         ))
     ),
     dashboardBody(
       tabsetPanel(
+        id = "mainPanel",
         tabPanel("Item selection",
         # Item selection menu
         fluidRow(
@@ -69,27 +67,35 @@ reportGenerator <- function() {
   )
 
 
-  server <- function(input,output) {
+  server <- function(input, output, session) {
 
     # Load data
 
     # 1. Load files
+
+    output$datasetLoadUI <- renderUI({
+      fileInput("datasetLoad",
+                "Upload your results",
+                accept = c(".zip", ".csv"),
+                multiple = TRUE,
+                placeholder = "ZIP or CSV file(s)")
+    })
 
     # ReactiveValues
     uploadedFiles <- reactiveValues(data = NULL)
     itemsList <- reactiveValues(objects = NULL)
 
     observeEvent(input$datasetLoad, {
-      # Data path from file input
+      # Get data path from file input
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
-      # Gets the config file that is used to define the type of uploaded file
+      # Retrieve the config file that is used to define the type of uploaded file
       configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
       # Lists all datatypes available to compare
       configDataTypes <- unique(configData$name)
       # Checks if single or multiple files
       if (length(fileDataPath) == 1) {
-        # If a zip file is loaded
+        # If a zip file is loaded, unzip
         if (grepl(".zip", fileDataPath, fixed = TRUE)) {
           csvLocation <- file.path(tempdir(), "dataLocation")
           dir.create(csvLocation)
@@ -97,7 +103,8 @@ reportGenerator <- function() {
                                  pattern = ".csv",
                                  full.names = TRUE,
                                  recursive = TRUE)
-          # Check columns and items; add data to reactiveValues
+          # Check columns and items
+          # Add data to reactiveValues
           uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
           items <- names(uploadedFiles$data)
           itemsList$objects[["items"]] <- getItemsList(items)
@@ -129,8 +136,16 @@ reportGenerator <- function() {
       if (!is.null(uploadedFiles)) {
         uploadedFiles$data <- NULL
         itemsList$objects <- NULL
+        updateTabsetPanel(session, "mainPanel",
+                          selected = "Item selection")
+        output$datasetLoadUI <- renderUI({
+          fileInput("datasetLoad",
+                    "Upload your results",
+                    accept = c(".zip", ".csv"),
+                    multiple = TRUE,
+                    placeholder = "ZIP or CSV file(s)")
+        })
       }
-
     })
 
     output$itemSelectionMenu <- renderUI({
@@ -555,6 +570,7 @@ reportGenerator <- function() {
                    style = "Heading 1 (Agency)")
 
         } else {
+          body_end_section_landscape(incidencePrevalenceDocx)
           body_add_table(incidencePrevalenceDocx,
                          value = object,
                          style = "TableOverall",
@@ -564,6 +580,8 @@ reportGenerator <- function() {
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
+          body_end_section_portrait(incidencePrevalenceDocx)
+          body_add_break(, pos = "after")
         }
       }
       body_add_toc(incidencePrevalenceDocx)

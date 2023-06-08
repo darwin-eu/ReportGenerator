@@ -408,3 +408,89 @@ variablesConfigWriter <- function(fileDataPath = NULL) {
 
 }
 
+dataCleanAttrition <- function(incidence_attrition = NULL,
+                               prevalence_attrition = NULL) {
+  if (!is.null(prevalence_attrition)) {
+    prevalence_attrition$reason <- gsub("Prior history requirement not fullfilled during study period",
+                                        "Prior history requirement not fulfilled during study period ",
+                                        prevalence_attrition$reason)
+    if (!("reason_id" %in% names(prevalence_attrition))) {
+      prevalence_attrition <- prevalence_attrition %>%
+        mutate(reason_id = case_when(reason == "Starting population"  ~ 1,
+                                     reason == "Missing year of birth"  ~ 2,
+                                     reason == "Missing sex"  ~ 3,
+                                     reason == "Cannot satisfy age criteria during the study period based on year of birth"  ~ 4,
+                                     reason == "No observation time available during study period"  ~ 5,
+                                     reason == "Doesn't satisfy age criteria during the study period"  ~ 6,
+                                     reason == "Prior history requirement not fulfilled during study period"  ~ 7,
+                                     reason == "No observation time available after applying age and prior history criteria"  ~ 8,
+                                     reason == "Not Female"  ~ 9,
+                                     reason == "Not Male"  ~ 10,
+                                     reason == "Starting analysis population" ~ 11,
+                                     reason == "Excluded due to prior event (do not pass outcome washout during study period)" ~ 12,
+                                     reason == "Not observed during the complete database interval"  ~ 14,
+                                     reason == "Do not satisfy full contribution requirement for an interval"  ~ 16),
+               number_subjects = current_n,
+               excluded_subjects = excluded)
+    } else {
+      prevalence_attrition <- prevalence_attrition %>%
+        mutate(reason_id = case_when(reason == "Starting population"  ~ 1,
+                                     reason == "Missing year of birth"  ~ 2,
+                                     reason == "Missing sex"  ~ 3,
+                                     reason == "Cannot satisfy age criteria during the study period based on year of birth"  ~ 4,
+                                     reason == "No observation time available during study period"  ~ 5,
+                                     reason == "Doesn't satisfy age criteria during the study period"  ~ 6,
+                                     reason == "Prior history requirement not fulfilled during study period"  ~ 7,
+                                     reason == "No observation time available after applying age and prior history criteria"  ~ 8,
+                                     reason == "Not Female"  ~ 9,
+                                     reason == "Not Male"  ~ 10,
+                                     reason == "Starting analysis population" ~ 11,
+                                     reason == "Excluded due to prior event (do not pass outcome washout during study period)" ~ 12,
+                                     reason == "Not observed during the complete database interval"  ~ 14,
+                                     reason == "Do not satisfy full contribution requirement for an interval"  ~ 16))
+    }
+    return(prevalence_attrition)
+  } else if (!is.null(incidence_attrition)) {
+    incidence_attrition$reason <- gsub("Prior history requirement not fullfilled during study period",
+                                       "Prior history requirement not fulfilled during study period ",
+                                       incidence_attrition$reason)
+    if (!("reason_id" %in% names(incidence_attrition))) {
+      incidence_attrition <- incidence_attrition %>%
+        mutate(reason_id = case_when(reason == "Starting population"  ~ 1,
+                                     reason == "Missing year of birth"  ~ 2,
+                                     reason == "Missing sex"  ~ 3,
+                                     reason == "Cannot satisfy age criteria during the study period based on year of birth"  ~ 4,
+                                     reason == "No observation time available during study period"  ~ 5,
+                                     reason == "Doesn't satisfy age criteria during the study period"  ~ 6,
+                                     reason == "Prior history requirement not fulfilled during study period"  ~ 7,
+                                     reason == "No observation time available after applying age and prior history criteria"  ~ 8,
+                                     reason == "Not Female"  ~ 9,
+                                     reason == "Not Male"  ~ 10,
+                                     reason == "Starting analysis population" ~ 11,
+                                     reason == "Excluded due to prior event (do not pass outcome washout during study period)" ~ 12,
+                                     reason == "Not observed during the complete database interval"  ~ 14,
+                                     reason == "Do not satisfy full contribution requirement for an interval"  ~ 16),
+               number_subjects = current_n,
+               excluded_subjects = excluded)
+    } else {
+      incidence_attrition <- incidence_attrition %>%
+        mutate(reason_id = case_when(reason == "Starting population"  ~ 1,
+                                     reason == "Missing year of birth"  ~ 2,
+                                     reason == "Missing sex"  ~ 3,
+                                     reason == "Cannot satisfy age criteria during the study period based on year of birth"  ~ 4,
+                                     reason == "No observation time available during study period"  ~ 5,
+                                     reason == "Doesn't satisfy age criteria during the study period"  ~ 6,
+                                     reason == "Prior history requirement not fulfilled during study period"  ~ 7,
+                                     reason == "No observation time available after applying age and prior history criteria"  ~ 8,
+                                     reason == "Not Female"  ~ 9,
+                                     reason == "Not Male"  ~ 10,
+                                     reason == "Starting analysis population" ~ 11,
+                                     reason == "Excluded due to prior event (do not pass outcome washout during study period)" ~ 12,
+                                     reason == "Not observed during the complete database interval"  ~ 14,
+                                     reason == "Do not satisfy full contribution requirement for an interval"  ~ 16))
+    }
+    return(incidence_attrition)
+  }
+
+
+}
