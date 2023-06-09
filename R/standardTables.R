@@ -18,32 +18,14 @@
 #'
 #' @param incidence_attrition incidence of the attrition
 #' @param prevalence_attrition prevalence of the attrition
-#' @param option Type of table, "a". "b", "c", etc.
 #'
 #' @import here flextable dplyr
 #' @importFrom huxtable as_hux set_contents insert_row set_align everywhere
 #' @export
-table1NumPar <- function (incidence_attrition,
-                          prevalence_attrition,
-                          option = "a") {
+table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 
   prevalence_attrition <- dataCleanAttrition(prevalence_attrition = prevalence_attrition)
   incidence_attrition <- dataCleanAttrition(incidence_attrition = incidence_attrition)
-
-  if (option == "a") {
-    displayTable <- table1a(prevalence_attrition = prevalence_attrition,
-                       incidence_attrition = incidence_attrition)
-    return(displayTable)
-  } else if (option == "b") {
-    displayTable <- table1b(prevalence_attrition = prevalence_attrition,
-                            incidence_attrition = incidence_attrition)
-    return(displayTable)
-  }
-}
-
-# Table functions
-
-table1a <- function(prevalence_attrition, incidence_attrition) {
 
   if (length(unique(prevalence_attrition$database_name)) == 1) {
 
@@ -251,50 +233,104 @@ table1a <- function(prevalence_attrition, incidence_attrition) {
 
     huxTableAtt <- huxTableAtt %>% set_align(1, everywhere, "center")
 
-    # huxTableAtt
+
+
+    # class(huxTableAtt)
 
     return(huxTableAtt)
 
   }
 
 }
-
 #' table1SexAge
 #'
 #' @param incidence_estimates incidence of the attrition
 #'
 #' @import here flextable dplyr
-#' @importFrom huxtable as_hux set_contents insert_row set_align everywhere
+#' @importFrom huxtable as_hux set_contents insert_row set_align everywhere merge_cells
 #' @export
 table1SexAge <- function(incidence_estimates) {
     # # Table data prevalence
     #
-    # incidence_estimates <- incidence_estimates_std
-    # prevalence_estimates <- prevalence_estimates_std
-    #
+    # incidence_estimates <- incidence_estimates_ab
+    # prevalence_estimates <- prevalence_estimates_ab
+
     # unique(incidence_estimates$denominator_age_group)
     # unique(incidence_estimates$denominator_sex)
+
+    databaseNameInc <- unique(incidence_estimates$database_name)
+
     totalParSex <- incidence_estimates %>%
+      filter(database_name == databaseNameInc) %>%
       filter(denominator_sex != "Both") %>%
       select(database_name, outcome_cohort_name, denominator_sex, n_persons) %>%
       group_by(database_name,
                outcome_cohort_name,
                denominator_sex) %>%
       summarise(`Total Users` = sum(n_persons))
+
     totalParSex <- pivot_wider(totalParSex, names_from = denominator_sex, values_from = `Total Users`)
+
     totalParAge <- incidence_estimates %>%
+      filter(database_name == databaseNameInc) %>%
       filter(denominator_sex != "Both") %>%
       select(database_name, outcome_cohort_name, denominator_age_group, n_persons) %>%
       group_by(database_name,
                outcome_cohort_name,
                denominator_age_group) %>%
       summarise(`Total Users` = sum(n_persons))
+
     totalParAge <- pivot_wider(totalParAge, names_from = denominator_age_group , values_from = `Total Users`)
+
     totalSexAge <- left_join(totalParSex, totalParAge, by = c("database_name", "outcome_cohort_name"))
-    return(totalSexAge)
+
+    huxSexAge <- as_hux(totalSexAge)
+
+    headerNames <- names(huxSexAge)
+
+    # headerNames <- gsub("database_name", "Database Name", headerNames)
+    headerNames <- gsub("outcome_cohort_name", "Outcome", headerNames)
+    headerNames <- gsub(";", "-", headerNames)
+
+    lengthNames <- length(names(huxSexAge))
+
+    blankAgeGroup <- rep(" ", (lengthNames-3))
+
+    blankAgeGroup <- append(blankAgeGroup, list(x="Age Groups"), (length(blankAgeGroup)/2))
+
+    subtitlesHeader <- c("Database / Total Users, N", "Sex", unlist(blankAgeGroup))
+
+    # huxSexAge <- as_hux(totalSexAge)
+
+    huxSexAge <- huxSexAge %>%
+      set_contents(1, 1:lengthNames, headerNames)
+    #
+    # huxSexAge <- huxSexAge %>%
+    #   insert_row(subtitlesHeader, after = 0)
+    #
+    #
+    # blankCells <- rep(" ", (lengthNames-1))
+    #
+    # databaseSubsection <- c(unique(totalSexAge$database_name[1]), blankCells)
+    #
+    # huxSexAge <- huxSexAge %>%
+    #   insert_row(databaseSubsection, after = 2) %>%
+    #   merge_cells(3, 1:length(databaseSubsection))
+
+    # huxSexAge <- subset(huxSexAge, select = -`Database Name`)
+
+    huxSexAge <- huxSexAge %>% set_align(1, everywhere, "center")
+
+    # flexSexAge <- as_flextable(huxSexAge) %>%
+    #   delete_part(part = c("header")) %>%
+    #   delete_part(part = c("footer")) %>%
+    #   merge_h()
+
+    # class(huxSexAge)
+
+    return(huxSexAge)
+
   }
-
-
 
 #' table2IncOver
 #'

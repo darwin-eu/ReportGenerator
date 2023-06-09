@@ -276,6 +276,7 @@ reportGenerator <- function() {
       menuFun$arguments <- gsub("prevalence_estimates",
                                 "prevalenceCommonData()",
                                 menuFun$arguments)
+      menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$data$incidence_estimates"
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
       menuFun
     })
@@ -672,7 +673,8 @@ reportGenerator <- function() {
                    value = i,
                    style = "Heading 1 (Agency)")
           body_end_section_portrait(incidencePrevalenceDocx)
-          body_add_break(incidencePrevalenceDocx, pos = "after")
+          # body_add_break(incidencePrevalenceDocx, pos = "on")
+          # body_remove(incidencePrevalenceDocx)
         }
       }
       body_add_toc(incidencePrevalenceDocx)

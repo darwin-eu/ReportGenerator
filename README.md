@@ -29,11 +29,11 @@ remotes::install_github("darwin-eu-dev/ReportGenerator")
 ```
 
 To test the package, generate first the mock data with
-`generateMockData()`. It will create a “Results” folder in the working
+`generateMockData()`. It will create a “results” folder in the working
 directory that contains IncidencePrevalence data in csv and zip format.
 
 ``` r
- generateMockData(databaseName = c("Synthea", "CPRD", "IPCI"))
+ generateMockData()
 ```
 
 `reportGenerator()` takes as an input zip or csv files with results from
