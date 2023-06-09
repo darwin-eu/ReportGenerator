@@ -1,3 +1,5 @@
+# ReportGenerator 1.6.0
+
 # ReportGenerator 1.5.1
 
 * Automatic text corrections
