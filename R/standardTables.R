@@ -259,234 +259,40 @@ table1a <- function(prevalence_attrition, incidence_attrition) {
 
 }
 
-table1b <- function(prevalence_attrition, incidence_attrition) {
-
-  if (length(unique(prevalence_attrition$database_name)) == 1) {
-
-    # Table data prevalence
-
-    names(incidence_estimates)
-
-
-
+#' table1SexAge
+#'
+#' @param incidence_estimates incidence of the attrition
+#'
+#' @import here flextable dplyr
+#' @importFrom huxtable as_hux set_contents insert_row set_align everywhere
+#' @export
+table1SexAge <- function(incidence_estimates) {
+    # # Table data prevalence
+    #
+    # incidence_estimates <- incidence_estimates_std
+    # prevalence_estimates <- prevalence_estimates_std
+    #
+    # unique(incidence_estimates$denominator_age_group)
+    # unique(incidence_estimates$denominator_sex)
     totalParSex <- incidence_estimates %>%
-      filter(denominator_age_group != "0 to 150") %>%
       filter(denominator_sex != "Both") %>%
       select(database_name, outcome_cohort_name, denominator_sex, n_persons) %>%
       group_by(database_name,
                outcome_cohort_name,
                denominator_sex) %>%
       summarise(`Total Users` = sum(n_persons))
-
-    totalParSex <- incidence_estimates %>%
-      filter(denominator_age_group == "0 to 150") %>%
+    totalParSex <- pivot_wider(totalParSex, names_from = denominator_sex, values_from = `Total Users`)
+    totalParAge <- incidence_estimates %>%
       filter(denominator_sex != "Both") %>%
-      select(database_name, outcome_cohort_name, denominator_sex, n_persons) %>%
+      select(database_name, outcome_cohort_name, denominator_age_group, n_persons) %>%
       group_by(database_name,
                outcome_cohort_name,
-               denominator_sex) %>%
+               denominator_age_group) %>%
       summarise(`Total Users` = sum(n_persons))
-
-
-    tablePrevalenceAtt <- tablePrevalenceAtt[,-1]
-
-    tablePrevalenceAtt <- tablePrevalenceAtt %>%
-      select(analysis_step, everything())
-
-    # tablePrevalenceAtt
-
-    # Table data incidence
-
-    tableIncidenceAtt <- incidence_attrition %>%
-      group_by(reason_id,
-               reason) %>%
-      summarise(current_n = round(mean(number_subjects ), 0),
-                excluded = round(mean(excluded_subjects ), 0)) %>%
-      mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
-                                       between(reason_id, 10, 16) ~ "incidence")) %>%
-      filter(reason != "Do not satisfy full contribution requirement for an interval")
-
-    tableIncidenceAtt <- tableIncidenceAtt[,-1]
-
-    tableIncidenceAtt <- tableIncidenceAtt %>%
-      select(analysis_step, everything())
-
-    # tableIncidenceAtt
-
-    tablePrevIncData <- union(tablePrevalenceAtt, tableIncidenceAtt)
-
-    databaseName <- unique(incidence_attrition$database_name)
-
-    headerNames <- gsub("\\..*","", names(tablePrevIncData))
-
-    # headerNames
-
-    subtitles <- c(" ", databaseName)
-
-    subtitlesHeader <- c()
-
-    for (i in subtitles) {
-
-      subtitlesHeader <- c(subtitlesHeader, i, " ")
-
-
-    }
-
-    huxTableAtt <- as_hux(tablePrevIncData)
-
-    lengthNames <- length(names(huxTableAtt))
-
-    huxTableAtt <- huxTableAtt %>%
-      set_contents(1, 1:lengthNames, headerNames)
-
-    huxTableAtt <- huxTableAtt %>%
-      insert_row(subtitlesHeader, after = 0)
-
-    huxTableAtt <- huxTableAtt %>% set_align(1, everywhere, "center")
-
-    # huxTableAtt
-
-    return(huxTableAtt)
-
-  } else {
-
-    # Table data prevalence
-
-    databaseNamePrev <- unique(prevalence_attrition$database_name)
-
-    # databaseNamePrev <- databaseNamePrev[1:3]
-
-    tablePrevalenceAtt <- prevalence_attrition %>%
-      filter(database_name == databaseNamePrev[1]) %>%
-      group_by(reason_id,
-               reason) %>%
-      summarise(current_n = round(mean(number_subjects ), 0),
-                excluded = round(mean(excluded_subjects ), 0)) %>%
-      mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
-                                       between(reason_id, 10, 16) ~ "prevalence")) %>%
-      filter(reason != "Do not satisfy full contribution requirement for an interval")
-
-
-    tablePrevalenceAtt <- tablePrevalenceAtt[,-1]
-
-    tablePrevalenceAtt <- tablePrevalenceAtt %>%
-      select(analysis_step, everything())
-
-    # tablePrevalenceAtt
-
-    # Table data incidence
-
-    databaseNameInc <- unique(incidence_attrition$database_name)
-
-    # databaseNameInc <- databaseNameInc[1:3]
-
-    tableIncidenceAtt <- incidence_attrition %>%
-      filter(database_name == databaseNameInc[1]) %>%
-      group_by(reason_id,
-               reason) %>%
-      summarise(current_n = round(mean(number_subjects ), 0),
-                excluded = round(mean(excluded_subjects ), 0)) %>%
-      mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
-                                       between(reason_id, 10, 16) ~ "incidence")) %>%
-      filter(reason != "Do not satisfy full contribution requirement for an interval")
-
-    tableIncidenceAtt <- tableIncidenceAtt[,-1]
-
-    tableIncidenceAtt <- tableIncidenceAtt %>%
-      select(analysis_step, everything())
-
-    # tableIncidenceAtt
-
-    # Union
-
-    tablePrevIncData <- union(tablePrevalenceAtt, tableIncidenceAtt)
-
-    # tablePrevIncData
-
-    # for (i in databaseNamePrev[2:3]) {
-    for (i in databaseNamePrev[2:length(databaseNamePrev)]) {
-
-      subPrevalenceAtt <- prevalence_attrition %>%
-        filter(database_name == i) %>%
-        group_by(reason_id,
-                 reason) %>%
-        summarise(current_n = round(mean(number_subjects ), 0),
-                  excluded = round(mean(excluded_subjects ), 0)) %>%
-        mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
-                                         between(reason_id, 10, 16) ~ "prevalence")) %>%
-        filter(reason != "Do not satisfy full contribution requirement for an interval")
-
-
-      subPrevalenceAtt <- subPrevalenceAtt[,-1]
-
-      subPrevalenceAtt <- subPrevalenceAtt %>%
-        select(analysis_step, everything())
-
-      # subPrevalenceAtt
-
-      subIncidenceAtt <- incidence_attrition %>%
-        filter(database_name == i) %>%
-        group_by(reason_id,
-                 reason) %>%
-        summarise(current_n = round(mean(number_subjects ), 0),
-                  excluded = round(mean(excluded_subjects ), 0)) %>%
-        mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
-                                         between(reason_id, 10, 16) ~ "incidence")) %>%
-        filter(reason != "Do not satisfy full contribution requirement for an interval")
-
-      subIncidenceAtt <- subIncidenceAtt[,-1]
-
-      subIncidenceAtt <- subIncidenceAtt %>%
-        select(analysis_step, everything())
-
-      # subIncidenceAtt
-
-      subPrevIncData <- union(subPrevalenceAtt, subIncidenceAtt)
-
-
-      subPrevalenceAtt <- subPrevIncData[, -c(1:2)]
-
-      tablePrevIncData <- bind_cols(tablePrevIncData,
-                                    subPrevalenceAtt)
-
-    }
-
-    names(tablePrevIncData)
-
-    headerNames <- gsub("\\..*","", names(tablePrevIncData))
-
-    # headerNames
-
-    subtitles <- c(" ", databaseNamePrev)
-
-    subtitlesHeader <- c()
-
-    for (i in subtitles) {
-
-      subtitlesHeader <- c(subtitlesHeader, i, " ")
-
-
-    }
-
-    huxTableAtt <- as_hux(tablePrevIncData)
-
-    lengthNames <- length(names(huxTableAtt))
-
-    huxTableAtt <- huxTableAtt %>%
-      set_contents(1, 1:lengthNames, headerNames)
-
-    huxTableAtt <- huxTableAtt %>%
-      insert_row(subtitlesHeader, after = 0)
-
-    huxTableAtt <- huxTableAtt %>% set_align(1, everywhere, "center")
-
-    # huxTableAtt
-
-    return(huxTableAtt)
-
+    totalParAge <- pivot_wider(totalParAge, names_from = denominator_age_group , values_from = `Total Users`)
+    totalSexAge <- left_join(totalParSex, totalParAge, by = c("database_name", "outcome_cohort_name"))
+    return(totalSexAge)
   }
-
-}
 
 
 
