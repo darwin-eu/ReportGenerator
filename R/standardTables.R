@@ -250,13 +250,6 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 #' @importFrom huxtable as_hux set_contents insert_row set_align everywhere merge_cells
 #' @export
 table1SexAge <- function(incidence_estimates) {
-    # # Table data prevalence
-    #
-    # incidence_estimates <- incidence_estimates_ab
-    # prevalence_estimates <- prevalence_estimates_ab
-
-    # unique(incidence_estimates$denominator_age_group)
-    # unique(incidence_estimates$denominator_sex)
 
     databaseNameInc <- unique(incidence_estimates$database_name)
 
@@ -281,14 +274,9 @@ table1SexAge <- function(incidence_estimates) {
       summarise(`Total Users` = sum(n_persons))
 
     totalParAge <- pivot_wider(totalParAge, names_from = denominator_age_group , values_from = `Total Users`)
-
     totalSexAge <- left_join(totalParSex, totalParAge, by = c("database_name", "outcome_cohort_name"))
-
     huxSexAge <- as_hux(totalSexAge)
-
     headerNames <- names(huxSexAge)
-
-    # headerNames <- gsub("database_name", "Database Name", headerNames)
     headerNames <- gsub("outcome_cohort_name", "Outcome", headerNames)
     headerNames <- gsub(";", "-", headerNames)
 
@@ -300,33 +288,10 @@ table1SexAge <- function(incidence_estimates) {
 
     subtitlesHeader <- c("Database / Total Users, N", "Sex", unlist(blankAgeGroup))
 
-    # huxSexAge <- as_hux(totalSexAge)
-
     huxSexAge <- huxSexAge %>%
       set_contents(1, 1:lengthNames, headerNames)
-    #
-    # huxSexAge <- huxSexAge %>%
-    #   insert_row(subtitlesHeader, after = 0)
-    #
-    #
-    # blankCells <- rep(" ", (lengthNames-1))
-    #
-    # databaseSubsection <- c(unique(totalSexAge$database_name[1]), blankCells)
-    #
-    # huxSexAge <- huxSexAge %>%
-    #   insert_row(databaseSubsection, after = 2) %>%
-    #   merge_cells(3, 1:length(databaseSubsection))
-
-    # huxSexAge <- subset(huxSexAge, select = -`Database Name`)
 
     huxSexAge <- huxSexAge %>% set_align(1, everywhere, "center")
-
-    # flexSexAge <- as_flextable(huxSexAge) %>%
-    #   delete_part(part = c("header")) %>%
-    #   delete_part(part = c("footer")) %>%
-    #   merge_h()
-
-    # class(huxSexAge)
 
     return(huxSexAge)
 

@@ -367,20 +367,6 @@ reportGenerator <- function() {
     output$previewTable <- renderTable({
       req(objectChoice())
 
-      # objectChoice <- "Table - Number of participants"
-      #
-      # ###
-      # if (grepl("Table", objectChoice)) {
-      #   object <- eval(parse(text = menuFun %>%
-      #                          dplyr::filter(title == objectChoice) %>%
-      #                          dplyr::pull(signature)))
-      #
-      #   object
-      # }
-      #
-      # ###
-
-
       if (grepl("Table", objectChoice())) {
         object <- eval(parse(text = menuFun() %>%
                                dplyr::filter(title == objectChoice()) %>%
@@ -401,20 +387,6 @@ reportGenerator <- function() {
       req(objectChoice())
       if (objectChoice() == "Table - Number of participants") {
       tagList(
-        # fluidRow(
-        #   column(4,
-        #          pickerInput(inputId = "databaseIncidence",
-        #                      label = "Database",
-        #                      choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-        #                      selected = "All",
-        #                      multiple = TRUE)
-        #   ),
-        #   column(4,
-        #          selectInput(inputId = "outcomeIncidence",
-        #                      label = "Outcome",
-        #                      choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id))
-        #   )
-        # ),
         fluidRow(
           column(8,
                  textAreaInput("captionTable1", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
@@ -423,88 +395,12 @@ reportGenerator <- function() {
       )
       } else if (objectChoice() == "Table - Number of participants by sex and age group") {
         tagList(
-          # fluidRow(
-          #   column(4,
-          #          pickerInput(inputId = "databaseIncidence",
-          #                      label = "Database",
-          #                      choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-          #                      selected = "All",
-          #                      multiple = TRUE)
-          #   ),
-          #   column(4,
-          #          selectInput(inputId = "outcomeIncidence",
-          #                      label = "Outcome",
-          #                      choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id))
-          #   )
-          # ),
-          # fluidRow(
-          #   column(4,
-          #          selectInput(inputId = "sexIncidence",
-          #                      label = "Sex",
-          #                      choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
-          #   ),
-          #   column(4,
-          #          selectInput(inputId = "ageIncidence",
-          #                      label = "Age",
-          #                      choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
-          #   ),
-          # ),
-          # fluidRow(
-          #   column(4,
-          #          selectInput(inputId = "intervalIncidence",
-          #                      label = "Interval",
-          #                      choices = unique(uploadedFiles$data$incidence_estimates$analysis_interval)),
-          #   ),
-          #   column(4,
-          #          selectInput(inputId = "repeatedIncidence",
-          #                      label = "Repeated Events",
-          #                      choices = unique(uploadedFiles$data$incidence_estimates$analysis_repeated_events)),
-          #   )
-          # ),
-          # fluidRow(
-          #   column(4,
-          #          selectInput(inputId = "timeFromIncidence",
-          #                      label = "From",
-          #                      choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
-          #                      selected = min(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
-          #   ),
-          #   column(4,
-          #          selectInput(inputId = "timeToIncidence",
-          #                      label = "To",
-          #                      choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
-          #                      selected = max(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
-          #   )
-          # )
           fluidRow(
             column(8,
                    textAreaInput("captionTable1", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
             )
           )
         )
-
-
-
-        # tagList(
-        #   fluidRow(
-        #     column(4,
-        #            pickerInput(inputId = "databaseIncidence",
-        #                        label = "Database",
-        #                        choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-        #                        selected = "All",
-        #                        multiple = TRUE)
-        #     ),
-        #     column(4,
-        #            selectInput(inputId = "outcomeIncidence",
-        #                        label = "Outcome",
-        #                        choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id))
-        #     )
-        #   ),
-        #   fluidRow(
-        #     column(8,
-        #            textAreaInput("captionTable1", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
-        #     )
-        #   )
-        # )
       } else if (grepl("Incidence", objectChoice())) {
 
         tagList(
@@ -678,8 +574,6 @@ reportGenerator <- function() {
                    value = i,
                    style = "Heading 1 (Agency)")
           body_end_section_portrait(incidencePrevalenceDocx)
-          # body_add_break(incidencePrevalenceDocx, pos = "on")
-          # body_remove(incidencePrevalenceDocx)
         }
       }
       body_add_toc(incidencePrevalenceDocx)
