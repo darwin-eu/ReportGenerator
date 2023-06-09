@@ -22,170 +22,84 @@
 #' @import here flextable dplyr
 #' @importFrom huxtable as_hux set_contents insert_row set_align everywhere
 #' @export
-table1NumPar <- function (incidence_attrition,
-                          prevalence_attrition) {
+table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 
-  prevalence_attrition$reason <- gsub("Prior history requirement not fullfilled during study period",
-                                      "Prior history requirement not fulfilled during study period ",
-                                      prevalence_attrition$reason)
-
-  incidence_attrition$reason <- gsub("Prior history requirement not fullfilled during study period",
-                                     "Prior history requirement not fulfilled during study period ",
-                                     incidence_attrition$reason)
-
-  if (!("reason_id" %in% names(prevalence_attrition))) {
-
-    prevalence_attrition <- prevalence_attrition %>%
-      mutate(reason_id = case_when(reason == "Starting population"  ~ 1,
-                                   reason == "Missing year of birth"  ~ 2,
-                                   reason == "Missing sex"  ~ 3,
-                                   reason == "Cannot satisfy age criteria during the study period based on year of birth"  ~ 4,
-                                   reason == "No observation time available during study period"  ~ 5,
-                                   reason == "Doesn't satisfy age criteria during the study period"  ~ 6,
-                                   reason == "Prior history requirement not fulfilled during study period"  ~ 7,
-                                   reason == "No observation time available after applying age and prior history criteria"  ~ 8,
-                                   reason == "Not Female"  ~ 9,
-                                   reason == "Not Male"  ~ 10,
-                                   reason == "Starting analysis population" ~ 11,
-                                   reason == "Excluded due to prior event (do not pass outcome washout during study period)" ~ 12,
-                                   reason == "Not observed during the complete database interval"  ~ 14,
-                                   reason == "Do not satisfy full contribution requirement for an interval"  ~ 16),
-             number_subjects = current_n,
-             excluded_subjects = excluded)
-
-  } else {
-
-    prevalence_attrition <- prevalence_attrition %>%
-      mutate(reason_id = case_when(reason == "Starting population"  ~ 1,
-                                   reason == "Missing year of birth"  ~ 2,
-                                   reason == "Missing sex"  ~ 3,
-                                   reason == "Cannot satisfy age criteria during the study period based on year of birth"  ~ 4,
-                                   reason == "No observation time available during study period"  ~ 5,
-                                   reason == "Doesn't satisfy age criteria during the study period"  ~ 6,
-                                   reason == "Prior history requirement not fulfilled during study period"  ~ 7,
-                                   reason == "No observation time available after applying age and prior history criteria"  ~ 8,
-                                   reason == "Not Female"  ~ 9,
-                                   reason == "Not Male"  ~ 10,
-                                   reason == "Starting analysis population" ~ 11,
-                                   reason == "Excluded due to prior event (do not pass outcome washout during study period)" ~ 12,
-                                   reason == "Not observed during the complete database interval"  ~ 14,
-                                   reason == "Do not satisfy full contribution requirement for an interval"  ~ 16))
-
-  }
-
-  if (!("reason_id" %in% names(incidence_attrition))) {
-
-    incidence_attrition <- incidence_attrition %>%
-      mutate(reason_id = case_when(reason == "Starting population"  ~ 1,
-                                   reason == "Missing year of birth"  ~ 2,
-                                   reason == "Missing sex"  ~ 3,
-                                   reason == "Cannot satisfy age criteria during the study period based on year of birth"  ~ 4,
-                                   reason == "No observation time available during study period"  ~ 5,
-                                   reason == "Doesn't satisfy age criteria during the study period"  ~ 6,
-                                   reason == "Prior history requirement not fulfilled during study period"  ~ 7,
-                                   reason == "No observation time available after applying age and prior history criteria"  ~ 8,
-                                   reason == "Not Female"  ~ 9,
-                                   reason == "Not Male"  ~ 10,
-                                   reason == "Starting analysis population" ~ 11,
-                                   reason == "Excluded due to prior event (do not pass outcome washout during study period)" ~ 12,
-                                   reason == "Not observed during the complete database interval"  ~ 14,
-                                   reason == "Do not satisfy full contribution requirement for an interval"  ~ 16),
-             number_subjects = current_n,
-             excluded_subjects = excluded)
-
-  } else {
-
-    incidence_attrition <- incidence_attrition %>%
-      mutate(reason_id = case_when(reason == "Starting population"  ~ 1,
-                                   reason == "Missing year of birth"  ~ 2,
-                                   reason == "Missing sex"  ~ 3,
-                                   reason == "Cannot satisfy age criteria during the study period based on year of birth"  ~ 4,
-                                   reason == "No observation time available during study period"  ~ 5,
-                                   reason == "Doesn't satisfy age criteria during the study period"  ~ 6,
-                                   reason == "Prior history requirement not fulfilled during study period"  ~ 7,
-                                   reason == "No observation time available after applying age and prior history criteria"  ~ 8,
-                                   reason == "Not Female"  ~ 9,
-                                   reason == "Not Male"  ~ 10,
-                                   reason == "Starting analysis population" ~ 11,
-                                   reason == "Excluded due to prior event (do not pass outcome washout during study period)" ~ 12,
-                                   reason == "Not observed during the complete database interval"  ~ 14,
-                                   reason == "Do not satisfy full contribution requirement for an interval"  ~ 16))
-
-  }
+  prevalence_attrition <- dataCleanAttrition(prevalence_attrition = prevalence_attrition)
+  incidence_attrition <- dataCleanAttrition(incidence_attrition = incidence_attrition)
 
   if (length(unique(prevalence_attrition$database_name)) == 1) {
 
     # Table data prevalence
 
-  tablePrevalenceAtt <- prevalence_attrition %>%
-    group_by(reason_id,
-             reason) %>%
-    summarise(current_n = round(mean(number_subjects ), 0),
-              excluded = round(mean(excluded_subjects ), 0)) %>%
-    mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
-                                     between(reason_id, 10, 16) ~ "prevalence")) %>%
-    filter(reason != "Do not satisfy full contribution requirement for an interval")
+    tablePrevalenceAtt <- prevalence_attrition %>%
+      group_by(reason_id,
+               reason) %>%
+      summarise(current_n = round(mean(number_subjects ), 0),
+                excluded = round(mean(excluded_subjects ), 0)) %>%
+      mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
+                                       between(reason_id, 10, 16) ~ "prevalence")) %>%
+      filter(reason != "Do not satisfy full contribution requirement for an interval")
 
 
-  tablePrevalenceAtt <- tablePrevalenceAtt[,-1]
+    tablePrevalenceAtt <- tablePrevalenceAtt[,-1]
 
-  tablePrevalenceAtt <- tablePrevalenceAtt %>%
-    select(analysis_step, everything())
+    tablePrevalenceAtt <- tablePrevalenceAtt %>%
+      select(analysis_step, everything())
 
-  # tablePrevalenceAtt
+    # tablePrevalenceAtt
 
-  # Table data incidence
+    # Table data incidence
 
-  tableIncidenceAtt <- incidence_attrition %>%
-    group_by(reason_id,
-             reason) %>%
-    summarise(current_n = round(mean(number_subjects ), 0),
-              excluded = round(mean(excluded_subjects ), 0)) %>%
-    mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
-                                     between(reason_id, 10, 16) ~ "incidence")) %>%
-    filter(reason != "Do not satisfy full contribution requirement for an interval")
+    tableIncidenceAtt <- incidence_attrition %>%
+      group_by(reason_id,
+               reason) %>%
+      summarise(current_n = round(mean(number_subjects ), 0),
+                excluded = round(mean(excluded_subjects ), 0)) %>%
+      mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
+                                       between(reason_id, 10, 16) ~ "incidence")) %>%
+      filter(reason != "Do not satisfy full contribution requirement for an interval")
 
-  tableIncidenceAtt <- tableIncidenceAtt[,-1]
+    tableIncidenceAtt <- tableIncidenceAtt[,-1]
 
-  tableIncidenceAtt <- tableIncidenceAtt %>%
-    select(analysis_step, everything())
+    tableIncidenceAtt <- tableIncidenceAtt %>%
+      select(analysis_step, everything())
 
-  # tableIncidenceAtt
+    # tableIncidenceAtt
 
-  tablePrevIncData <- union(tablePrevalenceAtt, tableIncidenceAtt)
+    tablePrevIncData <- union(tablePrevalenceAtt, tableIncidenceAtt)
 
-  databaseName <- unique(incidence_attrition$database_name)
+    databaseName <- unique(incidence_attrition$database_name)
 
-  headerNames <- gsub("\\..*","", names(tablePrevIncData))
+    headerNames <- gsub("\\..*","", names(tablePrevIncData))
 
-  # headerNames
+    # headerNames
 
-  subtitles <- c(" ", databaseName)
+    subtitles <- c(" ", databaseName)
 
-  subtitlesHeader <- c()
+    subtitlesHeader <- c()
 
-  for (i in subtitles) {
+    for (i in subtitles) {
 
-    subtitlesHeader <- c(subtitlesHeader, i, " ")
+      subtitlesHeader <- c(subtitlesHeader, i, " ")
 
 
-  }
+    }
 
-  huxTableAtt <- as_hux(tablePrevIncData)
+    huxTableAtt <- as_hux(tablePrevIncData)
 
-  lengthNames <- length(names(huxTableAtt))
+    lengthNames <- length(names(huxTableAtt))
 
-  huxTableAtt <- huxTableAtt %>%
-    set_contents(1, 1:lengthNames, headerNames)
+    huxTableAtt <- huxTableAtt %>%
+      set_contents(1, 1:lengthNames, headerNames)
 
-  huxTableAtt <- huxTableAtt %>%
-    insert_row(subtitlesHeader, after = 0)
+    huxTableAtt <- huxTableAtt %>%
+      insert_row(subtitlesHeader, after = 0)
 
-  huxTableAtt <- huxTableAtt %>% set_align(1, everywhere, "center")
+    huxTableAtt <- huxTableAtt %>% set_align(1, everywhere, "center")
 
-  # huxTableAtt
+    # huxTableAtt
 
-  return(huxTableAtt)
+    return(huxTableAtt)
 
   } else {
 
@@ -319,13 +233,69 @@ table1NumPar <- function (incidence_attrition,
 
     huxTableAtt <- huxTableAtt %>% set_align(1, everywhere, "center")
 
-    # huxTableAtt
+
+
+    # class(huxTableAtt)
 
     return(huxTableAtt)
 
   }
 
 }
+#' table1SexAge
+#'
+#' @param incidence_estimates incidence of the attrition
+#'
+#' @import here flextable dplyr
+#' @importFrom huxtable as_hux set_contents insert_row set_align everywhere merge_cells
+#' @export
+table1SexAge <- function(incidence_estimates) {
+
+    databaseNameInc <- unique(incidence_estimates$database_name)
+
+    totalParSex <- incidence_estimates %>%
+      filter(database_name == databaseNameInc) %>%
+      filter(denominator_sex != "Both") %>%
+      select(database_name, outcome_cohort_name, denominator_sex, n_persons) %>%
+      group_by(database_name,
+               outcome_cohort_name,
+               denominator_sex) %>%
+      summarise(`Total Users` = sum(n_persons))
+
+    totalParSex <- pivot_wider(totalParSex, names_from = denominator_sex, values_from = `Total Users`)
+
+    totalParAge <- incidence_estimates %>%
+      filter(database_name == databaseNameInc) %>%
+      filter(denominator_sex != "Both") %>%
+      select(database_name, outcome_cohort_name, denominator_age_group, n_persons) %>%
+      group_by(database_name,
+               outcome_cohort_name,
+               denominator_age_group) %>%
+      summarise(`Total Users` = sum(n_persons))
+
+    totalParAge <- pivot_wider(totalParAge, names_from = denominator_age_group , values_from = `Total Users`)
+    totalSexAge <- left_join(totalParSex, totalParAge, by = c("database_name", "outcome_cohort_name"))
+    huxSexAge <- as_hux(totalSexAge)
+    headerNames <- names(huxSexAge)
+    headerNames <- gsub("outcome_cohort_name", "Outcome", headerNames)
+    headerNames <- gsub(";", "-", headerNames)
+
+    lengthNames <- length(names(huxSexAge))
+
+    blankAgeGroup <- rep(" ", (lengthNames-3))
+
+    blankAgeGroup <- append(blankAgeGroup, list(x="Age Groups"), (length(blankAgeGroup)/2))
+
+    subtitlesHeader <- c("Database / Total Users, N", "Sex", unlist(blankAgeGroup))
+
+    huxSexAge <- huxSexAge %>%
+      set_contents(1, 1:lengthNames, headerNames)
+
+    huxSexAge <- huxSexAge %>% set_align(1, everywhere, "center")
+
+    return(huxSexAge)
+
+  }
 
 #' table2IncOver
 #'

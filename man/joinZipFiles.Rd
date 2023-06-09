@@ -4,9 +4,11 @@
 \alias{joinZipFiles}
 \title{Joins zip databases}
 \usage{
-joinZipFiles(uploadedFiles = NULL)
+joinZipFiles(uploadedFiles = NULL, csvLocation)
 }
 \arguments{
+\item{csvLocation}{A string with the location to export the unzipped CSV files}
+
 \item{filesLocation}{Location of zip files}
 }
 \value{

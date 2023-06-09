@@ -4,12 +4,12 @@
 \alias{table1NumPar}
 \title{table1NumPar}
 \usage{
-table1NumPar(incidence_attrition, prevalence_attrition)
+table1NumPar(prevalence_attrition, incidence_attrition)
 }
 \arguments{
-\item{incidence_attrition}{incidence of the attrition}
-
 \item{prevalence_attrition}{prevalence of the attrition}
+
+\item{incidence_attrition}{incidence of the attrition}
 }
 \description{
 table1NumPar

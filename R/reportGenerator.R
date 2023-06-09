@@ -34,15 +34,13 @@ reportGenerator <- function() {
         tagList(tags$br(),
                 tags$br(),
                 tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
-                fileInput("datasetLoad",
-                          "Upload zip folder or csv file",
-                          accept = c(".zip", ".csv"),
-                          multiple = TRUE),
+                uiOutput("datasetLoadUI"),
                 actionButton('resetData', 'Reset data')
         ))
     ),
     dashboardBody(
       tabsetPanel(
+        id = "mainPanel",
         tabPanel("Item selection",
         # Item selection menu
         fluidRow(
@@ -69,56 +67,47 @@ reportGenerator <- function() {
   )
 
 
-  server <- function(input,output) {
+  server <- function(input, output, session) {
 
     # Load data
 
     # 1. Load files
-
+    output$datasetLoadUI <- renderUI({
+      fileInput("datasetLoad",
+                "Upload your results",
+                accept = c(".zip", ".csv"),
+                multiple = TRUE,
+                placeholder = "ZIP or CSV file(s)")
+    })
     # ReactiveValues
     uploadedFiles <- reactiveValues(data = NULL)
-    # Test
-    # uploadedFiles <- list()
-
     itemsList <- reactiveValues(objects = NULL)
-    # Test
-    # itemsList <- list()
-
+    # After loading data
     observeEvent(input$datasetLoad, {
-      # Data path from file input
+      # Get data path from file input
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
-
-      # Test
-      # fileDataPath <- here("OtherResults", "resultsMock_CPRD.zip")
-      # Test
-      # fileDataPath <- here("results", "mock_data_ReportGenerator_SIDIAP.zip")
-
-      # Gets the config file that is used to define the type of uploaded file
+      # Retrieve the config file that is used to define the type of uploaded file
       configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
       # Lists all datatypes available to compare
       configDataTypes <- unique(configData$name)
       # Checks if single or multiple files
       if (length(fileDataPath) == 1) {
-        # If a zip file is loaded
+        # If a zip file is loaded, unzip
         if (grepl(".zip", fileDataPath, fixed = TRUE)) {
-          # Temp dir to allocate unzipped files
-          csvLocation <- tempdir()
-          # Unlinks previous files in the temp dir
-          lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
-          # Unzip files into temp dir location
-          unzip(fileDataPath, exdir = csvLocation)
-          # List unzipped files
+          csvLocation <- file.path(tempdir(), "dataLocation")
+          dir.create(csvLocation)
           csvFiles <- list.files(path = csvLocation,
                                  pattern = ".csv",
                                  full.names = TRUE,
                                  recursive = TRUE)
-          # Check columns and items; add data to reactiveValues
+          # Check columns and items
+          # Add data to reactiveValues
           uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
           items <- names(uploadedFiles$data)
           itemsList$objects[["items"]] <- getItemsList(items)
           # Unlink tempdir
-          unlink(csvLocation)
+          unlink(csvLocation, recursive = TRUE)
           } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
               uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
               items <- names(uploadedFiles$data)
@@ -127,10 +116,12 @@ reportGenerator <- function() {
       }
       else if (length(fileDataPath) > 1) {
         if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
-          csvFiles <- joinZipFiles(fileDataPath)
+          csvLocation <- file.path(tempdir(), "dataLocation")
+          csvFiles <- joinZipFiles(fileDataPath, csvLocation)
           uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
           items <- names(uploadedFiles$data)
           itemsList$objects[["items"]] <- getItemsList(items)
+          unlink(csvLocation, recursive = TRUE)
         } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
           uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
           items <- names(uploadedFiles$data)
@@ -138,18 +129,24 @@ reportGenerator <- function() {
         }
         }
       })
-
+    # Reset and back to initial tab
     observeEvent(input$resetData, {
       if (!is.null(uploadedFiles)) {
         uploadedFiles$data <- NULL
         itemsList$objects <- NULL
-        unlink(tempdir())
+        updateTabsetPanel(session, "mainPanel",
+                          selected = "Item selection")
+        output$datasetLoadUI <- renderUI({
+          fileInput("datasetLoad",
+                    "Upload your results",
+                    accept = c(".zip", ".csv"),
+                    multiple = TRUE,
+                    placeholder = "ZIP or CSV file(s)")
+        })
       }
-
     })
 
     output$itemSelectionMenu <- renderUI({
-
       column(tags$b("Item selection"),
              width = 12,
              bucket_list(header = "Select the figures you want in the report",
@@ -266,24 +263,20 @@ reportGenerator <- function() {
 
     # Functions available from the configuration file
     menuFun  <- reactive({
-      # menuFun  <- read.csv(system.file("config/itemsConfig.csv", package = "ReportGenerator"), sep = ";")
-      menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
+      menuFun  <- read.csv(system.file("config/itemsConfigMinimal.csv", package = "ReportGenerator"), sep = ";")
       menuFun$arguments <- gsub("incidence_attrition",
                                 "uploadedFiles$data$incidence_attrition",
                                 menuFun$arguments)
-
       menuFun$arguments <- gsub("prevalence_attrition",
                                 "uploadedFiles$data$prevalence_attrition",
                                 menuFun$arguments)
-
       menuFun$arguments <- gsub("incidence_estimates",
                                 "incidenceCommonData()",
                                 menuFun$arguments)
-
       menuFun$arguments <- gsub("prevalence_estimates",
                                 "prevalenceCommonData()",
                                 menuFun$arguments)
-
+      menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$data$incidence_estimates"
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
       menuFun
     })
@@ -354,8 +347,6 @@ reportGenerator <- function() {
     # Renders item preview depending on the object class
     output$itemPreview <- renderUI({
       req(objectChoice())
-
-
       if (grepl("Table", objectChoice())) {
         tableOutput("previewTable")
       } else {
@@ -373,7 +364,6 @@ reportGenerator <- function() {
     })
 
     # Objects to be rendered in the UI
-
     output$previewTable <- renderTable({
       req(objectChoice())
 
@@ -384,7 +374,7 @@ reportGenerator <- function() {
 
         object
       }
-    })
+    }, colnames = FALSE)
 
     output$plotFilters <- renderUI({
       req(objectChoice())
@@ -394,28 +384,23 @@ reportGenerator <- function() {
     })
 
     selectionPlotFilter <- reactive({
-
       req(objectChoice())
-
       if (objectChoice() == "Table - Number of participants") {
-
       tagList(
         fluidRow(
-          column(4,
-                 pickerInput(inputId = "databaseIncidence",
-                             label = "Database",
-                             choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-                             selected = "All",
-                             multiple = TRUE)
-          ),
-          column(4,
-                 selectInput(inputId = "outcomeIncidence",
-                             label = "Outcome",
-                             choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id))
+          column(8,
+                 textAreaInput("captionTable1", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
           )
         )
       )
-
+      } else if (objectChoice() == "Table - Number of participants by sex and age group") {
+        tagList(
+          fluidRow(
+            column(8,
+                   textAreaInput("captionTable1", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
+            )
+          )
+        )
       } else if (grepl("Incidence", objectChoice())) {
 
         tagList(
@@ -472,9 +457,7 @@ reportGenerator <- function() {
             )
           )
         )
-
       } else if (grepl("Prevalence", objectChoice())) {
-
         tagList(
           fluidRow(
             column(4,
@@ -529,49 +512,23 @@ reportGenerator <- function() {
             )
           )
         )
-
       }
-
     })
-
 
     output$previewPlot <- renderPlot({
       req(objectChoice())
-
-      ###
-
-      # objectChoice <- "Plot - Prevalence rate per year"
-      #
-      # menuFunction <- menuFun %>%
-      #   dplyr::filter(title == objectChoice)
-      # itemOptions <- menuFunction %>% getItemOptions()
-      # expression <- menuFunction %>%
-      #   dplyr::pull(signature)
-      #
-      # if (!identical(itemOptions, character(0))) {
-      #   expression <- expression %>%
-      #     addPreviewItemType("Facet by outcome")
-      # }
-
-      ###
-
-
       menuFunction <- menuFun() %>%
         dplyr::filter(title == objectChoice())
       itemOptions <- menuFunction %>% getItemOptions()
       expression <- menuFunction %>%
         dplyr::pull(signature)
-
       if (!identical(itemOptions, character(0))) {
         expression <- expression %>%
           addPreviewItemType(input$previewPlotOption)
       }
-
       object <- eval(parse(text = expression))
-
       if (grepl("Plot", objectChoice())) {
         object
-
       }
     })
 
@@ -605,13 +562,18 @@ reportGenerator <- function() {
                    style = "Heading 1 (Agency)")
 
         } else {
+          body_end_section_landscape(incidencePrevalenceDocx)
           body_add_table(incidencePrevalenceDocx,
                          value = object,
                          style = "TableOverall",
                          header = FALSE)
+          body_add_par(incidencePrevalenceDocx, " ")
+          body_add(incidencePrevalenceDocx,
+                   value = input$captionTable1)
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
+          body_end_section_portrait(incidencePrevalenceDocx)
         }
       }
       body_add_toc(incidencePrevalenceDocx)
