@@ -24,7 +24,7 @@
 #' @return a dataframe with the properties of the items
 getItemsList <- function(uploadedFiles) {
   # Reads the fi
-  menuFunctions <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"),
+  menuFunctions <- read.csv(system.file("config/itemsConfigMinimal.csv", package = "ReportGenerator"),
                             sep = ";") %>%
     dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
 
