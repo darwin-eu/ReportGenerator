@@ -263,7 +263,7 @@ reportGenerator <- function() {
 
     # Functions available from the configuration file
     menuFun  <- reactive({
-      menuFun  <- read.csv(system.file("config/itemsConfigMinimal.csv", package = "ReportGenerator"), sep = ";")
+      menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
       menuFun$arguments <- gsub("incidence_attrition",
                                 "uploadedFiles$data$incidence_attrition",
                                 menuFun$arguments)
@@ -306,7 +306,7 @@ reportGenerator <- function() {
         updateSelectInput(inputId = "ageIncidence",
                           choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
 
-      } else if (objectChoice() == "Plot - Incidence rate per year group by sex") {
+      } else if (objectChoice() == "Plot - Incidence rate per year by sex") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = c("All",
@@ -315,7 +315,7 @@ reportGenerator <- function() {
         updateSelectInput(inputId = "ageIncidence",
                           choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
 
-      } else if (objectChoice() == "Plot - Incidence rate per year color by age") {
+      } else if (objectChoice() == "Plot - Incidence rate per year by age") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = unique(uploadedFiles$data$incidence_estimates$denominator_sex))
@@ -324,16 +324,37 @@ reportGenerator <- function() {
                           choices = c("All",
                                       unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
 
-      } else if (objectChoice() == "Plot - Incidence rate per year facet by database, age group") {
+      }
 
-        updateSelectInput(inputId = "sexIncidence",
-                          choices = c("All",
-                                      unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
+      # else if (objectChoice() == "Plot - Incidence rate per year facet by database, age group") {
+      #
+      #   updateSelectInput(inputId = "sexIncidence",
+      #                     choices = c("All",
+      #                                 unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
+      #
+      #   updateSelectInput(inputId = "ageIncidence",
+      #                     choices = c("All",
+      #                                 unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
+      # }
 
-        updateSelectInput(inputId = "ageIncidence",
+      else if (objectChoice() == "Plot - Prevalence rate per year") {
+
+        updateSelectInput(inputId = "sexPrevalence",
+                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_sex))
+
+        updateSelectInput(inputId = "agePrevalence",
+                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_age_group))
+
+      } else if (objectChoice() == "Plot - Prevalence rate per year by sex") {
+
+        updateSelectInput(inputId = "sexPrevalence",
                           choices = c("All",
-                                      unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
-      } else if (objectChoice() == "Plot - Prevalence rate per year") {
+                                      unique(uploadedFiles$data$prevalence_estimates$denominator_sex)))
+
+        updateSelectInput(inputId = "agePrevalence",
+                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_age_group))
+
+      } else if (objectChoice() == "Plot - Prevalence rate per year by age") {
 
         updateSelectInput(inputId = "sexPrevalence",
                           choices = unique(uploadedFiles$data$prevalence_estimates$denominator_sex))
@@ -523,8 +544,16 @@ reportGenerator <- function() {
       expression <- menuFunction %>%
         dplyr::pull(signature)
       if (!identical(itemOptions, character(0))) {
-        expression <- expression %>%
-          addPreviewItemType(input$previewPlotOption)
+        if (grepl("by sex", objectChoice())) {
+          expression <- expression %>%
+            addPreviewItemTypeSex(input$previewPlotOption)
+        } else if (grepl("by age", objectChoice())) {
+          expression <- expression %>%
+            addPreviewItemTypeAge(input$previewPlotOption)
+        } else  {
+          expression <- expression %>%
+            addPreviewItemType(input$previewPlotOption)
+        }
       }
       object <- eval(parse(text = expression))
       if (grepl("Plot", objectChoice())) {
