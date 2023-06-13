@@ -1,4 +1,10 @@
-# ReportGenerator 1.6.0
+# ReportGenerator 1.7.0
+
+* Fixed bug "unknown file" when generating Word report. 
+
+* Added incidence and prevalence figures by sex and age. 
+
+* User can select data for table 1 according to the analysis_id
 
 # ReportGenerator 1.5.1
 
