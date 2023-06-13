@@ -24,7 +24,7 @@
 #' @return a dataframe with the properties of the items
 getItemsList <- function(uploadedFiles) {
   # Reads the fi
-  menuFunctions <- read.csv(system.file("config/itemsConfigMinimal.csv", package = "ReportGenerator"),
+  menuFunctions <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"),
                             sep = ";") %>%
     dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
 
@@ -80,6 +80,70 @@ addPreviewItemType <- function(previewItemString, previewItemType) {
   return(result)
 }
 
+#' Adds the given type to the current previewItem string, by sex
+#'
+#' @param previewItemString string representing the previewItem
+#' @param previewItemType preview item type
+#'
+#' @return the updated preview item string
+addPreviewItemTypeSex <- function(previewItemString, previewItemType) {
+
+  # previewItemString <- "plotIncidence(incidenceCommonData(), colour, facet)"
+  # previewItemType <- "Facet by database"
+  #
+  #
+  result <- previewItemString
+  if (is.null(previewItemType)) {
+    previewItemType <- "Facet by outcome"
+  }
+
+  if (previewItemType == "Facet by outcome") {
+    facet <- "facet = c('denominator_sex', 'outcome_cohort_name')"
+    colour <- "colour = 'database_name'"
+    result <- gsub("colour", colour, previewItemString)
+    result <- gsub("facet", facet, result)
+
+  } else if (previewItemType == "Facet by database"){
+
+    facet <- "facet = c('denominator_sex', 'database_name')"
+    colour <- "colour = 'outcome_cohort_name'"
+    result <- gsub("colour", colour, previewItemString)
+    result <- gsub("facet", facet, result)
+
+  }
+  return(result)
+}
+
+#' Adds the given type to the current previewItem string, by sex
+#'
+#' @param previewItemString string representing the previewItem
+#' @param previewItemType preview item type
+#'
+#' @return the updated preview item string
+addPreviewItemTypeAge <- function(previewItemString, previewItemType) {
+
+  # previewItemString <- "plotIncidence(incidenceCommonData(), colour, facet)"
+  # previewItemType <- "Facet by database"
+  #
+  #
+  result <- previewItemString
+  if (is.null(previewItemType)) {
+    previewItemType <- "Facet by outcome"
+  }
+  if (previewItemType == "Facet by outcome") {
+    facet <- "facet = c('denominator_age_group', 'outcome_cohort_name')"
+    colour <- "colour = 'database_name'"
+    result <- gsub("colour", colour, previewItemString)
+    result <- gsub("facet", facet, result)
+  } else if (previewItemType == "Facet by database"){
+    facet <- "facet = c('denominator_age_group', 'database_name')"
+    colour <- "colour = 'outcome_cohort_name'"
+    result <- gsub("colour", colour, previewItemString)
+    result <- gsub("facet", facet, result)
+
+  }
+  return(result)
+}
 #' Get options for given item.
 #'
 #' @param item the menu item

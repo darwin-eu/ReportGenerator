@@ -18,7 +18,7 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
-#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable waldo readr yaml data.tree
+#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable waldo readr yaml
 #' @importFrom sortable bucket_list add_rank_list
 #' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @export
@@ -163,6 +163,32 @@ reportGenerator <- function() {
       )
     })
 
+    # prevalenceAttritionData
+
+    prevalenceAttritionData <- reactive({
+      commonData <- uploadedFiles$data$prevalence_attrition
+      commonData[is.na(commonData)] = 0
+
+      commonData %>%
+        filter(analysis_id %in% c(input$analysisIdTable1))
+
+    })
+
+    # incidenceAttritionData
+
+    incidenceAttritionData <- reactive({
+      commonData <- uploadedFiles$data$incidence_attrition
+      commonData[is.na(commonData)] = 0
+
+      commonData %>%
+        filter(analysis_id %in% c(input$analysisIdTable1))
+
+    })
+
+
+
+
+
     # IncidenceCommonData
     incidenceCommonData <- reactive({
       commonData <- uploadedFiles$data$incidence_estimates
@@ -263,12 +289,12 @@ reportGenerator <- function() {
 
     # Functions available from the configuration file
     menuFun  <- reactive({
-      menuFun  <- read.csv(system.file("config/itemsConfigMinimal.csv", package = "ReportGenerator"), sep = ";")
+      menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
       menuFun$arguments <- gsub("incidence_attrition",
-                                "uploadedFiles$data$incidence_attrition",
+                                "incidenceAttritionData()",
                                 menuFun$arguments)
       menuFun$arguments <- gsub("prevalence_attrition",
-                                "uploadedFiles$data$prevalence_attrition",
+                                "prevalenceAttritionData()",
                                 menuFun$arguments)
       menuFun$arguments <- gsub("incidence_estimates",
                                 "incidenceCommonData()",
@@ -306,7 +332,7 @@ reportGenerator <- function() {
         updateSelectInput(inputId = "ageIncidence",
                           choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
 
-      } else if (objectChoice() == "Plot - Incidence rate per year group by sex") {
+      } else if (objectChoice() == "Plot - Incidence rate per year by sex") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = c("All",
@@ -315,7 +341,7 @@ reportGenerator <- function() {
         updateSelectInput(inputId = "ageIncidence",
                           choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
 
-      } else if (objectChoice() == "Plot - Incidence rate per year color by age") {
+      } else if (objectChoice() == "Plot - Incidence rate per year by age") {
 
         updateSelectInput(inputId = "sexIncidence",
                           choices = unique(uploadedFiles$data$incidence_estimates$denominator_sex))
@@ -324,16 +350,37 @@ reportGenerator <- function() {
                           choices = c("All",
                                       unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
 
-      } else if (objectChoice() == "Plot - Incidence rate per year facet by database, age group") {
+      }
 
-        updateSelectInput(inputId = "sexIncidence",
-                          choices = c("All",
-                                      unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
+      # else if (objectChoice() == "Plot - Incidence rate per year facet by database, age group") {
+      #
+      #   updateSelectInput(inputId = "sexIncidence",
+      #                     choices = c("All",
+      #                                 unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
+      #
+      #   updateSelectInput(inputId = "ageIncidence",
+      #                     choices = c("All",
+      #                                 unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
+      # }
 
-        updateSelectInput(inputId = "ageIncidence",
+      else if (objectChoice() == "Plot - Prevalence rate per year") {
+
+        updateSelectInput(inputId = "sexPrevalence",
+                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_sex))
+
+        updateSelectInput(inputId = "agePrevalence",
+                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_age_group))
+
+      } else if (objectChoice() == "Plot - Prevalence rate per year by sex") {
+
+        updateSelectInput(inputId = "sexPrevalence",
                           choices = c("All",
-                                      unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
-      } else if (objectChoice() == "Plot - Prevalence rate per year") {
+                                      unique(uploadedFiles$data$prevalence_estimates$denominator_sex)))
+
+        updateSelectInput(inputId = "agePrevalence",
+                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_age_group))
+
+      } else if (objectChoice() == "Plot - Prevalence rate per year by age") {
 
         updateSelectInput(inputId = "sexPrevalence",
                           choices = unique(uploadedFiles$data$prevalence_estimates$denominator_sex))
@@ -388,6 +435,11 @@ reportGenerator <- function() {
       if (objectChoice() == "Table - Number of participants") {
       tagList(
         fluidRow(
+          column(4,
+                 selectInput(inputId = "analysisIdTable1",
+                             label = "Analysis ID",
+                             choices = unique(uploadedFiles$data$incidence_attrition$analysis_id))
+          ),
           column(8,
                  textAreaInput("captionTable1", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
           )
@@ -523,8 +575,16 @@ reportGenerator <- function() {
       expression <- menuFunction %>%
         dplyr::pull(signature)
       if (!identical(itemOptions, character(0))) {
-        expression <- expression %>%
-          addPreviewItemType(input$previewPlotOption)
+        if (grepl("by sex", objectChoice())) {
+          expression <- expression %>%
+            addPreviewItemTypeSex(input$previewPlotOption)
+        } else if (grepl("by age", objectChoice())) {
+          expression <- expression %>%
+            addPreviewItemTypeAge(input$previewPlotOption)
+        } else  {
+          expression <- expression %>%
+            addPreviewItemType(input$previewPlotOption)
+        }
       }
       object <- eval(parse(text = expression))
       if (grepl("Plot", objectChoice())) {
