@@ -18,7 +18,7 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
-#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable waldo readr yaml data.tree
+#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard shinyWidgets officer flextable waldo readr yaml
 #' @importFrom sortable bucket_list add_rank_list
 #' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @export
@@ -163,6 +163,32 @@ reportGenerator <- function() {
       )
     })
 
+    # prevalenceAttritionData
+
+    prevalenceAttritionData <- reactive({
+      commonData <- uploadedFiles$data$prevalence_attrition
+      commonData[is.na(commonData)] = 0
+
+      commonData %>%
+        filter(analysis_id %in% c(input$analysisIdTable1))
+
+    })
+
+    # incidenceAttritionData
+
+    incidenceAttritionData <- reactive({
+      commonData <- uploadedFiles$data$incidence_attrition
+      commonData[is.na(commonData)] = 0
+
+      commonData %>%
+        filter(analysis_id %in% c(input$analysisIdTable1))
+
+    })
+
+
+
+
+
     # IncidenceCommonData
     incidenceCommonData <- reactive({
       commonData <- uploadedFiles$data$incidence_estimates
@@ -265,10 +291,10 @@ reportGenerator <- function() {
     menuFun  <- reactive({
       menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
       menuFun$arguments <- gsub("incidence_attrition",
-                                "uploadedFiles$data$incidence_attrition",
+                                "incidenceAttritionData()",
                                 menuFun$arguments)
       menuFun$arguments <- gsub("prevalence_attrition",
-                                "uploadedFiles$data$prevalence_attrition",
+                                "prevalenceAttritionData()",
                                 menuFun$arguments)
       menuFun$arguments <- gsub("incidence_estimates",
                                 "incidenceCommonData()",
@@ -409,6 +435,11 @@ reportGenerator <- function() {
       if (objectChoice() == "Table - Number of participants") {
       tagList(
         fluidRow(
+          column(4,
+                 selectInput(inputId = "analysisIdTable1",
+                             label = "Analysis ID",
+                             choices = unique(uploadedFiles$data$incidence_attrition$analysis_id))
+          ),
           column(8,
                  textAreaInput("captionTable1", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
           )
