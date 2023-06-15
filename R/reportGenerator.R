@@ -334,6 +334,29 @@ reportGenerator <- function() {
 
       } else if (objectChoice() == "Plot - Incidence rate per year by sex") {
 
+        if  (input$previewPlotOption == "Facet by outcome") {
+
+          updatePickerInput(session,
+                            inputId = "databaseIncidence",
+                            label = "Database",
+                            choices = unique(uploadedFiles$data$incidence_estimates$database_name),
+                            selected = uploadedFiles$data$incidence_estimates$database_name[1],
+                            options = list(
+                              maxOptions = 1
+                            ))
+
+        } else {
+
+          updatePickerInput(session,
+                            inputId = "databaseIncidence",
+                            label = "Database",
+                            choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
+                            selected = "All",
+                            options = list(
+                              maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
+                            ))
+        }
+
         updateSelectInput(inputId = "sexIncidence",
                           choices = c("All",
                                       unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
@@ -343,6 +366,29 @@ reportGenerator <- function() {
 
       } else if (objectChoice() == "Plot - Incidence rate per year by age") {
 
+        if  (input$previewPlotOption == "Facet by outcome") {
+
+          updatePickerInput(session,
+                            inputId = "databaseIncidence",
+                            label = "Database",
+                            choices = unique(uploadedFiles$data$incidence_estimates$database_name),
+                            selected = uploadedFiles$data$incidence_estimates$database_name[1],
+                            options = list(
+                              maxOptions = 1
+                            ))
+
+        } else {
+
+          updatePickerInput(session,
+                            inputId = "databaseIncidence",
+                            label = "Database",
+                            choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
+                            selected = "All",
+                            options = list(
+                              maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
+                            ))
+        }
+
         updateSelectInput(inputId = "sexIncidence",
                           choices = unique(uploadedFiles$data$incidence_estimates$denominator_sex))
 
@@ -351,17 +397,6 @@ reportGenerator <- function() {
                                       unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
 
       }
-
-      # else if (objectChoice() == "Plot - Incidence rate per year facet by database, age group") {
-      #
-      #   updateSelectInput(inputId = "sexIncidence",
-      #                     choices = c("All",
-      #                                 unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
-      #
-      #   updateSelectInput(inputId = "ageIncidence",
-      #                     choices = c("All",
-      #                                 unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
-      # }
 
       else if (objectChoice() == "Plot - Prevalence rate per year") {
 
@@ -373,6 +408,29 @@ reportGenerator <- function() {
 
       } else if (objectChoice() == "Plot - Prevalence rate per year by sex") {
 
+        if  (input$previewPlotOption == "Facet by outcome") {
+
+          updatePickerInput(session,
+                            inputId = "databasePrevalence",
+                            label = "Database",
+                            choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
+                            selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                            options = list(
+                              maxOptions = 1
+                            ))
+
+        } else {
+
+          updatePickerInput(session,
+                            inputId = "databasePrevalence",
+                            label = "Database",
+                            choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
+                            selected = "All",
+                            options = list(
+                              maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
+                            ))
+        }
+
         updateSelectInput(inputId = "sexPrevalence",
                           choices = c("All",
                                       unique(uploadedFiles$data$prevalence_estimates$denominator_sex)))
@@ -381,6 +439,29 @@ reportGenerator <- function() {
                           choices = unique(uploadedFiles$data$prevalence_estimates$denominator_age_group))
 
       } else if (objectChoice() == "Plot - Prevalence rate per year by age") {
+
+        if  (input$previewPlotOption == "Facet by outcome") {
+
+          updatePickerInput(session,
+                            inputId = "databasePrevalence",
+                            label = "Database",
+                            choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
+                            selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                            options = list(
+                              maxOptions = 1
+                            ))
+
+        } else {
+
+          updatePickerInput(session,
+                            inputId = "databasePrevalence",
+                            label = "Database",
+                            choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
+                            selected = "All",
+                            options = list(
+                              maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
+                            ))
+        }
 
         updateSelectInput(inputId = "sexPrevalence",
                           choices = unique(uploadedFiles$data$prevalence_estimates$denominator_sex))
