@@ -1,3 +1,7 @@
+# ReportGenerator 1.7.1
+
+* Fixes to the filters and facets for figures.
+
 # ReportGenerator 1.7.0
 
 * Fixed bug "unknown file" when generating Word report. 

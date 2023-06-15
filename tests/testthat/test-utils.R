@@ -6,21 +6,31 @@ genericChecks <- function(result) {
 test_that("getItemsList happy flow", {
 
   uploadedFiles <- c("incidence_attrition",
-                     "incidence_estimates",
-                     "prevalence_attrition")
-
-  result <- getItemsList(uploadedFiles)
-
-  genericChecks(result)
-  expect_equal(nrow(result), 9)
-
-  uploadedFiles <- c("incidence_attrition",
                      "prevalence_attrition")
 
   result <- getItemsList(uploadedFiles)
 
   genericChecks(result)
   expect_equal(nrow(result), 1)
+
+  uploadedFiles <- c("incidence_attrition",
+                     "prevalence_attrition",
+                     "incidence_estimates")
+
+  result <- getItemsList(uploadedFiles)
+
+  genericChecks(result)
+  expect_equal(nrow(result), 5)
+
+  uploadedFiles <- c("incidence_attrition",
+                     "prevalence_attrition",
+                     "incidence_estimates",
+                     "prevalence_estimates")
+
+  result <- getItemsList(uploadedFiles)
+
+  genericChecks(result)
+  expect_equal(nrow(result), 8)
 })
 
 test_that("getItemsList edge cases", {
@@ -32,18 +42,18 @@ test_that("getItemsList edge cases", {
 })
 
 test_that("addPreviewItemType happy flow", {
-  result <- addPreviewItemType(previewItemString = "incidenceRatePerYearPlot(incidence_estimates)",
+  result <- addPreviewItemType(previewItemString = "plotIncidence(incidenceCommonData(), colour, facet)",
                                previewItemType = "Facet by outcome")
 
   expect_equal(class(result), "character")
-  expect_equal(result, "incidenceRatePerYearPlot(incidence_estimates, \"Facet by outcome\")")
+  expect_equal(result, "plotIncidence(incidenceCommonData(), colour = 'database_name', facet = 'outcome_cohort_name')")
 
   # type might be empty, set default
-  result <- addPreviewItemType(previewItemString = "incidenceRatePerYearPlot(incidence_estimates)",
+  result <- addPreviewItemType(previewItemString = "plotIncidence(incidenceCommonData(), colour, facet)",
                                previewItemType = NULL)
 
   expect_equal(class(result), "character")
-  expect_equal(result, "incidenceRatePerYearPlot(incidence_estimates, \"Facet by outcome\")")
+  expect_equal(result, "plotIncidence(incidenceCommonData(), colour = 'database_name', facet = 'outcome_cohort_name')")
 })
 
 

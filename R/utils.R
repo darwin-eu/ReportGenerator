@@ -23,7 +23,7 @@
 #'
 #' @return a dataframe with the properties of the items
 getItemsList <- function(uploadedFiles) {
-  # Reads the fi
+
   menuFunctions <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"),
                             sep = ";") %>%
     dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
@@ -62,7 +62,6 @@ addPreviewItemType <- function(previewItemString, previewItemType) {
   if (is.null(previewItemType)) {
     previewItemType <- "Facet by outcome"
   }
-
   if (previewItemType == "Facet by outcome") {
     facet <- "facet = 'outcome_cohort_name'"
     colour <- "colour = 'database_name'"
@@ -98,15 +97,15 @@ addPreviewItemTypeSex <- function(previewItemString, previewItemType) {
   }
 
   if (previewItemType == "Facet by outcome") {
-    facet <- "facet = c('denominator_sex', 'outcome_cohort_name')"
-    colour <- "colour = 'database_name'"
+    facet <- "facet = 'outcome_cohort_name'"
+    colour <- "colour = 'denominator_sex'"
     result <- gsub("colour", colour, previewItemString)
     result <- gsub("facet", facet, result)
 
   } else if (previewItemType == "Facet by database"){
 
-    facet <- "facet = c('denominator_sex', 'database_name')"
-    colour <- "colour = 'outcome_cohort_name'"
+    facet <- "facet = 'database_name'"
+    colour <- "colour = 'denominator_sex'"
     result <- gsub("colour", colour, previewItemString)
     result <- gsub("facet", facet, result)
 
@@ -122,7 +121,7 @@ addPreviewItemTypeSex <- function(previewItemString, previewItemType) {
 #' @return the updated preview item string
 addPreviewItemTypeAge <- function(previewItemString, previewItemType) {
 
-  # previewItemString <- "plotIncidence(incidenceCommonData(), colour, facet)"
+  # previewItemString <- "plotIncidence(incidence_estimates, colour, facet)"
   # previewItemType <- "Facet by database"
   #
   #
@@ -131,13 +130,13 @@ addPreviewItemTypeAge <- function(previewItemString, previewItemType) {
     previewItemType <- "Facet by outcome"
   }
   if (previewItemType == "Facet by outcome") {
-    facet <- "facet = c('denominator_age_group', 'outcome_cohort_name')"
-    colour <- "colour = 'database_name'"
+    facet <- "facet = 'outcome_cohort_name'"
+    colour <- "colour = 'denominator_age_group'"
     result <- gsub("colour", colour, previewItemString)
     result <- gsub("facet", facet, result)
   } else if (previewItemType == "Facet by database"){
-    facet <- "facet = c('denominator_age_group', 'database_name')"
-    colour <- "colour = 'outcome_cohort_name'"
+    facet <- "facet = 'database_name'"
+    colour <- "colour = 'denominator_age_group'"
     result <- gsub("colour", colour, previewItemString)
     result <- gsub("facet", facet, result)
 

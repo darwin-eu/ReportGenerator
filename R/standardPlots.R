@@ -36,7 +36,10 @@ incidenceRatePerYearPlot <- function(incidence_estimates, type) {
       theme_bw() +
       labs(x = "Calendar year",
            y = "Incidence rate per 100000 person-years",
-           col = "Database name")
+           col = "Database name") +
+      facet_wrap(~denominator_sex)
+    # +
+    # facet_grid(cols = vars(denominator_sex))
   } else if (type == "Facet by database") {
     result <- incidence_estimates %>%
       ggplot(aes(x = incidence_start_date,
@@ -50,7 +53,10 @@ incidenceRatePerYearPlot <- function(incidence_estimates, type) {
       theme_bw() +
       labs(x = "Calendar year",
            y = "Incidence rate per 100000 person-years",
-           col = "Outcome")
+           col = "Outcome")  +
+      facet_wrap(~denominator_sex)
+    # +
+    #   facet_grid(cols = vars(denominator_sex))
   }
   return(result)
 }
@@ -70,7 +76,7 @@ incidenceRatePerYearGroupBySexPlot <- function(incidence_estimates, type) {
                  y = incidence_100000_pys,
                  group = denominator_sex,
                  col = database_name)) +
-      facet_wrap(~ denominator_sex + outcome_cohort_name) +
+      facet_wrap(~ denominator_sex) +
       geom_line() +
       geom_point() +
       theme_bw() +
@@ -83,7 +89,7 @@ incidenceRatePerYearGroupBySexPlot <- function(incidence_estimates, type) {
                  y = incidence_100000_pys,
                  group = denominator_sex,
                  col = outcome_cohort_name)) +
-      facet_wrap(~ denominator_sex + database_name) +
+      facet_wrap(~ denominator_sex) +
       geom_line() +
       geom_point() +
       theme_bw() +
