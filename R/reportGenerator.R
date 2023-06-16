@@ -276,14 +276,14 @@ reportGenerator <- function() {
 
     # Objects list selected by the user in the sortable menu into a dataframe
 
-    menu <- reactive({
+    objectDataFrame <- reactive({
       contents <- input$objectSelection
       objectsDataFrame <- data.frame(contents)
       objectsDataFrame
     })
 
     # Table of contents from objects list selected by the user data frame
-    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(menu()))
+    output$tableContents <- DT::renderDataTable(createPreviewMenuTable(objectDataFrame()))
 
     # Retrieves list of functions available and places the correct arguments
     menuFun  <- reactive({
@@ -309,7 +309,7 @@ reportGenerator <- function() {
     objectChoice  <- reactive({
       req(uploadedFiles)
       req(input$tableContents_cells_selected)
-      objectChoiceTitle <- menu()[input$tableContents_cells_selected,]
+      objectChoiceTitle <- objectDataFrame()[input$tableContents_cells_selected,]
       objectChoiceTitle
     })
 
@@ -662,7 +662,7 @@ reportGenerator <- function() {
     # 4. Word report generator
     observeEvent(input$generateReport, {
       incidencePrevalenceDocx <- read_docx(path = file.path(system.file("templates/word/darwinTemplate.docx", package = "ReportGenerator")))
-      reverseList <- rev(menu()$contents)
+      reverseList <- rev(objectDataFrame()$contents)
       for (i in reverseList) {
         menuFunction <- menuFun() %>%
           dplyr::filter(title == i)
