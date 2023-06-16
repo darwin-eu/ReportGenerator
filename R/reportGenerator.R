@@ -661,7 +661,7 @@ reportGenerator <- function() {
 
     # 4. Word report generator
     observeEvent(input$generateReport, {
-      incidencePrevalenceDocx <- read_docx(path = file.path(system.file("templates/word/darwinTemplate.docx", package = "ReportGenerator")))
+      incidencePrevalenceDocx <- read_docx(path = system.file("templates", "word", "darwinTemplate.docx", package = "ReportGenerator"))
       reverseList <- rev(objectDataFrame()$contents)
       for (i in reverseList) {
         menuFunction <- menuFun() %>%
