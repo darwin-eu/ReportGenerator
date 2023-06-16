@@ -635,49 +635,6 @@ reportGenerator <- function() {
     }, colnames = FALSE)
 
 
-
-    # functionReport <- list()
-    # dataReport <- list()
-    #
-    #
-    # objectChoice <-"Table - Number of participants"
-    #
-    # objectReport <- menuFun %>%
-    #   dplyr::filter(title == objectChoice) %>%
-    #   dplyr::pull(arguments)
-    #
-    # objectReport <- gsub(" ", "", objectReport)
-    #
-    # argumentsData <- unlist(strsplit(objectReport, ","))
-    #
-    # argumentsData <- c("incidence_attrition", "prevalence_attrition")
-    #
-    # for (i in argumentsData) {
-    #   functionReport[[objectChoice]][[i]] <- eval(parse(text = i))
-    # }
-
-
-
-    dataReport <- reactiveValues()
-    functionReport <- reactiveValues()
-
-
-    output$testReportData <- renderTable({
-      req(objectChoice())
-
-        objectReport <- menuFun() %>%
-          dplyr::filter(title == objectChoice()) %>%
-          dplyr::pull(arguments)
-        objectReport <- gsub(" ", "", objectReport)
-        argumentsData <- unlist(strsplit(objectReport, ","))
-        for (i in argumentsData) {
-          arguments <- eval(parse(text = i))
-          dataReport[[objectChoice()]][[i]] <- arguments
-        }
-      dataReport[[objectChoice()]][[argumentsData[1]]]
-
-      })
-
     # Figures
     output$previewPlot <- renderPlot({
       req(objectChoice())
@@ -706,30 +663,104 @@ reportGenerator <- function() {
 
     # Reactive values to hold data for the Word Report
 
+    # dataReport$data <- list()
+    # #
+    # objectChoice <- "Table - Number of participants"
+    # #
+    # objectReport <- menuFun %>%
+    #   dplyr::filter(title == objectChoice) %>%
+    #   dplyr::pull(arguments)
+    #
+    # objectReport <- gsub(" ", "", objectReport)
+    #
+    # argumentsData <- unlist(strsplit(objectReport, ","))
+    #
+    # # argumentsData <- c("incidence_attrition", "prevalence_attrition")
+    #
+    # argumentsData <- c("incidence_attrition", "prevalence_attrition")
+    #
+    # for (i in argumentsData) {
+    #   # if (grepl("_estimates", i)) {
+    #     dataReport$data[[objectChoice]][[i]] <- eval(parse(text = i))
+    #   # }
+    # }
+
+    # for (i in argumentsData) {
+    #   if (grepl("\\(\\)", i)) {
+    #   functionReport[[objectChoice]][[i]] <- eval(parse(text = i))
+    #   }
+    # }
+
+    dataReport <- reactiveValues(data = NULL)
+
+    ###
+    # objectChoice <- "Table - Number of participants"
+    # objectReport <- menuFun %>%
+    #   dplyr::filter(title == objectChoice) %>%
+    #   dplyr::pull(arguments)
+    # objectReport <- gsub(" ", "", objectReport)
+    # argumentsData <- unlist(strsplit(objectReport, ","))
+    #
+    # for (i in argumentsData) {
+    #   # if (grepl("\\(\\)", i)) {
+    #     # arguments <- eval(parse(text = i))
+    #     dataReport$data[[objectChoice()]][[i]] <- eval(parse(text = i))
+    #   # }
+    # }
 
 
+    ###
 
+
+    observe({
+      req(objectChoice())
+      objectReport <- menuFun() %>%
+        dplyr::filter(title == objectChoice()) %>%
+        dplyr::pull(arguments)
+      objectReport <- gsub(" ", "", objectReport)
+      argumentsData <- unlist(strsplit(objectReport, ","))
+      for (i in argumentsData) {
+        # if (grepl("\\(\\)", i)) {
+          arguments <- eval(parse(text = i))
+          dataReport$data[[objectChoice()]][[i]] <- eval(parse(text = i))
+        # }
+      }
+    })
+
+
+    output$testReportData <- renderTable({
+      req(objectChoice())
+      # uploadedFiles$data$incidence_attrition
+      dataReport$data[[objectChoice()]][[argumentsData[2]]]
+      })
+
+    # output$testReportData <- renderTable({
+    #   req(objectChoice())
+    #   testReportData <- paste0("dataReport$`", objectChoice(), "`$incidence_attrition")
+    #   testReportData <- eval(parse(text = testReportData))
+    #   testReportData
+    # })
 
 
 
     # Retrieves list of functions with correct selected data arguments
-    menuFunSelected  <- reactive({
-      menuFunSelected  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
-      menuFunSelected$arguments <- gsub("incidence_attrition",
-                                "dataReport$incidenceAttritionData",
-                                menuFunSelected$arguments)
-      menuFunSelected$arguments <- gsub("prevalence_attrition",
-                                "dataReport$prevalenceAttritionData",
-                                menuFunSelected$arguments)
-      menuFunSelected$arguments <- gsub("incidence_estimates",
-                                "dataReport$incidenceCommonData",
-                                menuFunSelected$arguments)
-      menuFunSelected$arguments <- gsub("prevalence_estimates",
-                                "dataReport$prevalenceCommonData",
-                                menuFunSelected$arguments)
-      menuFunSelected$arguments[menuFunSelected$name == "table1SexAge"] <- "uploadedFiles$data$incidence_estimates"
-      menuFunSelected  <- menuFunSelected  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-      menuFunSelected
+    menuFunSel  <- reactive({
+      menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
+      menuFun$arguments <- gsub("incidence_attrition",
+                                "incidenceAttritionData()",
+                                menuFun$arguments)
+      menuFun$arguments <- gsub("prevalence_attrition",
+                                "prevalenceAttritionData()",
+                                menuFun$arguments)
+      menuFun$arguments <- gsub("incidence_estimates",
+                                "incidenceCommonData()",
+                                menuFun$arguments)
+      menuFun$arguments <- gsub("prevalence_estimates",
+                                "prevalenceCommonData()",
+                                menuFun$arguments)
+      menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$data$incidence_estimates"
+      menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
+      menuFun
     })
 
     # 4. Word report generator
@@ -737,7 +768,8 @@ reportGenerator <- function() {
       incidencePrevalenceDocx <- read_docx(path = file.path(system.file("templates/word/darwinTemplate.docx", package = "ReportGenerator")))
       reverseList <- rev(objectDataFrame()$contents)
       for (i in reverseList) {
-        menuFunction <- menuFunSelected() %>%
+        # i <- "Table - Number of participants"
+        menuFunction <- menuFunSel() %>%
           dplyr::filter(title == i)
         itemOptions <- menuFunction %>% getItemOptions()
         expression <- menuFunction %>%
