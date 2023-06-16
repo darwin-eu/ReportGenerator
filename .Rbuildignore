@@ -25,7 +25,6 @@ itemsConfig - Copy.csv
 report.tex
 Report.html
 ^Reports/$
-^.*\.docx$
 report.tex
 ^incidence_attrition_ab\.rda$
 ^prevalence_attrition_ab\.rda$
