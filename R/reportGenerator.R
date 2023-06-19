@@ -179,7 +179,7 @@ reportGenerator <- function() {
       commonData <- commonData %>%
         filter(analysis_id %in% c(input$analysisIdTable1))
       dataReport[[objectChoice()]][["prevalence_attrition"]] <- commonData
-      commonData
+      dataReport[[objectChoice()]][["prevalence_attrition"]]
     })
 
     # Data: incidence_attrition
@@ -190,7 +190,7 @@ reportGenerator <- function() {
       commonData <- commonData %>%
         filter(analysis_id %in% c(input$analysisIdTable1))
       dataReport[[objectChoice()]][["incidence_attrition"]] <- commonData
-      commonData
+      dataReport[[objectChoice()]][["incidence_attrition"]]
     })
 
     # Data: incidence_estimates
@@ -437,6 +437,13 @@ reportGenerator <- function() {
                                label = "To",
                                choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
                                selected = max(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
+            ),
+            fluidRow(
+              column(4,
+                     checkboxInput(inputId = "lockDataIncidence",
+                                 label = "Add data to report",
+                                 value = FALSE)
+              ),
             )
           )
         )
@@ -492,6 +499,13 @@ reportGenerator <- function() {
                                label = "To",
                                choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
                                selected = max(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
+            ),
+            fluidRow(
+              column(4,
+                     checkboxInput(inputId = "lockDataPrevalence",
+                                 label = "Add data to report",
+                                 value = FALSE)
+              ),
             )
           )
         )
@@ -683,11 +697,11 @@ reportGenerator <- function() {
     output$previewPlot <- renderPlot({
       req(objectChoice())
 
-      if (grepl("Incidence", objectChoice())) {
-        dataReport[[objectChoice()]][["incidence_estimates"]] <- incidenceCommonData()
-      } else if (grepl("Prevalence", objectChoice())){
-        dataReport[[objectChoice()]][["prevalence_estimates"]] <- prevalenceCommonData()
-      }
+      # if (grepl("Incidence", objectChoice())) {
+      #   dataReport[[objectChoice()]][["incidence_estimates"]] <- incidenceCommonData()
+      # } else if (grepl("Prevalence", objectChoice())){
+      #   dataReport[[objectChoice()]][["prevalence_estimates"]] <- prevalenceCommonData()
+      # }
 
       menuFunction <- menuFun() %>%
         dplyr::filter(title == objectChoice())
@@ -764,21 +778,64 @@ reportGenerator <- function() {
 
     # dataReport <- reactiveValues()
 
+    # objectChoice <- "Plot - Prevalence rate per year"
+
     # observeEvent(input$lockDataTable1, {
-    #   if(input$lockDataTable1 == TRUE) {
-    #     objectReport <- menuFun() %>%
-    #       dplyr::filter(title == objectChoice()) %>%
+    #   if(input$lockDataIncidence == TRUE) {
+    #     objectReport <- menuFun %>%
+    #       dplyr::filter(title == objectChoice) %>%
     #       dplyr::pull(arguments)
-    #   objectReport <- gsub(" ", "", objectReport)
-    #   argumentsData <- unlist(strsplit(objectReport, ","))
-    #   for (i in argumentsData) {
-    #     # if (grepl("\\(\\)", i)) {
-    #     arguments <- eval(parse(text = i))
-    #     dataReport[[objectChoice()]][[i]] <- arguments
-    #     # }
-    #   }
+    #     objectReport <- gsub(" ", "", objectReport)
+    #     argumentsData <- unlist(strsplit(objectReport, ","))
+    #     for (i in argumentsData) {
+    #       if (grepl("prevalence", i)) {
+    #         arguments <- eval(parse(text = i))
+    #         dataReport[[objectChoice]][["prevalence_estimates"]] <- arguments
+    #       } else if (grepl("incidence", i)) {
+    #         arguments <- eval(parse(text = i))
+    #         dataReport[[objectChoice]][["incidence_estimates"]] <- arguments
+    #       }
+    #     }
     #   }
     # })
+
+    observeEvent(input$lockDataIncidence, {
+      if(input$lockDataIncidence == TRUE) {
+        objectReport <- menuFun() %>%
+          dplyr::filter(title == objectChoice()) %>%
+          dplyr::pull(arguments)
+        objectReport <- gsub(" ", "", objectReport)
+        argumentsData <- unlist(strsplit(objectReport, ","))
+        for (i in argumentsData) {
+          if (grepl("prevalence", i)) {
+            arguments <- eval(parse(text = i))
+            dataReport[[objectChoice()]][["prevalence_estimates"]] <- arguments
+          } else if (grepl("incidence", i)) {
+            arguments <- eval(parse(text = i))
+            dataReport[[objectChoice()]][["incidence_estimates"]] <- arguments
+          }
+        }
+      }
+    })
+
+    observeEvent(input$lockDataPrevalence, {
+      if(input$lockDataPrevalence == TRUE) {
+        objectReport <- menuFun() %>%
+          dplyr::filter(title == objectChoice()) %>%
+          dplyr::pull(arguments)
+        objectReport <- gsub(" ", "", objectReport)
+        argumentsData <- unlist(strsplit(objectReport, ","))
+        for (i in argumentsData) {
+          if (grepl("prevalence", i)) {
+            arguments <- eval(parse(text = i))
+            dataReport[[objectChoice()]][["prevalence_estimates"]] <- arguments
+          } else if (grepl("incidence", i)) {
+            arguments <- eval(parse(text = i))
+            dataReport[[objectChoice()]][["incidence_estimates"]] <- arguments
+          }
+        }
+      }
+    })
 
     output$testReportData <- renderTable({
       req(objectChoice())
