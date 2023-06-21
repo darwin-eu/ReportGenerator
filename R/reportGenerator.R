@@ -151,28 +151,6 @@ reportGenerator <- function() {
 
     dataReport <- reactiveValues()
 
-    # observe({
-    #   req(objectChoice())
-    #   commonData <- uploadedFiles$data$prevalence_attrition
-    #   commonData[is.na(commonData)] = 0
-    #   commonData <- commonData %>%
-    #     filter(analysis_id %in% c(input$analysisIdTable1))
-    #   dataReport[[objectChoice()]][["prevalence_attrition"]] <- commonData
-    #   dataReport[[objectChoice()]][["prevalence_attrition"]]
-    # })
-
-    # Data: incidence_attrition
-
-    # observe({
-    #   req(objectChoice())
-    #   commonData <- uploadedFiles$data$incidence_attrition
-    #   commonData[is.na(commonData)] = 0
-    #   commonData <- commonData %>%
-    #     filter(analysis_id %in% c(input$analysisIdTable1))
-    #   dataReport[[objectChoice()]][["incidence_attrition"]] <- commonData
-    #   dataReport[[objectChoice()]][["incidence_attrition"]]
-    # })
-
     prevalenceAttritionCommon <- reactive({
       commonData <- uploadedFiles$data$prevalence_attrition
       commonData[is.na(commonData)] = 0
@@ -319,14 +297,6 @@ reportGenerator <- function() {
     # Retrieves list of functions available and places the correct arguments
     menuFun  <- reactive({
       menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
-      # menuFun$arguments <- gsub("incidence_attrition",
-      #                           "dataReport[[objectChoice()]][['incidence_attrition']]",
-      #                           menuFun$arguments)
-      # menuFun$arguments <- gsub("prevalence_attrition",
-      #                           "dataReport[[objectChoice()]][['prevalence_attrition']]",
-      #                           menuFun$arguments)
-
-
       menuFun$arguments <- gsub("incidence_attrition",
                                 "incidenceAttritionCommon()",
                                 menuFun$arguments)
@@ -372,7 +342,11 @@ reportGenerator <- function() {
             #                    value = FALSE)
             # ),
             column(8,
-                   textAreaInput("captionTable1", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
+                   textAreaInput("captionTable1",
+                                 "Caption",
+                                 table1aAutText(uploadedFiles$data$incidence_attrition,
+                                                uploadedFiles$data$prevalence_attrition),
+                                 height = "130px")
             )
           )
         )
@@ -380,206 +354,41 @@ reportGenerator <- function() {
         tagList(
           fluidRow(
             column(8,
-                   textAreaInput("captionTable1", "Caption", table1aAutText(uploadedFiles$data$incidence_attrition, uploadedFiles$data$prevalence_attrition), height = "130px")
+                   textAreaInput("captionTable1",
+                                 "Caption",
+                                 table1aAutText(uploadedFiles$data$incidence_attrition,
+                                                uploadedFiles$data$prevalence_attrition),
+                                 height = "130px")
             )
           )
         )
+      } else if (objectChoice() == "Plot - Incidence rate per year") {
+
+        incPlotByYearFilters(uploadedFiles, menuFun(), objectChoice())
+
       } else if (objectChoice() == "Plot - Incidence rate per year by sex") {
 
         incPlotSexFilters(uploadedFiles, menuFun(), objectChoice())
-
 
       } else if (objectChoice() == "Plot - Incidence rate per year by age") {
 
         incPlotAgeFilters(uploadedFiles, menuFun(), objectChoice())
 
+      } else if (objectChoice() == "Plot - Prevalence rate per year") {
 
-      }else if (grepl("Prevalence", objectChoice())) {
-        tagList(
-          fluidRow(
-            column(4,
-                   pickerInput(inputId = "databasePrevalence",
-                               label = "Database",
-                               choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
-                               selected = "All",
-                               multiple = TRUE)
-            ),
-            column(4,
-                   selectInput(inputId = "outcomePrevalence",
-                               label = "Outcome",
-                               choices = unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name))
-            )
-          ),
-          fluidRow(
-            column(4,
-                   selectInput(inputId = "sexPrevalence",
-                               label = "Sex",
-                               choices = c("All", unique(uploadedFiles$data$prevalence_estimates$denominator_sex)))
-            ),
-            column(4,
-                   selectInput(inputId = "agePrevalence",
-                               label = "Age",
-                               choices = c("All", unique(uploadedFiles$data$prevalence_estimates$denominator_age_group)))
-            ),
-          ),
-          fluidRow(
-            column(4,
-                   selectInput(inputId = "intervalPrevalence",
-                               label = "Interval",
-                               choices = unique(uploadedFiles$data$prevalence_estimates$analysis_interval)),
-            ),
-            column(4,
-                   selectInput(inputId = "typePrevalence",
-                               label = "Analysis type",
-                               choices = unique(uploadedFiles$data$prevalence_estimates$analysis_type)),
-            )
-          ),
-          fluidRow(
-            column(4,
-                   selectInput(inputId = "timeFromPrevalence",
-                               label = "From",
-                               choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
-                               selected = min(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
-            ),
-            column(4,
-                   selectInput(inputId = "timeToPrevalence",
-                               label = "To",
-                               choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
-                               selected = max(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
-            ),
-            fluidRow(
-              column(4,
-                     checkboxInput(inputId = "lockDataPrevalence",
-                                 label = "Add data to report",
-                                 value = FALSE)
-              ),
-            )
-          )
-        )
+        prevPlotByYearFilters(uploadedFiles, menuFun(), objectChoice())
+
+      } else if (objectChoice() == "Plot - Prevalence rate per year by sex") {
+
+        prevPlotSexFilters(uploadedFiles, menuFun(), objectChoice())
+
       }
     })
-
-    # observeEvent(input$previewPlotOption, {
-    #   if  (input$previewPlotOption == "Facet by outcome") {
-    #     updatePickerInput(session,
-    #                       inputId = "databaseIncidence",
-    #                       label = "Database",
-    #                       choices = unique(uploadedFiles$data$incidence_estimates$database_name),
-    #                       selected = uploadedFiles$data$incidence_estimates$database_name[1],
-    #                       options = list(
-    #                         maxOptions = 1
-    #                       ))
-    #   } else {
-    #     updatePickerInput(session,
-    #                       inputId = "databaseIncidence",
-    #                       label = "Database",
-    #                       choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-    #                       selected = "All",
-    #                       options = list(
-    #                         maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
-    #                       ))
-    #   }
-    # })
 
     # Updates to the filters according to the object
     observe({
       req(objectChoice())
-      if (objectChoice() == "Plot - Incidence rate per year") {
-        updateSelectInput(inputId = "sexIncidence",
-                          choices = unique(uploadedFiles$data$incidence_estimates$denominator_sex))
-        updateSelectInput(inputId = "ageIncidence",
-                          choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
-      } else if (objectChoice() == "Plot - Incidence rate per year by sex") {
-
-        # if  (input$previewPlotOption == "Facet by outcome") {
-        #   updatePickerInput(session,
-        #                     inputId = "databaseIncidence",
-        #                     label = "Database",
-        #                     choices = unique(uploadedFiles$data$incidence_estimates$database_name),
-        #                     selected = uploadedFiles$data$incidence_estimates$database_name[1],
-        #                     options = list(
-        #                       maxOptions = 1
-        #                     ))
-        # } else {
-        #
-        #   updatePickerInput(session,
-        #                     inputId = "databaseIncidence",
-        #                     label = "Database",
-        #                     choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-        #                     selected = "All",
-        #                     options = list(
-        #                       maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
-        #                     ))
-        # }
-        # updateSelectInput(inputId = "sexIncidence",
-        #                   choices = c("All",
-        #                               unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
-        # updateSelectInput(inputId = "ageIncidence",
-        #                   choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
-
-      } else if (objectChoice() == "Plot - Incidence rate per year by age") {
-
-        # if  (input$previewPlotOption == "Facet by outcome") {
-        #   updatePickerInput(session,
-        #                     inputId = "databaseIncidence",
-        #                     label = "Database",
-        #                     choices = unique(uploadedFiles$data$incidence_estimates$database_name),
-        #                     selected = uploadedFiles$data$incidence_estimates$database_name[1],
-        #                     options = list(
-        #                       maxOptions = 1
-        #                     ))
-        #
-        # } else {
-        #
-        #   updatePickerInput(session,
-        #                     inputId = "databaseIncidence",
-        #                     label = "Database",
-        #                     choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-        #                     selected = "All",
-        #                     options = list(
-        #                       maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
-        #                     ))
-        #
-        # }
-        # updateSelectInput(inputId = "sexIncidence",
-        #                   choices = unique(uploadedFiles$data$incidence_estimates$denominator_sex))
-        # updateSelectInput(inputId = "ageIncidence",
-        #                   choices = c("All",
-        #                               unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
-
-      }
-      else if (objectChoice() == "Plot - Prevalence rate per year") {
-
-        updateSelectInput(inputId = "sexPrevalence",
-                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_sex))
-
-        updateSelectInput(inputId = "agePrevalence",
-                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_age_group))
-
-      } else if (objectChoice() == "Plot - Prevalence rate per year by sex") {
-
-        # if  (input$previewPlotOption == "Facet by outcome") {
-        #   updatePickerInput(session,
-        #                     inputId = "databasePrevalence",
-        #                     label = "Database",
-        #                     choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
-        #                     selected = uploadedFiles$data$prevalence_estimates$database_name[1],
-        #                     options = list(
-        #                       maxOptions = 1
-        #                     ))
-        #
-        # } else {
-        #
-        #   updatePickerInput(session,
-        #                     inputId = "databasePrevalence",
-        #                     label = "Database",
-        #                     choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
-        #                     selected = "All",
-        #                     options = list(
-        #                       maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
-        #                     ))
-        #
-        # }
+      if (objectChoice() == "Plot - Prevalence rate per year by sex") {
 
         updateSelectInput(inputId = "sexPrevalence",
                           choices = c("All",
@@ -588,29 +397,6 @@ reportGenerator <- function() {
                           choices = unique(uploadedFiles$data$prevalence_estimates$denominator_age_group))
 
       } else if (objectChoice() == "Plot - Prevalence rate per year by age") {
-
-        # if  (input$previewPlotOption == "Facet by outcome") {
-        #   updatePickerInput(session,
-        #                     inputId = "databasePrevalence",
-        #                     label = "Database",
-        #                     choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
-        #                     selected = uploadedFiles$data$prevalence_estimates$database_name[1],
-        #                     options = list(
-        #                       maxOptions = 1
-        #                     ))
-        #
-        # } else {
-        #
-        #   updatePickerInput(session,
-        #                     inputId = "databasePrevalence",
-        #                     label = "Database",
-        #                     choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
-        #                     selected = "All",
-        #                     options = list(
-        #                       maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
-        #                     ))
-        #
-        # }
 
         updateSelectInput(inputId = "sexPrevalence",
                           choices = unique(uploadedFiles$data$prevalence_estimates$denominator_sex))
@@ -686,79 +472,6 @@ reportGenerator <- function() {
       }
     })
 
-    # Reactive values to hold data for the Word Report
-
-    # dataReport$data <- list()
-    # #
-    # objectChoice <- "Table - Number of participants"
-    # #
-    # objectReport <- menuFun %>%
-    #   dplyr::filter(title == objectChoice) %>%
-    #   dplyr::pull(arguments)
-    #
-    # objectReport <- gsub(" ", "", objectReport)
-    #
-    # argumentsData <- unlist(strsplit(objectReport, ","))
-    #
-    # # argumentsData <- c("incidence_attrition", "prevalence_attrition")
-    #
-    # argumentsData <- c("incidence_attrition", "prevalence_attrition")
-    #
-    # for (i in argumentsData) {
-    #   # if (grepl("_estimates", i)) {
-    #     dataReport$data[[objectChoice]][[i]] <- eval(parse(text = i))
-    #   # }
-    # }
-
-    # for (i in argumentsData) {
-    #   if (grepl("\\(\\)", i)) {
-    #   functionReport[[objectChoice]][[i]] <- eval(parse(text = i))
-    #   }
-    # }
-
-
-    # dataReport <- list()
-    # #
-    # objectChoice <- "Table - Number of participants"
-    # objectReport <- menuFun %>%
-    #   dplyr::filter(title == objectChoice) %>%
-    #   dplyr::pull(arguments)
-    # objectReport <- gsub(" ", "", objectReport)
-    # argumentsData <- unlist(strsplit(objectReport, ","))
-    #
-    # for (i in argumentsData) {
-    #   # if (grepl("\\(\\)", i)) {
-    #     # arguments <- eval(parse(text = i))
-    #     dataReport[[objectChoice]][[i]] <- eval(parse(text = i), envir = uploadedFiles$data)
-    #   # }
-    # }
-
-
-    ###
-
-    # dataReport <- reactiveValues()
-
-    # objectChoice <- "Plot - Prevalence rate per year"
-
-    # observeEvent(input$lockDataTable1, {
-    #   if(input$lockDataIncidence == TRUE) {
-    #     objectReport <- menuFun %>%
-    #       dplyr::filter(title == objectChoice) %>%
-    #       dplyr::pull(arguments)
-    #     objectReport <- gsub(" ", "", objectReport)
-    #     argumentsData <- unlist(strsplit(objectReport, ","))
-    #     for (i in argumentsData) {
-    #       if (grepl("prevalence", i)) {
-    #         arguments <- eval(parse(text = i))
-    #         dataReport[[objectChoice]][["prevalence_estimates"]] <- arguments
-    #       } else if (grepl("incidence", i)) {
-    #         arguments <- eval(parse(text = i))
-    #         dataReport[[objectChoice]][["incidence_estimates"]] <- arguments
-    #       }
-    #     }
-    #   }
-    # })
-
     observeEvent(input$lockDataIncidence, {
       if(input$lockDataIncidence == TRUE) {
         objectReport <- menuFun() %>%
@@ -766,49 +479,6 @@ reportGenerator <- function() {
           dplyr::pull(arguments)
         objectReport <- gsub(" ", "", objectReport)
         argumentsData <- unlist(strsplit(objectReport, ","))
-
-        ### Facet ###
-        # if (objectChoice() == "Plot - Incidence rate per year") {
-        #   if (input$previewPlotOption == "Facet by outcome") {
-        #     facet <- "outcome_cohort_name"
-        #     colour <- "database_name"
-        #   } else {
-        #     facet <- "database_name"
-        #     colour <- "outcome_cohort_name"
-        #   }
-        # } else if (objectChoice() == "Plot - Incidence rate per year by sex") {
-        #   if (input$previewPlotOption == "Facet by outcome") {
-        #     facet <- "outcome_cohort_name"
-        #     colour <- "denominator_sex"
-        #     } else {
-        #     facet <- "database_name"
-        #     colour <- "denominator_sex"
-        #     }
-        # } else if (objectChoice() == "Plot - Incidence rate per year by age") {
-        #   if (input$previewPlotOption == "Facet by outcome") {
-        #     facet <- "outcome_cohort_name"
-        #     colour <- "denominator_age_group"
-        #   } else {
-        #     facet <- "database_name"
-        #     colour <- "denominator_age_group"
-        #   }
-        # }
-
-        # facet <- "facet = 'outcome_cohort_name'"
-        # colour <- "colour = 'database_name'"
-        # Table - Number of participants
-        # Table - Number of participants by sex and age group
-        # Plot - Incidence rate per year by sex
-        # Plot - Incidence rate per year
-        # Plot - Incidence rate per year by age
-        # Plot - Prevalence rate per year
-        # Plot - Prevalence rate per year by sex
-        # Plot - Prevalence rate per year by age
-
-
-
-        #############
-
         for (i in argumentsData) {
           if (grepl("incidence", i)) {
             arguments <- eval(parse(text = i))
@@ -821,25 +491,6 @@ reportGenerator <- function() {
       }
     })
 
-    # observeEvent(input$lockDataIncidence, {
-    #   if(input$lockDataIncidence == TRUE) {
-    #     objectReport <- menuFun() %>%
-    #       dplyr::filter(title == objectChoice()) %>%
-    #       dplyr::pull(arguments)
-    #     objectReport <- gsub(" ", "", objectReport)
-    #     argumentsData <- unlist(strsplit(objectReport, ","))
-    #     for (i in argumentsData) {
-    #       if (grepl("prevalence", i)) {
-    #         arguments <- eval(parse(text = i))
-    #         dataReport[[objectChoice()]][["prevalence_estimates"]] <- arguments
-    #       } else if (grepl("incidence", i)) {
-    #         arguments <- eval(parse(text = i))
-    #         dataReport[[objectChoice()]][["incidence_estimates"]] <- arguments
-    #       }
-    #     }
-    #   }
-    # })
-
     observeEvent(input$lockDataPrevalence, {
       if(input$lockDataPrevalence == TRUE) {
         objectReport <- menuFun() %>%
@@ -851,11 +502,11 @@ reportGenerator <- function() {
           if (grepl("prevalence", i)) {
             arguments <- eval(parse(text = i))
             dataReport[[objectChoice()]][["prevalence_estimates"]] <- arguments
-          } else if (grepl("incidence", i)) {
-            arguments <- eval(parse(text = i))
-            dataReport[[objectChoice()]][["incidence_estimates"]] <- arguments
+            dataReport[[objectChoice()]][["plotOption"]] <- input$previewPlotOption
           }
         }
+      } else {
+        dataReport[[objectChoice()]] <- NULL
       }
     })
 
