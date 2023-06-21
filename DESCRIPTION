@@ -40,7 +40,8 @@ Imports:
     zip,
     waldo,
     glue,
-    rLDCP
+    rLDCP,
+    yaml
 Suggests: 
     testthat
 Remotes:
