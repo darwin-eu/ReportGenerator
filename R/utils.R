@@ -170,3 +170,14 @@ increaseFacetStripSize <- function(plotlyObject) {
   }
   return(plotlyObject)
 }
+
+
+facetReturn <- function(menuFun, objectChoice) {
+  plotOptions <- menuFun %>%
+    dplyr::filter(title == objectChoice) %>%
+    getItemOptions()
+  if (!identical(plotOptions, character(0))) {
+    names(plotOptions) <- as.character(glue::glue("{toupper(letters)[1:length(plotOptions)]}: {plotOptions}"))
+    return(selectizeInput("previewPlotOption", "Select plot type", choices = plotOptions))
+  }
+}
