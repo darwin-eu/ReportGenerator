@@ -517,27 +517,27 @@ reportGenerator <- function() {
       }
     })
 
-    observeEvent(input$previewPlotOption, {
-      if  (input$previewPlotOption == "Facet by outcome") {
-        updatePickerInput(session,
-                          inputId = "databaseIncidence",
-                          label = "Database",
-                          choices = unique(uploadedFiles$data$incidence_estimates$database_name),
-                          selected = uploadedFiles$data$incidence_estimates$database_name[1],
-                          options = list(
-                            maxOptions = 1
-                          ))
-      } else {
-        updatePickerInput(session,
-                          inputId = "databaseIncidence",
-                          label = "Database",
-                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-                          selected = "All",
-                          options = list(
-                            maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
-                          ))
-      }
-    })
+    # observeEvent(input$previewPlotOption, {
+    #   if  (input$previewPlotOption == "Facet by outcome") {
+    #     updatePickerInput(session,
+    #                       inputId = "databaseIncidence",
+    #                       label = "Database",
+    #                       choices = unique(uploadedFiles$data$incidence_estimates$database_name),
+    #                       selected = uploadedFiles$data$incidence_estimates$database_name[1],
+    #                       options = list(
+    #                         maxOptions = 1
+    #                       ))
+    #   } else {
+    #     updatePickerInput(session,
+    #                       inputId = "databaseIncidence",
+    #                       label = "Database",
+    #                       choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
+    #                       selected = "All",
+    #                       options = list(
+    #                         maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
+    #                       ))
+    #   }
+    # })
 
     # Updates to the filters according to the object
     observe({
@@ -842,7 +842,15 @@ reportGenerator <- function() {
             facet <- "database_name"
             colour <- "denominator_sex"
             }
+        } else if (objectChoice() == "Plot - Incidence rate per year by age") {
+          if (input$previewPlotOption == "Facet by outcome") {
+            facet <- "outcome_cohort_name"
+            colour <- "denominator_age_group"
+          } else {
+            facet <- "database_name"
+            colour <- "denominator_age_group"
           }
+        }
 
         # facet <- "facet = 'outcome_cohort_name'"
         # colour <- "colour = 'database_name'"
@@ -986,22 +994,6 @@ reportGenerator <- function() {
         # incidence_attrition <- eval(parse(text = paste0("dataReport$data$`", i, "`$incidence_attrition")))
         # prevalence_attrition <- eval(parse(text = paste0("dataReport$data$`", i, "`$prevalence_attrition")))
         ###
-        # i <- "Table - Number of participants"
-        # menuFunction <- menuSel %>%
-        #   dplyr::filter(title == i)
-        # itemOptions <- menuFunction %>% getItemOptions()
-        # expression <- menuFunction %>%
-        #   dplyr::pull(signature)
-        # if (!identical(itemOptions, character(0))) {
-        #   expression <- expression %>%
-        #     addPreviewItemType(input$previewPlotOption)
-        # }
-        # signatureData <- paste0("dataReport$`", i, "`")
-        # dataSelected <- dataReport[[i]]
-        # dataSelected <- eval(parse(text = signatureData))
-        # names(dataSelected)
-        # object <- eval(parse(text = expression), envir = dataSelected)
-        # class(object)
         ###
 
         menuFunction <- menuSel() %>%
@@ -1010,9 +1002,21 @@ reportGenerator <- function() {
         expression <- menuFunction %>%
           dplyr::pull(signature)
         if (!identical(itemOptions, character(0))) {
-          expression <- expression %>%
-            addPreviewItemType(input$previewPlotOption)
+          if (grepl("by sex", objectChoice())) {
+            expression <- expression %>%
+              addPreviewItemTypeSex(input$previewPlotOption)
+          } else if (grepl("by age", objectChoice())) {
+            expression <- expression %>%
+              addPreviewItemTypeAge(input$previewPlotOption)
+          } else  {
+            expression <- expression %>%
+              addPreviewItemType(input$previewPlotOption)
+          }
         }
+
+        # expression <- expression %>%
+        #   addPreviewItemType(input$previewPlotOption)
+
         # message(names(dataSelected))
         object <- eval(parse(text = expression), envir = dataReport[[i]])
         if ("flextable" %in% class(object)) {
