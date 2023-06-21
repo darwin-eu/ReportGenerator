@@ -56,7 +56,7 @@ reportGenerator <- function() {
                        actionButton("generateReport", "Generate Report"),
                        width = 4),
                    box(uiOutput("plotFilters"),
-                       tableOutput("testReportData"),
+                       textOutput("testReportData"),
                        uiOutput("itemPreview"),
                        width = 8)
                    )
@@ -826,23 +826,22 @@ reportGenerator <- function() {
         argumentsData <- unlist(strsplit(objectReport, ","))
 
         ### Facet ###
-
-        if (input$previewPlotOption == "Facet by outcome") {
-          if (grepl("Plot - Incidence rate per year", objectChoice())) {
+        if (objectChoice() == "Plot - Incidence rate per year") {
+          if (input$previewPlotOption == "Facet by outcome") {
             facet <- "outcome_cohort_name"
             colour <- "database_name"
-          } else if (grepl("sex", objectChoice())) {
-            facet <- "outcome_cohort_name"
-            colour <- "denominator_sex"
-          }
-        } else {
-          if (grepl("Plot - Incidence rate per year by sex", objectChoice())) {
+          } else {
             facet <- "database_name"
             colour <- "outcome_cohort_name"
-          } else if (grepl("sex", objectChoice())) {
+          }
+        } else if (objectChoice() == "Plot - Incidence rate per year by sex") {
+          if (input$previewPlotOption == "Facet by outcome") {
+            facet <- "outcome_cohort_name"
+            colour <- "denominator_sex"
+            } else {
             facet <- "database_name"
             colour <- "denominator_sex"
-          }
+            }
           }
 
         # facet <- "facet = 'outcome_cohort_name'"
@@ -867,9 +866,11 @@ reportGenerator <- function() {
           } else if (grepl("face", i)) {
             dataReport[[objectChoice()]][["facet"]] <- facet
           } else if (grepl("colour", i)) {
-            dataReport[[objectChoice()]][["colour"]] <- facet
+            dataReport[[objectChoice()]][["colour"]] <- colour
         }
         }
+      } else {
+        dataReport[[objectChoice()]] <- NULL
       }
     })
 
@@ -911,11 +912,14 @@ reportGenerator <- function() {
       }
     })
 
-    output$testReportData <- renderTable({
+    output$testReportData <- renderText({
       req(objectChoice())
       # uploadedFiles$data$incidence_attrition
       # names(dataReport[[objectChoice()]])
-      dataReport[[objectChoice()]][["incidence_estimates"]]
+      textData <- c(dataReport[[objectChoice()]][["facet"]], dataReport[[objectChoice()]][["colour"]])
+
+      textData
+
       })
 
     # output$testReportData <- renderTable({
