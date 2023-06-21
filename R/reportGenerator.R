@@ -303,7 +303,6 @@ reportGenerator <- function() {
       menuFun$arguments <- gsub("prevalence_attrition",
                                 "prevalenceAttritionCommon()",
                                 menuFun$arguments)
-
       menuFun$arguments <- gsub("incidence_estimates",
                                 "incidenceCommonData()",
                                 menuFun$arguments)
@@ -329,80 +328,21 @@ reportGenerator <- function() {
     selectionPlotFilter <- reactive({
       req(objectChoice())
       if (objectChoice() == "Table - Number of participants") {
-        tagList(
-          fluidRow(
-            column(4,
-                   selectInput(inputId = "analysisIdTable1",
-                               label = "Analysis ID",
-                               choices = unique(uploadedFiles$data$incidence_attrition$analysis_id))
-            ),
-            # column(4,
-            #        checkboxInput(inputId = "lockDataTable1",
-            #                    label = "Add data to report",
-            #                    value = FALSE)
-            # ),
-            column(8,
-                   textAreaInput("captionTable1",
-                                 "Caption",
-                                 table1aAutText(uploadedFiles$data$incidence_attrition,
-                                                uploadedFiles$data$prevalence_attrition),
-                                 height = "130px")
-            )
-          )
-        )
+        tableNumParFilters(uploadedFiles)
       } else if (objectChoice() == "Table - Number of participants by sex and age group") {
-        tagList(
-          fluidRow(
-            column(8,
-                   textAreaInput("captionTable1",
-                                 "Caption",
-                                 table1aAutText(uploadedFiles$data$incidence_attrition,
-                                                uploadedFiles$data$prevalence_attrition),
-                                 height = "130px")
-            )
-          )
-        )
+        tableSexFilters(uploadedFiles)
       } else if (objectChoice() == "Plot - Incidence rate per year") {
-
         incPlotByYearFilters(uploadedFiles, menuFun(), objectChoice())
-
       } else if (objectChoice() == "Plot - Incidence rate per year by sex") {
-
         incPlotSexFilters(uploadedFiles, menuFun(), objectChoice())
-
       } else if (objectChoice() == "Plot - Incidence rate per year by age") {
-
         incPlotAgeFilters(uploadedFiles, menuFun(), objectChoice())
-
       } else if (objectChoice() == "Plot - Prevalence rate per year") {
-
         prevPlotByYearFilters(uploadedFiles, menuFun(), objectChoice())
-
       } else if (objectChoice() == "Plot - Prevalence rate per year by sex") {
-
         prevPlotSexFilters(uploadedFiles, menuFun(), objectChoice())
-
-      }
-    })
-
-    # Updates to the filters according to the object
-    observe({
-      req(objectChoice())
-      if (objectChoice() == "Plot - Prevalence rate per year by sex") {
-
-        updateSelectInput(inputId = "sexPrevalence",
-                          choices = c("All",
-                                      unique(uploadedFiles$data$prevalence_estimates$denominator_sex)))
-        updateSelectInput(inputId = "agePrevalence",
-                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_age_group))
-
       } else if (objectChoice() == "Plot - Prevalence rate per year by age") {
-
-        updateSelectInput(inputId = "sexPrevalence",
-                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_sex))
-
-        updateSelectInput(inputId = "agePrevalence",
-                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_age_group))
+        prevPlotAgeFilters(uploadedFiles, menuFun(), objectChoice())
       }
     })
 
@@ -429,26 +369,18 @@ reportGenerator <- function() {
     # Table
     output$previewTable <- renderTable({
       req(objectChoice())
-
       if (grepl("Table", objectChoice())) {
         object <- eval(parse(text = menuFun() %>%
                                dplyr::filter(title == objectChoice()) %>%
                                dplyr::pull(signature)))
         object
-      }
-    }, colnames = FALSE)
+        }
+      }, colnames = FALSE)
 
 
     # Figures
     output$previewPlot <- renderPlot({
       req(objectChoice())
-
-      # if (grepl("Incidence", objectChoice())) {
-      #   dataReport[[objectChoice()]][["incidence_estimates"]] <- incidenceCommonData()
-      # } else if (grepl("Prevalence", objectChoice())){
-      #   dataReport[[objectChoice()]][["prevalence_estimates"]] <- prevalenceCommonData()
-      # }
-
       menuFunction <- menuFun() %>%
         dplyr::filter(title == objectChoice())
       itemOptions <- menuFunction %>% getItemOptions()
@@ -469,9 +401,10 @@ reportGenerator <- function() {
       object <- eval(parse(text = expression))
       if (grepl("Plot", objectChoice())) {
         object
-      }
-    })
+        }
+      })
 
+    # Data saving functions to print into Word
     observeEvent(input$lockDataIncidence, {
       if(input$lockDataIncidence == TRUE) {
         objectReport <- menuFun() %>%
@@ -512,41 +445,29 @@ reportGenerator <- function() {
 
     output$testReportData <- renderText({
       req(objectChoice())
-      # uploadedFiles$data$incidence_attrition
-      # names(dataReport[[objectChoice()]])
       textData <- c(dataReport[[objectChoice()]][["plotOption"]])
-
       textData
-
       })
 
-    # output$testReportData <- renderTable({
-    #   req(objectChoice())
-    #   testReportData <- paste0("dataReport$`", objectChoice(), "`$incidence_attrition")
-    #   testReportData <- eval(parse(text = testReportData))
-    #   testReportData
-    # })
-
     menuSel  <- reactive({
-      menuSel  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
+      menuSel  <- read.csv(system.file("config/itemsConfigExternal.csv",
+                                       package = "ReportGenerator"), sep = ";")
       menuSel  <- menuSel  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
       menuSel
     })
 
     # 4. Word report generator
     observeEvent(input$generateReport, {
-      incidencePrevalenceDocx <- read_docx(path = system.file("templates", "word", "darwinTemplate.docx", package = "ReportGenerator"))
+      incidencePrevalenceDocx <- read_docx(path = system.file("templates",
+                                                              "word",
+                                                              "darwinTemplate.docx",
+                                                              package = "ReportGenerator"))
       reverseList <- rev(objectDataFrame()$contents)
       for (i in reverseList) {
-
-        # incidence_attrition <- eval(parse(text = paste0("dataReport$data$`", i, "`$incidence_attrition")))
-        # prevalence_attrition <- eval(parse(text = paste0("dataReport$data$`", i, "`$prevalence_attrition")))
-        ###
-        ###
-
         menuFunction <- menuSel() %>%
           dplyr::filter(title == i)
-        itemOptions <- menuFunction %>% getItemOptions()
+        itemOptions <- menuFunction %>%
+          getItemOptions()
         expression <- menuFunction %>%
           dplyr::pull(signature)
         if (!identical(itemOptions, character(0))) {
@@ -561,11 +482,6 @@ reportGenerator <- function() {
               addPreviewItemType(dataReport[[i]][["plotOption"]])
           }
         }
-
-        # expression <- expression %>%
-        #   addPreviewItemType(input$previewPlotOption)
-
-        # message(names(dataSelected))
         object <- eval(parse(text = expression), envir = dataReport[[i]])
         if ("flextable" %in% class(object)) {
           body_add_flextable(incidencePrevalenceDocx, value = object)
