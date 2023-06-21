@@ -384,75 +384,17 @@ reportGenerator <- function() {
             )
           )
         )
-      } else if (grepl("Incidence", objectChoice())) {
+      } else if (objectChoice() == "Plot - Incidence rate per year by sex") {
 
-        tagList(
-          fluidRow(
-            column(4,
-                   facetReturn(menuFun = menuFun(), objectChoice = objectChoice())
-            )
-          ),
-          fluidRow(
-            column(4,
-                   pickerInput(inputId = "databaseIncidence",
-                               label = "Database",
-                               choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-                               selected = "All",
-                               multiple = TRUE)
-            ),
-            column(4,
-                   selectInput(inputId = "outcomeIncidence",
-                               label = "Outcome",
-                               choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id))
-            )
-          ),
-          fluidRow(
-            column(4,
-                   selectInput(inputId = "sexIncidence",
-                               label = "Sex",
-                               choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
-            ),
-            column(4,
-                   selectInput(inputId = "ageIncidence",
-                               label = "Age",
-                               choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
-            ),
-          ),
-          fluidRow(
-            column(4,
-                   selectInput(inputId = "intervalIncidence",
-                               label = "Interval",
-                               choices = unique(uploadedFiles$data$incidence_estimates$analysis_interval)),
-            ),
-            column(4,
-                   selectInput(inputId = "repeatedIncidence",
-                               label = "Repeated Events",
-                               choices = unique(uploadedFiles$data$incidence_estimates$analysis_repeated_events)),
-            )
-          ),
-          fluidRow(
-            column(4,
-                   selectInput(inputId = "timeFromIncidence",
-                               label = "From",
-                               choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
-                               selected = min(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
-            ),
-            column(4,
-                   selectInput(inputId = "timeToIncidence",
-                               label = "To",
-                               choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
-                               selected = max(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
-            ),
-            fluidRow(
-              column(4,
-                     checkboxInput(inputId = "lockDataIncidence",
-                                 label = "Add data to report",
-                                 value = FALSE)
-              ),
-            )
-          )
-        )
-      } else if (grepl("Prevalence", objectChoice())) {
+        incPlotSexFilters(uploadedFiles, menuFun(), objectChoice())
+
+
+      } else if (objectChoice() == "Plot - Incidence rate per year by age") {
+
+        incPlotAgeFilters(uploadedFiles, menuFun(), objectChoice())
+
+
+      }else if (grepl("Prevalence", objectChoice())) {
         tagList(
           fluidRow(
             column(4,
@@ -569,11 +511,11 @@ reportGenerator <- function() {
         #                       maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
         #                     ))
         # }
-        updateSelectInput(inputId = "sexIncidence",
-                          choices = c("All",
-                                      unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
-        updateSelectInput(inputId = "ageIncidence",
-                          choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
+        # updateSelectInput(inputId = "sexIncidence",
+        #                   choices = c("All",
+        #                               unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
+        # updateSelectInput(inputId = "ageIncidence",
+        #                   choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
 
       } else if (objectChoice() == "Plot - Incidence rate per year by age") {
 
@@ -599,11 +541,11 @@ reportGenerator <- function() {
         #                     ))
         #
         # }
-        updateSelectInput(inputId = "sexIncidence",
-                          choices = unique(uploadedFiles$data$incidence_estimates$denominator_sex))
-        updateSelectInput(inputId = "ageIncidence",
-                          choices = c("All",
-                                      unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
+        # updateSelectInput(inputId = "sexIncidence",
+        #                   choices = unique(uploadedFiles$data$incidence_estimates$denominator_sex))
+        # updateSelectInput(inputId = "ageIncidence",
+        #                   choices = c("All",
+        #                               unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
 
       }
       else if (objectChoice() == "Plot - Prevalence rate per year") {
@@ -826,31 +768,31 @@ reportGenerator <- function() {
         argumentsData <- unlist(strsplit(objectReport, ","))
 
         ### Facet ###
-        if (objectChoice() == "Plot - Incidence rate per year") {
-          if (input$previewPlotOption == "Facet by outcome") {
-            facet <- "outcome_cohort_name"
-            colour <- "database_name"
-          } else {
-            facet <- "database_name"
-            colour <- "outcome_cohort_name"
-          }
-        } else if (objectChoice() == "Plot - Incidence rate per year by sex") {
-          if (input$previewPlotOption == "Facet by outcome") {
-            facet <- "outcome_cohort_name"
-            colour <- "denominator_sex"
-            } else {
-            facet <- "database_name"
-            colour <- "denominator_sex"
-            }
-        } else if (objectChoice() == "Plot - Incidence rate per year by age") {
-          if (input$previewPlotOption == "Facet by outcome") {
-            facet <- "outcome_cohort_name"
-            colour <- "denominator_age_group"
-          } else {
-            facet <- "database_name"
-            colour <- "denominator_age_group"
-          }
-        }
+        # if (objectChoice() == "Plot - Incidence rate per year") {
+        #   if (input$previewPlotOption == "Facet by outcome") {
+        #     facet <- "outcome_cohort_name"
+        #     colour <- "database_name"
+        #   } else {
+        #     facet <- "database_name"
+        #     colour <- "outcome_cohort_name"
+        #   }
+        # } else if (objectChoice() == "Plot - Incidence rate per year by sex") {
+        #   if (input$previewPlotOption == "Facet by outcome") {
+        #     facet <- "outcome_cohort_name"
+        #     colour <- "denominator_sex"
+        #     } else {
+        #     facet <- "database_name"
+        #     colour <- "denominator_sex"
+        #     }
+        # } else if (objectChoice() == "Plot - Incidence rate per year by age") {
+        #   if (input$previewPlotOption == "Facet by outcome") {
+        #     facet <- "outcome_cohort_name"
+        #     colour <- "denominator_age_group"
+        #   } else {
+        #     facet <- "database_name"
+        #     colour <- "denominator_age_group"
+        #   }
+        # }
 
         # facet <- "facet = 'outcome_cohort_name'"
         # colour <- "colour = 'database_name'"
@@ -871,10 +813,7 @@ reportGenerator <- function() {
           if (grepl("incidence", i)) {
             arguments <- eval(parse(text = i))
             dataReport[[objectChoice()]][["incidence_estimates"]] <- arguments
-          } else if (grepl("face", i)) {
-            dataReport[[objectChoice()]][["facet"]] <- facet
-          } else if (grepl("colour", i)) {
-            dataReport[[objectChoice()]][["colour"]] <- colour
+            dataReport[[objectChoice()]][["plotOption"]] <- input$previewPlotOption
         }
         }
       } else {
@@ -924,7 +863,7 @@ reportGenerator <- function() {
       req(objectChoice())
       # uploadedFiles$data$incidence_attrition
       # names(dataReport[[objectChoice()]])
-      textData <- c(dataReport[[objectChoice()]][["facet"]], dataReport[[objectChoice()]][["colour"]])
+      textData <- c(dataReport[[objectChoice()]][["plotOption"]])
 
       textData
 
@@ -1002,15 +941,15 @@ reportGenerator <- function() {
         expression <- menuFunction %>%
           dplyr::pull(signature)
         if (!identical(itemOptions, character(0))) {
-          if (grepl("by sex", objectChoice())) {
+          if (grepl("by sex", i)) {
             expression <- expression %>%
-              addPreviewItemTypeSex(input$previewPlotOption)
-          } else if (grepl("by age", objectChoice())) {
+              addPreviewItemTypeSex(dataReport[[i]][["plotOption"]])
+          } else if (grepl("by age", i)) {
             expression <- expression %>%
-              addPreviewItemTypeAge(input$previewPlotOption)
+              addPreviewItemTypeAge(dataReport[[i]][["plotOption"]])
           } else  {
             expression <- expression %>%
-              addPreviewItemType(input$previewPlotOption)
+              addPreviewItemType(dataReport[[i]][["plotOption"]])
           }
         }
 
