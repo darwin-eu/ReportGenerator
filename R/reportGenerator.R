@@ -876,48 +876,6 @@ reportGenerator <- function() {
     #   testReportData
     # })
 
-
-
-    # Retrieves list of functions with correct selected data arguments
-    # menuFunSel  <- reactive({
-      # req(objectChoice())
-      # objectChoice <- objectChoice()
-
-      # menuFun  <- read.csv(system.file("config", "itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
-      # menuFun$arguments <- gsub("incidence_attrition",
-      #                           paste0("dataReport$data$`", objectChoice, "`$incidence_attrition"),
-      #                           menuFun$arguments)
-      # menuFun$arguments <- gsub("prevalence_attrition",
-      #                           paste0("dataReport$data$`", objectChoice, "`$prevalence_attrition"),
-      #                           menuFun$arguments)
-      # menuFun$arguments <- gsub("incidence_estimates",
-      #                           paste0("dataReport$data$`", objectChoice, "`$incidence_estimates"),
-      #                           menuFun$arguments)
-      # menuFun$arguments <- gsub("prevalence_estimates",
-      #                           paste0("dataReport$data$`", objectChoice, "`$prevalence_estimates"),
-      #                           menuFun$arguments)
-      # menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$data$incidence_estimates"
-      # menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-      # menuFun
-
-      # menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
-      # menuFun$arguments <- gsub("incidence_attrition",
-      #                           paste0("dataReport$data$`", objectChoice(), "`$incidence_attrition"),
-      #                           menuFun$arguments)
-      # menuFun$arguments <- gsub("prevalence_attrition",
-      #                           paste0("dataReport$data$`", objectChoice(), "`$prevalence_attrition"),
-      #                           menuFun$arguments)
-      # menuFun$arguments <- gsub("incidence_estimates",
-      #                           paste0("dataReport$data$`", objectChoice(), "`$incidence_estimates"),
-      #                           menuFun$arguments)
-      # menuFun$arguments <- gsub("prevalence_estimates",
-      #                           paste0("dataReport$data$`", objectChoice(), "`$prevalence_estimates"),
-      #                           menuFun$arguments)
-      # menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$data$incidence_estimates"
-      # menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-      # menuFun
-    # })
-
     menuSel  <- reactive({
       menuSel  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
       menuSel  <- menuSel  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
