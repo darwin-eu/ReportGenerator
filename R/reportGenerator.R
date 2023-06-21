@@ -824,17 +824,73 @@ reportGenerator <- function() {
           dplyr::pull(arguments)
         objectReport <- gsub(" ", "", objectReport)
         argumentsData <- unlist(strsplit(objectReport, ","))
+
+        ### Facet ###
+
+        if (input$previewPlotOption == "Facet by outcome") {
+          if (grepl("Plot - Incidence rate per year", objectChoice())) {
+            facet <- "outcome_cohort_name"
+            colour <- "database_name"
+          } else if (grepl("sex", objectChoice())) {
+            facet <- "outcome_cohort_name"
+            colour <- "denominator_sex"
+          }
+        } else {
+          if (grepl("Plot - Incidence rate per year by sex", objectChoice())) {
+            facet <- "database_name"
+            colour <- "outcome_cohort_name"
+          } else if (grepl("sex", objectChoice())) {
+            facet <- "database_name"
+            colour <- "denominator_sex"
+          }
+          }
+
+        # facet <- "facet = 'outcome_cohort_name'"
+        # colour <- "colour = 'database_name'"
+        # Table - Number of participants
+        # Table - Number of participants by sex and age group
+        # Plot - Incidence rate per year by sex
+        # Plot - Incidence rate per year
+        # Plot - Incidence rate per year by age
+        # Plot - Prevalence rate per year
+        # Plot - Prevalence rate per year by sex
+        # Plot - Prevalence rate per year by age
+
+
+
+        #############
+
         for (i in argumentsData) {
-          if (grepl("prevalence", i)) {
-            arguments <- eval(parse(text = i))
-            dataReport[[objectChoice()]][["prevalence_estimates"]] <- arguments
-          } else if (grepl("incidence", i)) {
+          if (grepl("incidence", i)) {
             arguments <- eval(parse(text = i))
             dataReport[[objectChoice()]][["incidence_estimates"]] <- arguments
-          }
+          } else if (grepl("face", i)) {
+            dataReport[[objectChoice()]][["facet"]] <- facet
+          } else if (grepl("colour", i)) {
+            dataReport[[objectChoice()]][["colour"]] <- facet
+        }
         }
       }
     })
+
+    # observeEvent(input$lockDataIncidence, {
+    #   if(input$lockDataIncidence == TRUE) {
+    #     objectReport <- menuFun() %>%
+    #       dplyr::filter(title == objectChoice()) %>%
+    #       dplyr::pull(arguments)
+    #     objectReport <- gsub(" ", "", objectReport)
+    #     argumentsData <- unlist(strsplit(objectReport, ","))
+    #     for (i in argumentsData) {
+    #       if (grepl("prevalence", i)) {
+    #         arguments <- eval(parse(text = i))
+    #         dataReport[[objectChoice()]][["prevalence_estimates"]] <- arguments
+    #       } else if (grepl("incidence", i)) {
+    #         arguments <- eval(parse(text = i))
+    #         dataReport[[objectChoice()]][["incidence_estimates"]] <- arguments
+    #       }
+    #     }
+    #   }
+    # })
 
     observeEvent(input$lockDataPrevalence, {
       if(input$lockDataPrevalence == TRUE) {
@@ -858,7 +914,8 @@ reportGenerator <- function() {
     output$testReportData <- renderTable({
       req(objectChoice())
       # uploadedFiles$data$incidence_attrition
-      dataReport[[objectChoice()]][1]
+      # names(dataReport[[objectChoice()]])
+      dataReport[[objectChoice()]][["incidence_estimates"]]
       })
 
     # output$testReportData <- renderTable({
