@@ -9,9 +9,11 @@ prevPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databasePrevalence",
                          label = "Database",
-                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
-                         selected = "All",
-                         multiple = TRUE)
+                         choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
+                         selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                         options = list(
+                           maxOptions = 1
+                         ))
       ),
       column(4,
              selectInput(inputId = "outcomePrevalence",
@@ -78,9 +80,11 @@ prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databasePrevalence",
                          label = "Database",
-                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
-                         selected = "All",
-                         multiple = TRUE)
+                         choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
+                         selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                         options = list(
+                           maxOptions = 1
+                         ))
       ),
       column(4,
              selectInput(inputId = "outcomePrevalence",
@@ -147,9 +151,11 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databasePrevalence",
                          label = "Database",
-                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
-                         selected = "All",
-                         multiple = TRUE)
+                         choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
+                         selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                         options = list(
+                           maxOptions = 1
+                         ))
       ),
       column(4,
              selectInput(inputId = "outcomePrevalence",

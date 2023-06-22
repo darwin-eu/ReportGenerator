@@ -80,7 +80,10 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          label = "Database",
                          choices = unique(uploadedFiles$data$incidence_estimates$database_name),
                          selected = uploadedFiles$data$incidence_estimates$database_name[1],
-                         multiple = TRUE)
+                         multiple = FALSE,
+                         options = list(
+                           maxOptions = 1
+                         ))
       ),
       column(4,
              selectInput(inputId = "outcomeIncidence",
@@ -90,9 +93,11 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
     ),
     fluidRow(
       column(4,
-             selectInput(inputId = "sexIncidence",
+             pickerInput(inputId = "sexIncidence",
                          label = "Sex",
-                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_sex)))
+                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_sex)),
+                         selected = "All",
+                         multiple = TRUE)
       ),
       column(4,
              selectInput(inputId = "ageIncidence",
@@ -150,9 +155,12 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databaseIncidence",
                          label = "Database",
-                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-                         selected = "All",
-                         multiple = TRUE)
+                         choices = unique(uploadedFiles$data$incidence_estimates$database_name),
+                         selected = uploadedFiles$data$incidence_estimates$database_name[1],
+                         multiple = FALSE,
+                         options = list(
+                           maxOptions = 1
+                         ))
       ),
       column(4,
              selectInput(inputId = "outcomeIncidence",
@@ -167,9 +175,11 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          choices = unique(uploadedFiles$data$incidence_estimates$denominator_sex))
       ),
       column(4,
-             selectInput(inputId = "ageIncidence",
+             pickerInput(inputId = "ageIncidence",
                          label = "Age",
-                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_age_group)))
+                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_age_group)),
+                         selected = "All",
+                         multiple = TRUE)
       ),
     ),
     fluidRow(
