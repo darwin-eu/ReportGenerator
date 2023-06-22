@@ -66,7 +66,7 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 
 
   autoText <- glue(
-    "Table 1. A total of {totalParticipantsChar} study participants were included from all databases combined,",
+    "Table 1. A total of {totalParticipantsChar} participants were included in the study,",
     "{numberDatabaseChar}",
     "The starting populations ranged from {minParticipantsChar} ({label_percent(accuracy = 0.01)(minParticipants/totalParticipants)} in {databaseNameMin}) to {maxParticipantsChar} ({label_percent(accuracy = 0.01)(maxParticipants/totalParticipants)} in {databaseNameMax}).",
     "{femPropChar}",
@@ -74,9 +74,8 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
     .sep = " ")
 
   autoText <- gsub("  ", " ", autoText)
-
+  autoText <- gsub("  ", " ", autoText)
   return(autoText)
-
 }
 
 phraseList <- function(initialPhrase,
@@ -85,7 +84,24 @@ phraseList <- function(initialPhrase,
                        databaseName,
                        individuals) {
 
-  if (length(databaseName) == 2) {
+  if (length(databaseName) == 1) {
+
+    firstPhrase <- paste0(initialPhrase,
+                          format(individuals[1], big.mark=",", scientific = FALSE),
+                          " (",
+                          label_percent(accuracy = 0.01)(individuals[1]/totalParticipants[1]),
+                          ") ",
+                          " were ",
+                          adjective,
+                          " from ",
+                          databaseName[1],
+                          ". ",
+                          collapse = ", ")
+
+    result <- gsub("  ", " ", paste(firstPhrase))
+
+
+  } else if (length(databaseName) == 2) {
 
     firstPhrase <- paste0(initialPhrase,
                           format(individuals[1], big.mark=",", scientific = FALSE),

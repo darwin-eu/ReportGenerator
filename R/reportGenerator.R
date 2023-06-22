@@ -98,11 +98,7 @@ reportGenerator <- function() {
         # If a zip file is loaded, unzip
         if (grepl(".zip", fileDataPath, fixed = TRUE)) {
           csvLocation <- file.path(tempdir(), "dataLocation")
-          dir.create(csvLocation)
-          csvFiles <- list.files(path = csvLocation,
-                                 pattern = ".csv",
-                                 full.names = TRUE,
-                                 recursive = TRUE)
+          csvFiles <- joinZipFiles(fileDataPath, csvLocation)
           # Check columns and items
           # Add data to reactiveValues
           uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
