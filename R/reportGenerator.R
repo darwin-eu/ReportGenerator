@@ -237,15 +237,17 @@ reportGenerator <- function() {
         filter(outcome_cohort_name == input$outcomePrevalence)
 
       # Sex
-      if (input$sexPrevalence != "All") {
+
+      if (length(input$sexPrevalence) != 1 || input$sexPrevalence != "All") {
         commonData <- commonData %>%
-          filter(denominator_sex == input$sexPrevalence)
+          filter(denominator_sex %in% input$sexPrevalence)
       }
 
       # Age group
-      if (input$agePrevalence != "All") {
+
+      if (length(input$agePrevalence) != 1 || input$agePrevalence != "All")  {
         commonData <- commonData %>%
-          filter(denominator_age_group == input$agePrevalence)
+          filter(denominator_age_group %in% input$agePrevalence)
       }
 
       # Start Time
@@ -395,27 +397,51 @@ reportGenerator <- function() {
         }
       })
 
-    # observeEvent(input$previewPlotOption, {
-    #   if  (input$previewPlotOption == "Facet by database") {
-    #     updatePickerInput(session,
-    #                       inputId = "databasePrevalence",
-    #                       label = "Database",
-    #                       choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
-    #                       selected = "All",
-    #                       options = list(
-    #                         maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
-    #                       ))
-    #   } else {
-    #     updatePickerInput(session,
-    #                       inputId = "databasePrevalence",
-    #                       label = "Database",
-    #                       choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
-    #                       selected = uploadedFiles$data$prevalence_estimates$database_name[1],
-    #                       options = list(
-    #                         maxOptions = 1
-    #                       ))
-    #   }
-    # })
+    observeEvent(input$previewPlotOption, {
+      if  (input$previewPlotOption == "Facet by database") {
+        if (objectChoice() == "Plot - Prevalence rate per year by sex") {
+          updatePickerInput(session,
+                            inputId = "databasePrevalence",
+                            label = "Database",
+                            choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
+                            selected = "All",
+                            options = list(
+                              maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
+                            ))
+        } else if (objectChoice() == "Plot - Prevalence rate per year by age") {
+          updatePickerInput(session,
+                            inputId = "databasePrevalence",
+                            label = "Database",
+                            choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
+                            selected = "All",
+                            options = list(
+                              maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
+                            ))
+        }
+      } else {
+        if (objectChoice() == "Plot - Prevalence rate per year by sex") {
+          updatePickerInput(session,
+                            inputId = "databasePrevalence",
+                            label = "Database",
+                            choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
+                            selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                            options = list(
+                              maxOptions = 1
+                            )
+          )
+        } else if (objectChoice() == "Plot - Prevalence rate per year by age") {
+          updatePickerInput(session,
+                            inputId = "databasePrevalence",
+                            label = "Database",
+                            choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
+                            selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                            options = list(
+                              maxOptions = 1
+                            )
+          )
+        }
+      }
+    })
 
     # Filters to the UI
 

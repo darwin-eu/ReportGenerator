@@ -9,11 +9,9 @@ prevPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databasePrevalence",
                          label = "Database",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
-                         selected = uploadedFiles$data$prevalence_estimates$database_name[1],
-                         options = list(
-                           maxOptions = 1
-                         ))
+                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
+                         selected = "All",
+                         multiple = TRUE)
       ),
       column(4,
              selectInput(inputId = "outcomePrevalence",
@@ -82,6 +80,7 @@ prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          label = "Database",
                          choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
                          selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                         multiple = FALSE,
                          options = list(
                            maxOptions = 1
                          ))
@@ -94,9 +93,11 @@ prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
     ),
     fluidRow(
       column(4,
-             selectInput(inputId = "sexPrevalence",
+             pickerInput(inputId = "sexPrevalence",
                          label = "Sex",
-                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$denominator_sex)))
+                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$denominator_sex)),
+                         selected = "All",
+                         multiple = TRUE)
       ),
       column(4,
              selectInput(inputId = "agePrevalence",
@@ -153,6 +154,7 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          label = "Database",
                          choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
                          selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                         multiple = FALSE,
                          options = list(
                            maxOptions = 1
                          ))
@@ -170,9 +172,11 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          choices = unique(uploadedFiles$data$prevalence_estimates$denominator_sex))
       ),
       column(4,
-             selectInput(inputId = "agePrevalence",
+             pickerInput(inputId = "agePrevalence",
                          label = "Age",
-                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$denominator_age_group)))
+                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$denominator_age_group)),
+                         selected = "All",
+                         multiple = TRUE)
       ),
     ),
     fluidRow(
