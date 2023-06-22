@@ -54,7 +54,7 @@ groupInfrequentCombinations <- function(data, groupCombinations) {
 
     if (nrow(summaryCombinations) > 0) {
       summaryCombinations <- summaryCombinations[
-        , .(freq = sum(freq)),
+        , list(freq = sum(freq)),
         by = combination
       ][order(-freq)]
 

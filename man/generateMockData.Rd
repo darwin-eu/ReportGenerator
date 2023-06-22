@@ -6,11 +6,13 @@
 \usage{
 generateMockData(
   databaseName = c("CHUBX", "CPRD GOLD", "IMASIS", "IPCI", "SIDIAP"),
-  simulatePopulation = FALSE
+  simulatePopulation = TRUE
 )
 }
 \arguments{
 \item{databaseName}{A vector with the name in characters of each database.}
+
+\item{simulatePopulation}{TRUE or FALSE to simulate different population sizes. TRUE is default.}
 }
 \value{
 csv files

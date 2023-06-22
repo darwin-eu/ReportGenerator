@@ -6,7 +6,7 @@
 #' @return Automatic text as a character string
 #' @export
 #'
-#' @import rLDCP here glue
+#' @import here glue
 #' @importFrom scales label_percent
 table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 

@@ -15,11 +15,9 @@ Depends:
 Imports:
     flextable,
     ggplot2,
-    plotly,
     here,
-    IncidencePrevalence (>= 0.2.0),
+    IncidencePrevalence (== 0.4.0),
     officer,
-    quarto,
     readr,
     rmarkdown,
     scales,
@@ -36,14 +34,16 @@ Imports:
     data.table,
     huxtable,
     sortable,
-    DT,
     zip,
-    waldo,
     glue,
-    rLDCP,
-    yaml
+    yaml,
+    waldo,
+    plotly
 Suggests: 
-    testthat
+    testthat,
+    rLDCP,
+    DT,
+    quarto,
 Remotes:
     darwin-eu/IncidencePrevalence
 Config/testthat/edition: 3

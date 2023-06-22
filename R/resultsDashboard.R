@@ -16,7 +16,7 @@
 
 #' Results Data Visualisation Dashboard
 #'
-#' @import dplyr rmarkdown here ggplot2 quarto shiny shinydashboard
+#' @import dplyr rmarkdown here ggplot2 shiny shinydashboard
 #' @importFrom plotly plotlyOutput renderPlotly
 #' @return Shiny app.
 #' @export

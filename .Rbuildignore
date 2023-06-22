@@ -30,3 +30,5 @@ report.tex
 ^prevalence_attrition_ab\.rda$
 ^incidence_estimates_ab\.rda$
 ^prevalence_estimates_ab\.rda$
+^OtherResults$
+^generatedReport\.docx$

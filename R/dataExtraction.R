@@ -170,7 +170,7 @@ prevalenceExtractionToRDS <- function (importFolderPrevalence = here("inst/csv/p
 #'
 #' `joinZipFiles()` joins data from multiple datapartners and returns a list of condensed files in a temp dir
 #'
-#' @param filesLocation Location of zip files
+#' @param uploadedFiles Location of zip files
 #' @param csvLocation A string with the location to export the unzipped CSV files
 #' @return A list of files
 #' @import dplyr

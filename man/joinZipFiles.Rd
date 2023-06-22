@@ -7,9 +7,9 @@
 joinZipFiles(uploadedFiles = NULL, csvLocation)
 }
 \arguments{
-\item{csvLocation}{A string with the location to export the unzipped CSV files}
+\item{uploadedFiles}{Location of zip files}
 
-\item{filesLocation}{Location of zip files}
+\item{csvLocation}{A string with the location to export the unzipped CSV files}
 }
 \value{
 A list of files

@@ -19,6 +19,7 @@
 #' `generateMockData()` uses [IncidencePrevalence::mockIncidencePrevalenceRef()] function to create csv files to test ReportGenerator.
 #'
 #' @param databaseName A vector with the name in characters of each database.
+#' @param simulatePopulation TRUE or FALSE to simulate different population sizes. TRUE is default.
 #' @import dplyr rmarkdown here tidyr IncidencePrevalence
 #' @importFrom utils head write.csv
 #' @importFrom stats time
@@ -30,7 +31,7 @@ generateMockData <- function(databaseName = c("CHUBX",
                                               "IMASIS",
                                               "IPCI",
                                               "SIDIAP"),
-                             simulatePopulation = FALSE) {
+                             simulatePopulation = TRUE) {
 
   for (i in databaseName) {
 
@@ -76,7 +77,7 @@ generateMockData <- function(databaseName = c("CHUBX",
                                         ageGroup  = list(c(18, 39),
                                                          c(40, 59),
                                                          c(60, 99),
-                                                         c(18,99)),
+                                                         c(18, 99)),
                                         sex  = c("Female", "Male", "Both"),
                                         daysPriorHistory  = 365)
 
