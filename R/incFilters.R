@@ -78,8 +78,8 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databaseIncidence",
                          label = "Database",
-                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-                         selected = "All",
+                         choices = unique(uploadedFiles$data$incidence_estimates$database_name),
+                         selected = uploadedFiles$data$incidence_estimates$database_name[1],
                          multiple = TRUE)
       ),
       column(4,
