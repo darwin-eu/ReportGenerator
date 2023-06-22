@@ -318,8 +318,8 @@ reportGenerator <- function() {
     # Item choice data
     objectChoice  <- reactive({
       req(uploadedFiles)
-      req(input$tableContents_cells_selected)
-      objectChoiceTitle <- objectDataFrame()[input$tableContents_cells_selected,]
+      req(input$tableContents_rows_selected)
+      objectChoiceTitle <- objectDataFrame()[input$tableContents_rows_selected,]
       objectChoiceTitle
     })
 
