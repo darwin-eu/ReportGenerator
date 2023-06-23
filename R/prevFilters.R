@@ -214,4 +214,3 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
     )
   )
 }
-
