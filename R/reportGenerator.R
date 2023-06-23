@@ -54,7 +54,7 @@ reportGenerator <- function() {
                  fluidRow(
                    box(tags$b("Item preview"),
                        DT::dataTableOutput("tableContents"),
-                       actionButton("generateReport", "Generate Report"),
+                       downloadButton("generateReport", "Generate Report"),
                        width = 4),
                    box(uiOutput("plotFilters"),
                        # textOutput("testReportData"),
@@ -553,7 +553,11 @@ reportGenerator <- function() {
     })
 
     # 4. Word report generator
-    observeEvent(input$generateReport, {
+    output$generateReport <- downloadHandler(
+      filename = function() {
+        paste0("generatedReport.docx")
+      },
+      content = function(file) {
       incidencePrevalenceDocx <- read_docx(path = system.file("templates",
                                                               "word",
                                                               "darwinTemplate.docx",
@@ -609,8 +613,11 @@ reportGenerator <- function() {
       }
       body_add_toc(incidencePrevalenceDocx)
       print(incidencePrevalenceDocx,
-            target = here("generatedReport.docx"))
-    })
+            target = file)
+    }
+
+    )
+
   }
   shinyApp(ui, server)
 }
