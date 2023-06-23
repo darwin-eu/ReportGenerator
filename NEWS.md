@@ -1,3 +1,7 @@
+# ReportGenerator 1.8.1
+
+* Updated to the last CRAN version of IncidencePrevalence. 
+
 # ReportGenerator 1.8.0
 
 * Preview items can be locked and added to the Word report. 
