@@ -1,6 +1,6 @@
 # ReportGenerator 1.8.2
 
-* New download botton. 
+* New download button. 
 
 # ReportGenerator 1.8.1
 
