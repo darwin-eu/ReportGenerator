@@ -1,3 +1,11 @@
+# ReportGenerator 1.8.0
+
+* Preview items can be locked and added to the Word report. 
+
+* Fixed bug that prevented loading one database. 
+
+* Corrections to the plot filters. 
+
 # ReportGenerator 1.7.1
 
 * Fixes to the filters and facets for figures.

@@ -1,7 +1,7 @@
 Package: ReportGenerator
 Type: Package
 Title: Automatic report generator of the Darwin EU studies
-Version: 1.7.1
+Version: 1.8.0
 Author: CE BARBOZA
 Maintainer: CE BARBOZA <c.barbozagutierrez@erasmusmc.nl>
 Description: This package creates a report in docx, html and pdf formats from Darwin studies. 
