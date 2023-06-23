@@ -1,5 +1,7 @@
 # ReportGenerator 1.8.2
 
+* New download botton. 
+
 # ReportGenerator 1.8.1
 
 * Updated to the last CRAN version of IncidencePrevalence. 
