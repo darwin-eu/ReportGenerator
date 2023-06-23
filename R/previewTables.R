@@ -18,22 +18,13 @@
 #'
 #' @param data the input data
 createPreviewMenuTable <- function(data) {
-
-  # data <- data.frame(contents = c("Table - Number of participants",
-  #                                 "Table - Number of participants by sex and age group",
-  #                                 "Plot - Incidence rate per year"))
-
-  checkboxes <- sprintf('<input type="checkbox" name="%s" value="%s"/>', data$contents, data$contents)
-
-  data <- data %>% mutate(selection = checkboxes)
-
   DT::datatable(data,
                 escape = FALSE,
                 extensions = 'RowReorder',
                 options = list(dom = "t", rowReorder = FALSE),
                 selection = list(mode = "single", target = "row"),
                 rownames = FALSE,
-                colnames = c("Items to select", "Add to Word Report"))
+                colnames = c("Items to select"))
 }
 
 #' Create preview table.

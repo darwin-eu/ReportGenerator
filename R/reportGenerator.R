@@ -57,7 +57,7 @@ reportGenerator <- function() {
                        actionButton("generateReport", "Generate Report"),
                        width = 4),
                    box(uiOutput("plotFilters"),
-                       textOutput("testReportData"),
+                       # textOutput("testReportData"),
                        uiOutput("itemPreview"),
                        width = 8)
                    )
@@ -538,7 +538,7 @@ reportGenerator <- function() {
     output$testReportData <- renderText({
       req(objectChoice())
       if (!is.null(dataReport[[objectChoice()]])) {
-        textData <- "Data addet to the report"
+        textData <- "Data added to the report"
       } else {
         textData <- NULL
       }
