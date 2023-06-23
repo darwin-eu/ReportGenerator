@@ -55,14 +55,14 @@ prevPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          label = "To",
                          choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
                          selected = max(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
-      ),
-      fluidRow(
-        column(4,
-               checkboxInput(inputId = "lockDataPrevalence",
-                             label = "Add data to report",
-                             value = FALSE)
-        ),
       )
+    ),
+    fluidRow(
+      column(4,
+             checkboxInput(inputId = "lockDataPrevalence",
+                           label = "Add data to report",
+                           value = FALSE)
+      ),
     )
   )
 }
@@ -129,14 +129,14 @@ prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          label = "To",
                          choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
                          selected = max(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
-      ),
-      fluidRow(
-        column(4,
-               checkboxInput(inputId = "lockDataPrevalence",
-                             label = "Add data to report",
-                             value = FALSE)
-        ),
       )
+    ),
+    fluidRow(
+      column(4,
+             checkboxInput(inputId = "lockDataPrevalence",
+                           label = "Add data to report",
+                           value = FALSE)
+      ),
     )
   )
 }
@@ -203,14 +203,14 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          label = "To",
                          choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
                          selected = max(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
-      ),
-      fluidRow(
-        column(4,
-               checkboxInput(inputId = "lockDataPrevalence",
-                             label = "Add data to report",
-                             value = FALSE)
-        ),
       )
+    ),
+    fluidRow(
+      column(4,
+             checkboxInput(inputId = "lockDataPrevalence",
+                           label = "Add data to report",
+                           value = FALSE)
+      ),
     )
   )
 }

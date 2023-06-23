@@ -55,18 +55,17 @@ incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          label = "To",
                          choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
                          selected = max(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
-      ),
-      fluidRow(
-        column(4,
-               checkboxInput(inputId = "lockDataIncidence",
-                             label = "Add data to report",
-                             value = FALSE)
-        ),
       )
+    ),
+    fluidRow(
+      column(4,
+             checkboxInput(inputId = "lockDataIncidence",
+                           label = "Add data to report",
+                           value = FALSE)
+      ),
     )
   )
 }
-
 incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
   tagList(
     fluidRow(
@@ -130,21 +129,18 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
                          selected = max(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
       ),
-      fluidRow(
-        column(4,
-               checkboxInput(inputId = "lockDataIncidence",
-                             label = "Add data to report",
-                             value = FALSE)
-        ),
+    ),
+    fluidRow(
+      column(4,
+             checkboxInput(inputId = "lockDataIncidence",
+                           label = "Add data to report",
+                           value = FALSE)
       )
     )
   )
-
-
 }
 
 incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
-
   tagList(
     fluidRow(
       column(4,
@@ -207,13 +203,13 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
                          selected = max(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
       ),
-      fluidRow(
-        column(4,
-               checkboxInput(inputId = "lockDataIncidence",
-                             label = "Add data to report",
-                             value = FALSE)
-        ),
-      )
+    ),
+    fluidRow(
+      column(4,
+             checkboxInput(inputId = "lockDataIncidence",
+                           label = "Add data to report",
+                           value = FALSE)
+      ),
     )
   )
 }

@@ -444,7 +444,6 @@ reportGenerator <- function() {
     output$plotFilters <- renderUI({
       req(objectChoice())
       selectionPlotFilter()
-
     })
 
     # 3.3 Renders item preview depending on the object class
@@ -538,7 +537,11 @@ reportGenerator <- function() {
 
     output$testReportData <- renderText({
       req(objectChoice())
-      textData <- c(dataReport[[objectChoice()]][["plotOption"]])
+      if (!is.null(dataReport[[objectChoice()]])) {
+        textData <- "Data addet to the report"
+      } else {
+        textData <- NULL
+      }
       textData
       })
 
