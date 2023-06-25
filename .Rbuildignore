@@ -32,3 +32,4 @@ report.tex
 ^prevalence_estimates_ab\.rda$
 ^OtherResults$
 ^generatedReport\.docx$
+^publish
