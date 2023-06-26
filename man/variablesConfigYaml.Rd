@@ -4,10 +4,15 @@
 \alias{variablesConfigYaml}
 \title{Writes variablesConfig file in Yaml}
 \usage{
-variablesConfigYaml(fileDataPath = NULL)
+variablesConfigYaml(
+  fileDataPath = NULL,
+  version = "IncidencePrevalence v0.4.0"
+)
 }
 \arguments{
 \item{fileDataPath}{A list of csv files}
+
+\item{version}{A string to identify which version of IncidencePrevalence is used to generate the results}
 }
 \value{
 Writes a csv file into the config folder of ReportGenerator

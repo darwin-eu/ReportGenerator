@@ -37,8 +37,8 @@ reportGenerator <- function() {
                 tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
                 selectInput(inputId = "dataVersion",
                             label = "Please select version",
-                            choices = c("IncidencePrevalence v0.4.0", "previousVersion"),
-                            selected = "latestVersion"),
+                            choices = c("IncidencePrevalence v0.4.0 (Latest)", "IncidencePrevalence v0.2.1"),
+                            selected = "IncidencePrevalence v0.4.0"),
                 uiOutput("datasetLoadUI"),
                 actionButton('resetData', 'Reset data')
         ))
@@ -106,13 +106,10 @@ reportGenerator <- function() {
       #TEST VAR
       # fileDataPath <- list.files(here("results", "newResults"), full.names = TRUE, pattern = ".zip")
 
-      # Retrieve the config file that is used to define the type of uploaded file
+      # Retrieve the config yaml file filtering the required version of the data
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-
-      # configData <- configData[["latestVersion"]]
-
-      configData <- configData[[input$dataVersion]]
-      # configDataLegacy <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
+      versionData <- gsub(" \\(Latest\\)", "", "IncidencePrevalence v0.4.0 (Latest)")
+      configData <- configData[[versionData]]
       # Lists all datatypes available to compare
       configDataTypes <- names(configData)
       # Checks if single or multiple files

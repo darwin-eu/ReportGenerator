@@ -16,7 +16,7 @@ Imports:
     flextable,
     ggplot2,
     here,
-    IncidencePrevalence (== 0.4.0),
+    IncidencePrevalence,
     officer,
     readr,
     rmarkdown,
