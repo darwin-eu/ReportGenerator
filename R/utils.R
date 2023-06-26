@@ -28,6 +28,8 @@ getItemsList <- function(uploadedFiles) {
                             sep = ";") %>%
     dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
 
+  # uploadedFiles <- items
+
   checkNeeds <- function(menuFunctions, uploadedFiles) {
     unlist(lapply(menuFunctions, FUN = function(menuFunction) {
       required <- trimws(unlist(strsplit(menuFunction , ",")))

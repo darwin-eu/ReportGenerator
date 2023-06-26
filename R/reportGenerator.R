@@ -83,16 +83,30 @@ reportGenerator <- function() {
     })
     # ReactiveValues
     uploadedFiles <- reactiveValues(data = NULL)
+
+    #TEST VAR
+    # uploadedFiles <- list()
+
     itemsList <- reactiveValues(objects = NULL)
+
+    # TEST VAR
+    # itemsList <- list()
+
     # After loading data
     observeEvent(input$datasetLoad, {
       # Get data path from file input
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
+
+      #TEST VAR
+      # fileDataPath <- list.files(here("results", "newResults"), full.names = TRUE, pattern = ".zip")
+
       # Retrieve the config file that is used to define the type of uploaded file
-      configData <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
+      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+      # configDataLegacy <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
       # Lists all datatypes available to compare
-      configDataTypes <- unique(configData$name)
+      configDataTypes <- names(configData$latestVersion)
       # Checks if single or multiple files
       if (length(fileDataPath) == 1) {
         # If a zip file is loaded, unzip
