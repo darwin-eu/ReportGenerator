@@ -395,7 +395,7 @@ variablesConfigWriter <- function(fileDataPath = NULL) {
 #' @import dplyr
 variablesConfigYaml <- function(fileDataPath = NULL, version = "IncidencePrevalence v0.4.0") {
 
-  # fileDataPath <- here("results", "latestVersion", "mock_data_ReportGenerator_SIDIAP.zip")
+  # fileDataPath <- here("results", "oldResults", "mock_data_ReportGenerator_SIDIAP.zip")
 
   csvLocation <- tempdir()
 

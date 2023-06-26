@@ -37,8 +37,10 @@ reportGenerator <- function() {
                 tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
                 selectInput(inputId = "dataVersion",
                             label = "Please select version",
-                            choices = c("IncidencePrevalence v0.4.0 (Latest)", "IncidencePrevalence v0.2.1"),
-                            selected = "IncidencePrevalence v0.4.0"),
+                            choices = c("IncidencePrevalence v0.4.0 (Latest)",
+                                        "IncidencePrevalence v0.2.1",
+                                        "IncidencePrevalence v0.1.0"),
+                            selected = "IncidencePrevalence v0.4.0 (Latest)"),
                 uiOutput("datasetLoadUI"),
                 actionButton('resetData', 'Reset data')
         ))
@@ -108,7 +110,7 @@ reportGenerator <- function() {
 
       # Retrieve the config yaml file filtering the required version of the data
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      versionData <- gsub(" \\(Latest\\)", "", "IncidencePrevalence v0.4.0 (Latest)")
+      versionData <- gsub(" \\(Latest\\)", "", input$dataVersion)
       configData <- configData[[versionData]]
       # Lists all datatypes available to compare
       configDataTypes <- names(configData)
