@@ -104,6 +104,7 @@ reportGenerator <- function() {
       # Retrieve the config file that is used to define the type of uploaded file
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
+
       # configDataLegacy <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
       # Lists all datatypes available to compare
       configDataTypes <- names(configData$latestVersion)

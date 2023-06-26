@@ -392,9 +392,9 @@ variablesConfigWriter <- function(fileDataPath = NULL) {
 #' @return Writes a csv file into the config folder of ReportGenerator
 #' @export
 #' @import dplyr
-variablesConfigYaml <- function(fileDataPath = NULL) {
+variablesConfigYaml <- function(fileDataPath = NULL, version = "previousVersion") {
 
-  # fileDataPath <- here("results", "newResults", "mock_data_ReportGenerator_SIDIAP.zip")
+  # fileDataPath <- here("results", "recentResults", "mock_data_ReportGenerator_SIDIAP.zip")
 
   csvLocation <- tempdir()
 
@@ -408,13 +408,13 @@ variablesConfigYaml <- function(fileDataPath = NULL) {
   for (fileLocation in csvFiles) {
 
     if (grepl("prevalence_attrition", fileLocation)) {
-      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpCOhl36/mock_data_ReportGenerator_SIDIAP/test_database_prevalence_attrition_2023_06_22.csv"
+      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpGMm1rf/mock_data_ReportGenerator_SIDIAP/test_database_prevalence_attrition_2023_06_13.csv"
 
       prevalence_attrition <- read_csv(fileLocation)
       tempNames <- names(prevalence_attrition)
       tempTitle <- "prevalence_attrition"
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      configData$latestVersion$prevalence_attrition$names <- tempNames
+      configData[[version]][["prevalence_attrition"]][["names"]] <- tempNames
       write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
     } else if (grepl("incidence_attrition", fileLocation)) {
@@ -424,7 +424,7 @@ variablesConfigYaml <- function(fileDataPath = NULL) {
       tempNames <- names(incidence_attrition)
       tempTitle <- "incidence_attrition"
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      configData$latestVersion$incidence_attrition$names <- tempNames
+      configData[[version]][["incidence_attrition"]][["names"]] <- tempNames
       write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
     } else  if(grepl("incidence_estimates", fileLocation)) {
@@ -434,7 +434,7 @@ variablesConfigYaml <- function(fileDataPath = NULL) {
       tempNames <- list(names(incidence_estimates))
       tempTitle <- "incidence_estimates"
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      configData$latestVersion$incidence_estimates$names <- tempNames
+      configData[[version]][["incidence_estimates"]][["names"]] <- tempNames
       write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
     } else  if(grepl("prevalence_estimates", fileLocation)) {
@@ -444,33 +444,12 @@ variablesConfigYaml <- function(fileDataPath = NULL) {
       tempNames <- list(names(prevalence_estimates))
       tempTitle <- "prevalence_estimates"
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      configData$latestVersion$prevalence_estimates$names <- tempNames
+      configData[[version]][["prevalence_estimates"]][["names"]] <- tempNames
       write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
     }
 
   }
-
-  # # variablesIncidence <- filter(variablesConfig, name == "incidence_estimates")
-  #
-  #
-  # tempNames <- list(names(prevalence_estimates))
-  #
-  # tempTitle <- "prevalence_estimates"
-  #
-  # itemDataFrame <- data.frame(name = tempTitle, variables = tempNames[[1]])
-  #
-  # itemsVariables <- bind_rows(variablesConfig, itemDataFrame)
-  #
-  #
-  # itemsVariablesExport <- itemsVariables %>% filter(name %in% c("cdm_snapshot", "doseSummaryWide", "incidence_attrition", "incidence_estimates",
-  #                                                               "indicationSummaryWide", "largeScaleSummary", "LSC", "prevalence_attrition",
-  #                                                               "prevalence_estimates", "stratification" ))
-  #
-  # write.csv(itemsVariablesExport, file = here("inst",
-  #                                             "config",
-  #                                             "variablesConfig.csv"), row.names = FALSE)
-
 
 }
 
