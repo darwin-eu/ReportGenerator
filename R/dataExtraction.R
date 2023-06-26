@@ -269,7 +269,7 @@ columnCheck <- function(csvFiles,
     resultsColumns <- names(resultsData)
     for (val in configDataTypes) {
       # val <- "incidence_attrition"
-      configColumns <- configData$latestVersion[[val]]
+      configColumns <- configData[[val]]
       configColumns <- unlist(configColumns$names)
       if (length(configColumns) == length(resultsColumns)) {
         message("Length correspondance yes")
