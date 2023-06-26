@@ -37,7 +37,7 @@ reportGenerator <- function() {
                 tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
                 selectInput(inputId = "dataVersion",
                             label = "Please select version",
-                            choices = c("latestVersion", "previousVersion"),
+                            choices = c("IncidencePrevalence v0.4.0", "previousVersion"),
                             selected = "latestVersion"),
                 uiOutput("datasetLoadUI"),
                 actionButton('resetData', 'Reset data')

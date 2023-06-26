@@ -388,13 +388,14 @@ variablesConfigWriter <- function(fileDataPath = NULL) {
 #' `variablesConfigYaml()` takes a list of csv files, extract their columns and writes de variables config file
 #'
 #' @param fileDataPath A list of csv files
+#' @param version A string to identify which version of IncidencePrevalence is used to generate the results
 #'
 #' @return Writes a csv file into the config folder of ReportGenerator
 #' @export
 #' @import dplyr
-variablesConfigYaml <- function(fileDataPath = NULL, version = "latestVersion") {
+variablesConfigYaml <- function(fileDataPath = NULL, version = "IncidencePrevalence v0.4.0") {
 
-  # fileDataPath <- here("results", "oldResults", "mock_data_ReportGenerator_SIDIAP.zip")
+  # fileDataPath <- here("results", "latestVersion", "mock_data_ReportGenerator_SIDIAP.zip")
 
   csvLocation <- tempdir()
 
