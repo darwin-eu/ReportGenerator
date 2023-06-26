@@ -35,6 +35,10 @@ reportGenerator <- function() {
         tagList(tags$br(),
                 tags$br(),
                 tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
+                selectInput(inputId = "dataVersion",
+                            label = "Please select version",
+                            choices = c("latestVersion", "previousVersion"),
+                            selected = "latestVersion"),
                 uiOutput("datasetLoadUI"),
                 actionButton('resetData', 'Reset data')
         ))
@@ -75,6 +79,7 @@ reportGenerator <- function() {
 
     # 1. Load files
     output$datasetLoadUI <- renderUI({
+
       fileInput("datasetLoad",
                 "Upload your results",
                 accept = c(".zip", ".csv"),
@@ -104,10 +109,12 @@ reportGenerator <- function() {
       # Retrieve the config file that is used to define the type of uploaded file
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
+      # configData <- configData[["latestVersion"]]
 
+      configData <- configData[[input$dataVersion]]
       # configDataLegacy <- read.csv(system.file("config/variablesConfig.csv", package = "ReportGenerator"))
       # Lists all datatypes available to compare
-      configDataTypes <- names(configData$latestVersion)
+      configDataTypes <- names(configData)
       # Checks if single or multiple files
       if (length(fileDataPath) == 1) {
         # If a zip file is loaded, unzip

@@ -392,9 +392,9 @@ variablesConfigWriter <- function(fileDataPath = NULL) {
 #' @return Writes a csv file into the config folder of ReportGenerator
 #' @export
 #' @import dplyr
-variablesConfigYaml <- function(fileDataPath = NULL, version = "previousVersion") {
+variablesConfigYaml <- function(fileDataPath = NULL, version = "latestVersion") {
 
-  # fileDataPath <- here("results", "recentResults", "mock_data_ReportGenerator_SIDIAP.zip")
+  # fileDataPath <- here("results", "oldResults", "mock_data_ReportGenerator_SIDIAP.zip")
 
   csvLocation <- tempdir()
 
@@ -408,7 +408,7 @@ variablesConfigYaml <- function(fileDataPath = NULL, version = "previousVersion"
   for (fileLocation in csvFiles) {
 
     if (grepl("prevalence_attrition", fileLocation)) {
-      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpGMm1rf/mock_data_ReportGenerator_SIDIAP/test_database_prevalence_attrition_2023_06_13.csv"
+      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpmkHYCT/mock_data_ReportGenerator_SIDIAP/test_database_prevalence_attrition_2023_05_24.csv"
 
       prevalence_attrition <- read_csv(fileLocation)
       tempNames <- names(prevalence_attrition)
@@ -418,7 +418,7 @@ variablesConfigYaml <- function(fileDataPath = NULL, version = "previousVersion"
       write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
     } else if (grepl("incidence_attrition", fileLocation)) {
-      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\Rtmp6VtqyH/mock_data_ReportGenerator_SIDIAP/test_database_incidence_attrition_2023_06_22.csv"
+      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpmkHYCT/mock_data_ReportGenerator_SIDIAP/test_database_incidence_attrition_2023_05_24.csv"
 
       incidence_attrition <- read_csv(fileLocation)
       tempNames <- names(incidence_attrition)
@@ -428,20 +428,20 @@ variablesConfigYaml <- function(fileDataPath = NULL, version = "previousVersion"
       write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
     } else  if(grepl("incidence_estimates", fileLocation)) {
-      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\Rtmp6VtqyH/mock_data_ReportGenerator_SIDIAP/test_database_incidence_estimates_2023_06_22.csv"
+      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpmkHYCT/mock_data_ReportGenerator_SIDIAP/test_database_incidence_estimates_2023_05_24.csv"
 
       incidence_estimates <- read_csv(fileLocation)
-      tempNames <- list(names(incidence_estimates))
+      tempNames <- names(incidence_estimates)
       tempTitle <- "incidence_estimates"
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
       configData[[version]][["incidence_estimates"]][["names"]] <- tempNames
       write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
     } else  if(grepl("prevalence_estimates", fileLocation)) {
-      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\Rtmp6VtqyH/mock_data_ReportGenerator_SIDIAP/test_database_prevalence_estimates_2023_06_22.csv"
+      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpmkHYCT/mock_data_ReportGenerator_SIDIAP/test_database_prevalence_estimates_2023_05_24.csv"
 
       prevalence_estimates <- read_csv(fileLocation)
-      tempNames <- list(names(prevalence_estimates))
+      tempNames <- names(prevalence_estimates)
       tempTitle <- "prevalence_estimates"
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
       configData[[version]][["prevalence_estimates"]][["names"]] <- tempNames
