@@ -49,7 +49,6 @@ reportGenerator <- function() {
       tabsetPanel(
         id = "mainPanel",
         tabPanel("Item selection",
-        # Item selection menu
         fluidRow(
           box(uiOutput("itemSelectionMenu"),
               tags$br())
@@ -77,9 +76,8 @@ reportGenerator <- function() {
 
   server <- function(input, output, session) {
 
-    # Load data
+    # 1. Load data
 
-    # 1. Load files
     output$datasetLoadUI <- renderUI({
 
       fileInput("datasetLoad",
@@ -88,44 +86,27 @@ reportGenerator <- function() {
                 multiple = TRUE,
                 placeholder = "ZIP or CSV file(s)")
     })
+
     # ReactiveValues
     uploadedFiles <- reactiveValues(data = NULL)
 
-    #TEST VAR
-    # uploadedFiles <- list()
-
     itemsList <- reactiveValues(objects = NULL)
 
-    # TEST VAR
-    # itemsList <- list()
-
-    # After loading data
+    # Check data
     observeEvent(input$datasetLoad, {
-      # Get data path from file input
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
-
-      #TEST VAR
-      # fileDataPath <- list.files(here("results", "newResults"), full.names = TRUE, pattern = ".zip")
-
-      # Retrieve the config yaml file filtering the required version of the data
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
       versionData <- gsub(" \\(Latest\\)", "", input$dataVersion)
       configData <- configData[[versionData]]
-      # Lists all datatypes available to compare
       configDataTypes <- names(configData)
-      # Checks if single or multiple files
       if (length(fileDataPath) == 1) {
-        # If a zip file is loaded, unzip
         if (grepl(".zip", fileDataPath, fixed = TRUE)) {
           csvLocation <- file.path(tempdir(), "dataLocation")
           csvFiles <- joinZipFiles(fileDataPath, csvLocation)
-          # Check columns and items
-          # Add data to reactiveValues
           uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
           items <- names(uploadedFiles$data)
           itemsList$objects[["items"]] <- getItemsList(items)
-          # Unlink tempdir
           unlink(csvLocation, recursive = TRUE)
           } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
               uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
@@ -148,6 +129,7 @@ reportGenerator <- function() {
         }
         }
       })
+
     # Reset and back to initial tab
     observeEvent(input$resetData, {
       if (!is.null(uploadedFiles)) {
@@ -165,9 +147,11 @@ reportGenerator <- function() {
       }
     })
 
-    # Data: prevalence_attrition
+    # 2.Assign Data
 
     dataReport <- reactiveValues()
+
+    # prevalence_attrition
 
     prevalenceAttritionCommon <- reactive({
       commonData <- uploadedFiles$data$prevalence_attrition
@@ -178,7 +162,7 @@ reportGenerator <- function() {
       dataReport[[objectChoice()]][["prevalence_attrition"]]
     })
 
-    # Data: incidence_attrition
+    # incidence_attrition
 
     incidenceAttritionCommon <- reactive({
       commonData <- uploadedFiles$data$incidence_attrition
@@ -189,7 +173,8 @@ reportGenerator <- function() {
       dataReport[[objectChoice()]][["incidence_attrition"]]
     })
 
-    # Data: incidence_estimates
+    # incidence_estimates
+
     incidenceCommonData <- reactive({
       commonData <- uploadedFiles$data$incidence_estimates
       class(commonData) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
@@ -237,7 +222,8 @@ reportGenerator <- function() {
 
     })
 
-    # Data: prevalence_estimates
+    # prevalence_estimates
+
     prevalenceCommonData <- reactive({
       commonData <- uploadedFiles$data$prevalence_estimates
       class(commonData) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
@@ -285,7 +271,8 @@ reportGenerator <- function() {
 
     })
 
-    # 2. Render interactive sortable menu
+    # 3. Interactive menu
+
     output$itemSelectionMenu <- renderUI({
       column(tags$b("Item selection"),
              width = 12,
@@ -303,7 +290,7 @@ reportGenerator <- function() {
       )
     })
 
-    # 3. Item preview
+    # Item preview
 
     # Objects list selected by the user in the sortable menu into a dataframe
 
@@ -344,7 +331,7 @@ reportGenerator <- function() {
       objectChoiceTitle
     })
 
-    # 3.2 Filters UI
+    # Filters UI
 
     # Filters that go into the UI for figures, tables, etc
     selectionPlotFilter <- reactive({
@@ -467,7 +454,7 @@ reportGenerator <- function() {
       selectionPlotFilter()
     })
 
-    # 3.3 Renders item preview depending on the object class
+    # Renders item preview depending on the object class
     output$itemPreview <- renderUI({
       req(objectChoice())
       if (grepl("Table", objectChoice())) {
@@ -516,6 +503,8 @@ reportGenerator <- function() {
         object
         }
       })
+
+    # 4. Report
 
     # Data saving functions to print into Word
     observeEvent(input$lockDataIncidence, {
@@ -573,7 +562,7 @@ reportGenerator <- function() {
       menuSel
     })
 
-    # 4. Word report generator
+    # Word report generator
     output$generateReport <- downloadHandler(
       filename = function() {
         paste0("generatedReport.docx")
