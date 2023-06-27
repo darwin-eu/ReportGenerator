@@ -33,3 +33,6 @@ report.tex
 ^OtherResults$
 ^generatedReport\.docx$
 ^publish
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

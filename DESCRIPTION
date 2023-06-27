@@ -47,3 +47,4 @@ Suggests:
 Remotes:
     darwin-eu/IncidencePrevalence
 Config/testthat/edition: 3
+URL: https://darwin-eu-dev.github.io/ReportGenerator/
