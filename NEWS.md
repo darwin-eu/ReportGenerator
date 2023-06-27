@@ -1,3 +1,13 @@
+# ReportGenerator 1.9.0
+
+* Users can select the version of IncidencePrevalence data that ReportGenerator accepts.
+
+* Yaml file for items configuration. 
+
+* Github website. 
+
+* Improvements to function variablesConfigYaml() to add new versions of results to yaml file. 
+
 # ReportGenerator 1.8.2
 
 * New download button. 
