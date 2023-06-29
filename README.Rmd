@@ -46,3 +46,4 @@ To test the package, generate first the mock data with `generateMockData()`. It 
 reportGenerator()
 ```
 
+Alternatively, you can access to an [online version here](https://data-dev.darwin-eu.org/content/5f2cf055-690c-4a28-9567-a1986eaafe8e/).
