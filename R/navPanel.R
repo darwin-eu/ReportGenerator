@@ -10,10 +10,6 @@ tabPanelSelection <- function(selection, menuFun) {
   } else if (selection == "Plot - Incidence rate per year by age") {
     tabPanel(selection, incPlotAgeFilters(uploadedFiles, menuFun, selection), plotOutput("previewFigure3"))
   }
-  # else if (selection == "Plot - Incidence rate per year by sex") {
-  #   incPlotSexFilters(uploadedFiles, menuFun(), selection)
-  # } else if (selection == "Plot - Incidence rate per year by age") {
-  #   incPlotAgeFilters(uploadedFiles, menuFun(), selection)
   # } else if (selection == "Plot - Prevalence rate per year") {
   #   prevPlotByYearFilters(uploadedFiles, menuFun(), selection)
   # } else if (selection == "Plot - Prevalence rate per year by sex") {

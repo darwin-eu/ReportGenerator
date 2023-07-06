@@ -421,6 +421,8 @@ reportGenerator <- function() {
 
     # Objects to be rendered in the UI
 
+    # Table 1
+
     output$previewTable1 <- renderTable({
       objectChoice <- "Table - Number of participants"
       prevalence_attrition <- prevalenceAttritionCommon()
@@ -438,6 +440,8 @@ reportGenerator <- function() {
       object
     }, colnames = FALSE)
 
+    # Table 2
+
     output$previewTableSex <- renderTable({
       objectChoice <- "Table - Number of participants by sex and age group"
       # Lock data
@@ -452,6 +456,8 @@ reportGenerator <- function() {
                              dplyr::pull(signature)))
       object
     }, colnames = FALSE)
+
+    # Figure 1
 
     output$previewFigure1 <- renderPlot({
       objectChoice <- "Plot - Incidence rate per year"
@@ -507,6 +513,8 @@ reportGenerator <- function() {
       object
       })
 
+    # Figure 2
+
     output$previewFigure2 <- renderPlot({
       objectChoice <- "Plot - Incidence rate per year by sex"
       incidence_estimates <- uploadedFiles$data$incidence_estimates
@@ -561,6 +569,8 @@ reportGenerator <- function() {
       object <- eval(parse(text = expression))
       object
     })
+
+    # Figure 3
 
     output$previewFigure3 <- renderPlot({
       objectChoice <- "Plot - Incidence rate per year by age"
@@ -706,8 +716,7 @@ reportGenerator <- function() {
     #   })
 
     menuSel  <- reactive({
-      menuSel  <- read.csv(system.file("config/itemsConfigExternal.csv",
-                                       package = "ReportGenerator"), sep = ";")
+      menuSel  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
       menuSel  <- menuSel  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
       menuSel
     })
@@ -718,10 +727,7 @@ reportGenerator <- function() {
         paste0("generatedReport.docx")
       },
       content = function(file) {
-      incidencePrevalenceDocx <- read_docx(path = system.file("templates",
-                                                              "word",
-                                                              "darwinTemplate.docx",
-                                                              package = "ReportGenerator"))
+      incidencePrevalenceDocx <- read_docx(path = system.file("templates", "word", "darwinTemplate.docx", package = "ReportGenerator"))
       reverseList <- rev(input$objectSelection)
       for (i in reverseList) {
         menuFunction <- menuSel() %>%
