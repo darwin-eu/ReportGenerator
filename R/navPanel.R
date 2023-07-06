@@ -1,0 +1,24 @@
+tabPanelSelection <- function(selection, menuFun) {
+  if (selection == "Table - Number of participants") {
+    tabPanel(selection, tableNumParFilters(uploadedFiles), tableOutput("previewTable1"))
+  } else if (selection == "Table - Number of participants by sex and age group") {
+    tabPanel(selection, tableSexFilters(uploadedFiles), tableOutput("previewTableSex"))
+  } else if (selection == "Plot - Incidence rate per year") {
+    tabPanel(selection, incPlotByYearFilters(uploadedFiles, menuFun, selection), plotOutput("previewFigure1"))
+  } else if (selection == "Plot - Incidence rate per year by sex") {
+    tabPanel(selection, incPlotSexFilters(uploadedFiles, menuFun, selection), plotOutput("previewFigure2"))
+  } else if (selection == "Plot - Incidence rate per year by age") {
+    tabPanel(selection, incPlotAgeFilters(uploadedFiles, menuFun, selection), plotOutput("previewFigure3"))
+  }
+  # else if (selection == "Plot - Incidence rate per year by sex") {
+  #   incPlotSexFilters(uploadedFiles, menuFun(), selection)
+  # } else if (selection == "Plot - Incidence rate per year by age") {
+  #   incPlotAgeFilters(uploadedFiles, menuFun(), selection)
+  # } else if (selection == "Plot - Prevalence rate per year") {
+  #   prevPlotByYearFilters(uploadedFiles, menuFun(), selection)
+  # } else if (selection == "Plot - Prevalence rate per year by sex") {
+  #   prevPlotSexFilters(uploadedFiles, menuFun(), selection)
+  # } else if (selection == "Plot - Prevalence rate per year by age") {
+  #   prevPlotAgeFilters(uploadedFiles, menuFun(), selection)
+  # }
+}

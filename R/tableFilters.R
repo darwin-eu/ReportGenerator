@@ -13,6 +13,11 @@ tableNumParFilters <- function(uploadedFiles) {
                                           uploadedFiles$data$prevalence_attrition),
                            height = "130px")
       )
+    ),
+    fluidRow(
+      checkboxInput(inputId = "lockTableNumPar",
+                    label = "Add data to report",
+                    value = FALSE)
     )
   )
 }
@@ -35,7 +40,7 @@ tableSexFilters <- function(uploadedFiles) {
     ),
     fluidRow(
       column(4,
-             checkboxInput(inputId = "lockDataIncidence",
+             checkboxInput(inputId = "lockTableSex",
                            label = "Add data to report",
                            value = FALSE)
       ),
