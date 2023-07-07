@@ -76,8 +76,7 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
   tagList(
     fluidRow(
       column(4,
-             selectizeInput("previewPlotOptionSex", "Select plot type", choices = c("Facet by outcome", "Facet by database"))
-             # facetReturn(menuFun = menuFun, objectChoice = objectChoice)
+             selectizeInput("facetIncidenceSex", "Select plot type", choices = c("Facet by outcome", "Facet by database"))
       )
     ),
     fluidRow(
@@ -94,7 +93,7 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "outcomeIncidenceSex",
                          label = "Outcome",
-                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id)),
+                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name)),
                          selected = "All",
                          multiple = TRUE)
       )
@@ -153,8 +152,7 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
   tagList(
     fluidRow(
       column(4,
-             selectizeInput("previewPlotOptionAge", "Select plot type", choices = c("Facet by outcome", "Facet by database"))
-             # facetReturn(menuFun = menuFun, objectChoice = objectChoice)
+             selectizeInput("facetIncidenceAge", "Select plot type", choices = c("Facet by outcome", "Facet by database"))
       )
     ),
     fluidRow(
@@ -171,12 +169,9 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "outcomeIncidenceAge",
                          label = "Outcome",
-                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id)),
+                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name)),
                          selected = "All",
                          multiple = TRUE)
-             # selectInput(inputId = "outcomeIncidenceAge",
-             #             label = "Outcome",
-             #             choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id))
       )
     ),
     fluidRow(

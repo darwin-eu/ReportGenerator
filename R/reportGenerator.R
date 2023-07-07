@@ -193,7 +193,7 @@ reportGenerator <- function() {
 #
 #       # Outcome
 #       commonData <- commonData %>%
-#         filter(outcome_cohort_id == input$outcomeIncidence)
+#         filter(outcome_cohort_name == input$outcomeIncidence)
 #
 #       # Sex
 #
@@ -344,83 +344,7 @@ reportGenerator <- function() {
 
     # Filters UI
 
-    observeEvent(input$previewPlotOptionSex, {
-      if  (input$previewPlotOptionSex == "Facet by database") {
-        updatePickerInput(session,
-                          inputId = "databaseIncidenceSex",
-                          label = "Database",
-                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-                          selected = "All",
-                          options = list(
-                            maxOptions = (length(unique(uploadedFiles$data$incidence_estimates$database_name))+1)
-                          ))
 
-        updatePickerInput(session,
-                          inputId = "outcomeIncidenceSex",
-                          label = "Outcome",
-                          choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id),
-                          selected = uploadedFiles$data$incidence_estimates$outcome_cohort_id[1],
-                          options = list(
-                            maxOptions = 1
-                          ))
-
-      } else {
-        updatePickerInput(session,
-                          inputId = "databaseIncidenceSex",
-                          label = "Database",
-                          choices = unique(uploadedFiles$data$incidence_estimates$database_name),
-                          selected = uploadedFiles$data$incidence_estimates$database_name[1],
-                          options = list(
-                            maxOptions = 1
-                            )
-                          )
-        updatePickerInput(session,
-                          inputId = "outcomeIncidenceSex",
-                          label = "Outcome",
-                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id)),
-                          selected = "All")
-
-            }
-      })
-
-    observeEvent(input$previewPlotOptionAge, {
-      if  (input$previewPlotOptionAge == "Facet by database") {
-        updatePickerInput(session,
-                          inputId = "databaseIncidenceAge",
-                          label = "Database",
-                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
-                          selected = "All",
-                          options = list(
-                            maxOptions = (length(unique(uploadedFiles$data$incidence_estimates$database_name))+1)
-                          ))
-
-        updatePickerInput(session,
-                          inputId = "outcomeIncidenceAge",
-                          label = "Outcome",
-                          choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id),
-                          selected = uploadedFiles$data$incidence_estimates$outcome_cohort_id[1],
-                          options = list(
-                            maxOptions = 1
-                          ))
-      } else {
-
-        updatePickerInput(session,
-                          inputId = "databaseIncidenceAge",
-                          label = "Database",
-                          choices = unique(uploadedFiles$data$incidence_estimates$database_name),
-                          selected = uploadedFiles$data$incidence_estimates$database_name[1],
-                          options = list(
-                            maxOptions = 1
-                          )
-        )
-        updatePickerInput(session,
-                          inputId = "outcomeIncidenceAge",
-                          label = "Outcome",
-                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id)),
-                          selected = "All")
-
-      }
-    })
 
     # Objects to be rendered in the UI
 
@@ -451,7 +375,7 @@ reportGenerator <- function() {
       if (input$lockTableSex == TRUE) {
         dataReport[[objectChoice]][["incidence_estimates"]] <- uploadedFiles$data$incidence_estimates
       } else {
-        dataReport[[objectChoice]][["incidence_estimates"]] <- uploadedFiles$data$incidence_estimates
+        dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
       }
       # Preview object
       object <- eval(parse(text = menuFun() %>%
@@ -475,7 +399,7 @@ reportGenerator <- function() {
       # Outcome
       if (length(input$outcomeIncidenceYear) != 1 || input$outcomeIncidenceYear != "All") {
       incidence_estimates <- incidence_estimates %>%
-        filter(outcome_cohort_id == input$outcomeIncidenceYear)
+        filter(outcome_cohort_name == input$outcomeIncidenceYear)
       }
       # Sex
       if (length(input$sexIncidenceYear) != 1 || input$sexIncidenceYear != "All") {
@@ -501,8 +425,10 @@ reportGenerator <- function() {
       # Lock data
       if (input$lockDataIncidenceYear == TRUE) {
         dataReport[[objectChoice]][["incidence_estimates"]] <- incidence_estimates
+        dataReport[[objectChoice]][["plotOption"]] <- input$facetIncidenceYear
       } else {
         dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
+        dataReport[[objectChoice]][["plotOption"]] <- NULL
       }
       # Preview object
       menuFunction <- menuFun() %>%
@@ -531,7 +457,7 @@ reportGenerator <- function() {
       # Outcome
       if (length(input$outcomeIncidenceSex) != 1 || input$outcomeIncidenceSex != "All") {
       incidence_estimates <- incidence_estimates %>%
-        filter(outcome_cohort_id == input$outcomeIncidenceSex)
+        filter(outcome_cohort_name == input$outcomeIncidenceSex)
       }
       # Sex
       if (length(input$sexIncidenceSex) != 1 || input$sexIncidenceSex != "All") {
@@ -559,8 +485,10 @@ reportGenerator <- function() {
       # Lock data
       if (input$lockDataIncidenceSex == TRUE) {
         dataReport[[objectChoice]][["incidence_estimates"]] <- incidence_estimates
+        dataReport[[objectChoice]][["plotOption"]] <- input$facetIncidenceSex
       } else {
         dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
+        dataReport[[objectChoice]][["plotOption"]] <- NULL
       }
       menuFunction <- menuFun() %>%
         dplyr::filter(title == objectChoice)
@@ -568,7 +496,7 @@ reportGenerator <- function() {
       expression <- menuFunction %>%
         dplyr::pull(signature)
       expression <- expression %>%
-        addPreviewItemTypeSex(input$previewPlotOptionSex)
+        addPreviewItemTypeSex(input$facetIncidenceSex)
       object <- eval(parse(text = expression))
       object
     })
@@ -588,7 +516,7 @@ reportGenerator <- function() {
       # Outcome
       if (length(input$outcomeIncidenceAge) != 1 || input$outcomeIncidenceAge != "All") {
       incidence_estimates <- incidence_estimates %>%
-        filter(outcome_cohort_id %in% input$outcomeIncidenceAge)
+        filter(outcome_cohort_name %in% input$outcomeIncidenceAge)
       }
       # Sex
       if (length(input$sexIncidenceAge) != 1 || input$sexIncidenceAge != "All") {
@@ -614,8 +542,10 @@ reportGenerator <- function() {
       # Lock data
       if (input$lockDataIncidenceAge == TRUE) {
         dataReport[[objectChoice]][["incidence_estimates"]] <- incidence_estimates
+        dataReport[[objectChoice]][["plotOption"]] <- input$facetIncidenceAge
       } else {
         dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
+        dataReport[[objectChoice]][["plotOption"]] <- NULL
       }
       menuFunction <- menuFun() %>%
         dplyr::filter(title == objectChoice)
@@ -623,9 +553,89 @@ reportGenerator <- function() {
       expression <- menuFunction %>%
         dplyr::pull(signature)
       expression <- expression %>%
-        addPreviewItemTypeAge(input$previewPlotOptionAge)
+        addPreviewItemTypeAge(input$facetIncidenceAge)
       object <- eval(parse(text = expression))
       object
+    })
+
+    # Update according to facet incidence
+
+    observeEvent(input$facetIncidenceSex, {
+      if  (input$facetIncidenceSex == "Facet by database") {
+        updatePickerInput(session,
+                          inputId = "databaseIncidenceSex",
+                          label = "Database",
+                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
+                          selected = "All",
+                          options = list(
+                            maxOptions = (length(unique(uploadedFiles$data$incidence_estimates$database_name))+1)
+                          ))
+
+        updatePickerInput(session,
+                          inputId = "outcomeIncidenceSex",
+                          label = "Outcome",
+                          choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name),
+                          selected = uploadedFiles$data$incidence_estimates$outcome_cohort_name[1],
+                          options = list(
+                            maxOptions = 1
+                          ))
+
+      } else {
+        updatePickerInput(session,
+                          inputId = "databaseIncidenceSex",
+                          label = "Database",
+                          choices = unique(uploadedFiles$data$incidence_estimates$database_name),
+                          selected = uploadedFiles$data$incidence_estimates$database_name[1],
+                          options = list(
+                            maxOptions = 1
+                          )
+        )
+        updatePickerInput(session,
+                          inputId = "outcomeIncidenceSex",
+                          label = "Outcome",
+                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name)),
+                          selected = "All")
+
+      }
+    })
+
+    observeEvent(input$facetIncidenceAge, {
+      if  (input$facetIncidenceAge == "Facet by database") {
+        updatePickerInput(session,
+                          inputId = "databaseIncidenceAge",
+                          label = "Database",
+                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
+                          selected = "All",
+                          options = list(
+                            maxOptions = (length(unique(uploadedFiles$data$incidence_estimates$database_name))+1)
+                          ))
+
+        updatePickerInput(session,
+                          inputId = "outcomeIncidenceAge",
+                          label = "Outcome",
+                          choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name),
+                          selected = uploadedFiles$data$incidence_estimates$outcome_cohort_name[1],
+                          options = list(
+                            maxOptions = 1
+                          ))
+      } else {
+
+        updatePickerInput(session,
+                          inputId = "databaseIncidenceAge",
+                          label = "Database",
+                          choices = unique(uploadedFiles$data$incidence_estimates$database_name),
+                          selected = uploadedFiles$data$incidence_estimates$database_name[1],
+                          options = list(
+                            maxOptions = 1
+                          )
+        )
+        updatePickerInput(session,
+                          inputId = "outcomeIncidenceAge",
+                          label = "Outcome",
+                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name)),
+                          selected = "All")
+
+      }
     })
 
     # Figure 4: Prevalence rate per year
@@ -667,8 +677,6 @@ reportGenerator <- function() {
                        as.Date(input$timeFromPrevalenceYear),
                        as.Date(input$timeToPrevalenceYear)))
 
-      # Analysis
-
       # Interval
       prevalence_estimates <- prevalence_estimates %>%
         filter(analysis_interval == input$intervalPrevalenceYear)
@@ -679,8 +687,10 @@ reportGenerator <- function() {
       # Lock data
       if (input$lockDataPrevalenceYear == TRUE) {
         dataReport[[objectChoice]][["prevalence_estimates"]] <- prevalence_estimates
+        dataReport[[objectChoice]][["plotOption"]] <- input$facetPrevalenceYear
       } else {
         dataReport[[objectChoice]][["prevalence_estimates"]] <- NULL
+        dataReport[[objectChoice]][["plotOption"]] <- NULL
       }
       # Preview object
       menuFunction <- menuFun() %>%
@@ -692,6 +702,218 @@ reportGenerator <- function() {
         addPreviewItemType(input$facetPrevalenceYear)
       object <- eval(parse(text = expression))
       object
+    })
+
+    # Figure 5: Prevalence rate per year by sex
+
+    output$previewFigure5 <- renderPlot({
+      objectChoice <- "Plot - Prevalence rate per year by sex"
+      prevalence_estimates <- uploadedFiles$data$prevalence_estimates
+      class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
+      prevalence_estimates[is.na(prevalence_estimates)] = 0
+
+      # Database
+      if (length(input$databasePrevalenceSex) != 1 || input$databasePrevalenceSex != "All") {
+        prevalence_estimates <- prevalence_estimates %>%
+          filter(database_name %in% c(input$databasePrevalenceSex))
+      }
+
+      # Outcome
+      if (length(input$outcomePrevalenceSex) != 1 || input$outcomePrevalenceSex != "All") {
+        prevalence_estimates <- prevalence_estimates %>%
+          filter(outcome_cohort_name %in% input$outcomePrevalenceSex)
+      }
+      # Sex
+
+      if (length(input$sexPrevalenceSex) != 1 || input$sexPrevalenceSex != "All") {
+        prevalence_estimates <- prevalence_estimates %>%
+          filter(denominator_sex %in% input$sexPrevalenceSex)
+      }
+
+      # Age group
+
+      if (length(input$agePrevalenceSex) != 1 || input$agePrevalenceSex != "All")  {
+        prevalence_estimates <- prevalence_estimates %>%
+          filter(denominator_age_group %in% input$agePrevalenceSex)
+      }
+
+      # Start Time
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(between(prevalence_start_date,
+                       as.Date(input$timeFromPrevalenceSex),
+                       as.Date(input$timeToPrevalenceSex)))
+
+      # Interval
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(analysis_interval == input$intervalPrevalenceSex)
+
+      # Repeated events
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(analysis_type == input$typePrevalenceSex)
+      # Lock data
+      if (input$lockDataPrevalenceSex == TRUE) {
+        dataReport[[objectChoice]][["prevalence_estimates"]] <- prevalence_estimates
+        dataReport[[objectChoice]][["plotOption"]] <- input$facetPrevalenceSex
+      } else {
+        dataReport[[objectChoice]][["prevalence_estimates"]] <- NULL
+        dataReport[[objectChoice]][["plotOption"]] <- NULL
+      }
+      # Preview object
+      menuFunction <- menuFun() %>%
+        dplyr::filter(title == objectChoice)
+      itemOptions <- menuFunction %>% getItemOptions()
+      expression <- menuFunction %>%
+        dplyr::pull(signature)
+      expression <- expression %>%
+        addPreviewItemTypeSex(input$facetPrevalenceSex)
+      object <- eval(parse(text = expression))
+      object
+    })
+
+    # Figure 6: Prevalence rate per year by age
+
+    output$previewFigure6 <- renderPlot({
+      objectChoice <- "Plot - Prevalence rate per year by age"
+      prevalence_estimates <- uploadedFiles$data$prevalence_estimates
+      class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
+      prevalence_estimates[is.na(prevalence_estimates)] = 0
+
+      # Database
+      if (length(input$databasePrevalenceAge) != 1 || input$databasePrevalenceAge != "All") {
+        prevalence_estimates <- prevalence_estimates %>%
+          filter(database_name %in% c(input$databasePrevalenceAge))
+      }
+
+      # Outcome
+      if (length(input$outcomePrevalenceAge) != 1 || input$outcomePrevalenceAge != "All") {
+        prevalence_estimates <- prevalence_estimates %>%
+          filter(outcome_cohort_name %in% input$outcomePrevalenceAge)
+      }
+      # Sex
+
+      if (length(input$sexPrevalenceAge) != 1 || input$sexPrevalenceAge != "All") {
+        prevalence_estimates <- prevalence_estimates %>%
+          filter(denominator_sex %in% input$sexPrevalenceAge)
+      }
+
+      # Age group
+
+      if (length(input$agePrevalenceAge) != 1 || input$agePrevalenceAge != "All")  {
+        prevalence_estimates <- prevalence_estimates %>%
+          filter(denominator_age_group %in% input$agePrevalenceAge)
+      }
+
+      # Start Time
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(between(prevalence_start_date,
+                       as.Date(input$timeFromPrevalenceAge),
+                       as.Date(input$timeToPrevalenceAge)))
+
+      # Interval
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(analysis_interval == input$intervalPrevalenceAge)
+
+      # Repeated events
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(analysis_type == input$typePrevalenceAge)
+      # Lock data
+      if (input$lockDataPrevalenceSex == TRUE) {
+        dataReport[[objectChoice]][["prevalence_estimates"]] <- prevalence_estimates
+        dataReport[[objectChoice]][["plotOption"]] <- input$facetPrevalenceAge
+      } else {
+        dataReport[[objectChoice]][["prevalence_estimates"]] <- NULL
+        dataReport[[objectChoice]][["plotOption"]] <- NULL
+      }
+      # Preview object
+      menuFunction <- menuFun() %>%
+        dplyr::filter(title == objectChoice)
+      itemOptions <- menuFunction %>% getItemOptions()
+      expression <- menuFunction %>%
+        dplyr::pull(signature)
+      expression <- expression %>%
+        addPreviewItemTypeAge(input$facetPrevalenceAge)
+      object <- eval(parse(text = expression))
+      object
+    })
+
+    # Update according to facet prevalence
+
+    observeEvent(input$facetPrevalenceSex, {
+      if  (input$facetPrevalenceSex == "Facet by database") {
+        updatePickerInput(session,
+                          inputId = "databasePrevalenceSex",
+                          label = "Database",
+                          choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
+                          selected = "All",
+                          options = list(
+                            maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
+                          ))
+
+        updatePickerInput(session,
+                          inputId = "outcomePrevalenceSex",
+                          label = "Outcome",
+                          choices = unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name),
+                          selected = uploadedFiles$data$prevalence_estimates$outcome_cohort_name[1],
+                          options = list(
+                            maxOptions = 1
+                          ))
+
+      } else {
+        updatePickerInput(session,
+                          inputId = "databasePrevalenceSex",
+                          label = "Database",
+                          choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
+                          selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                          options = list(
+                            maxOptions = 1
+                          )
+        )
+        updatePickerInput(session,
+                          inputId = "outcomePrevalenceSex",
+                          label = "Outcome",
+                          choices = c("All", unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name)),
+                          selected = "All")
+
+      }
+    })
+
+    observeEvent(input$facetPrevalenceAge, {
+      if  (input$facetPrevalenceAge == "Facet by database") {
+        updatePickerInput(session,
+                          inputId = "databasePrevalenceAge",
+                          label = "Database",
+                          choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
+                          selected = "All",
+                          options = list(
+                            maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
+                          ))
+
+        updatePickerInput(session,
+                          inputId = "outcomePrevalenceAge",
+                          label = "Outcome",
+                          choices = unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name),
+                          selected = uploadedFiles$data$prevalence_estimates$outcome_cohort_name[1],
+                          options = list(
+                            maxOptions = 1
+                          ))
+      } else {
+
+        updatePickerInput(session,
+                          inputId = "databasePrevalenceAge",
+                          label = "Database",
+                          choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
+                          selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                          options = list(
+                            maxOptions = 1
+                          )
+        )
+        updatePickerInput(session,
+                          inputId = "outcomePrevalenceAge",
+                          label = "Outcome",
+                          choices = c("All", unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name)),
+                          selected = "All")
+
+      }
     })
 
 

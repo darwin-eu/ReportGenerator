@@ -77,7 +77,7 @@ prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
   tagList(
     fluidRow(
       column(4,
-             facetReturn(menuFun = menuFun, objectChoice = objectChoice)
+             selectInput("facetPrevalenceSex", "Select plot type", choices = c("Facet by outcome", "Facet by database"))
       )
     ),
     fluidRow(
@@ -86,15 +86,17 @@ prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          label = "Database",
                          choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
                          selected = uploadedFiles$data$prevalence_estimates$database_name[1],
-                         multiple = FALSE,
+                         multiple = TRUE,
                          options = list(
                            maxOptions = 1
                          ))
       ),
       column(4,
-             selectInput(inputId = "outcomePrevalenceSex",
+             pickerInput(inputId = "outcomePrevalenceSex",
                          label = "Outcome",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name))
+                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name)),
+                         selected = "All",
+                         multiple = TRUE)
       )
     ),
     fluidRow(
@@ -151,7 +153,7 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
   tagList(
     fluidRow(
       column(4,
-             facetReturn(menuFun = menuFun, objectChoice = objectChoice)
+             selectInput("facetPrevalenceAge", "Select plot type", choices = c("Facet by outcome", "Facet by database"))
       )
     ),
     fluidRow(
@@ -160,15 +162,17 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          label = "Database",
                          choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
                          selected = uploadedFiles$data$prevalence_estimates$database_name[1],
-                         multiple = FALSE,
+                         multiple = TRUE,
                          options = list(
                            maxOptions = 1
                          ))
       ),
       column(4,
-             selectInput(inputId = "outcomePrevalenceAge",
+             pickerInput(inputId = "outcomePrevalenceAge",
                          label = "Outcome",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name))
+                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name)),
+                         selected = "All",
+                         multiple = TRUE)
       )
     ),
     fluidRow(
