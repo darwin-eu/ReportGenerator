@@ -2,7 +2,7 @@ incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
   tagList(
     fluidRow(
       column(4,
-             selectInput("previewPlotOptionYear",
+             selectInput("facetIncidenceYear",
                          "Select plot type",
                          choices = c("Facet by outcome",
                                      "Facet by database"),
@@ -19,8 +19,8 @@ incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
       ),
       column(4,
              pickerInput(inputId = "outcomeIncidenceYear",
-                         label = "Database",
-                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_id)),
+                         label = "Outcome",
+                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name)),
                          selected = "All",
                          multiple = TRUE)
       )

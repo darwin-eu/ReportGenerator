@@ -178,103 +178,103 @@ reportGenerator <- function() {
     })
 
     # incidence_estimates
-
-    incidenceCommonData <- reactive({
-
-      commonData <- uploadedFiles$data$incidence_estimates
-      class(commonData) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
-      commonData[is.na(commonData)] = 0
-
-      # Database
-      if (length(input$databaseIncidence) != 1 || input$databaseIncidence != "All") {
-        commonData <- commonData %>%
-          filter(database_name %in% c(input$databaseIncidence))
-      }
-
-      # Outcome
-      commonData <- commonData %>%
-        filter(outcome_cohort_id == input$outcomeIncidence)
-
-      # Sex
-
-      if (length(input$sexIncidence) != 1 || input$sexIncidence != "All") {
-        commonData <- commonData %>%
-          filter(denominator_sex %in% input$sexIncidence)
-      }
-
-      # Age group
-
-      if (length(input$ageIncidence) != 1 || input$ageIncidence != "All") {
-        commonData <- commonData %>%
-          filter(denominator_age_group %in% input$ageIncidence)
-      }
-
-      # Start Time
-      commonData <- commonData %>%
-        filter(between(incidence_start_date,
-                       as.Date(input$timeFromIncidence),
-                       as.Date(input$timeToIncidence)))
-
-      # Analysis
-
-      # Interval
-      commonData <- commonData %>%
-        filter(analysis_interval == input$intervalIncidence)
-
-      # Repeated events
-      commonData <- commonData %>%
-        filter(analysis_repeated_events == input$repeatedIncidence)
-
-    })
-
-    # prevalence_estimates
-
-    prevalenceCommonData <- reactive({
-      commonData <- uploadedFiles$data$prevalence_estimates
-      class(commonData) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
-      commonData[is.na(commonData)] = 0
-
-      # Database
-      if (length(input$databasePrevalence) != 1 || input$databasePrevalence != "All") {
-        commonData <- commonData %>%
-          filter(database_name %in% c(input$databasePrevalence))
-      }
-
-      # Outcome
-      commonData <- commonData %>%
-        filter(outcome_cohort_name == input$outcomePrevalence)
-
-      # Sex
-
-      if (length(input$sexPrevalence) != 1 || input$sexPrevalence != "All") {
-        commonData <- commonData %>%
-          filter(denominator_sex %in% input$sexPrevalence)
-      }
-
-      # Age group
-
-      if (length(input$agePrevalence) != 1 || input$agePrevalence != "All")  {
-        commonData <- commonData %>%
-          filter(denominator_age_group %in% input$agePrevalence)
-      }
-
-      # Start Time
-      commonData <- commonData %>%
-        filter(between(prevalence_start_date,
-                       as.Date(input$timeFromPrevalence),
-                       as.Date(input$timeToPrevalence)))
-
-      # Analysis
-
-      # Interval
-      commonData <- commonData %>%
-        filter(analysis_interval == input$intervalPrevalence)
-
-      # Repeated events
-      commonData <- commonData %>%
-        filter(analysis_type == input$typePrevalence)
-
-    })
+#
+#     incidenceCommonData <- reactive({
+#
+#       commonData <- uploadedFiles$data$incidence_estimates
+#       class(commonData) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
+#       commonData[is.na(commonData)] = 0
+#
+#       # Database
+#       if (length(input$databaseIncidence) != 1 || input$databaseIncidence != "All") {
+#         commonData <- commonData %>%
+#           filter(database_name %in% c(input$databaseIncidence))
+#       }
+#
+#       # Outcome
+#       commonData <- commonData %>%
+#         filter(outcome_cohort_id == input$outcomeIncidence)
+#
+#       # Sex
+#
+#       if (length(input$sexIncidence) != 1 || input$sexIncidence != "All") {
+#         commonData <- commonData %>%
+#           filter(denominator_sex %in% input$sexIncidence)
+#       }
+#
+#       # Age group
+#
+#       if (length(input$ageIncidence) != 1 || input$ageIncidence != "All") {
+#         commonData <- commonData %>%
+#           filter(denominator_age_group %in% input$ageIncidence)
+#       }
+#
+#       # Start Time
+#       commonData <- commonData %>%
+#         filter(between(incidence_start_date,
+#                        as.Date(input$timeFromIncidence),
+#                        as.Date(input$timeToIncidence)))
+#
+#       # Analysis
+#
+#       # Interval
+#       commonData <- commonData %>%
+#         filter(analysis_interval == input$intervalIncidence)
+#
+#       # Repeated events
+#       commonData <- commonData %>%
+#         filter(analysis_repeated_events == input$repeatedIncidence)
+#
+#     })
+#
+#     # prevalence_estimates
+#
+#     prevalenceCommonData <- reactive({
+#       commonData <- uploadedFiles$data$prevalence_estimates
+#       class(commonData) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
+#       commonData[is.na(commonData)] = 0
+#
+#       # Database
+#       if (length(input$databasePrevalence) != 1 || input$databasePrevalence != "All") {
+#         commonData <- commonData %>%
+#           filter(database_name %in% c(input$databasePrevalence))
+#       }
+#
+#       # Outcome
+#       commonData <- commonData %>%
+#         filter(outcome_cohort_name == input$outcomePrevalence)
+#
+#       # Sex
+#
+#       if (length(input$sexPrevalence) != 1 || input$sexPrevalence != "All") {
+#         commonData <- commonData %>%
+#           filter(denominator_sex %in% input$sexPrevalence)
+#       }
+#
+#       # Age group
+#
+#       if (length(input$agePrevalence) != 1 || input$agePrevalence != "All")  {
+#         commonData <- commonData %>%
+#           filter(denominator_age_group %in% input$agePrevalence)
+#       }
+#
+#       # Start Time
+#       commonData <- commonData %>%
+#         filter(between(prevalence_start_date,
+#                        as.Date(input$timeFromPrevalence),
+#                        as.Date(input$timeToPrevalence)))
+#
+#       # Analysis
+#
+#       # Interval
+#       commonData <- commonData %>%
+#         filter(analysis_interval == input$intervalPrevalence)
+#
+#       # Repeated events
+#       commonData <- commonData %>%
+#         filter(analysis_type == input$typePrevalence)
+#
+#     })
 
     # 3. Interactive menu
 
@@ -307,7 +307,10 @@ reportGenerator <- function() {
 
     # Table of contents from objects list selected by the user data frame
     output$navPanelPreview <- renderUI({
-      previewPanels <- lapply(input$objectSelection, tabPanelSelection, menuFun = menuFun())
+      previewPanels <- lapply(input$objectSelection,
+                              tabPanelSelection,
+                              uploadedFiles = uploadedFiles,
+                              menuFun = menuFun())
       do.call(navlistPanel, previewPanels)
     })
 
@@ -508,7 +511,7 @@ reportGenerator <- function() {
       expression <- menuFunction %>%
         dplyr::pull(signature)
           expression <- expression %>%
-            addPreviewItemType(input$previewPlotOptionYear)
+            addPreviewItemType(input$facetIncidenceYear)
       object <- eval(parse(text = expression))
       object
       })
@@ -621,6 +624,72 @@ reportGenerator <- function() {
         dplyr::pull(signature)
       expression <- expression %>%
         addPreviewItemTypeAge(input$previewPlotOptionAge)
+      object <- eval(parse(text = expression))
+      object
+    })
+
+    # Figure 4: Prevalence rate per year
+
+    output$previewFigure4 <- renderPlot({
+      objectChoice <- "Plot - Prevalence rate per year"
+      prevalence_estimates <- uploadedFiles$data$prevalence_estimates
+      class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
+      prevalence_estimates[is.na(prevalence_estimates)] = 0
+
+      # Database
+      if (length(input$databasePrevalenceYear) != 1 || input$databasePrevalenceYear != "All") {
+        prevalence_estimates <- prevalence_estimates %>%
+          filter(database_name %in% c(input$databasePrevalenceYear))
+      }
+
+      # Outcome
+      if (length(input$outcomePrevalenceYear) != 1 || input$outcomePrevalenceYear != "All") {
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(outcome_cohort_name %in% input$outcomePrevalenceYear)
+      }
+      # Sex
+
+      if (length(input$sexPrevalenceYear) != 1 || input$sexPrevalenceYear != "All") {
+        prevalence_estimates <- prevalence_estimates %>%
+          filter(denominator_sex %in% input$sexPrevalenceYear)
+      }
+
+      # Age group
+
+      if (length(input$agePrevalenceYear) != 1 || input$agePrevalenceYear != "All")  {
+        prevalence_estimates <- prevalence_estimates %>%
+          filter(denominator_age_group %in% input$agePrevalenceYear)
+      }
+
+      # Start Time
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(between(prevalence_start_date,
+                       as.Date(input$timeFromPrevalenceYear),
+                       as.Date(input$timeToPrevalenceYear)))
+
+      # Analysis
+
+      # Interval
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(analysis_interval == input$intervalPrevalenceYear)
+
+      # Repeated events
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(analysis_type == input$typePrevalenceYear)
+      # Lock data
+      if (input$lockDataPrevalenceYear == TRUE) {
+        dataReport[[objectChoice]][["prevalence_estimates"]] <- prevalence_estimates
+      } else {
+        dataReport[[objectChoice]][["prevalence_estimates"]] <- NULL
+      }
+      # Preview object
+      menuFunction <- menuFun() %>%
+        dplyr::filter(title == objectChoice)
+      itemOptions <- menuFunction %>% getItemOptions()
+      expression <- menuFunction %>%
+        dplyr::pull(signature)
+      expression <- expression %>%
+        addPreviewItemType(input$facetPrevalenceYear)
       object <- eval(parse(text = expression))
       object
     })

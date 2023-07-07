@@ -15,9 +15,11 @@ tableNumParFilters <- function(uploadedFiles) {
       )
     ),
     fluidRow(
+      column(4,
       checkboxInput(inputId = "lockTableNumPar",
                     label = "Add data to report",
                     value = FALSE)
+      )
     )
   )
 }
