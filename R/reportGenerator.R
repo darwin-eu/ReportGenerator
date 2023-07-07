@@ -59,14 +59,6 @@ reportGenerator <- function() {
                  fluidRow(
                    uiOutput("navPanelPreview"),
                    downloadButton("generateReport", "Generate Report")
-                   # box(tags$b("Item preview"),
-                   #     DT::dataTableOutput("tableContents"),
-                   #     downloadButton("generateReport", "Generate Report"),
-                   #     width = 4),
-                   # box(uiOutput("plotFilters"),
-                   #     # textOutput("testReportData"),
-                   #     uiOutput("itemPreview"),
-                   #     width = 8)
                    )
                  )
           )
@@ -161,8 +153,6 @@ reportGenerator <- function() {
       commonData <- commonData %>%
         filter(analysis_id %in% c(input$analysisIdTable1))
       commonData
-      # dataReport[[objectChoice()]][["prevalence_attrition"]] <- commonData
-      # dataReport[[objectChoice()]][["prevalence_attrition"]]
     })
 
     # incidence_attrition
@@ -173,108 +163,7 @@ reportGenerator <- function() {
       commonData <- commonData %>%
         filter(analysis_id %in% c(input$analysisIdTable1))
       commonData
-      # dataReport[[objectChoice()]][["incidence_attrition"]] <- commonData
-      # dataReport[[objectChoice()]][["incidence_attrition"]]
     })
-
-    # incidence_estimates
-#
-#     incidenceCommonData <- reactive({
-#
-#       commonData <- uploadedFiles$data$incidence_estimates
-#       class(commonData) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
-#       commonData[is.na(commonData)] = 0
-#
-#       # Database
-#       if (length(input$databaseIncidence) != 1 || input$databaseIncidence != "All") {
-#         commonData <- commonData %>%
-#           filter(database_name %in% c(input$databaseIncidence))
-#       }
-#
-#       # Outcome
-#       commonData <- commonData %>%
-#         filter(outcome_cohort_name == input$outcomeIncidence)
-#
-#       # Sex
-#
-#       if (length(input$sexIncidence) != 1 || input$sexIncidence != "All") {
-#         commonData <- commonData %>%
-#           filter(denominator_sex %in% input$sexIncidence)
-#       }
-#
-#       # Age group
-#
-#       if (length(input$ageIncidence) != 1 || input$ageIncidence != "All") {
-#         commonData <- commonData %>%
-#           filter(denominator_age_group %in% input$ageIncidence)
-#       }
-#
-#       # Start Time
-#       commonData <- commonData %>%
-#         filter(between(incidence_start_date,
-#                        as.Date(input$timeFromIncidence),
-#                        as.Date(input$timeToIncidence)))
-#
-#       # Analysis
-#
-#       # Interval
-#       commonData <- commonData %>%
-#         filter(analysis_interval == input$intervalIncidence)
-#
-#       # Repeated events
-#       commonData <- commonData %>%
-#         filter(analysis_repeated_events == input$repeatedIncidence)
-#
-#     })
-#
-#     # prevalence_estimates
-#
-#     prevalenceCommonData <- reactive({
-#       commonData <- uploadedFiles$data$prevalence_estimates
-#       class(commonData) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
-#       commonData[is.na(commonData)] = 0
-#
-#       # Database
-#       if (length(input$databasePrevalence) != 1 || input$databasePrevalence != "All") {
-#         commonData <- commonData %>%
-#           filter(database_name %in% c(input$databasePrevalence))
-#       }
-#
-#       # Outcome
-#       commonData <- commonData %>%
-#         filter(outcome_cohort_name == input$outcomePrevalence)
-#
-#       # Sex
-#
-#       if (length(input$sexPrevalence) != 1 || input$sexPrevalence != "All") {
-#         commonData <- commonData %>%
-#           filter(denominator_sex %in% input$sexPrevalence)
-#       }
-#
-#       # Age group
-#
-#       if (length(input$agePrevalence) != 1 || input$agePrevalence != "All")  {
-#         commonData <- commonData %>%
-#           filter(denominator_age_group %in% input$agePrevalence)
-#       }
-#
-#       # Start Time
-#       commonData <- commonData %>%
-#         filter(between(prevalence_start_date,
-#                        as.Date(input$timeFromPrevalence),
-#                        as.Date(input$timeToPrevalence)))
-#
-#       # Analysis
-#
-#       # Interval
-#       commonData <- commonData %>%
-#         filter(analysis_interval == input$intervalPrevalence)
-#
-#       # Repeated events
-#       commonData <- commonData %>%
-#         filter(analysis_type == input$typePrevalence)
-#
-#     })
 
     # 3. Interactive menu
 
@@ -297,14 +186,6 @@ reportGenerator <- function() {
 
     # Item preview
 
-    # Objects list selected by the user in the sortable menu into a dataframe
-
-    # objectDataFrame <- reactive({
-    #   contents <- input$objectSelection
-    #   objectsDataFrame <- data.frame(contents)
-    #   objectsDataFrame
-    # })
-
     # Table of contents from objects list selected by the user data frame
     output$navPanelPreview <- renderUI({
       previewPanels <- lapply(input$objectSelection,
@@ -317,34 +198,10 @@ reportGenerator <- function() {
     # Retrieves list of functions available and places the correct arguments
     menuFun  <- reactive({
       menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
-      # menuFun$arguments <- gsub("incidence_attrition",
-      #                           "incidenceAttritionCommon()",
-      #                           menuFun$arguments)
-      # menuFun$arguments <- gsub("prevalence_attrition",
-      #                           "prevalenceAttritionCommon()",
-      #                           menuFun$arguments)
-      # menuFun$arguments <- gsub("incidence_estimates",
-      #                           "incidenceCommonData()",
-      #                           menuFun$arguments)
-      # menuFun$arguments <- gsub("prevalence_estimates",
-      #                           "prevalenceCommonData()",
-      #                           menuFun$arguments)
       menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$data$incidence_estimates"
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
       menuFun
     })
-
-    # Item choice data
-    # objectChoice  <- reactive({
-    #   req(uploadedFiles)
-    #   req(input$tableContents_rows_selected)
-    #   objectChoiceTitle <- objectDataFrame()[input$tableContents_rows_selected,]
-    #   objectChoiceTitle
-    # })
-
-    # Filters UI
-
-
 
     # Objects to be rendered in the UI
 
@@ -915,96 +772,6 @@ reportGenerator <- function() {
 
       }
     })
-
-
-    # Table
-    # output$previewTable <- renderTable({
-    #   req(objectChoice())
-    #   if (grepl("Table", objectChoice())) {
-    #     object <- eval(parse(text = menuFun() %>%
-    #                            dplyr::filter(title == objectChoice()) %>%
-    #                            dplyr::pull(signature)))
-    #     object
-    #     }
-    #   }, colnames = FALSE)
-
-
-    # Figures
-    # output$previewPlot <- renderPlot({
-    #   req(objectChoice())
-    #   menuFunction <- menuFun() %>%
-    #     dplyr::filter(title == objectChoice())
-    #   itemOptions <- menuFunction %>% getItemOptions()
-    #   expression <- menuFunction %>%
-    #     dplyr::pull(signature)
-    #   if (!identical(itemOptions, character(0))) {
-    #     if (grepl("by sex", objectChoice())) {
-    #       expression <- expression %>%
-    #         addPreviewItemTypeSex(input$previewPlotOption)
-    #     } else if (grepl("by age", objectChoice())) {
-    #       expression <- expression %>%
-    #         addPreviewItemTypeAge(input$previewPlotOption)
-    #     } else  {
-    #       expression <- expression %>%
-    #         addPreviewItemType(input$previewPlotOption)
-    #     }
-    #   }
-    #   object <- eval(parse(text = expression))
-    #   if (grepl("Plot", objectChoice())) {
-    #     object
-    #     }
-    #   })
-
-    # 4. Report
-
-    # Data saving functions to print into Word
-    # observeEvent(input$lockDataIncidence, {
-    #   if(input$lockDataIncidence == TRUE) {
-    #     objectReport <- menuFun() %>%
-    #       dplyr::filter(title == objectChoice()) %>%
-    #       dplyr::pull(arguments)
-    #     objectReport <- gsub(" ", "", objectReport)
-    #     argumentsData <- unlist(strsplit(objectReport, ","))
-    #     for (i in argumentsData) {
-    #       if (grepl("incidence", i)) {
-    #         arguments <- eval(parse(text = i))
-    #         dataReport[[objectChoice()]][["incidence_estimates"]] <- arguments
-    #         dataReport[[objectChoice()]][["plotOption"]] <- input$previewPlotOption
-    #     }
-    #     }
-    #   } else {
-    #     dataReport[[objectChoice()]] <- NULL
-    #   }
-    # })
-    #
-    # observeEvent(input$lockDataPrevalence, {
-    #   if(input$lockDataPrevalence == TRUE) {
-    #     objectReport <- menuFun() %>%
-    #       dplyr::filter(title == objectChoice()) %>%
-    #       dplyr::pull(arguments)
-    #     objectReport <- gsub(" ", "", objectReport)
-    #     argumentsData <- unlist(strsplit(objectReport, ","))
-    #     for (i in argumentsData) {
-    #       if (grepl("prevalence", i)) {
-    #         arguments <- eval(parse(text = i))
-    #         dataReport[[objectChoice()]][["prevalence_estimates"]] <- arguments
-    #         dataReport[[objectChoice()]][["plotOption"]] <- input$previewPlotOption
-    #       }
-    #     }
-    #   } else {
-    #     dataReport[[objectChoice()]] <- NULL
-    #   }
-    # })
-
-    # output$testReportData <- renderText({
-    #   # req(objectChoice())
-    #   if (!is.null(dataReport[[objectChoice()]])) {
-    #     textData <- "Data added to the report"
-    #   } else {
-    #     textData <- NULL
-    #   }
-    #   textData
-    #   })
 
     menuSel  <- reactive({
       menuSel  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
