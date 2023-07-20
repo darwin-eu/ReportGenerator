@@ -1,3 +1,5 @@
+# ReportGenerator 1.10.0
+
 # ReportGenerator 1.9.0
 
 * Users can select the version of IncidencePrevalence data that ReportGenerator accepts.
