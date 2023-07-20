@@ -1,5 +1,7 @@
 # ReportGenerator 1.10.0
 
+* Preview persist even when changing different tables and figures.
+
 # ReportGenerator 1.9.0
 
 * Users can select the version of IncidencePrevalence data that ReportGenerator accepts.
