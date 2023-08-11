@@ -29,7 +29,7 @@ reportGenerator <- function() {
   options(shiny.maxRequestSize = 30*1024^2)
 
   ui <- dashboardPage(
-    dashboardHeader(title = "Report Generator"),
+    dashboardHeader(title = "ReportGenerator"),
     dashboardSidebar(
       sidebarMenu(
         tagList(tags$br(),
