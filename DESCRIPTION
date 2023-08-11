@@ -3,7 +3,7 @@ Type: Package
 Title: Automatic report generator of the Darwin EU studies
 Version: 1.10.0
 Author: CE BARBOZA
-Maintainer: CE BARBOZA <c.barbozagutierrez@erasmusmc.nl>
+Maintainer: CE BARBOZA <c.barboza@darwin-eu.org>
 Description: This package creates a report in docx, html and pdf formats from Darwin studies. 
 License: Apache License (>= 2)
 Encoding: UTF-8
@@ -19,18 +19,16 @@ Imports:
     IncidencePrevalence,
     officer,
     readr,
-    rmarkdown,
     scales,
     shiny,
     shinydashboard,
     shinyWidgets,
+    stringi,
     tidyr,
     checkmate,
     webshot2 (>= 0.1.0),
-    stringi,
     stringr,
     rjson,
-    googleVis,
     data.table,
     huxtable,
     sortable,
@@ -38,12 +36,15 @@ Imports:
     glue,
     yaml,
     waldo,
-    plotly
+    plotly,
+    googleVis
 Suggests: 
     testthat,
     rLDCP,
     DT,
     quarto,
+    rmarkdown,
+    covr
 Remotes:
     darwin-eu/IncidencePrevalence
 Config/testthat/edition: 3

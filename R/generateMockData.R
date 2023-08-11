@@ -20,7 +20,7 @@
 #'
 #' @param databaseName A vector with the name in characters of each database.
 #' @param simulatePopulation TRUE or FALSE to simulate different population sizes. TRUE is default.
-#' @import dplyr rmarkdown here tidyr IncidencePrevalence
+#' @import dplyr here tidyr IncidencePrevalence
 #' @importFrom utils head write.csv
 #' @importFrom stats time
 #' @importFrom zip zip

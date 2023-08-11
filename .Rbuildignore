@@ -39,3 +39,4 @@ report.tex
 ^vignettes/articles$
 app.R
 .rscignore
+^codecov\.yml$
