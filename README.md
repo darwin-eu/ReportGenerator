@@ -35,7 +35,7 @@ ReportGenerator::reportGenerator()
 ```
 
 Alternatively, you can access to an [online version
-here](https://data-dev.darwin-eu.org/content/5f2cf055-690c-4a28-9567-a1986eaafe8e/).
+here](https://data-dev.darwin-eu.org/content/46c367cd-6e29-4382-9d7d-aff8caaa582a/).
 
 Load your own results from the
 [IncidencePrevalence](https://darwin-eu.github.io/IncidencePrevalence/)
