@@ -236,7 +236,7 @@ transformCSVtoJSON <- function(data, outcomes, folder, fileName) {
 #'
 #' @export
 #'
-#' @returns NULL
+#' @return NULL
 #'
 #' @examples
 #' \dontrun{

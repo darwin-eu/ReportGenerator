@@ -40,3 +40,4 @@ report.tex
 app.R
 .rscignore
 ^codecov\.yml$
+^cran-comments\.md$

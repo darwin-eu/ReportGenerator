@@ -15,3 +15,6 @@ Writes a csv file into the config folder of ReportGenerator
 \description{
 `variablesConfigWriter()` takes a list of csv files, extract their columns and writes de variables config file
 }
+\examples{
+variablesConfigWriter()
+}

@@ -24,8 +24,7 @@ Analyses.
 You can install the development version of ReportGenerator like so:
 
 ``` r
-install.packages("remotes")
-remotes::install_github("darwin-eu-dev/ReportGenerator")
+install.packages("ReportGenerator")
 ```
 
 `reportGenerator()` takes as an input zip or csv files with results from

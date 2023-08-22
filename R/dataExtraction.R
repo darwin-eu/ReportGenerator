@@ -14,189 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' Extracts data from csv files
-#'
-#' @param importFolderDenominator Location of csv files.
-#' @return A tibble.
-#' @export
-denominatorExtraction <- function (importFolderDenominator = here("inst/csv/denominatorMockData")) {
-
-  result <- bind_rows(
-    lapply(
-      list.files(
-        importFolderDenominator,
-        pattern = ".csv",
-        full.names = TRUE
-      ),
-      read_csv
-    )
-  )
-
-  return(result)
-}
-#' Extracts data from csv files and saves rds
-#'
-#' @param importFolderIndcidence Location of csv files.
-#' @param studyName Name of the study.
-#' @return A tibble
-#' @export
-incidenceExtraction <- function (importFolderIndcidence = here("inst/csv/incidenceMockResults"),
-                                 studyName = "mock_data") {
-
-  result <- bind_rows(
-    lapply(
-      list.files(
-        importFolderIndcidence,
-        pattern = ".csv",
-        full.names = TRUE
-      ),
-      read_csv
-    )
-  ) %>% mutate(denominator_age_group = gsub(";", "-", denominator_age_group))
-  return(result)
-}
-#' Extracts data from csv files and saves rds
-#'
-#' @param importFolderIndcidence Location of incidence results.
-#' @param studyName Name of the study.
-#' @return A tibble
-#' @export
-#'
-incidenceExtractionToRDS <- function (importFolderIndcidence = here("inst/csv/incidenceMockResults"),
-                                      studyName = "mock_data") {
-
-  result <- bind_rows(
-    lapply(
-      list.files(
-        importFolderIndcidence,
-        pattern = ".csv",
-        full.names = TRUE
-      ),
-      read_csv
-    )
-  ) %>% mutate(denominator_age_group = gsub(";", "-", denominator_age_group))
-
-  subDir <- here("inst",
-                 "data",
-                 "incidence")
-
-  if (!file.exists(subDir)) {
-    dir.create(file.path(here("inst",
-                              "data",
-                              "incidence")),
-               recursive = TRUE)
-  }
-
-  saveRDS(result,
-          here("inst",
-               "data",
-               "incidence",
-               paste0(
-                 studyName,
-                 ".rds"
-               )
-               )
-          )
-}
-#' Extracts data from csv and saves rds
-#'
-#' @param importFolderPrevalence Location of prevalence results.
-#' @param studyName Name of the study.
-#' @return A tibble
-#' @export
-#'
-prevalenceExtraction <- function (importFolderPrevalence = here("inst/csv/prevalenceMockResults"),
-                                  studyName = "mock_data") {
-
-  result <- bind_rows(
-    lapply(
-      list.files(
-        importFolderPrevalence,
-        pattern = ".csv",
-        full.names = TRUE
-      ),
-      read_csv
-    )
-  ) %>% mutate(denominator_age_group = gsub(";", "-", denominator_age_group))
-  return(result)
-
-}
-#' Extracts data from csv files and saves rds
-#'
-#' @param importFolderPrevalence Location of prevalence results.
-#' @param studyName Name of the study.
-#' @return A tibble
-#' @export
-#'
-prevalenceExtractionToRDS <- function (importFolderPrevalence = here("inst/csv/prevalenceMockResults"),
-                                       studyName = "mock_data") {
-
-  result <- bind_rows(
-    lapply(
-      list.files(
-        importFolderPrevalence,
-        pattern = ".csv",
-        full.names = TRUE
-      ),
-      read_csv
-    )
-  ) %>% mutate(denominator_age_group = gsub(";", "-", denominator_age_group))
-
-  subDir <- here("inst",
-                 "data",
-                 "prevalence")
-
-  if (!file.exists(subDir)) {
-    dir.create(file.path(here("inst",
-                              "data",
-                              "prevalence")),
-               recursive = TRUE)
-  }
-
-  saveRDS(result,
-          here("inst",
-               "data",
-               "prevalence",
-               paste0(
-                 studyName,
-                 ".rds"
-               )
-          )
-  )
-
-}
-
-#' Joins zip databases
-#'
-#' `joinZipFiles()` joins data from multiple datapartners and returns a list of condensed files in a temp dir
-#'
-#' @param uploadedFiles Location of zip files
-#' @param csvLocation A string with the location to export the unzipped CSV files
-#' @return A list of files
-#' @import dplyr
-#' @export
 joinZipFiles <- function(uploadedFiles = NULL, csvLocation) {
-
-  # Results
-  # uploadedFiles <- list.files(here("results", "newResults"), full.names = TRUE, pattern = ".zip")
-
-  # Other results
-  # uploadedFiles <- list.files(here("OtherResults"), full.names = TRUE, pattern = ".zip")
 
   if (grepl(".zip",
             uploadedFiles[1],
             fixed = TRUE)) {
-
-    # csvLocation <- file.path(tempdir(), "dataLocation")
-    # lapply(list.files(path = csvLocation, full.names = TRUE), unlink)
     folderNumber <- 0
-
     for (fileLocation in uploadedFiles) {
       folderNumber <- folderNumber + 1
       unzip(zipfile = fileLocation,
             exdir = paste0(csvLocation, "/", "database", as.character(folderNumber)))
     }
-
     databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
     incidence_estimates <- data.frame()
     incidence_attrition <- data.frame()
@@ -204,9 +32,6 @@ joinZipFiles <- function(uploadedFiles = NULL, csvLocation) {
     prevalence_attrition <-  data.frame()
 
     for (folderLocation in databaseFolders) {
-
-      # folderLocation <- databaseFolders[1]
-
       incidence_estimate_file <- list.files(folderLocation,
                                             pattern = "incidence_estimates",
                                             full.names = TRUE,
@@ -296,21 +121,16 @@ columnCheck <- function(csvFiles,
 #' @return Writes a csv file into the config folder of ReportGenerator
 #' @export
 #' @import dplyr
+#' @examples
+#' variablesConfigWriter()
 variablesConfigWriter <- function(fileDataPath = NULL) {
-
-  # fileDataPath <- here("results", "mock_data_ReportGenerator_SIDIAP.zip")
-
   csvLocation <- tempdir()
-
   unzip(fileDataPath, exdir = csvLocation)
-
   csvFiles <- list.files(path = csvLocation,
                          pattern = ".csv",
                          full.names = TRUE,
                          recursive = TRUE)
-
   for (fileLocation in csvFiles) {
-
     if (grepl("incidence_attrition", fileLocation)) {
       variablesConfig <- read_csv("inst/config/variablesConfig.csv")
       variablesConfig <- filter(variablesConfig, name != "incidence_attrition")
@@ -371,16 +191,13 @@ variablesConfigWriter <- function(fileDataPath = NULL) {
                                                                     "incidence_estimates",
                                                                     "prevalence_attrition",
                                                                     "prevalence_estimates"))
-      write.csv(itemsVariablesExport, file = here("inst",
-                                                  "config",
-                                                  "variablesConfig.csv"), row.names = FALSE)
-
+      write.csv(itemsVariablesExport,
+                file = system.file("config",
+                                   "variablesConfig.csv",
+                                   package = "ReportGenerator"),
+                row.names = FALSE)
     }
-
-
-
   }
-
 }
 
 #' Writes variablesConfig file in Yaml
@@ -537,6 +354,4 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
     }
     return(incidence_attrition)
   }
-
-
 }
