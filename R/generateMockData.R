@@ -20,6 +20,7 @@
 #'
 #' @param databaseName A vector with the name in characters of each database.
 #' @param simulatePopulation TRUE or FALSE to simulate different population sizes. TRUE is default.
+#' @param outputDir A character vector of the directory to export mock data.
 #' @import dplyr here tidyr IncidencePrevalence
 #' @importFrom utils head write.csv
 #' @importFrom stats time
@@ -31,7 +32,8 @@ generateMockData <- function(databaseName = c("CHUBX",
                                               "IMASIS",
                                               "IPCI",
                                               "SIDIAP"),
-                             simulatePopulation = TRUE) {
+                             simulatePopulation = TRUE,
+                             outputDir = getwd()) {
 
   for (i in databaseName) {
 
@@ -146,13 +148,21 @@ generateMockData <- function(databaseName = c("CHUBX",
                                     "data.frame")
 
     # Results
+    incPreVersion <- packageVersion("IncidencePrevalence")
+    outputDirExp <- outputDir
+    outputDirExp <- file.path(outputDir,
+                              "results",
+                              incPreVersion)
+    if (!dir.exists(outputDirExp)) {
+      dir.create(outputDirExp, recursive = TRUE)
+    }
 
     exportIncidencePrevalenceResults(resultList = list("incidence_estimates" = incidence_estimates,
                                                        "prevalence_estimates" = prevalence_estimates,
                                                        "incidence_attrition" = incidence_attrition,
                                                        "prevalence_attrition" = incidence_attrition),
                                      zipName = paste0("mock_data_ReportGenerator_", i),
-                                     outputFolder = here::here("results"))
+                                     outputFolder = paste0(outputDirExp))
 
   }
 }

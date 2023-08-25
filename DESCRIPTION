@@ -39,7 +39,8 @@ Imports:
     yaml,
     waldo,
     plotly,
-    googleVis
+    googleVis,
+    gtools
 Suggests: 
     testthat,
     DT,

@@ -6,13 +6,16 @@
 \usage{
 generateMockData(
   databaseName = c("CHUBX", "CPRD GOLD", "IMASIS", "IPCI", "SIDIAP"),
-  simulatePopulation = TRUE
+  simulatePopulation = TRUE,
+  outputDir = getwd()
 )
 }
 \arguments{
 \item{databaseName}{A vector with the name in characters of each database.}
 
 \item{simulatePopulation}{TRUE or FALSE to simulate different population sizes. TRUE is default.}
+
+\item{outputDir}{A character vector of the directory to export mock data.}
 }
 \value{
 csv files

@@ -22,6 +22,7 @@
 #' @importFrom sortable bucket_list add_rank_list
 #' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @importFrom utils read.csv tail unzip
+#' @importFrom gtools mixedsort
 #' @export
 reportGenerator <- function() {
 
@@ -42,8 +43,8 @@ reportGenerator <- function() {
                             selected = "IncidencePrevalence"),
                 selectInput(inputId = "dataVersion",
                             label = "Please select version",
-                            choices = names(configData[["IncidencePrevalence"]]),
-                            selected = names(configData[["IncidencePrevalence"]])[-1]),
+                            choices = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE),
+                            selected = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE)[1]),
                 uiOutput("datasetLoadUI"),
                 actionButton('resetData', 'Reset data')
         ))

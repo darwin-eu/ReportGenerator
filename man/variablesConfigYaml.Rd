@@ -21,5 +21,5 @@ variablesConfigYaml(
 Adds column names to the variablesConfig.yaml
 }
 \description{
-`variablesConfigYaml()` takes zipped IncidencePrevalence results and extract their columns and writes variables in the variablesConfig.yaml
+`variablesConfigYaml()` the user can load the column names to the variablesConfig.yaml so ReportGenerator can recognize its data.
 }
