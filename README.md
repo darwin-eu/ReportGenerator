@@ -9,7 +9,7 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Codecov test
-coverage](https://codecov.io/gh/darwin-eu-dev/ReportGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/gh/darwin-eu-dev/ReportGenerator?branch=main)
+coverage](https://codecov.io/gh/darwin-eu-dev/ReportGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/gh/darwin-eu-dev/ReportGenerator?branch=develop)
 <!-- badges: end -->
 
 ## Overview
@@ -24,7 +24,8 @@ Analyses.
 You can install the development version of ReportGenerator like so:
 
 ``` r
-install.packages("ReportGenerator")
+install.packages("remotes")
+remotes::install_github("darwin-eu-dev/ReportGenerator")
 ```
 
 `reportGenerator()` takes as an input zip or csv files with results from
