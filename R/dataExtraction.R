@@ -14,6 +14,64 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#' Writes variablesConfig file in Yaml
+#'
+#' `variablesConfigYaml()` the user can load the column names to the variablesConfig.yaml so ReportGenerator can recognize its data.
+#'
+#' @param fileDataPath A list of zipped csv files.
+#' @param package A string to identify the name of the package, default IncidencePrevalence.
+#' @param version A string to identify which version of IncidencePrevalence is used to generate the results.
+#'
+#' @return Adds column names to the variablesConfig.yaml
+#' @export
+#' @import dplyr readr
+#' @importFrom utils unzip
+#' @importFrom readr read_csv
+variablesConfigYaml <- function(fileDataPath = NULL,
+                                package = "IncidencePrevalence",
+                                version = NULL) {
+  # fileDataPath <- here("results", "v0.2.1", "mock_data_ReportGenerator_SIDIAP.zip")
+  csvLocation <- file.path(tempdir(), "varDataLocation")
+  utils::unzip(zipfile = fileDataPath,
+               exdir = csvLocation)
+  csvFiles <- list.files(path = csvLocation,
+                         pattern = ".csv",
+                         full.names = TRUE,
+                         recursive = TRUE)
+  for (fileLocation in csvFiles) {
+    if (grepl("prevalence_attrition", fileLocation)) {
+      prevalence_attrition <- read_csv(fileLocation, show_col_types = FALSE)
+      tempNames <- names(prevalence_attrition)
+      tempTitle <- "prevalence_attrition"
+      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+      configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- tempNames
+      write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    } else if (grepl("incidence_attrition", fileLocation)) {
+      incidence_attrition <- read_csv(fileLocation, show_col_types = FALSE)
+      tempNames <- names(incidence_attrition)
+      tempTitle <- "incidence_attrition"
+      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+      configData[[package]][[version]][["incidence_attrition"]][["names"]] <- tempNames
+      write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    } else if(grepl("incidence_estimates", fileLocation)) {
+      incidence_estimates <- read_csv(fileLocation, show_col_types = FALSE)
+      tempNames <- names(incidence_estimates)
+      tempTitle <- "incidence_estimates"
+      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+      configData[[package]][[version]][["incidence_estimates"]][["names"]] <- tempNames
+      write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    } else {
+      prevalence_estimates <- read_csv(fileLocation, show_col_types = FALSE)
+      tempNames <- names(prevalence_estimates)
+      tempTitle <- "prevalence_estimates"
+      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+      configData[[package]][[version]][["prevalence_estimates"]][["names"]] <- tempNames
+      write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    }
+  }
+  unlink(csvLocation, recursive = TRUE)
+}
+
 joinZipFiles <- function(uploadedFiles = NULL, csvLocation) {
 
   if (grepl(".zip",
@@ -110,165 +168,6 @@ columnCheck <- function(csvFiles,
       }
   }
   return(data)
-}
-
-#' Writes variablesConfig file
-#'
-#' `variablesConfigWriter()` takes a list of csv files, extract their columns and writes de variables config file
-#'
-#' @param fileDataPath A list of csv files
-#'
-#' @return Writes a csv file into the config folder of ReportGenerator
-#' @export
-#' @import dplyr
-#' @examples
-#' variablesConfigWriter()
-variablesConfigWriter <- function(fileDataPath = NULL) {
-  csvLocation <- tempdir()
-  unzip(fileDataPath, exdir = csvLocation)
-  csvFiles <- list.files(path = csvLocation,
-                         pattern = ".csv",
-                         full.names = TRUE,
-                         recursive = TRUE)
-  for (fileLocation in csvFiles) {
-    if (grepl("incidence_attrition", fileLocation)) {
-      variablesConfig <- read_csv("inst/config/variablesConfig.csv")
-      variablesConfig <- filter(variablesConfig, name != "incidence_attrition")
-      incidence_attrition <- read_csv(fileLocation)
-      tempNames <- list(names(incidence_attrition))
-      tempTitle <- "incidence_attrition"
-      itemDataFrame <- data.frame(name = tempTitle, variables = tempNames[[1]])
-      itemsVariables <- bind_rows(variablesConfig, itemDataFrame)
-      itemsVariablesExport <- itemsVariables %>% filter(name %in% c("incidence_attrition",
-                                                                    "incidence_estimates",
-                                                                    "prevalence_attrition",
-                                                                    "prevalence_estimates"))
-      write.csv(itemsVariablesExport, file = here("inst",
-                                                  "config",
-                                                  "variablesConfig.csv"), row.names = FALSE)
-
-    } else if(grepl("incidence_estimates", fileLocation)) {
-      variablesConfig <- read.csv("inst/config/variablesConfig.csv")
-      variablesConfig <- filter(variablesConfig, name != "incidence_estimates")
-      incidence_estimates <- read_csv(fileLocation)
-      tempNames <- list(names(incidence_estimates))
-      tempTitle <- "incidence_estimates"
-      itemDataFrame <- data.frame(name = tempTitle, variables = tempNames[[1]])
-      itemsVariables <- bind_rows(variablesConfig, itemDataFrame)
-      itemsVariablesExport <- itemsVariables %>% filter(name %in% c("incidence_attrition",
-                                                                    "incidence_estimates",
-                                                                    "prevalence_attrition",
-                                                                    "prevalence_estimates"))
-      write.csv(itemsVariablesExport, file = here("inst",
-                                                  "config",
-                                                  "variablesConfig.csv"), row.names = FALSE)
-
-    } else if(grepl("prevalence_attrition", fileLocation)) {
-      variablesConfig <- read.csv("inst/config/variablesConfig.csv")
-      variablesConfig <- filter(variablesConfig, name != "prevalence_attrition")
-      prevalence_attrition <- read_csv(fileLocation)
-      tempNames <- list(names(prevalence_attrition))
-      tempTitle <- "prevalence_attrition"
-      itemDataFrame <- data.frame(name = tempTitle, variables = tempNames[[1]])
-      itemsVariables <- bind_rows(variablesConfig, itemDataFrame)
-      itemsVariablesExport <- itemsVariables %>% filter(name %in% c("incidence_attrition",
-                                                                    "incidence_estimates",
-                                                                    "prevalence_attrition",
-                                                                    "prevalence_estimates"))
-      write.csv(itemsVariablesExport, file = here("inst",
-                                                  "config",
-                                                  "variablesConfig.csv"), row.names = FALSE)
-
-    } else if(grepl("prevalence_estimates", fileLocation)) {
-      variablesConfig <- read.csv("inst/config/variablesConfig.csv")
-      variablesConfig <- filter(variablesConfig, name != "prevalence_estimates")
-      prevalence_estimates <- read_csv(fileLocation)
-      tempNames <- list(names(prevalence_estimates))
-      tempTitle <- "prevalence_estimates"
-      itemDataFrame <- data.frame(name = tempTitle, variables = tempNames[[1]])
-      itemsVariables <- bind_rows(variablesConfig, itemDataFrame)
-      itemsVariablesExport <- itemsVariables %>% filter(name %in% c("incidence_attrition",
-                                                                    "incidence_estimates",
-                                                                    "prevalence_attrition",
-                                                                    "prevalence_estimates"))
-      write.csv(itemsVariablesExport,
-                file = system.file("config",
-                                   "variablesConfig.csv",
-                                   package = "ReportGenerator"),
-                row.names = FALSE)
-    }
-  }
-}
-
-#' Writes variablesConfig file in Yaml
-#'
-#' `variablesConfigYaml()` takes a list of csv files, extract their columns and writes de variables config file
-#'
-#' @param fileDataPath A list of csv files
-#' @param version A string to identify which version of IncidencePrevalence is used to generate the results
-#'
-#' @return Writes a csv file into the config folder of ReportGenerator
-#' @export
-#' @import dplyr
-variablesConfigYaml <- function(fileDataPath = NULL, version = "IncidencePrevalence v0.4.0") {
-
-  # fileDataPath <- here("results", "oldResults", "mock_data_ReportGenerator_SIDIAP.zip")
-
-  csvLocation <- tempdir()
-
-  unzip(fileDataPath, exdir = csvLocation)
-
-  csvFiles <- list.files(path = csvLocation,
-                         pattern = ".csv",
-                         full.names = TRUE,
-                         recursive = TRUE)
-
-  for (fileLocation in csvFiles) {
-
-    if (grepl("prevalence_attrition", fileLocation)) {
-      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpmkHYCT/mock_data_ReportGenerator_SIDIAP/test_database_prevalence_attrition_2023_05_24.csv"
-
-      prevalence_attrition <- read_csv(fileLocation)
-      tempNames <- names(prevalence_attrition)
-      tempTitle <- "prevalence_attrition"
-      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      configData[[version]][["prevalence_attrition"]][["names"]] <- tempNames
-      write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-
-    } else if (grepl("incidence_attrition", fileLocation)) {
-      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpmkHYCT/mock_data_ReportGenerator_SIDIAP/test_database_incidence_attrition_2023_05_24.csv"
-
-      incidence_attrition <- read_csv(fileLocation)
-      tempNames <- names(incidence_attrition)
-      tempTitle <- "incidence_attrition"
-      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      configData[[version]][["incidence_attrition"]][["names"]] <- tempNames
-      write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-
-    } else  if(grepl("incidence_estimates", fileLocation)) {
-      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpmkHYCT/mock_data_ReportGenerator_SIDIAP/test_database_incidence_estimates_2023_05_24.csv"
-
-      incidence_estimates <- read_csv(fileLocation)
-      tempNames <- names(incidence_estimates)
-      tempTitle <- "incidence_estimates"
-      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      configData[[version]][["incidence_estimates"]][["names"]] <- tempNames
-      write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-
-    } else  if(grepl("prevalence_estimates", fileLocation)) {
-      # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpmkHYCT/mock_data_ReportGenerator_SIDIAP/test_database_prevalence_estimates_2023_05_24.csv"
-
-      prevalence_estimates <- read_csv(fileLocation)
-      tempNames <- names(prevalence_estimates)
-      tempTitle <- "prevalence_estimates"
-      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      configData[[version]][["prevalence_estimates"]][["names"]] <- tempNames
-      write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-
-    }
-
-  }
-
 }
 
 dataCleanAttrition <- function(incidence_attrition = NULL,

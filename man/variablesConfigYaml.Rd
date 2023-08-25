@@ -6,17 +6,20 @@
 \usage{
 variablesConfigYaml(
   fileDataPath = NULL,
-  version = "IncidencePrevalence v0.4.0"
+  package = "IncidencePrevalence",
+  version = NULL
 )
 }
 \arguments{
-\item{fileDataPath}{A list of csv files}
+\item{fileDataPath}{A list of zipped csv files.}
 
-\item{version}{A string to identify which version of IncidencePrevalence is used to generate the results}
+\item{package}{A string to identify the name of the package, default IncidencePrevalence.}
+
+\item{version}{A string to identify which version of IncidencePrevalence is used to generate the results.}
 }
 \value{
-Writes a csv file into the config folder of ReportGenerator
+Adds column names to the variablesConfig.yaml
 }
 \description{
-`variablesConfigYaml()` takes a list of csv files, extract their columns and writes de variables config file
+`variablesConfigYaml()` takes zipped IncidencePrevalence results and extract their columns and writes variables in the variablesConfig.yaml
 }

@@ -27,6 +27,7 @@ reportGenerator <- function() {
 
   # set max file upload size
   options(shiny.maxRequestSize = 30*1024^2)
+  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
   ui <- dashboardPage(
     dashboardHeader(title = "ReportGenerator"),
@@ -35,12 +36,14 @@ reportGenerator <- function() {
         tagList(tags$br(),
                 tags$br(),
                 tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
+                selectInput(inputId = "packageType",
+                            label = "Please select package",
+                            choices = c("IncidencePrevalence"),
+                            selected = "IncidencePrevalence"),
                 selectInput(inputId = "dataVersion",
                             label = "Please select version",
-                            choices = c("IncidencePrevalence v0.4.0 (Latest)",
-                                        "IncidencePrevalence v0.2.1",
-                                        "IncidencePrevalence v0.1.0"),
-                            selected = "IncidencePrevalence v0.4.0 (Latest)"),
+                            choices = names(configData[["IncidencePrevalence"]]),
+                            selected = names(configData[["IncidencePrevalence"]])[-1]),
                 uiOutput("datasetLoadUI"),
                 actionButton('resetData', 'Reset data')
         ))
@@ -71,28 +74,25 @@ reportGenerator <- function() {
   server <- function(input, output, session) {
 
     # 1. Load data
-
     output$datasetLoadUI <- renderUI({
-
       fileInput("datasetLoad",
                 "Upload your results",
                 accept = c(".zip", ".csv"),
                 multiple = TRUE,
                 placeholder = "ZIP or CSV file(s)")
     })
-
     # ReactiveValues
+    uploadedFiles <- list()
     uploadedFiles <- reactiveValues(data = NULL)
-
     itemsList <- reactiveValues(objects = NULL)
-
     # Check data
     observeEvent(input$datasetLoad, {
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      versionData <- gsub(" \\(Latest\\)", "", input$dataVersion)
-      configData <- configData[[versionData]]
+      package <- input$packageType
+      versionData <- input$dataVersion
+      configData <- configData[[package]][[versionData]]
       configDataTypes <- names(configData)
       if (length(fileDataPath) == 1) {
         if (grepl(".zip", fileDataPath, fixed = TRUE)) {
