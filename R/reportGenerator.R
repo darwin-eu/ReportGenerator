@@ -34,20 +34,22 @@ reportGenerator <- function() {
     dashboardHeader(title = "ReportGenerator"),
     dashboardSidebar(
       sidebarMenu(
-        tagList(tags$br(),
-                tags$br(),
-                tags$div(tags$h4("Load data"), class = "form-group shiny-input-container"),
-                selectInput(inputId = "packageType",
-                            label = "Please select package",
-                            choices = c("IncidencePrevalence"),
-                            selected = "IncidencePrevalence"),
-                selectInput(inputId = "dataVersion",
-                            label = "Please select version",
-                            choices = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE),
-                            selected = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE)[1]),
-                uiOutput("datasetLoadUI"),
-                actionButton('resetData', 'Reset data')
-        ))
+        menuItem("IncidencePrevalence",
+          tagList(tags$div(tags$h4("Load results"), class = "form-group shiny-input-container"),
+                  selectInput(inputId = "packageType",
+                              label = "Please select package",
+                              choices = c("IncidencePrevalence"),
+                              selected = "IncidencePrevalence"),
+                  selectInput(inputId = "dataVersion",
+                              label = "Select version",
+                              choices = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE),
+                              selected = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE)[1]),
+                  uiOutput("datasetLoadUI"),
+                  actionButton('resetData', 'Reset data'),
+                  tags$br()
+          )
+        )
+        )
     ),
     dashboardBody(
       tabsetPanel(
