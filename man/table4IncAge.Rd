@@ -12,3 +12,6 @@ table4IncAge(incidence_estimates)
 \description{
 table4IncAge
 }
+\examples{
+table4IncAge(incidence_estimates = ReportGenerator:::incidence_estimates_latest)
+}

@@ -25,7 +25,9 @@
 #' @importFrom gtools mixedsort
 #' @export
 #' @examples
+#' \dontrun{
 #' reportGenerator()
+#' }
 reportGenerator <- function() {
 
   # set max file upload size

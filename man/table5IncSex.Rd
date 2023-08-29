@@ -12,3 +12,6 @@ table5IncSex(incidence_estimates)
 \description{
 table5IncSex
 }
+\examples{
+table5IncSex(incidence_estimates = ReportGenerator:::incidence_estimates_latest)
+}

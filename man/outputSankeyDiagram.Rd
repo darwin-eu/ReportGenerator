@@ -2,7 +2,7 @@
 % Please edit documentation in R/treatmentPatterns.R
 \name{outputSankeyDiagram}
 \alias{outputSankeyDiagram}
-\title{outputSankeyDiagram}
+\title{`outputSankeyDiagram()` generates the required Sankey Diagram}
 \usage{
 outputSankeyDiagram(
   data,
@@ -16,11 +16,19 @@ outputSankeyDiagram(
 
 \item{outputFolder}{Path to the output folder.}
 
-\item{groupCombinations}{Select to group all non-fixed combinations in one category "other" in
-the sunburst plot.}
+\item{groupCombinations}{Select to group all non-fixed combinations in one category "other" in the sunburst plot.}
 
 \item{fileName}{File name of the html-file to output.}
 }
 \description{
-outputSankeyDiagram
+`outputSankeyDiagram()` generates the required Sankey Diagram
+}
+\examples{
+\dontrun{
+outputSankeyDiagram(
+    data = data
+    outputFolder = "~/output",
+    groupCombinations = "other",
+    fileName = "sankeyDiagram.html")
+}
 }

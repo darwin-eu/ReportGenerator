@@ -2,7 +2,7 @@
 % Please edit documentation in R/treatmentPatterns.R
 \name{saveAsFile}
 \alias{saveAsFile}
-\title{Save an SVG-image from a html-file}
+\title{`saveAsFile()` saves an SVG-image from an html-file}
 \usage{
 saveAsFile(fileName, fileNameOut, zoom = 3, vwidth = 430, selector = NULL, ...)
 }
@@ -17,13 +17,13 @@ saveAsFile(fileName, fileNameOut, zoom = 3, vwidth = 430, selector = NULL, ...)
 
 \item{selector}{Default: `NULL`; May be set to `"svg"` only works if the output file is pdf, otherwise use `NULL`}
 
-\item{...}{Other potential parameters to be passed to webshot2::webshot()}
+\item{...}{Other parameters to be passed to webshot2::webshot()}
 }
 \value{
 Invisibly returns the normalized path to all screenshots taken. The character vector will have a class of '"webshot"'.
 }
 \description{
-Save an SVG-image from a html-file
+`saveAsFile()` saves an SVG-image from an html-file
 }
 \examples{
 \dontrun{

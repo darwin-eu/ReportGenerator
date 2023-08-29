@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' `table1NumPar()` creates table 1 from attrition data
+#' `table1NumPar()` creates table 1 with number of participants from each database from attrition data
 #'
 #' @param incidence_attrition A dataframe with incidence attrition data.
 #' @param prevalence_attrition A dataframe with prevalence attrition data.
@@ -23,8 +23,8 @@
 #' @importFrom huxtable as_hux set_contents insert_row set_align everywhere
 #' @export
 #' @examples
-#' table1NumPar(prevalence_attrition = prevalence_attrition_latest,
-#'              incidence_attrition = incidence_attrition_latest)
+#' table1NumPar(prevalence_attrition = ReportGenerator:::prevalence_attrition_latest,
+#'              incidence_attrition = ReportGenerator:::incidence_attrition_latest)
 table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 
   prevalence_attrition <- dataCleanAttrition(prevalence_attrition = prevalence_attrition)
@@ -245,13 +245,15 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
   }
 
 }
-#' table1SexAge
+#' `table1SexAge()` returns table with sex and age for each database
 #'
-#' @param incidence_estimates incidence of the attrition
+#' @param incidence_estimates A data frame with incidence attrition data.
 #'
 #' @import flextable dplyr
 #' @importFrom huxtable as_hux set_contents insert_row set_align everywhere merge_cells
 #' @export
+#' @examples
+#' table1SexAge(incidence_estimates = ReportGenerator:::incidence_estimates_latest)
 table1SexAge <- function(incidence_estimates) {
 
     databaseNameInc <- unique(incidence_estimates$database_name)
@@ -306,6 +308,8 @@ table1SexAge <- function(incidence_estimates) {
 #'
 #' @import flextable dplyr
 #' @export
+#' @examples
+#' table2IncOver(incidence_estimates = ReportGenerator:::incidence_estimates_latest)
 table2IncOver <- function (incidence_estimates) {
 
   tableIncidence <- incidence_estimates %>%
@@ -319,10 +323,7 @@ table2IncOver <- function (incidence_estimates) {
 
   tableIncidence <- as_hux(tableIncidence,
                            add_colnames = getOption("huxtable.add_colnames", FALSE))
-
   return(tableIncidence)
-
-
 }
 
 #' table3IncYear
@@ -330,6 +331,8 @@ table2IncOver <- function (incidence_estimates) {
 #'
 #' @import flextable dplyr
 #' @export
+#' @examples
+#' table3IncYear(incidence_estimates = ReportGenerator:::incidence_estimates_latest)
 table3IncYear <- function (incidence_estimates) {
 
   tableIncidence <- incidence_estimates %>%
@@ -354,6 +357,8 @@ table3IncYear <- function (incidence_estimates) {
 #'
 #' @import flextable dplyr
 #' @export
+#' @examples
+#' table4IncAge(incidence_estimates = ReportGenerator:::incidence_estimates_latest)
 table4IncAge <- function (incidence_estimates) {
 
   tableIncidence <- incidence_estimates %>%
@@ -378,6 +383,8 @@ table4IncAge <- function (incidence_estimates) {
 #'
 #' @import flextable dplyr
 #' @export
+#' @examples
+#' table5IncSex(incidence_estimates = ReportGenerator:::incidence_estimates_latest)
 table5IncSex <- function (incidence_estimates) {
 
   tableIncidence <- incidence_estimates %>%

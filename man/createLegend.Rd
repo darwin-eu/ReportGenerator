@@ -5,8 +5,6 @@
 \title{Write html file for the sunburst plot legend.}
 \usage{
 createLegend(inputJSON, fileName)
-
-createLegend(inputJSON, fileName)
 }
 \arguments{
 \item{inputJSON}{JSON-data to create legend}
@@ -14,7 +12,5 @@ createLegend(inputJSON, fileName)
 \item{fileName}{Output file name for the legend.}
 }
 \description{
-Write html file for the sunburst plot legend.
-
 Write html file for the sunburst plot legend.
 }

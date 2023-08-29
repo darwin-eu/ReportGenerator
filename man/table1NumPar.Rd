@@ -2,15 +2,19 @@
 % Please edit documentation in R/standardTables.R
 \name{table1NumPar}
 \alias{table1NumPar}
-\title{table1NumPar}
+\title{`table1NumPar()` creates table 1 with number of participants from each database from attrition data}
 \usage{
 table1NumPar(prevalence_attrition, incidence_attrition)
 }
 \arguments{
-\item{prevalence_attrition}{prevalence of the attrition}
+\item{prevalence_attrition}{A dataframe with prevalence attrition data.}
 
-\item{incidence_attrition}{incidence of the attrition}
+\item{incidence_attrition}{A dataframe with incidence attrition data.}
 }
 \description{
-table1NumPar
+`table1NumPar()` creates table 1 with number of participants from each database from attrition data
+}
+\examples{
+table1NumPar(prevalence_attrition = ReportGenerator:::prevalence_attrition_latest,
+             incidence_attrition = ReportGenerator:::incidence_attrition_latest)
 }

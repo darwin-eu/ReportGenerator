@@ -2,13 +2,16 @@
 % Please edit documentation in R/standardTables.R
 \name{table1SexAge}
 \alias{table1SexAge}
-\title{table1SexAge}
+\title{`table1SexAge()` returns table with sex and age for each database}
 \usage{
 table1SexAge(incidence_estimates)
 }
 \arguments{
-\item{incidence_estimates}{incidence of the attrition}
+\item{incidence_estimates}{A data frame with incidence attrition data.}
 }
 \description{
-table1SexAge
+`table1SexAge()` returns table with sex and age for each database
+}
+\examples{
+table1SexAge(incidence_estimates = ReportGenerator:::incidence_estimates_latest)
 }

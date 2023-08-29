@@ -2,7 +2,7 @@
 % Please edit documentation in R/treatmentPatterns.R
 \name{createSunburstPlot}
 \alias{createSunburstPlot}
-\title{Export sunburst plot from a data.frame}
+\title{`createSunburstPlot()` exports sunburst plot from a data frame}
 \usage{
 createSunburstPlot(data, folder, fileName)
 }
@@ -17,7 +17,7 @@ occurs.}
 \item{fileName}{File name for the results.}
 }
 \description{
-Export sunburst plot from a data.frame
+`createSunburstPlot()` exports sunburst plot from a data frame
 }
 \examples{
 \dontrun{

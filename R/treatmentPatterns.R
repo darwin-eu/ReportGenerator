@@ -14,17 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' Export sunburst plot from a data.frame
+#' `createSunburstPlot()` exports sunburst plot from a data frame
 #'
-#' @param data
-#'     A data frame containing two columns: 1) column "path" should specify the
+#' @param data A data frame containing two columns: 1) column "path" should specify the
 #'     event cohorts separated by dashes - (combinations can be indicated using
 #'     &) and 2) column "freq" should specify how often that (unique) path
 #'     occurs.
-#' @param folder
-#'     Root folder to store the results.
-#' @param fileName
-#'     File name for the results.
+#' @param folder Root folder to store the results.
+#' @param fileName File name for the results.
 #' @importFrom utils write.table
 #'
 #' @export
@@ -78,17 +75,12 @@ createSunburstPlot <- function(data, folder, fileName) {
     con = normalizePath(paste0(folder, fileName), mustWork = FALSE))
 }
 
-#' outputSankeyDiagram
+#' `outputSankeyDiagram()` generates the required Sankey Diagram
 #'
-#' @param data
-#'     Dataframe with event cohorts of the target cohort in different columns.
-#' @param outputFolder
-#'     Path to the output folder.
-#' @param groupCombinations
-#'     Select to group all non-fixed combinations in one category "other" in
-#'     the sunburst plot.
-#' @param fileName
-#'     File name of the html-file to output.
+#' @param data Dataframe with event cohorts of the target cohort in different columns.
+#' @param outputFolder Path to the output folder.
+#' @param groupCombinations Select to group all non-fixed combinations in one category "other" in the sunburst plot.
+#' @param fileName File name of the html-file to output.
 #'
 #' @import dplyr
 #' @importFrom googleVis gvisSankey
@@ -96,6 +88,7 @@ createSunburstPlot <- function(data, folder, fileName) {
 #' @export
 #'
 #' @returns NULL
+#' @examples
 #' \dontrun{
 #' outputSankeyDiagram(
 #'     data = data
@@ -149,14 +142,14 @@ outputSankeyDiagram <- function(
   )
 }
 
-#' Save an SVG-image from a html-file
+#' `saveAsFile()` saves an SVG-image from an html-file
 #'
 #' @param fileName HTML-Filename.
 #' @param fileNameOut Filename of image, either with .pdf or .png extension.
 #' @param zoom Zoom factor, default = 3.
 #' @param vwidth Width of frame to capture, default = 430.
 #' @param selector Default: `NULL`; May be set to `"svg"` only works if the output file is pdf, otherwise use `NULL`
-#' @param ... Other potential parameters to be passed to webshot2::webshot()
+#' @param ... Other parameters to be passed to webshot2::webshot()
 #'
 #' @import checkmate
 #' @import webshot2
