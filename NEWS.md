@@ -1,3 +1,9 @@
+# ReportGenerator 1.11.0
+
+* CRAN release test.
+
+* Added tests and examples.
+
 # ReportGenerator 1.10.0
 
 * Preview persist even when changing different tables and figures.
