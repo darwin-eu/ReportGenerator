@@ -10,6 +10,8 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Codecov test
 coverage](https://codecov.io/github/darwin-eu-dev/ReportGenerator/branch/develop/graph/badge.svg)](https://app.codecov.io/github/darwin-eu-dev/ReportGenerator?branch=develop)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/ReportGenerator)](https://CRAN.R-project.org/package=ReportGenerator)
 <!-- badges: end -->
 
 ## Overview
