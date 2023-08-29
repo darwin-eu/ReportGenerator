@@ -24,6 +24,8 @@
 #' @importFrom utils read.csv tail unzip
 #' @importFrom gtools mixedsort
 #' @export
+#' @examples
+#' reportGenerator()
 reportGenerator <- function() {
 
   # set max file upload size
