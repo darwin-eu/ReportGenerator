@@ -6,7 +6,7 @@ Authors@R: c(
     person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("cre", "aut"), comment = c(ORCID = "0009-0002-4453-3071")),
     person("Ger", "Inberg", , "g.inberg@darwin-eu.org", role = "aut")
   )
-Description: Generates automatic reports in Word format from DARWIN study results data. Includes a Shiny interface and accepts data from the IncidencePrevalence, DrugUtilisation and TreatmentPatterns packages. Creates tables and figures in the report in accordance to the Catalog of Standard Analyses.
+Description: Generates automatic reports in Word format from Data Analysis and Real World Interrogation Network (DARWIN EU) study results. Includes a Shiny interface and accepts data from incidence, prevalence, drug utilisation and treatment patterns studies. Creates tables and figures in the report in accordance to the Catalogue of Standard Analyses.
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
@@ -37,8 +37,7 @@ Imports:
     zip,
     glue,
     yaml,
-    waldo,
-    plotly,
+    waldo,    
     googleVis,
     gtools
 Suggests: 
