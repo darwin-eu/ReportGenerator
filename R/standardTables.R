@@ -14,14 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' table1NumPar
+#' `table1NumPar()` creates table 1 from attrition data
 #'
-#' @param incidence_attrition incidence of the attrition
-#' @param prevalence_attrition prevalence of the attrition
+#' @param incidence_attrition A dataframe with incidence attrition data.
+#' @param prevalence_attrition A dataframe with prevalence attrition data.
 #'
 #' @import flextable dplyr
 #' @importFrom huxtable as_hux set_contents insert_row set_align everywhere
 #' @export
+#' @examples
+#' table1NumPar(prevalence_attrition = prevalence_attrition_latest,
+#'              incidence_attrition = incidence_attrition_latest)
 table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 
   prevalence_attrition <- dataCleanAttrition(prevalence_attrition = prevalence_attrition)
