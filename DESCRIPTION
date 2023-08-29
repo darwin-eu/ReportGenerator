@@ -6,7 +6,7 @@ Authors@R: c(
     person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("cre", "aut"), comment = c(ORCID = "0009-0002-4453-3071")),
     person("Ger", "Inberg", , "g.inberg@darwin-eu.org", role = "aut")
   )
-Description: The goal of this package is to generate automatic reports in Word format of DARWIN study results. It includes a Shiny interface and accepts data from the IncidencePrevalence, DrugUtilisation and TreatmentPatterns packages. 
+Description: Generates automatic reports in Word format from DARWIN study results data. Includes a Shiny interface and accepts data from the IncidencePrevalence, DrugUtilisation and TreatmentPatterns packages. Creates tables and figures in the report in accordance to the Catalog of Standard Analyses.
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true

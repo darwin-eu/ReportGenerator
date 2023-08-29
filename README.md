@@ -9,7 +9,7 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Codecov test
-coverage](https://codecov.io/gh/darwin-eu-dev/ReportGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/gh/darwin-eu-dev/ReportGenerator?branch=develop)
+coverage](https://codecov.io/github/darwin-eu-dev/ReportGenerator/branch/develop/graph/badge.svg)](https://app.codecov.io/github/darwin-eu-dev/ReportGenerator?branch=develop)
 <!-- badges: end -->
 
 ## Overview
