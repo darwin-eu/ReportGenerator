@@ -21,7 +21,7 @@
 #' @param databaseName A vector with the name in characters of each database.
 #' @param simulatePopulation TRUE or FALSE to simulate different population sizes. TRUE is default.
 #' @param outputDir A character vector of the directory to export mock data.
-#' @import dplyr here tidyr IncidencePrevalence
+#' @import dplyr tidyr IncidencePrevalence
 #' @importFrom utils head write.csv packageVersion
 #' @importFrom stats time
 #' @importFrom zip zip

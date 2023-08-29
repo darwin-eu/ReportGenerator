@@ -24,13 +24,12 @@
 #'
 #' @return Adds column names to the variablesConfig.yaml
 #' @export
-#' @import dplyr readr
+#' @import dplyr
 #' @importFrom utils unzip
 #' @importFrom readr read_csv
 variablesConfigYaml <- function(fileDataPath = NULL,
                                 package = "IncidencePrevalence",
                                 version = NULL) {
-  # fileDataPath <- here("results", "v0.2.1", "mock_data_ReportGenerator_SIDIAP.zip")
   csvLocation <- file.path(tempdir(), "varDataLocation")
   utils::unzip(zipfile = fileDataPath,
                exdir = csvLocation)

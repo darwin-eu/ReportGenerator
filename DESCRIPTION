@@ -16,8 +16,6 @@ Depends:
     dplyr
 Imports:
     flextable,
-    ggplot2,
-    here,
     IncidencePrevalence,
     officer,
     readr,

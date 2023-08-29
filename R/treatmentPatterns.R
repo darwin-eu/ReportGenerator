@@ -14,6 +14,57 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#' Write html file for the sunburst plot legend.
+#'
+#' @param fileName Output file name for the legend.
+#' @param inputJSON JSON-data to create legend
+#'
+#' @returns NULL
+createLegend <- function(inputJSON, fileName) {
+  # Load template HTML file
+  html <- paste(
+    readLines(file.path(
+      system.file(package = "ReportGenerator"),
+      "TreatmentPatterns",
+      "legend.html"
+    )),
+    collapse = "\n"
+  )
+
+  html <- sub("@insert_data", inputJSON, html)
+
+  # Save HTML file as sunburst_@studyName
+  writeLines(
+    text = html,
+    con = fileName)
+}
+
+#' Write html file for the sunburst plot legend.
+#'
+#' @param fileName Output file name for the legend.
+#' @param inputJSON JSON-data to create legend
+#'
+#' @returns NULL
+createLegend <- function(inputJSON, fileName) {
+  # Load template HTML file
+  html <- paste(
+    readLines(file.path(
+      system.file(package = "ReportGenerator"),
+      "TreatmentPatterns",
+      "legend.html"
+    )),
+    collapse = "\n"
+  )
+
+  html <- sub("@insert_data", inputJSON, html)
+
+  # Save HTML file as sunburst_@studyName
+  writeLines(
+    text = html,
+    con = fileName)
+}
+
+
 #' Finds the depth of a list element.
 #'
 #' @param x input list (element)
@@ -255,7 +306,7 @@ createSunburstPlot <- function(data, folder, fileName) {
   outcomes <- unique(unlist(strsplit(
     data$path,
     split = "-", fixed = TRUE
-    )))
+  )))
 
   # Load CSV file and convert to JSON
   json <- transformCSVtoJSON(
@@ -283,4 +334,161 @@ createSunburstPlot <- function(data, folder, fileName) {
   writeLines(
     text = html,
     con = normalizePath(paste0(folder, fileName), mustWork = FALSE))
+}
+
+
+#' Help function to group combinations
+#'
+#' @param data
+#'     Data
+#' @param groupCombinations
+#'     Group combinations
+#'
+#' @importFrom data.table data.table as.data.table
+#'
+#' @returns data.table
+groupInfrequentCombinations <- function(data, groupCombinations) {
+  data <- as.data.frame(data)
+
+  # Find all non-fixed combinations occurring
+  findCombinations <- apply(
+    X = data,
+    MARGIN = 2,
+    FUN = function(x) {
+      grepl("+", x, fixed = TRUE)
+    }
+  )
+
+  # Group all non-fixed combinations in one group if TRUE
+  if (groupCombinations == TRUE) {
+    data[findCombinations] <- "Other"
+  } else {
+    # Otherwise: group infrequent treatments below groupCombinations as "other"
+    combinations <- as.matrix(data)[findCombinations == TRUE]
+
+    freqCombinations <- matrix(
+      rep(data$freq, times = ncol(data)),
+      ncol = ncol(data))[findCombinations == TRUE]
+
+    summaryCombinations <- data.table::data.table(
+      combination = combinations,
+      freq = freqCombinations
+    )
+
+    if (nrow(summaryCombinations) > 0) {
+      summaryCombinations <- summaryCombinations[
+        , list(freq = sum(freq)),
+        by = combination
+      ][order(-freq)]
+
+      summarizeCombinations <- summaryCombinations$combination[
+        summaryCombinations$freq <= as.numeric(groupCombinations)]
+
+      selectedCombinations <- apply(
+        X = data,
+        MARGIN = 2,
+        FUN = function(x) {
+          x %in% summarizeCombinations
+        }
+      )
+      data[selectedCombinations] <- "Other"
+    }
+  }
+  return(data.table::as.data.table(data))
+}
+
+#' outputSankeyDiagram
+#'
+#' @param data
+#'     Dataframe with event cohorts of the target cohort in different columns.
+#' @param outputFolder
+#'     Path to the output folder.
+#' @param groupCombinations
+#'     Select to group all non-fixed combinations in one category "other" in
+#'     the sunburst plot.
+#' @param fileName
+#'     File name of the html-file to output.
+#'
+#' @import dplyr
+#' @importFrom googleVis gvisSankey
+#'
+#' @export
+#'
+#' @returns NULL
+outputSankeyDiagram <- function(
+    data,
+    outputFolder,
+    groupCombinations,
+    fileName = "sankeyDiagram.html") {
+  # Group non-fixed combinations in one group according to groupCobinations
+  data <- groupInfrequentCombinations(data, groupCombinations)
+
+  # Define stop treatment
+  data[is.na(data)] <- "Stopped"
+
+  # Sankey diagram for first three treatment layers
+  data$event_cohort_name1 <- paste0("1. ", data$event_cohort_name1)
+  data$event_cohort_name2 <- paste0("2. ", data$event_cohort_name2)
+  data$event_cohort_name3 <- paste0("3. ", data$event_cohort_name3)
+
+  results1 <- data %>%
+    dplyr::group_by(event_cohort_name1, event_cohort_name2) %>%
+    dplyr::summarise(freq = sum(freq))
+
+  results2 <- data %>%
+    dplyr::group_by(event_cohort_name2, event_cohort_name3) %>%
+    dplyr::summarise(freq = sum(freq))
+
+  # Format in prep for sankey diagram
+  colnames(results1) <- c("source", "target", "value")
+  colnames(results2) <- c("source", "target", "value")
+  links <- as.data.frame(rbind(results1, results2))
+
+  # Draw sankey network
+  plot <- googleVis::gvisSankey(
+    links,
+    from = "source",
+    to = "target",
+    weight = "value",
+    chartid = 1,
+    options = list(sankey = "{node: { colors: ['#B5482A'], width: 5}}")
+  )
+
+  writeLines(
+    text = plot$html$chart,
+    con = normalizePath(paste0(outputFolder, fileName), mustWork = FALSE)
+  )
+}
+
+#' Save an SVG-image from a html-file
+#'
+#' @param fileName HTML-Filename.
+#' @param fileNameOut Filename of image, either with .pdf or .png extension.
+#' @param zoom Zoom factor, default = 3.
+#' @param vwidth Width of frame to capture, default = 430.
+#' @param selector Default: `NULL`; May be set to `"svg"` only works if the output file is pdf, otherwise use `NULL`
+#' @param ... Other potential parameters to be passed to webshot2::webshot()
+#'
+#' @import checkmate
+#' @import webshot2
+#'
+#' @return Invisibly returns the normalized path to all screenshots taken. The character vector will have a class of '"webshot"'.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'   saveAsFile("webFile.html", "outputFile.png")}
+saveAsFile <- function(fileName, fileNameOut, zoom = 3, vwidth = 430, selector = NULL, ...) {
+  # Assertions
+  checkmate::assertCharacter(x = fileName, pattern = "*.html", null.ok = FALSE)
+  checkmate::assertCharacter(x = fileNameOut, pattern = "*.pdf|*.png", null.ok = FALSE)
+  checkmate::assertNumeric(x = zoom, lower = 0, len = 1, null.ok = FALSE)
+  checkmate::assertNumeric(x = vwidth, lower = 0, len = 1, null.ok = FALSE)
+
+  webshot2::webshot(
+    url = fileName,
+    file = fileNameOut,
+    zoom = zoom,
+    vwidth = vwidth,
+    ...)
 }

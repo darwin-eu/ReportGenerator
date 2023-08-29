@@ -19,7 +19,7 @@
 #' @param incidence_attrition incidence of the attrition
 #' @param prevalence_attrition prevalence of the attrition
 #'
-#' @import here flextable dplyr
+#' @import flextable dplyr
 #' @importFrom huxtable as_hux set_contents insert_row set_align everywhere
 #' @export
 table1NumPar <- function(prevalence_attrition, incidence_attrition) {
@@ -246,7 +246,7 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 #'
 #' @param incidence_estimates incidence of the attrition
 #'
-#' @import here flextable dplyr
+#' @import flextable dplyr
 #' @importFrom huxtable as_hux set_contents insert_row set_align everywhere merge_cells
 #' @export
 table1SexAge <- function(incidence_estimates) {
@@ -301,7 +301,7 @@ table1SexAge <- function(incidence_estimates) {
 #'
 #' @param incidence_estimates estimates of of the incidence
 #'
-#' @import here flextable dplyr
+#' @import flextable dplyr
 #' @export
 table2IncOver <- function (incidence_estimates) {
 
@@ -325,7 +325,7 @@ table2IncOver <- function (incidence_estimates) {
 #' table3IncYear
 #' @param incidence_estimates estimates of of the incidence
 #'
-#' @import here flextable dplyr
+#' @import flextable dplyr
 #' @export
 table3IncYear <- function (incidence_estimates) {
 
@@ -349,7 +349,7 @@ table3IncYear <- function (incidence_estimates) {
 #'
 #' @param incidence_estimates estimates of of the incidence
 #'
-#' @import here flextable dplyr
+#' @import flextable dplyr
 #' @export
 table4IncAge <- function (incidence_estimates) {
 
@@ -373,7 +373,7 @@ table4IncAge <- function (incidence_estimates) {
 #'
 #' @param incidence_estimates estimates of of the incidence
 #'
-#' @import here flextable dplyr
+#' @import flextable dplyr
 #' @export
 table5IncSex <- function (incidence_estimates) {
 
