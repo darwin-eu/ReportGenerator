@@ -15,8 +15,7 @@ RunApp.R
 CodeToRun.R
 studyReportApp.R
 dataShiny.RData
-notes1.R
-notes2.R
+notes.R
 itemsConfig - Copy.csv
 prevalenceResults/
 incidenceResults/

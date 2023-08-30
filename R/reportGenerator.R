@@ -25,7 +25,7 @@
 #' @importFrom gtools mixedsort
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' reportGenerator()
 #' }
 reportGenerator <- function() {
@@ -39,20 +39,35 @@ reportGenerator <- function() {
     dashboardSidebar(
       sidebarMenu(
         menuItem("IncidencePrevalence",
-          tagList(tags$div(tags$h4("Load results"), class = "form-group shiny-input-container"),
-                  selectInput(inputId = "packageType",
-                              label = "Please select package",
-                              choices = c("IncidencePrevalence"),
-                              selected = "IncidencePrevalence"),
-                  selectInput(inputId = "dataVersion",
-                              label = "Select version",
-                              choices = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE),
-                              selected = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE)[1]),
-                  uiOutput("datasetLoadUI"),
-                  actionButton('resetData', 'Reset data'),
-                  tags$br()
+                 tagList(tags$div(tags$h4("Load results"), class = "form-group shiny-input-container"),
+                         selectInput(inputId = "packageType",
+                                     label = "Please select package",
+                                     choices = c("IncidencePrevalence"),
+                                     selected = "IncidencePrevalence"),
+                         selectInput(inputId = "dataVersion",
+                                     label = "Select version",
+                                     choices = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE),
+                                     selected = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE)[1]),
+                         uiOutput("datasetLoadUI")
           )
-        )
+        ),
+        menuItem("TreatmentPatterns",
+                 tagList(tags$div(tags$h4("Load results"), class = "form-group shiny-input-container"),
+                         # selectInput(inputId = "packageType",
+                         #             label = "Please select package",
+                         #             choices = c("IncidencePrevalence"),
+                         #             selected = "IncidencePrevalence"),
+                         # selectInput(inputId = "dataVersion",
+                         #             label = "Select version",
+                         #             choices = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE),
+                         #             selected = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE)[1]),
+                         uiOutput("datasetLoadUITP"),
+                         tags$br()
+                 )
+        ),
+        tags$br(),
+        actionButton('resetData', 'Reset data'),
+        tags$br()
         )
     ),
     dashboardBody(
@@ -81,18 +96,32 @@ reportGenerator <- function() {
   server <- function(input, output, session) {
 
     # 1. Load data
+    # IncidencePrevalence
     output$datasetLoadUI <- renderUI({
       fileInput("datasetLoad",
-                "Upload your results",
+                "Upload your files",
                 accept = c(".zip", ".csv"),
                 multiple = TRUE,
-                placeholder = "ZIP or CSV file(s)")
+                placeholder = "ZIP or CSV")
     })
+
+    # TreatmentPatterns
+    output$datasetLoadUITP <- renderUI({
+      fileInput("datasetLoadTP",
+                "Upload your file",
+                accept = c(".zip", ".csv"),
+                multiple = TRUE,
+                placeholder = "CSV")
+    })
+
     # ReactiveValues
+    # General use
     uploadedFiles <- list()
     uploadedFiles <- reactiveValues(data = NULL)
     itemsList <- reactiveValues(objects = NULL)
-    # Check data
+
+    # Check input data
+    # IncidencePrevalence
     observeEvent(input$datasetLoad, {
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
@@ -132,6 +161,7 @@ reportGenerator <- function() {
       })
 
     # Reset and back to initial tab
+    # IncidencePrevalence
     observeEvent(input$resetData, {
       if (!is.null(uploadedFiles)) {
         uploadedFiles$data <- NULL
@@ -140,13 +170,37 @@ reportGenerator <- function() {
                           selected = "Item selection")
         output$datasetLoadUI <- renderUI({
           fileInput("datasetLoad",
-                    "Upload your results",
+                    "Upload your files",
                     accept = c(".zip", ".csv"),
                     multiple = TRUE,
-                    placeholder = "ZIP or CSV file(s)")
+                    placeholder = "ZIP or CSV")
+        })
+        output$datasetLoadUITP <- renderUI({
+          fileInput("datasetLoadTP",
+                    "Upload your file",
+                    accept = c(".zip", ".csv"),
+                    multiple = TRUE,
+                    placeholder = "CSV")
         })
       }
     })
+
+    # # TreatmentPatterns
+    # observeEvent(input$resetDataTP, {
+    #   if (!is.null(uploadedFiles)) {
+    #     uploadedFiles$data <- NULL
+    #     itemsList$objects <- NULL
+    #     updateTabsetPanel(session, "mainPanel",
+    #                       selected = "Item selection")
+        # output$datasetLoadUITP <- renderUI({
+        #   fileInput("datasetLoadTP",
+        #             "Upload your file",
+        #             accept = c(".zip", ".csv"),
+        #             multiple = TRUE,
+        #             placeholder = "CSV")
+        # })
+    #   }
+    # })
 
     # 2.Assign Data
 

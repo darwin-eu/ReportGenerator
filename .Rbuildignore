@@ -13,8 +13,7 @@ CodeToRun.R
 RunApp.R
 studyReportApp.R
 dataShiny.RData
-notes1.R
-notes2.R
+notes.R
 ^\.github$
 itemsConfig - Copy.csv
 ^prevalenceResults/$
