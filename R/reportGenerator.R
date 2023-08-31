@@ -18,7 +18,7 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
-#' @import dplyr shiny shinydashboard shinyWidgets officer flextable waldo readr yaml
+#' @import dplyr shiny shinydashboard shinyWidgets officer flextable waldo readr yaml googleVis
 #' @importFrom sortable bucket_list add_rank_list
 #' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @importFrom utils read.csv tail unzip
@@ -40,10 +40,10 @@ reportGenerator <- function() {
       sidebarMenu(
         menuItem("IncidencePrevalence",
                  tagList(tags$div(tags$h4("Load results"), class = "form-group shiny-input-container"),
-                         selectInput(inputId = "packageType",
-                                     label = "Please select package",
-                                     choices = c("IncidencePrevalence"),
-                                     selected = "IncidencePrevalence"),
+                         # selectInput(inputId = "packageType",
+                         #             label = "Please select package",
+                         #             choices = c("IncidencePrevalence"),
+                         #             selected = "IncidencePrevalence"),
                          selectInput(inputId = "dataVersion",
                                      label = "Select version",
                                      choices = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE),
@@ -53,14 +53,14 @@ reportGenerator <- function() {
         ),
         menuItem("TreatmentPatterns",
                  tagList(tags$div(tags$h4("Load results"), class = "form-group shiny-input-container"),
-                         # selectInput(inputId = "packageType",
+                         # selectInput(inputId = "packageTypeTP",
                          #             label = "Please select package",
                          #             choices = c("IncidencePrevalence"),
                          #             selected = "IncidencePrevalence"),
-                         # selectInput(inputId = "dataVersion",
-                         #             label = "Select version",
-                         #             choices = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE),
-                         #             selected = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE)[1]),
+                         selectInput(inputId = "dataVersionTP",
+                                     label = "Select version",
+                                     choices = gtools::mixedsort(names(configData[["TreatmentPatterns"]]), decreasing = TRUE),
+                                     selected = gtools::mixedsort(names(configData[["TreatmentPatterns"]]), decreasing = TRUE)[1]),
                          uiOutput("datasetLoadUITP"),
                          tags$br()
                  )
@@ -116,7 +116,6 @@ reportGenerator <- function() {
 
     # ReactiveValues
     # General use
-    uploadedFiles <- list()
     uploadedFiles <- reactiveValues(data = NULL)
     itemsList <- reactiveValues(objects = NULL)
 
@@ -126,7 +125,7 @@ reportGenerator <- function() {
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      package <- input$packageType
+      package <- "IncidencePrevalence"
       versionData <- input$dataVersion
       configData <- configData[[package]][[versionData]]
       configDataTypes <- names(configData)
@@ -155,10 +154,56 @@ reportGenerator <- function() {
         } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
           uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
           items <- names(uploadedFiles$data)
-          itemsList$objects[["items"]] <- getItemsList(items)
+          itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
         }
         }
       })
+
+    # TreatmentPatterns
+    observeEvent(input$datasetLoadTP, {
+      inFile <- input$datasetLoadTP
+      fileDataPath <- inFile$datapath
+      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+      package <- "TreatmentPatterns"
+      versionData <- input$dataVersionTP
+      configData <- configData[[package]][[versionData]]
+      configDataTypes <- names(configData)
+      if (length(fileDataPath) == 1) {
+        if (grepl(".csv", fileDataPath, fixed = TRUE)) {
+          # fileDataPath <- "D:/Users/cbarboza/Documents/all_in_one/treatmentPathways.csv"
+          uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+          items <- names(uploadedFiles$data)
+          itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
+        }
+      }
+      #   if (grepl(".zip", fileDataPath, fixed = TRUE)) {
+      #     csvLocation <- file.path(tempdir(), "dataLocation")
+      #     csvFiles <- joinZipFiles(fileDataPath, csvLocation)
+      #     uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
+      #     items <- names(uploadedFiles$data)
+      #     itemsList$objects[["items"]] <- getItemsList(items)
+      #     unlink(csvLocation, recursive = TRUE)
+      #   } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
+      #     uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+      #     items <- names(uploadedFiles$data)
+      #     itemsList$objects[["items"]] <- getItemsList(items)
+      #   }
+      # }
+      # else if (length(fileDataPath) > 1) {
+      #   if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
+      #     csvLocation <- file.path(tempdir(), "dataLocation")
+      #     csvFiles <- joinZipFiles(fileDataPath, csvLocation)
+      #     uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
+      #     items <- names(uploadedFiles$data)
+      #     itemsList$objects[["items"]] <- getItemsList(items)
+      #     unlink(csvLocation, recursive = TRUE)
+      #   } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
+      #     uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+      #     items <- names(uploadedFiles$data)
+      #     itemsList$objects[["items"]] <- getItemsList(items)
+      #   }
+      # }
+    })
 
     # Reset and back to initial tab
     # IncidencePrevalence
@@ -184,23 +229,6 @@ reportGenerator <- function() {
         })
       }
     })
-
-    # # TreatmentPatterns
-    # observeEvent(input$resetDataTP, {
-    #   if (!is.null(uploadedFiles)) {
-    #     uploadedFiles$data <- NULL
-    #     itemsList$objects <- NULL
-    #     updateTabsetPanel(session, "mainPanel",
-    #                       selected = "Item selection")
-        # output$datasetLoadUITP <- renderUI({
-        #   fileInput("datasetLoadTP",
-        #             "Upload your file",
-        #             accept = c(".zip", ".csv"),
-        #             multiple = TRUE,
-        #             placeholder = "CSV")
-        # })
-    #   }
-    # })
 
     # 2.Assign Data
 
@@ -260,6 +288,8 @@ reportGenerator <- function() {
     menuFun  <- reactive({
       menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
       menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$data$incidence_estimates"
+      menuFun$arguments[menuFun$name == "createSunburstPlot"] <- "uploadedFiles$data$treatmentPathways"
+      menuFun$arguments[menuFun$name == "outputSankeyDiagram"] <- "uploadedFiles$data$treatmentPathways"
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
       menuFun
     })
@@ -753,6 +783,22 @@ reportGenerator <- function() {
       object <- eval(parse(text = expression))
       object
     })
+
+    output$previewSankeyDiagram <- renderGvis({
+      objectChoice <- "Sankey Diagram - TreatmentPatterns"
+      # # Lock data
+      # if (input$lockTableSex == TRUE) {
+      #   dataReport[[objectChoice]][["incidence_estimates"]] <- uploadedFiles$data$incidence_estimates
+      # } else {
+      #   dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
+      # }
+      # Preview object
+      object <- eval(parse(text = menuFun() %>%
+                             dplyr::filter(title == objectChoice) %>%
+                             dplyr::pull(signature)))
+      object
+    })
+
 
     # Update according to facet prevalence
 

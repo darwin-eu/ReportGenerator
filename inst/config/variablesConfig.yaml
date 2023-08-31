@@ -483,3 +483,12 @@ IncidencePrevalence:
       - denominator_closed_cohort
       - cdm_name
       - database_name
+TreatmentPatterns:
+  2.5.0:
+    treatmentPathways:
+      names:
+      - path
+      - freq
+      - sex
+      - age
+      - index_year

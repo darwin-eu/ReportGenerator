@@ -97,49 +97,78 @@ createSunburstPlot <- function(data, folder, fileName) {
 #'     fileName = "sankeyDiagram.html")
 #' }
 outputSankeyDiagram <- function(
-    data,
-    outputFolder,
-    groupCombinations,
-    fileName = "sankeyDiagram.html") {
+    treatmentPathways,
+    groupCombinations = FALSE,
+    minFreq = 5) {
 
-  # Group non-fixed combinations in one group according to groupCobinations
-  data <- groupInfrequentCombinations(data, groupCombinations)
+  data <- treatmentPathways %>%
+    rowwise() %>%
+    dplyr::mutate(path = stringr::str_split(.data$path, pattern = "-")) %>%
+    dplyr::mutate(freq = as.integer(.data$freq))
 
-  # Define stop treatment
+  data <- data %>%
+    tidyr::unnest_wider(path, names_sep = "")
+
+  data <- data %>%
+    dplyr::group_by_at(grep("path", names(data))) %>%
+    dplyr::summarise(freq = sum(.data$freq), .groups = "drop")
+
   data[is.na(data)] <- "Stopped"
 
-  # Sankey diagram for first three treatment layers
-  data$event_cohort_name1 <- paste0("1. ", data$event_cohort_name1)
-  data$event_cohort_name2 <- paste0("2. ", data$event_cohort_name2)
-  data$event_cohort_name3 <- paste0("3. ", data$event_cohort_name3)
+  result1 <- data %>%
+    mutate(
+      source = paste("1.", .data$path1),
+      target = paste("2.", .data$path2)
+    ) %>%
+    select("source", "target", "freq")
 
-  results1 <- data %>%
-    dplyr::group_by(event_cohort_name1, event_cohort_name2) %>%
-    dplyr::summarise(freq = sum(freq))
 
-  results2 <- data %>%
-    dplyr::group_by(event_cohort_name2, event_cohort_name3) %>%
-    dplyr::summarise(freq = sum(freq))
+  if (suppressWarnings(!is.null(data$path3))) {
+    result2 <- data %>%
+      mutate(
+        source = paste("2.", .data$path2),
+        target = paste("3.", .data$path3)
+      ) %>%
+      select("source", "target", "freq")
 
-  # Format in prep for sankey diagram
-  colnames(results1) <- c("source", "target", "value")
-  colnames(results2) <- c("source", "target", "value")
-  links <- as.data.frame(rbind(results1, results2))
+    links <- dplyr::bind_rows(
+      result1, result2
+    )
+  } else {
+    links <- result1
+  }
+
+  links <- links %>%
+    dplyr::filter(.data$freq >= minFreq) %>%
+    dplyr::mutate(`%` = round(freq / sum(freq) * 100, 2)) %>%
+    dplyr::select(-"freq")
+
+  if (groupCombinations) {
+    links$source <- stringr::str_replace_all(
+      string = links$source, "\\w+\\+\\w+", replacement = "Combination"
+    )
+    links$target <- stringr::str_replace_all(
+      string = links$target, "\\w+\\+\\w+", replacement = "Combination"
+    )
+  }
 
   # Draw sankey network
   plot <- googleVis::gvisSankey(
     links,
     from = "source",
     to = "target",
-    weight = "value",
+    weight = "%",
     chartid = 1,
     options = list(sankey = "{node: { colors: ['#B5482A'], width: 5}}")
   )
 
-  writeLines(
-    text = plot$html$chart,
-    con = normalizePath(paste0(outputFolder, fileName), mustWork = FALSE)
-  )
+
+  return(plot)
+
+  # writeLines(
+  #   text = plot$html$chart,
+  #   con = normalizePath(paste0(outputFolder, fileName), mustWork = FALSE)
+  # )
 }
 
 #' `saveAsFile()` saves an SVG-image from an html-file
