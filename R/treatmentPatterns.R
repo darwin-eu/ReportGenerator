@@ -91,10 +91,9 @@ createSunburstPlot <- function(data, folder, fileName) {
 #' @examples
 #' \dontrun{
 #' outputSankeyDiagram(
-#'     data = data
-#'     outputFolder = "~/output",
-#'     groupCombinations = "other",
-#'     fileName = "sankeyDiagram.html")
+#'         treatmentPathways,
+#'         groupCombinations = FALSE,
+#'         minFreq = 5)
 #' }
 outputSankeyDiagram <- function(
     treatmentPathways,
