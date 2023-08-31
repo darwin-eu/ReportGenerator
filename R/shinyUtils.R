@@ -16,7 +16,7 @@ tabPanelSelection <- function(selection, uploadedFiles, menuFun) {
   } else if (selection == "Plot - Prevalence rate per year by age") {
     tabPanel(selection, prevPlotAgeFilters(uploadedFiles, menuFun, selection), plotOutput("previewFigure6"))
   } else if (selection == "Sankey Diagram - TreatmentPatterns") {
-    tabPanel(selection, htmlOutput("previewSankeyDiagram"))
+    tabPanel(selection, sankeyDiagramFilters(uploadedFiles), htmlOutput("previewSankeyDiagram"))
   }
 }
 

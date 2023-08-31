@@ -207,7 +207,6 @@ reportGenerator <- function() {
     })
 
     # Reset and back to initial tab
-    # IncidencePrevalence
     observeEvent(input$resetData, {
       # if (!is.null(uploadedFiles)) {
         uploadedFiles$dataIP <- NULL
@@ -789,18 +788,30 @@ reportGenerator <- function() {
     output$previewSankeyDiagram <- renderGvis({
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
       # # Lock data
-      # if (input$lockTableSex == TRUE) {
-      #   dataReport[[objectChoice]][["incidence_estimates"]] <- uploadedFiles$dataIP$incidence_estimates
-      # } else {
-      #   dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
-      # }
+      if (input$lockTreatmentSankey == TRUE) {
+        treatmentPathways <- uploadedFiles$dataTP$treatmentPathways
+        dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentPathways
+        outputDirSankey <- file.path(tempdir(), "outputDirSankey")
+        dir.create(outputDirSankey)
+        outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
+        # outputFile <- file.path(tempfile("sankeyDiagram", fileext = c(".html")))
+        createSankeyDiagramHTML(treatmentPathways = treatmentPathways,
+                                outputFile = outputFile,
+                                groupCombinations = FALSE,
+                                minFreq = 5)
+        fileNameOut <- file.path(outputDirSankey, "sankeyDiagram.png")
+        saveAsFile(fileName = outputFile, fileNameOut = fileNameOut)
+        dataReport[[objectChoice]][["sankeyDiagramImage"]] <- fileNameOut
+      } else {
+        dataReport[[objectChoice]][["sankeyDiagramImage"]] <- NULL
+        # unlink(outputFile, recursive = TRUE)
+      }
       # Preview object
       object <- eval(parse(text = menuFun() %>%
                              dplyr::filter(title == objectChoice) %>%
                              dplyr::pull(signature)))
       object
     })
-
 
     # Update according to facet prevalence
 
@@ -928,6 +939,18 @@ reportGenerator <- function() {
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
+
+        } else if ("gvis" %in% class(object)) {
+
+          if (i == "Sankey Diagram - TreatmentPatterns") {
+            body_add_img(x = incidencePrevalenceDocx,
+                         src = dataReport[[i]][["sankeyDiagramImage"]],
+                         height = 8,
+                         width = 5)
+            body_add(incidencePrevalenceDocx,
+                     value = i,
+                     style = "Heading 1 (Agency)")
+          }
 
         } else {
           body_end_section_landscape(incidencePrevalenceDocx)
