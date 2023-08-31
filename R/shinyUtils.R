@@ -1,4 +1,4 @@
-tabPanelSelection <- function(selection, uploadedFiles, menuFun) {
+tabPanelSelection <- function(selection, uploadedFiles, uploadedFilesTP, menuFun) {
   if (selection == "Table - Number of participants") {
     tabPanel(selection, tableNumParFilters(uploadedFiles), tableOutput("previewTable1"))
   } else if (selection == "Table - Number of participants by sex and age group") {

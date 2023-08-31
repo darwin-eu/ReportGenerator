@@ -117,6 +117,7 @@ reportGenerator <- function() {
     # ReactiveValues
     # General use
     uploadedFiles <- reactiveValues(data = NULL)
+    uploadedFilesTP <- reactiveValues(data = NULL)
     itemsList <- reactiveValues(objects = NULL)
 
     # Check input data
@@ -135,12 +136,12 @@ reportGenerator <- function() {
           csvFiles <- joinZipFiles(fileDataPath, csvLocation)
           uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
           items <- names(uploadedFiles$data)
-          itemsList$objects[["items"]] <- getItemsList(items)
+          itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           unlink(csvLocation, recursive = TRUE)
           } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
               uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
               items <- names(uploadedFiles$data)
-              itemsList$objects[["items"]] <- getItemsList(items)
+              itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           }
       }
       else if (length(fileDataPath) > 1) {
@@ -149,7 +150,7 @@ reportGenerator <- function() {
           csvFiles <- joinZipFiles(fileDataPath, csvLocation)
           uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
           items <- names(uploadedFiles$data)
-          itemsList$objects[["items"]] <- getItemsList(items)
+          itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           unlink(csvLocation, recursive = TRUE)
         } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
           uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
@@ -165,14 +166,14 @@ reportGenerator <- function() {
       fileDataPath <- inFile$datapath
       configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
       package <- "TreatmentPatterns"
-      versionData <- input$dataVersionTP
+      versionData <- "2.5.0"
       configData <- configData[[package]][[versionData]]
       configDataTypes <- names(configData)
       if (length(fileDataPath) == 1) {
         if (grepl(".csv", fileDataPath, fixed = TRUE)) {
           # fileDataPath <- "D:/Users/cbarboza/Documents/all_in_one/treatmentPathways.csv"
-          uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
-          items <- names(uploadedFiles$data)
+          uploadedFilesTP$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+          items <- names(uploadedFilesTP$data)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
         }
       }
@@ -208,8 +209,9 @@ reportGenerator <- function() {
     # Reset and back to initial tab
     # IncidencePrevalence
     observeEvent(input$resetData, {
-      if (!is.null(uploadedFiles)) {
+      # if (!is.null(uploadedFiles)) {
         uploadedFiles$data <- NULL
+        uploadedFilesTP$data <- NULL
         itemsList$objects <- NULL
         updateTabsetPanel(session, "mainPanel",
                           selected = "Item selection")
@@ -227,7 +229,7 @@ reportGenerator <- function() {
                     multiple = TRUE,
                     placeholder = "CSV")
         })
-      }
+      # }
     })
 
     # 2.Assign Data
@@ -280,6 +282,7 @@ reportGenerator <- function() {
       previewPanels <- lapply(input$objectSelection,
                               tabPanelSelection,
                               uploadedFiles = uploadedFiles,
+                              uploadedFilesTP = uploadedFilesTP,
                               menuFun = menuFun())
       do.call(navlistPanel, previewPanels)
     })
@@ -288,8 +291,8 @@ reportGenerator <- function() {
     menuFun  <- reactive({
       menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
       menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$data$incidence_estimates"
-      menuFun$arguments[menuFun$name == "createSunburstPlot"] <- "uploadedFiles$data$treatmentPathways"
-      menuFun$arguments[menuFun$name == "outputSankeyDiagram"] <- "uploadedFiles$data$treatmentPathways"
+      menuFun$arguments[menuFun$name == "createSunburstPlot"] <- "uploadedFilesTP$data$treatmentPathways"
+      menuFun$arguments[menuFun$name == "outputSankeyDiagram"] <- "uploadedFilesTP$data$treatmentPathways"
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
       menuFun
     })
