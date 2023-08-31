@@ -116,8 +116,8 @@ reportGenerator <- function() {
 
     # ReactiveValues
     # General use
-    uploadedFiles <- reactiveValues(data = NULL)
-    uploadedFilesTP <- reactiveValues(data = NULL)
+    uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
+    # uploadedFilesTP <- reactiveValues(data = NULL)
     itemsList <- reactiveValues(objects = NULL)
 
     # Check input data
@@ -134,13 +134,13 @@ reportGenerator <- function() {
         if (grepl(".zip", fileDataPath, fixed = TRUE)) {
           csvLocation <- file.path(tempdir(), "dataLocation")
           csvFiles <- joinZipFiles(fileDataPath, csvLocation)
-          uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
-          items <- names(uploadedFiles$data)
+          uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
+          items <- names(uploadedFiles$dataIP)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           unlink(csvLocation, recursive = TRUE)
           } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
-              uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
-              items <- names(uploadedFiles$data)
+              uploadedFiles$dataIP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+              items <- names(uploadedFiles$dataIP)
               itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           }
       }
@@ -148,13 +148,13 @@ reportGenerator <- function() {
         if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
           csvLocation <- file.path(tempdir(), "dataLocation")
           csvFiles <- joinZipFiles(fileDataPath, csvLocation)
-          uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
-          items <- names(uploadedFiles$data)
+          uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
+          items <- names(uploadedFiles$dataIP)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           unlink(csvLocation, recursive = TRUE)
         } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
-          uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
-          items <- names(uploadedFiles$data)
+          uploadedFiles$dataIP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+          items <- names(uploadedFiles$dataIP)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
         }
         }
@@ -172,21 +172,21 @@ reportGenerator <- function() {
       if (length(fileDataPath) == 1) {
         if (grepl(".csv", fileDataPath, fixed = TRUE)) {
           # fileDataPath <- "D:/Users/cbarboza/Documents/all_in_one/treatmentPathways.csv"
-          uploadedFilesTP$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
-          items <- names(uploadedFilesTP$data)
+          uploadedFiles$dataTP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+          items <- names(uploadedFiles$dataTP)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
         }
       }
       #   if (grepl(".zip", fileDataPath, fixed = TRUE)) {
       #     csvLocation <- file.path(tempdir(), "dataLocation")
       #     csvFiles <- joinZipFiles(fileDataPath, csvLocation)
-      #     uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
-      #     items <- names(uploadedFiles$data)
+      #     uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
+      #     items <- names(uploadedFiles$dataIP)
       #     itemsList$objects[["items"]] <- getItemsList(items)
       #     unlink(csvLocation, recursive = TRUE)
       #   } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
-      #     uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
-      #     items <- names(uploadedFiles$data)
+      #     uploadedFiles$dataIP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+      #     items <- names(uploadedFiles$dataIP)
       #     itemsList$objects[["items"]] <- getItemsList(items)
       #   }
       # }
@@ -194,13 +194,13 @@ reportGenerator <- function() {
       #   if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
       #     csvLocation <- file.path(tempdir(), "dataLocation")
       #     csvFiles <- joinZipFiles(fileDataPath, csvLocation)
-      #     uploadedFiles$data <- columnCheck(csvFiles, configData, configDataTypes)
-      #     items <- names(uploadedFiles$data)
+      #     uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
+      #     items <- names(uploadedFiles$dataIP)
       #     itemsList$objects[["items"]] <- getItemsList(items)
       #     unlink(csvLocation, recursive = TRUE)
       #   } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
-      #     uploadedFiles$data <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
-      #     items <- names(uploadedFiles$data)
+      #     uploadedFiles$dataIP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+      #     items <- names(uploadedFiles$dataIP)
       #     itemsList$objects[["items"]] <- getItemsList(items)
       #   }
       # }
@@ -210,8 +210,8 @@ reportGenerator <- function() {
     # IncidencePrevalence
     observeEvent(input$resetData, {
       # if (!is.null(uploadedFiles)) {
-        uploadedFiles$data <- NULL
-        uploadedFilesTP$data <- NULL
+        uploadedFiles$dataIP <- NULL
+        uploadedFiles$dataTP <- NULL
         itemsList$objects <- NULL
         updateTabsetPanel(session, "mainPanel",
                           selected = "Item selection")
@@ -239,7 +239,7 @@ reportGenerator <- function() {
     # prevalence_attrition
 
     prevalenceAttritionCommon <- reactive({
-      commonData <- uploadedFiles$data$prevalence_attrition
+      commonData <- uploadedFiles$dataIP$prevalence_attrition
       commonData[is.na(commonData)] = 0
       commonData <- commonData %>%
         filter(analysis_id %in% c(input$analysisIdTable1))
@@ -249,7 +249,7 @@ reportGenerator <- function() {
     # incidence_attrition
 
     incidenceAttritionCommon <- reactive({
-      commonData <- uploadedFiles$data$incidence_attrition
+      commonData <- uploadedFiles$dataIP$incidence_attrition
       commonData[is.na(commonData)] = 0
       commonData <- commonData %>%
         filter(analysis_id %in% c(input$analysisIdTable1))
@@ -282,7 +282,6 @@ reportGenerator <- function() {
       previewPanels <- lapply(input$objectSelection,
                               tabPanelSelection,
                               uploadedFiles = uploadedFiles,
-                              uploadedFilesTP = uploadedFilesTP,
                               menuFun = menuFun())
       do.call(navlistPanel, previewPanels)
     })
@@ -290,9 +289,9 @@ reportGenerator <- function() {
     # Retrieves list of functions available and places the correct arguments
     menuFun  <- reactive({
       menuFun  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
-      menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$data$incidence_estimates"
-      menuFun$arguments[menuFun$name == "createSunburstPlot"] <- "uploadedFilesTP$data$treatmentPathways"
-      menuFun$arguments[menuFun$name == "outputSankeyDiagram"] <- "uploadedFilesTP$data$treatmentPathways"
+      menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$dataIP$incidence_estimates"
+      menuFun$arguments[menuFun$name == "createSunburstPlot"] <- "uploadedFiles$dataTP$treatmentPathways"
+      menuFun$arguments[menuFun$name == "outputSankeyDiagram"] <- "uploadedFiles$dataTP$treatmentPathways"
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
       menuFun
     })
@@ -324,7 +323,7 @@ reportGenerator <- function() {
       objectChoice <- "Table - Number of participants by sex and age group"
       # Lock data
       if (input$lockTableSex == TRUE) {
-        dataReport[[objectChoice]][["incidence_estimates"]] <- uploadedFiles$data$incidence_estimates
+        dataReport[[objectChoice]][["incidence_estimates"]] <- uploadedFiles$dataIP$incidence_estimates
       } else {
         dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
       }
@@ -339,7 +338,7 @@ reportGenerator <- function() {
 
     output$previewFigure1 <- renderPlot({
       objectChoice <- "Plot - Incidence rate per year"
-      incidence_estimates <- uploadedFiles$data$incidence_estimates
+      incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
       # Database
@@ -397,7 +396,7 @@ reportGenerator <- function() {
 
     output$previewFigure2 <- renderPlot({
       objectChoice <- "Plot - Incidence rate per year by sex"
-      incidence_estimates <- uploadedFiles$data$incidence_estimates
+      incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
       # Database
@@ -456,7 +455,7 @@ reportGenerator <- function() {
 
     output$previewFigure3 <- renderPlot({
       objectChoice <- "Plot - Incidence rate per year by age"
-      incidence_estimates <- uploadedFiles$data$incidence_estimates
+      incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
       # Database
@@ -516,17 +515,17 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databaseIncidenceSex",
                           label = "Database",
-                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
+                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$database_name)),
                           selected = "All",
                           options = list(
-                            maxOptions = (length(unique(uploadedFiles$data$incidence_estimates$database_name))+1)
+                            maxOptions = (length(unique(uploadedFiles$dataIP$incidence_estimates$database_name))+1)
                           ))
 
         updatePickerInput(session,
                           inputId = "outcomeIncidenceSex",
                           label = "Outcome",
-                          choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name),
-                          selected = uploadedFiles$data$incidence_estimates$outcome_cohort_name[1],
+                          choices = unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name),
+                          selected = uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name[1],
                           options = list(
                             maxOptions = 1
                           ))
@@ -535,8 +534,8 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databaseIncidenceSex",
                           label = "Database",
-                          choices = unique(uploadedFiles$data$incidence_estimates$database_name),
-                          selected = uploadedFiles$data$incidence_estimates$database_name[1],
+                          choices = unique(uploadedFiles$dataIP$incidence_estimates$database_name),
+                          selected = uploadedFiles$dataIP$incidence_estimates$database_name[1],
                           options = list(
                             maxOptions = 1
                           )
@@ -544,7 +543,7 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "outcomeIncidenceSex",
                           label = "Outcome",
-                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name)),
+                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)),
                           selected = "All")
 
       }
@@ -555,17 +554,17 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databaseIncidenceAge",
                           label = "Database",
-                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
+                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$database_name)),
                           selected = "All",
                           options = list(
-                            maxOptions = (length(unique(uploadedFiles$data$incidence_estimates$database_name))+1)
+                            maxOptions = (length(unique(uploadedFiles$dataIP$incidence_estimates$database_name))+1)
                           ))
 
         updatePickerInput(session,
                           inputId = "outcomeIncidenceAge",
                           label = "Outcome",
-                          choices = unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name),
-                          selected = uploadedFiles$data$incidence_estimates$outcome_cohort_name[1],
+                          choices = unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name),
+                          selected = uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name[1],
                           options = list(
                             maxOptions = 1
                           ))
@@ -574,8 +573,8 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databaseIncidenceAge",
                           label = "Database",
-                          choices = unique(uploadedFiles$data$incidence_estimates$database_name),
-                          selected = uploadedFiles$data$incidence_estimates$database_name[1],
+                          choices = unique(uploadedFiles$dataIP$incidence_estimates$database_name),
+                          selected = uploadedFiles$dataIP$incidence_estimates$database_name[1],
                           options = list(
                             maxOptions = 1
                           )
@@ -583,7 +582,7 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "outcomeIncidenceAge",
                           label = "Outcome",
-                          choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name)),
+                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)),
                           selected = "All")
 
       }
@@ -593,7 +592,7 @@ reportGenerator <- function() {
 
     output$previewFigure4 <- renderPlot({
       objectChoice <- "Plot - Prevalence rate per year"
-      prevalence_estimates <- uploadedFiles$data$prevalence_estimates
+      prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
       class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
       prevalence_estimates[is.na(prevalence_estimates)] = 0
 
@@ -659,7 +658,7 @@ reportGenerator <- function() {
 
     output$previewFigure5 <- renderPlot({
       objectChoice <- "Plot - Prevalence rate per year by sex"
-      prevalence_estimates <- uploadedFiles$data$prevalence_estimates
+      prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
       class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
       prevalence_estimates[is.na(prevalence_estimates)] = 0
 
@@ -725,7 +724,7 @@ reportGenerator <- function() {
 
     output$previewFigure6 <- renderPlot({
       objectChoice <- "Plot - Prevalence rate per year by age"
-      prevalence_estimates <- uploadedFiles$data$prevalence_estimates
+      prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
       class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
       prevalence_estimates[is.na(prevalence_estimates)] = 0
 
@@ -791,7 +790,7 @@ reportGenerator <- function() {
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
       # # Lock data
       # if (input$lockTableSex == TRUE) {
-      #   dataReport[[objectChoice]][["incidence_estimates"]] <- uploadedFiles$data$incidence_estimates
+      #   dataReport[[objectChoice]][["incidence_estimates"]] <- uploadedFiles$dataIP$incidence_estimates
       # } else {
       #   dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
       # }
@@ -810,17 +809,17 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databasePrevalenceSex",
                           label = "Database",
-                          choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
+                          choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$database_name)),
                           selected = "All",
                           options = list(
-                            maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
+                            maxOptions = (length(unique(uploadedFiles$dataIP$prevalence_estimates$database_name))+1)
                           ))
 
         updatePickerInput(session,
                           inputId = "outcomePrevalenceSex",
                           label = "Outcome",
-                          choices = unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name),
-                          selected = uploadedFiles$data$prevalence_estimates$outcome_cohort_name[1],
+                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name),
+                          selected = uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name[1],
                           options = list(
                             maxOptions = 1
                           ))
@@ -829,8 +828,8 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databasePrevalenceSex",
                           label = "Database",
-                          choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
-                          selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$database_name),
+                          selected = uploadedFiles$dataIP$prevalence_estimates$database_name[1],
                           options = list(
                             maxOptions = 1
                           )
@@ -838,7 +837,7 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "outcomePrevalenceSex",
                           label = "Outcome",
-                          choices = c("All", unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name)),
+                          choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)),
                           selected = "All")
 
       }
@@ -849,17 +848,17 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databasePrevalenceAge",
                           label = "Database",
-                          choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
+                          choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$database_name)),
                           selected = "All",
                           options = list(
-                            maxOptions = (length(unique(uploadedFiles$data$prevalence_estimates$database_name))+1)
+                            maxOptions = (length(unique(uploadedFiles$dataIP$prevalence_estimates$database_name))+1)
                           ))
 
         updatePickerInput(session,
                           inputId = "outcomePrevalenceAge",
                           label = "Outcome",
-                          choices = unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name),
-                          selected = uploadedFiles$data$prevalence_estimates$outcome_cohort_name[1],
+                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name),
+                          selected = uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name[1],
                           options = list(
                             maxOptions = 1
                           ))
@@ -868,8 +867,8 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databasePrevalenceAge",
                           label = "Database",
-                          choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
-                          selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$database_name),
+                          selected = uploadedFiles$dataIP$prevalence_estimates$database_name[1],
                           options = list(
                             maxOptions = 1
                           )
@@ -877,7 +876,7 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "outcomePrevalenceAge",
                           label = "Outcome",
-                          choices = c("All", unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name)),
+                          choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)),
                           selected = "All")
 
       }

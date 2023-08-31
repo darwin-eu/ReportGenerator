@@ -13,14 +13,14 @@ prevPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databasePrevalenceYear",
                          label = "Database",
-                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$database_name)),
+                         choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$database_name)),
                          selected = "All",
                          multiple = TRUE)
       ),
       column(4,
              pickerInput(inputId = "outcomePrevalenceYear",
                          label = "Outcome",
-                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name)),
+                         choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)),
                          selected = "All",
                          multiple = TRUE)
       )
@@ -29,38 +29,38 @@ prevPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              selectInput(inputId = "sexPrevalenceYear",
                          label = "Sex",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$denominator_sex))
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$denominator_sex))
       ),
       column(4,
              selectInput(inputId = "agePrevalenceYear",
                          label = "Age",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$denominator_age_group))
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group))
       ),
     ),
     fluidRow(
       column(4,
              selectInput(inputId = "intervalPrevalenceYear",
                          label = "Interval",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$analysis_interval)),
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_interval)),
       ),
       column(4,
              selectInput(inputId = "typePrevalenceYear",
                          label = "Analysis type",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$analysis_type)),
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_type)),
       )
     ),
     fluidRow(
       column(4,
              selectInput(inputId = "timeFromPrevalenceYear",
                          label = "From",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
-                         selected = min(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date),
+                         selected = min(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date)))
       ),
       column(4,
              selectInput(inputId = "timeToPrevalenceYear",
                          label = "To",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
-                         selected = max(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date),
+                         selected = max(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date)))
       )
     ),
     fluidRow(
@@ -84,8 +84,8 @@ prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databasePrevalenceSex",
                          label = "Database",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
-                         selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$database_name),
+                         selected = uploadedFiles$dataIP$prevalence_estimates$database_name[1],
                          multiple = TRUE,
                          options = list(
                            maxOptions = 1
@@ -94,7 +94,7 @@ prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "outcomePrevalenceSex",
                          label = "Outcome",
-                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name)),
+                         choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)),
                          selected = "All",
                          multiple = TRUE)
       )
@@ -110,33 +110,33 @@ prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              selectInput(inputId = "agePrevalenceSex",
                          label = "Age",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$denominator_age_group))
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group))
       ),
     ),
     fluidRow(
       column(4,
              selectInput(inputId = "intervalPrevalenceSex",
                          label = "Interval",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$analysis_interval)),
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_interval)),
       ),
       column(4,
              selectInput(inputId = "typePrevalenceSex",
                          label = "Analysis type",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$analysis_type)),
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_type)),
       )
     ),
     fluidRow(
       column(4,
              selectInput(inputId = "timeFromPrevalenceSex",
                          label = "From",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
-                         selected = min(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date),
+                         selected = min(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date)))
       ),
       column(4,
              selectInput(inputId = "timeToPrevalenceSex",
                          label = "To",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
-                         selected = max(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date),
+                         selected = max(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date)))
       )
     ),
     fluidRow(
@@ -160,8 +160,8 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databasePrevalenceAge",
                          label = "Database",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$database_name),
-                         selected = uploadedFiles$data$prevalence_estimates$database_name[1],
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$database_name),
+                         selected = uploadedFiles$dataIP$prevalence_estimates$database_name[1],
                          multiple = TRUE,
                          options = list(
                            maxOptions = 1
@@ -170,7 +170,7 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "outcomePrevalenceAge",
                          label = "Outcome",
-                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$outcome_cohort_name)),
+                         choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)),
                          selected = "All",
                          multiple = TRUE)
       )
@@ -179,12 +179,12 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              selectInput(inputId = "sexPrevalenceAge",
                          label = "Sex",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$denominator_sex))
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$denominator_sex))
       ),
       column(4,
              pickerInput(inputId = "agePrevalenceAge",
                          label = "Age",
-                         choices = c("All", unique(uploadedFiles$data$prevalence_estimates$denominator_age_group)),
+                         choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)),
                          selected = "All",
                          multiple = TRUE)
       ),
@@ -193,26 +193,26 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              selectInput(inputId = "intervalPrevalenceAge",
                          label = "Interval",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$analysis_interval)),
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_interval)),
       ),
       column(4,
              selectInput(inputId = "typePrevalenceAge",
                          label = "Analysis type",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$analysis_type)),
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_type)),
       )
     ),
     fluidRow(
       column(4,
              selectInput(inputId = "timeFromPrevalenceAge",
                          label = "From",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
-                         selected = min(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date),
+                         selected = min(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date)))
       ),
       column(4,
              selectInput(inputId = "timeToPrevalenceAge",
                          label = "To",
-                         choices = unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date),
-                         selected = max(unique(uploadedFiles$data$prevalence_estimates$prevalence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date),
+                         selected = max(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date)))
       )
     ),
     fluidRow(

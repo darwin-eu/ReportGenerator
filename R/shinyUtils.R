@@ -1,4 +1,4 @@
-tabPanelSelection <- function(selection, uploadedFiles, uploadedFilesTP, menuFun) {
+tabPanelSelection <- function(selection, uploadedFiles, menuFun) {
   if (selection == "Table - Number of participants") {
     tabPanel(selection, tableNumParFilters(uploadedFiles), tableOutput("previewTable1"))
   } else if (selection == "Table - Number of participants by sex and age group") {
@@ -35,14 +35,14 @@ incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databaseIncidenceYear",
                          label = "Database",
-                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$database_name)),
+                         choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$database_name)),
                          selected = "All",
                          multiple = TRUE)
       ),
       column(4,
              pickerInput(inputId = "outcomeIncidenceYear",
                          label = "Outcome",
-                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name)),
+                         choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)),
                          selected = "All",
                          multiple = TRUE)
       )
@@ -51,38 +51,38 @@ incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              selectInput(inputId = "sexIncidenceYear",
                          label = "Sex",
-                         choices = unique(uploadedFiles$data$incidence_estimates$denominator_sex))
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex))
       ),
       column(4,
              selectInput(inputId = "ageIncidenceYear",
                          label = "Age",
-                         choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group))
       ),
     ),
     fluidRow(
       column(4,
              selectInput(inputId = "intervalIncidenceYear",
                          label = "Interval",
-                         choices = unique(uploadedFiles$data$incidence_estimates$analysis_interval)),
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval)),
       ),
       column(4,
              selectInput(inputId = "repeatedIncidenceYear",
                          label = "Repeated Events",
-                         choices = unique(uploadedFiles$data$incidence_estimates$analysis_repeated_events)),
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_repeated_events)),
       )
     ),
     fluidRow(
       column(4,
              selectInput(inputId = "timeFromIncidenceYear",
                          label = "From",
-                         choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
-                         selected = min(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
+                         selected = min(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
       ),
       column(4,
              selectInput(inputId = "timeToIncidenceYear",
                          label = "To",
-                         choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
-                         selected = max(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
+                         selected = max(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
       )
     ),
     fluidRow(
@@ -105,8 +105,8 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databaseIncidenceSex",
                          label = "Database",
-                         choices = unique(uploadedFiles$data$incidence_estimates$database_name),
-                         selected = uploadedFiles$data$incidence_estimates$database_name[1],
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$database_name),
+                         selected = uploadedFiles$dataIP$incidence_estimates$database_name[1],
                          multiple = TRUE,
                          options = list(
                            maxOptions = 1
@@ -115,7 +115,7 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "outcomeIncidenceSex",
                          label = "Outcome",
-                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name)),
+                         choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)),
                          selected = "All",
                          multiple = TRUE)
       )
@@ -131,33 +131,33 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              selectInput(inputId = "ageIncidenceSex",
                          label = "Age",
-                         choices = unique(uploadedFiles$data$incidence_estimates$denominator_age_group))
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group))
       ),
     ),
     fluidRow(
       column(4,
              selectInput(inputId = "intervalIncidenceSex",
                          label = "Interval",
-                         choices = unique(uploadedFiles$data$incidence_estimates$analysis_interval)),
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval)),
       ),
       column(4,
              selectInput(inputId = "repeatedIncidenceSex",
                          label = "Repeated Events",
-                         choices = unique(uploadedFiles$data$incidence_estimates$analysis_repeated_events)),
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_repeated_events)),
       )
     ),
     fluidRow(
       column(4,
              selectInput(inputId = "timeFromIncidenceSex",
                          label = "From",
-                         choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
-                         selected = min(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
+                         selected = min(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
       ),
       column(4,
              selectInput(inputId = "timeToIncidenceSex",
                          label = "To",
-                         choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
-                         selected = max(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
+                         selected = max(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
       ),
     ),
     fluidRow(
@@ -181,8 +181,8 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databaseIncidenceAge",
                          label = "Database",
-                         choices = unique(uploadedFiles$data$incidence_estimates$database_name),
-                         selected = uploadedFiles$data$incidence_estimates$database_name[1],
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$database_name),
+                         selected = uploadedFiles$dataIP$incidence_estimates$database_name[1],
                          multiple = TRUE,
                          options = list(
                            maxOptions = 1
@@ -191,7 +191,7 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "outcomeIncidenceAge",
                          label = "Outcome",
-                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$outcome_cohort_name)),
+                         choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)),
                          selected = "All",
                          multiple = TRUE)
       )
@@ -200,12 +200,12 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              selectInput(inputId = "sexIncidenceAge",
                          label = "Sex",
-                         choices = unique(uploadedFiles$data$incidence_estimates$denominator_sex))
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex))
       ),
       column(4,
              pickerInput(inputId = "ageIncidenceAge",
                          label = "Age",
-                         choices = c("All", unique(uploadedFiles$data$incidence_estimates$denominator_age_group)),
+                         choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)),
                          selected = "All",
                          multiple = TRUE)
       ),
@@ -214,26 +214,26 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              selectInput(inputId = "intervalIncidenceAge",
                          label = "Interval",
-                         choices = unique(uploadedFiles$data$incidence_estimates$analysis_interval)),
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval)),
       ),
       column(4,
              selectInput(inputId = "repeatedIncidenceAge",
                          label = "Repeated Events",
-                         choices = unique(uploadedFiles$data$incidence_estimates$analysis_repeated_events)),
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_repeated_events)),
       )
     ),
     fluidRow(
       column(4,
              selectInput(inputId = "timeFromIncidenceAge",
                          label = "From",
-                         choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
-                         selected = min(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
+                         selected = min(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
       ),
       column(4,
              selectInput(inputId = "timeToIncidenceAge",
                          label = "To",
-                         choices = unique(uploadedFiles$data$incidence_estimates$incidence_start_date),
-                         selected = max(unique(uploadedFiles$data$incidence_estimates$incidence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
+                         selected = max(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
       ),
     ),
     fluidRow(
