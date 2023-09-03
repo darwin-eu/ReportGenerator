@@ -813,6 +813,32 @@ reportGenerator <- function() {
       object
     })
 
+    output$previewOutburstPlot <- renderImage({
+
+      if (input$lockTreatmentOutburst == TRUE) {
+        # Lock data
+        dataReport[[objectChoice]][["OutburstDiagramImage"]] <- filename
+
+      } else {
+        dataReport[[objectChoice]][["OutburstDiagramImage"]] <- NULL
+        # unlink(outputFile, recursive = TRUE)
+      }
+      objectChoice <- "Sunburst Plot - TreatmentPatterns"
+      treatmentPathways <- uploadedFiles$dataTP$treatmentPathways
+      dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentPathways
+      outputDirOutburst <- file.path(tempdir(), "outputDirOutburst")
+      dir.create(outputDirOutburst)
+      outputFile <- file.path(outputDirOutburst, "outburstDiagram.html")
+      dataReport[[objectChoice]][["outputFile"]] <- outputFile
+      # outputFile <- file.path(tempfile("outburstDiagram", fileext = c(".html")))
+      createSunburstPlot(treatmentPathways = treatmentPathways, outputFile = outputFile)
+      fileNameOut <- file.path(outputDirOutburst, "OutburstDiagram.png")
+      saveAsFile(fileName = outputFile, fileNameOut = fileNameOut)
+      filename <- normalizePath(fileNameOut)
+      # Return a list containing the filename
+      list(src = filename, alt = "TreatmentPatterns outburst plot")
+    }, deleteFile = FALSE)
+
     # Update according to facet prevalence
 
     observeEvent(input$facetPrevalenceSex, {
@@ -910,6 +936,8 @@ reportGenerator <- function() {
       for (i in reverseList) {
         menuFunction <- menuSel() %>%
           dplyr::filter(title == i)
+        # menuFunction <- menuSel %>%
+        #   dplyr::filter(title == i)
         itemOptions <- menuFunction %>%
           getItemOptions()
         expression <- menuFunction %>%
@@ -926,6 +954,18 @@ reportGenerator <- function() {
               addPreviewItemType(dataReport[[i]][["plotOption"]])
           }
         }
+
+        if (expression == "createSunburstPlot(treatmentPathways, outputFile)") {
+
+          body_add_img(x = incidencePrevalenceDocx,
+                       src = dataReport[[i]][["OutburstDiagramImage"]],
+                       height = 8,
+                       width = 3)
+          body_add(incidencePrevalenceDocx,
+                   value = i,
+                   style = "Heading 1 (Agency)")
+
+        } else {
         object <- eval(parse(text = expression), envir = dataReport[[i]])
         if ("flextable" %in% class(object)) {
           body_add_flextable(incidencePrevalenceDocx, value = object)
@@ -965,6 +1005,7 @@ reportGenerator <- function() {
                    value = i,
                    style = "Heading 1 (Agency)")
           body_end_section_portrait(incidencePrevalenceDocx)
+        }
         }
       }
       body_add_toc(incidencePrevalenceDocx)

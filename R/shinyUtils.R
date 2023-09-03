@@ -17,6 +17,8 @@ tabPanelSelection <- function(selection, uploadedFiles, menuFun) {
     tabPanel(selection, prevPlotAgeFilters(uploadedFiles, menuFun, selection), plotOutput("previewFigure6"))
   } else if (selection == "Sankey Diagram - TreatmentPatterns") {
     tabPanel(selection, sankeyDiagramFilters(uploadedFiles), htmlOutput("previewSankeyDiagram"))
+  } else if (selection == "Sunburst Plot - TreatmentPatterns") {
+    tabPanel(selection, outburstDiagramFilters(uploadedFiles), imageOutput("previewOutburstPlot", width = "250px", height = "400px"))
   }
 }
 
