@@ -7,6 +7,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+  
 prevalence_attrition_general <- readRDS("prevalence_attrition.rds")
 incidence_attrition_general <- readRDS("incidence_attrition.rds")
 
@@ -18,7 +19,7 @@ class(prevalence_estimates_general) <- c("IncidencePrevalenceResult", "Incidence
 
 ### INTRODUCTION
 
-ReportGenerator aims to automate study reports, initially for Darwin's Off-the-Shelf studies. Those reports should be based on the requirements of the Complete Catalogue of Standard Data Analyses. In this article, we show in more detail every table and figure that ReportGenerator can include in a Word document, according to the guidelines established in the Darwin Style Guide. 
+ReportGenerator automate study reports for Darwin's Off-the-Shelf studies. Those reports should are based on thhe Complete Catalogue of Standard Data Analyses. In this guide, we show in more detail and how to call every table and figure that ReportGenerator includes when generating a report. 
 
 ```{r setup, message= FALSE, warning=FALSE}
 library(ReportGenerator)
@@ -56,7 +57,7 @@ The second option describes the number of users by database, sex, age group, etc
 table1SexAge(incidence_estimates)
 ```
 
-### Figure 1ab Incidence over calendar time overall
+### Figure 1 Incidence over calendar time overall
 
 ##### Complete Catalogue of Standard Data Analyses:
 
@@ -100,7 +101,7 @@ ReportGenerator identifies how many databases and how many outcomes are availabl
 incidence_estimates <- incidence_estimates_general %>% filter(denominator_age_group == "18 to 99", denominator_sex != "Both", analysis_interval == "years", database_name == "CHUBX")
 ```
 
-Option A – facet by outcome, lines per database
+Option A – facet by outcome
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotIncidence(incidence_estimates,
@@ -108,7 +109,7 @@ IncidencePrevalence::plotIncidence(incidence_estimates,
                                    colour = 'denominator_sex')
 ```
 
-Option B – facet by database, lines per database
+Option B – facet by database
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotIncidence(incidence_estimates,
@@ -116,7 +117,21 @@ IncidencePrevalence::plotIncidence(incidence_estimates,
                                    colour = 'denominator_sex')
 ```
 
-### Figure 2a Incidence over calendar time by age
+Option C – Facet by sex, outcome and database (IN PROGRESS)
+
+```{r, echo=FALSE}
+knitr::include_graphics("man/figures/FigureIncSexOutDB.png")
+
+```
+
+Option D – Facet by sex, database and database (IN PROGRESS)
+
+```{r, echo=FALSE}
+knitr::include_graphics("man/figures/FigureIncSexDBOut.png")
+
+```
+
+### Figure 2b Incidence over calendar time by age
 
 ##### Complete Catalogue of Standard Data Analyses:
 
@@ -146,7 +161,24 @@ IncidencePrevalence::plotIncidence(incidence_estimates,
                                    colour = 'denominator_age_group')
 ```
 
-### Figure 1ab Prevalence over calendar time overall
+Option C – facet by outcome and database, lines per age group (IN PROGRESS)
+
+- Lines should be points with 95% CI. 
+
+```{r, echo=FALSE}
+knitr::include_graphics("man/figures/Figure2cAgeGroup.png")
+
+```
+
+Option D – facet by database and outcome, lines per database (IN PROGRESS)
+
+```{r, echo=FALSE}
+knitr::include_graphics("man/figures/Figure2cbAgeGroup.png")
+
+```
+
+
+### Figure 3 Prevalence over calendar time overall
 
 ##### Complete Catalogue of Standard Data Analyses:
 
@@ -176,7 +208,7 @@ IncidencePrevalence::plotPrevalence(prevalence_estimates,
                                    colour = 'outcome_cohort_name')
 ```
 
-### Figure 2a Incidence over calendar time by sex
+### Figure 4 Prevalence over calendar time by sex
 
 ##### Complete Catalogue of Standard Data Analyses:
 
@@ -205,6 +237,20 @@ IncidencePrevalence::plotPrevalence(prevalence_estimates,
                                    facet = 'database_name',
                                    colour = 'denominator_sex')
 ```
+Option C – facet by sex, outcome and database lines per database (IN PROGRESS)
+
+```{r, echo=FALSE}
+knitr::include_graphics("man/figures/FigureIncSexOutDB.png")
+
+```
+
+Option D – facet by sex, database and outcome, lines per database (IN PROGRESS)
+
+```{r, echo=FALSE}
+knitr::include_graphics("man/figures/FigureIncSexDBOut.png")
+
+```
+
 
 ### Figure 2a Prevalence over calendar time by age
 
@@ -235,3 +281,21 @@ IncidencePrevalence::plotPrevalence(prevalence_estimates,
                                    facet = 'database_name',
                                    colour = 'denominator_age_group')
 ```
+
+### Kaplan-Meier (IN PROGRESS)
+
+##### Complete Catalogue of Standard Data Analyses:
+
+Kaplan-Meier or Cumulative Incidence Function plots of the probability of a pre-specified outcome following index diagnosis of the condition of interest.
+
+##### General considerations:
+
+-	Facet by database – outcome, colour for strata.
+-	Include confidence intervals.
+
+```{r, echo=FALSE}
+
+knitr::include_graphics("man/figures/kaplanMeyer.png")
+
+```
+
