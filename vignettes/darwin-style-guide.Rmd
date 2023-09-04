@@ -1,7 +1,7 @@
 ---
 title: "Darwin Style Guide"
 resource_files:
-  - man/figures/kaplanMeyer.png
+  - kaplanMeyer.png
 ---
 
 ```{r, include = FALSE}
@@ -122,14 +122,14 @@ IncidencePrevalence::plotIncidence(incidence_estimates,
 ##### Option C – Facet by sex, outcome and database (IN PROGRESS)
 
 ```{r, echo=FALSE}
-knitr::include_graphics("man/figures/FigureIncSexOutDB.png")
+knitr::include_graphics("FigureIncSexOutDB.png")
 
 ```
 
 ##### Option D – Facet by sex, database and database (IN PROGRESS)
 
 ```{r, echo=FALSE}
-knitr::include_graphics("man/figures/FigureIncSexDBOut.png")
+knitr::include_graphics("FigureIncSexDBOut.png")
 
 ```
 
@@ -168,14 +168,14 @@ IncidencePrevalence::plotIncidence(incidence_estimates,
 - Lines should be points with 95% CI. 
 
 ```{r, echo=FALSE}
-knitr::include_graphics("man/figures/Figure2cAgeGroup.png")
+knitr::include_graphics("Figure2cAgeGroup.png")
 
 ```
 
 ##### Option D – facet by database and outcome, lines per database (IN PROGRESS)
 
 ```{r, echo=FALSE}
-knitr::include_graphics("man/figures/Figure2cbAgeGroup.png")
+knitr::include_graphics("Figure2cbAgeGroup.png")
 
 ```
 
@@ -243,14 +243,14 @@ IncidencePrevalence::plotPrevalence(prevalence_estimates,
 ##### Option C – facet by sex, outcome and database lines per database (IN PROGRESS)
 
 ```{r, echo=FALSE}
-knitr::include_graphics("man/figures/FigureIncSexOutDB.png")
+knitr::include_graphics("FigureIncSexOutDB.png")
 
 ```
 
 ##### Option D – facet by sex, database and outcome, lines per database (IN PROGRESS)
 
 ```{r, echo=FALSE}
-knitr::include_graphics("man/figures/FigureIncSexDBOut.png")
+knitr::include_graphics("FigureIncSexDBOut.png")
 
 ```
 
@@ -298,7 +298,7 @@ Kaplan-Meier or Cumulative Incidence Function plots of the probability of a pre-
 
 ```{r, echo=FALSE}
 
-knitr::include_graphics("man/figures/kaplanMeyer.png")
+knitr::include_graphics("kaplanMeyer.png")
 
 ```
 
