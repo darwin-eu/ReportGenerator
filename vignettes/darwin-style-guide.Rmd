@@ -108,6 +108,10 @@ ReportGenerator identifies how many databases and how many outcomes are availabl
 incidence_estimates <- incidence_estimates_general %>% filter(denominator_age_group == "18 to 99", denominator_sex != "Both", analysis_interval == "years", database_name == "CHUBX")
 ```
 
+##### DARWIN EU packages that generate the object:
+
+- IncidencePrevalence
+
 ##### Option A – facet by outcome
 
 ```{r, message= FALSE, warning=FALSE }
@@ -147,6 +151,10 @@ Incidence rate/s of drug/s use over calendar time (per year) stratified by age.
 ##### General considerations:
 
 ReportGenerator identifies how many databases and how many outcomes are available to show in the figures. For each figure, the user interface of the package will show a drop-down menu to select the key visualisations of interest through a set of options. The user can select either a facet by outcome or database. ReportGenerator makes a call to the functions `plotIncidence()` from the IncidencePrevalence package to generate the figures.
+
+##### DARWIN EU packages that generate the object:
+
+- IncidencePrevalence
 
 ```{r, include = FALSE}
 incidence_estimates <- incidence_estimates_general %>% filter(denominator_sex == "Both", analysis_interval == "years", denominator_age_group != "18 to 99", database_name == "CHUBX")
@@ -195,6 +203,10 @@ Prevalence rate/s of drug/s use over calendar time (per year) overall.
 
 ReportGenerator identifies how many databases and how many outcomes are available to show in the figures. For each figure, the user interface of the package will show a drop-down menu to select the key visualisations of interest through a set of options. The user can select either a facet by outcome or database. ReportGenerator makes a call to the functions `plotPrevalence()` from the IncidencePrevalence package to generate the figures.
 
+##### DARWIN EU packages that generate the object:
+
+- IncidencePrevalence
+
 ```{r, include = FALSE}
 prevalence_estimates <- prevalence_estimates_general %>% filter(denominator_age_group == "18 to 99", denominator_sex == "Both", analysis_interval =="years", analysis_type == "point")
 ```
@@ -224,6 +236,10 @@ Prevalence rate/s of drug/s use over calendar time (per year) stratified by sex 
 ##### General considerations:
 
 ReportGenerator identifies how many databases and how many outcomes are available to show in the figures. For each figure, the user interface of the package will show a drop-down menu to select the key visualisations of interest through a set of options. The user can select either a facet by outcome or database. ReportGenerator makes a call to the functions `plotPrevalence()` from the IncidencePrevalence package to generate the figures.
+
+##### DARWIN EU packages that generate the object:
+
+- IncidencePrevalence
 
 ```{r, include = FALSE}
 prevalence_estimates <- prevalence_estimates_general %>% filter(denominator_age_group == "18 to 99", denominator_sex != "Both", analysis_interval == "years", database_name == "CHUBX", analysis_type == "point")
@@ -269,6 +285,10 @@ Prevalence rate/s of drug/s use over calendar time (per year) stratified by age.
 ##### General considerations:
 
 ReportGenerator identifies how many databases and how many outcomes are available to show in the figures. For each figure, the user interface of the package will show a drop-down menu to select the key visualisations of interest through a set of options. The user can select either a facet by outcome or database. ReportGenerator makes a call to the functions `plotPrevalence()` from the IncidencePrevalence package to generate the figures.
+
+##### DARWIN EU packages that generate the object:
+
+- IncidencePrevalence
 
 ```{r, include = FALSE}
 prevalence_estimates <- prevalence_estimates_general %>% filter(denominator_sex == "Both", analysis_interval == "years", denominator_age_group != "18 to 99", database_name == "CHUBX", analysis_type == "point")
