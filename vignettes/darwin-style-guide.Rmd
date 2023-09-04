@@ -40,6 +40,11 @@ Number of participants and total number of drug/s user/s in each source populati
 ##### General considerations:
 
 ReportGenerator provides two options for this object. The first is derived from attrition data and is preferred to be the default option. ReportGenerator calls the function `table1NumPar()` to generate this table and include it in the report. It also generates an automated text description of the graph that the user can edit in the shiny app through the function `table1aAutText()`.
+
+##### DARWIN EU packages that generate the object:
+
+- ReportGenerator
+
 ```{r, include = FALSE}
 prevalence_attrition <- prevalence_attrition_general
 incidence_attrition <- incidence_attrition_general
