@@ -237,6 +237,7 @@ IncidencePrevalence::plotPrevalence(prevalence_estimates,
                                    facet = 'database_name',
                                    colour = 'denominator_sex')
 ```
+
 ##### Option C – facet by sex, outcome and database lines per database (IN PROGRESS)
 
 ```{r, echo=FALSE}
