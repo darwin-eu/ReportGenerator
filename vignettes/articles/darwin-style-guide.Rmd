@@ -1,5 +1,7 @@
 ---
 title: "Darwin Style Guide"
+resource_files:
+  - man/figures/kaplanMeyer.png
 ---
 
 ```{r, include = FALSE}
