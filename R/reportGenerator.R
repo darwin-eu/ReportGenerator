@@ -785,20 +785,56 @@ reportGenerator <- function() {
       object
     })
 
+    # SunburstPlot
+
+    output$previewOutburstPlot <- renderImage({
+      objectChoice <- "Sunburst Plot - TreatmentPatterns"
+      treatmentPathways <- uploadedFiles$dataTP$treatmentPathways
+      if (input$lockTreatmentOutburst == TRUE) {
+        dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentPathways
+        outputDirOutburst <- file.path(tempdir(), "outputDirOutburst")
+        # dir.create(outputDirOutburst)
+        outputFile <- file.path(outputDirOutburst, "outburstDiagram.html")
+        dataReport[[objectChoice]][["outputFile"]] <- outputFile
+        createSunburstPlot(treatmentPathways = treatmentPathways, outputFile = outputFile)
+        fileNameOut <- file.path(outputDirOutburst, "OutburstDiagram.png")
+        saveAsFile(fileName = outputFile, fileNameOut = fileNameOut)
+        filename <- normalizePath(fileNameOut)
+        dataReport[[objectChoice]][["OutburstDiagramImage"]] <- filename
+      } else {
+        dataReport[[objectChoice]][["OutburstDiagramImage"]] <- NULL
+        # unlink(outputFile, recursive = TRUE)
+      }
+      # dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentPathways
+      outputDirOutburst <- file.path(tempdir(), "outputDirOutburst")
+      dir.create(outputDirOutburst)
+      outputFile <- file.path(outputDirOutburst, "outburstDiagram.html")
+      dataReport[[objectChoice]][["outputFile"]] <- outputFile
+      # outputFile <- file.path(tempfile("outburstDiagram", fileext = c(".html")))
+      createSunburstPlot(treatmentPathways = treatmentPathways, outputFile = outputFile)
+      fileNameOut <- file.path(outputDirOutburst, "OutburstDiagram.png")
+      saveAsFile(fileName = outputFile, fileNameOut = fileNameOut)
+      filename <- normalizePath(fileNameOut)
+      # Return a list containing the filename
+      list(src = filename, alt = "TreatmentPatterns outburst plot")
+    }, deleteFile = FALSE)
+
+    # SunburstPlot
+
     output$previewSankeyDiagram <- renderGvis({
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
+      treatmentPathways <- uploadedFiles$dataTP$treatmentPathways
       # # Lock data
       if (input$lockTreatmentSankey == TRUE) {
-        treatmentPathways <- uploadedFiles$dataTP$treatmentPathways
         dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentPathways
         outputDirSankey <- file.path(tempdir(), "outputDirSankey")
         dir.create(outputDirSankey)
         outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
         # outputFile <- file.path(tempfile("sankeyDiagram", fileext = c(".html")))
-        createSankeyDiagramHTML(treatmentPathways = treatmentPathways,
-                                outputFile = outputFile,
-                                groupCombinations = FALSE,
-                                minFreq = 5)
+        TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentPathways,
+                                               outputFile = outputFile,
+                                               groupCombinations = FALSE,
+                                               minFreq = 5)
         fileNameOut <- file.path(outputDirSankey, "sankeyDiagram.png")
         saveAsFile(fileName = outputFile, fileNameOut = fileNameOut)
         dataReport[[objectChoice]][["sankeyDiagramImage"]] <- fileNameOut
@@ -813,31 +849,7 @@ reportGenerator <- function() {
       object
     })
 
-    output$previewOutburstPlot <- renderImage({
 
-      if (input$lockTreatmentOutburst == TRUE) {
-        # Lock data
-        dataReport[[objectChoice]][["OutburstDiagramImage"]] <- filename
-
-      } else {
-        dataReport[[objectChoice]][["OutburstDiagramImage"]] <- NULL
-        # unlink(outputFile, recursive = TRUE)
-      }
-      objectChoice <- "Sunburst Plot - TreatmentPatterns"
-      treatmentPathways <- uploadedFiles$dataTP$treatmentPathways
-      dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentPathways
-      outputDirOutburst <- file.path(tempdir(), "outputDirOutburst")
-      dir.create(outputDirOutburst)
-      outputFile <- file.path(outputDirOutburst, "outburstDiagram.html")
-      dataReport[[objectChoice]][["outputFile"]] <- outputFile
-      # outputFile <- file.path(tempfile("outburstDiagram", fileext = c(".html")))
-      createSunburstPlot(treatmentPathways = treatmentPathways, outputFile = outputFile)
-      fileNameOut <- file.path(outputDirOutburst, "OutburstDiagram.png")
-      saveAsFile(fileName = outputFile, fileNameOut = fileNameOut)
-      filename <- normalizePath(fileNameOut)
-      # Return a list containing the filename
-      list(src = filename, alt = "TreatmentPatterns outburst plot")
-    }, deleteFile = FALSE)
 
     # Update according to facet prevalence
 
