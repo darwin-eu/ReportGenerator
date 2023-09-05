@@ -32,38 +32,18 @@ reportGenerator <- function() {
 
   # set max file upload size
   options(shiny.maxRequestSize = 30*1024^2)
-  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
 
   ui <- dashboardPage(
     dashboardHeader(title = "ReportGenerator"),
     dashboardSidebar(
       sidebarMenu(
         menuItem("IncidencePrevalence",
-                 tagList(tags$div(tags$h4("Load results"), class = "form-group shiny-input-container"),
-                         # selectInput(inputId = "packageType",
-                         #             label = "Please select package",
-                         #             choices = c("IncidencePrevalence"),
-                         #             selected = "IncidencePrevalence"),
-                         selectInput(inputId = "dataVersion",
-                                     label = "Select version",
-                                     choices = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE),
-                                     selected = gtools::mixedsort(names(configData[["IncidencePrevalence"]]), decreasing = TRUE)[1]),
-                         uiOutput("datasetLoadUI")
-          )
+                         datasetLoadUI("IncidencePrevalence")
         ),
         menuItem("TreatmentPatterns",
-                 tagList(tags$div(tags$h4("Load results"), class = "form-group shiny-input-container"),
-                         # selectInput(inputId = "packageTypeTP",
-                         #             label = "Please select package",
-                         #             choices = c("IncidencePrevalence"),
-                         #             selected = "IncidencePrevalence"),
-                         selectInput(inputId = "dataVersionTP",
-                                     label = "Select version",
-                                     choices = gtools::mixedsort(names(configData[["TreatmentPatterns"]]), decreasing = TRUE),
-                                     selected = gtools::mixedsort(names(configData[["TreatmentPatterns"]]), decreasing = TRUE)[1]),
-                         uiOutput("datasetLoadUITP"),
+                         datasetLoadUI("TreatmentPatterns"),
                          tags$br()
-                 )
         ),
         tags$br(),
         actionButton('resetData', 'Reset data'),
@@ -96,23 +76,11 @@ reportGenerator <- function() {
   server <- function(input, output, session) {
 
     # 1. Load data
-    # IncidencePrevalence
-    output$datasetLoadUI <- renderUI({
-      fileInput("datasetLoad",
-                "Upload your files",
-                accept = c(".zip", ".csv"),
-                multiple = TRUE,
-                placeholder = "ZIP or CSV")
-    })
+    # IncidencePrevalence Module
+    datasetLoadServer("IncidencePrevalence")
+    # TreatmentPatterns Module
+    datasetLoadServer("TreatmentPatterns")
 
-    # TreatmentPatterns
-    output$datasetLoadUITP <- renderUI({
-      fileInput("datasetLoadTP",
-                "Upload your file",
-                accept = c(".zip", ".csv"),
-                multiple = TRUE,
-                placeholder = "CSV")
-    })
 
     # ReactiveValues
     # General use
@@ -214,6 +182,8 @@ reportGenerator <- function() {
         itemsList$objects <- NULL
         updateTabsetPanel(session, "mainPanel",
                           selected = "Item selection")
+
+
         output$datasetLoadUI <- renderUI({
           fileInput("datasetLoad",
                     "Upload your files",
