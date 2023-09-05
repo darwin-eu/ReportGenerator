@@ -30,45 +30,63 @@
 variablesConfigYaml <- function(fileDataPath = NULL,
                                 package = "IncidencePrevalence",
                                 version = NULL) {
-  csvLocation <- file.path(tempdir(), "varDataLocation")
-  utils::unzip(zipfile = fileDataPath,
-               exdir = csvLocation)
-  csvFiles <- list.files(path = csvLocation,
-                         pattern = ".csv",
-                         full.names = TRUE,
-                         recursive = TRUE)
-  for (fileLocation in csvFiles) {
-    if (grepl("prevalence_attrition", fileLocation)) {
-      prevalence_attrition <- read_csv(fileLocation, show_col_types = FALSE)
-      tempNames <- names(prevalence_attrition)
-      tempTitle <- "prevalence_attrition"
-      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- tempNames
-      write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-    } else if (grepl("incidence_attrition", fileLocation)) {
-      incidence_attrition <- read_csv(fileLocation, show_col_types = FALSE)
-      tempNames <- names(incidence_attrition)
-      tempTitle <- "incidence_attrition"
-      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      configData[[package]][[version]][["incidence_attrition"]][["names"]] <- tempNames
-      write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-    } else if(grepl("incidence_estimates", fileLocation)) {
-      incidence_estimates <- read_csv(fileLocation, show_col_types = FALSE)
-      tempNames <- names(incidence_estimates)
-      tempTitle <- "incidence_estimates"
-      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      configData[[package]][[version]][["incidence_estimates"]][["names"]] <- tempNames
-      write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-    } else {
-      prevalence_estimates <- read_csv(fileLocation, show_col_types = FALSE)
-      tempNames <- names(prevalence_estimates)
-      tempTitle <- "prevalence_estimates"
-      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      configData[[package]][[version]][["prevalence_estimates"]][["names"]] <- tempNames
-      write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+  if (package == "IncidencePrevalence") {
+    csvLocation <- file.path(tempdir(), "varDataLocation")
+    utils::unzip(zipfile = fileDataPath,
+                 exdir = csvLocation)
+    csvFiles <- list.files(path = csvLocation,
+                           pattern = ".csv",
+                           full.names = TRUE,
+                           recursive = TRUE)
+    for (fileLocation in csvFiles) {
+      if (grepl("prevalence_attrition", fileLocation)) {
+        prevalence_attrition <- read_csv(fileLocation, show_col_types = FALSE)
+        tempNames <- names(prevalence_attrition)
+        tempTitle <- "prevalence_attrition"
+        configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+        configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- tempNames
+        write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+      } else if (grepl("incidence_attrition", fileLocation)) {
+        incidence_attrition <- read_csv(fileLocation, show_col_types = FALSE)
+        tempNames <- names(incidence_attrition)
+        tempTitle <- "incidence_attrition"
+        configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+        configData[[package]][[version]][["incidence_attrition"]][["names"]] <- tempNames
+        write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+      } else if(grepl("incidence_estimates", fileLocation)) {
+        incidence_estimates <- read_csv(fileLocation, show_col_types = FALSE)
+        tempNames <- names(incidence_estimates)
+        tempTitle <- "incidence_estimates"
+        configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+        configData[[package]][[version]][["incidence_estimates"]][["names"]] <- tempNames
+        write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+      } else {
+        prevalence_estimates <- read_csv(fileLocation, show_col_types = FALSE)
+        tempNames <- names(prevalence_estimates)
+        tempTitle <- "prevalence_estimates"
+        configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+        configData[[package]][[version]][["prevalence_estimates"]][["names"]] <- tempNames
+        write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+      }
     }
-  }
-  unlink(csvLocation, recursive = TRUE)
+    unlink(csvLocation, recursive = TRUE)
+  } else if (package == "TreatmentPatterns") {
+    csvFiles <- list.files(path = fileDataPath,
+                           pattern = ".csv",
+                           full.names = TRUE,
+                           recursive = TRUE)
+    for (fileLocation in csvFiles) {
+      if (grepl("treatmentPathways.csv", fileLocation)) {
+        treatmentPathways <- read_csv(fileLocation, show_col_types = FALSE)
+        tempNames <- names(treatmentPathways)
+        tempTitle <- "treatmentPathways"
+        configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+        configData[[package]][[version]][[tempTitle]][["names"]] <- tempNames
+        write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+        }
+      }
+    }
 }
 
 joinZipFiles <- function(uploadedFiles = NULL, csvLocation) {
