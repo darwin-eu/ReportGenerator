@@ -182,22 +182,9 @@ reportGenerator <- function() {
         itemsList$objects <- NULL
         updateTabsetPanel(session, "mainPanel",
                           selected = "Item selection")
-
-
-        output$datasetLoadUI <- renderUI({
-          fileInput("datasetLoad",
-                    "Upload your files",
-                    accept = c(".zip", ".csv"),
-                    multiple = TRUE,
-                    placeholder = "ZIP or CSV")
-        })
-        output$datasetLoadUITP <- renderUI({
-          fileInput("datasetLoadTP",
-                    "Upload your file",
-                    accept = c(".zip", ".csv"),
-                    multiple = TRUE,
-                    placeholder = "CSV")
-        })
+        datasetLoadServer("IncidencePrevalence")
+        # TreatmentPatterns Module
+        datasetLoadServer("TreatmentPatterns")
       # }
     })
 

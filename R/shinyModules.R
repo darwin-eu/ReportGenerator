@@ -7,7 +7,6 @@ datasetLoadUI <- function(id) {
 datasetLoadServer <- function(id) {
   moduleServer(id, function(input, output, session) {
     configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-
     if (id == "IncidencePrevalence") {
       datasetLoad <- "datasetLoad"
       inputId <- "dataVersion"
@@ -19,7 +18,6 @@ datasetLoadServer <- function(id) {
       accept <- c(".csv")
       placeholder <- "CSV"
     }
-
     output$datasetLoad <- renderUI({
       tagList(tags$div(tags$h4("Load results"), class = "form-group shiny-input-container"),
               selectInput(inputId = inputId,
@@ -32,10 +30,6 @@ datasetLoadServer <- function(id) {
                         multiple = TRUE,
                         placeholder = placeholder)
       )
-
-
-
-
     })
   })
 }
