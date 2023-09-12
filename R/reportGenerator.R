@@ -343,7 +343,7 @@ reportGenerator <- function() {
       # Database
       if (length(input$databaseIncidenceYear) != 1 || input$databaseIncidenceYear != "All") {
         incidence_estimates <- incidence_estimates %>%
-          filter(database_name %in% c(input$databaseIncidenceYear))
+          filter(cdm_name %in% c(input$databaseIncidenceYear))
       }
       # Outcome
       if (length(input$outcomeIncidenceYear) != 1 || input$outcomeIncidenceYear != "All") {
@@ -401,7 +401,7 @@ reportGenerator <- function() {
       # Database
       if (length(input$databaseIncidenceSex) != 1 || input$databaseIncidenceSex != "All") {
         incidence_estimates <- incidence_estimates %>%
-          filter(database_name %in% c(input$databaseIncidenceSex))
+          filter(cdm_name %in% c(input$databaseIncidenceSex))
       }
       # Outcome
       if (length(input$outcomeIncidenceSex) != 1 || input$outcomeIncidenceSex != "All") {
@@ -460,7 +460,7 @@ reportGenerator <- function() {
       # Database
       if (length(input$databaseIncidenceAge) != 1 || input$databaseIncidenceAge != "All") {
         incidence_estimates <- incidence_estimates %>%
-          filter(database_name %in% c(input$databaseIncidenceAge))
+          filter(cdm_name %in% c(input$databaseIncidenceAge))
       }
       # Outcome
       if (length(input$outcomeIncidenceAge) != 1 || input$outcomeIncidenceAge != "All") {
@@ -514,10 +514,10 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databaseIncidenceSex",
                           label = "Database",
-                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$database_name)),
+                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)),
                           selected = "All",
                           options = list(
-                            maxOptions = (length(unique(uploadedFiles$dataIP$incidence_estimates$database_name))+1)
+                            maxOptions = (length(unique(uploadedFiles$dataIP$incidence_estimates$cdm_name))+1)
                           ))
 
         updatePickerInput(session,
@@ -533,8 +533,8 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databaseIncidenceSex",
                           label = "Database",
-                          choices = unique(uploadedFiles$dataIP$incidence_estimates$database_name),
-                          selected = uploadedFiles$dataIP$incidence_estimates$database_name[1],
+                          choices = unique(uploadedFiles$dataIP$incidence_estimates$cdm_name),
+                          selected = uploadedFiles$dataIP$incidence_estimates$cdm_name[1],
                           options = list(
                             maxOptions = 1
                           )
@@ -553,10 +553,10 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databaseIncidenceAge",
                           label = "Database",
-                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$database_name)),
+                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)),
                           selected = "All",
                           options = list(
-                            maxOptions = (length(unique(uploadedFiles$dataIP$incidence_estimates$database_name))+1)
+                            maxOptions = (length(unique(uploadedFiles$dataIP$incidence_estimates$cdm_name))+1)
                           ))
 
         updatePickerInput(session,
@@ -572,8 +572,8 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databaseIncidenceAge",
                           label = "Database",
-                          choices = unique(uploadedFiles$dataIP$incidence_estimates$database_name),
-                          selected = uploadedFiles$dataIP$incidence_estimates$database_name[1],
+                          choices = unique(uploadedFiles$dataIP$incidence_estimates$cdm_name),
+                          selected = uploadedFiles$dataIP$incidence_estimates$cdm_name[1],
                           options = list(
                             maxOptions = 1
                           )
@@ -598,7 +598,7 @@ reportGenerator <- function() {
       # Database
       if (length(input$databasePrevalenceYear) != 1 || input$databasePrevalenceYear != "All") {
         prevalence_estimates <- prevalence_estimates %>%
-          filter(database_name %in% c(input$databasePrevalenceYear))
+          filter(cdm_name %in% c(input$databasePrevalenceYear))
       }
 
       # Outcome
@@ -664,7 +664,7 @@ reportGenerator <- function() {
       # Database
       if (length(input$databasePrevalenceSex) != 1 || input$databasePrevalenceSex != "All") {
         prevalence_estimates <- prevalence_estimates %>%
-          filter(database_name %in% c(input$databasePrevalenceSex))
+          filter(cdm_name %in% c(input$databasePrevalenceSex))
       }
 
       # Outcome
@@ -730,7 +730,7 @@ reportGenerator <- function() {
       # Database
       if (length(input$databasePrevalenceAge) != 1 || input$databasePrevalenceAge != "All") {
         prevalence_estimates <- prevalence_estimates %>%
-          filter(database_name %in% c(input$databasePrevalenceAge))
+          filter(cdm_name %in% c(input$databasePrevalenceAge))
       }
 
       # Outcome
@@ -860,10 +860,10 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databasePrevalenceSex",
                           label = "Database",
-                          choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$database_name)),
+                          choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)),
                           selected = "All",
                           options = list(
-                            maxOptions = (length(unique(uploadedFiles$dataIP$prevalence_estimates$database_name))+1)
+                            maxOptions = (length(unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name))+1)
                           ))
 
         updatePickerInput(session,
@@ -879,8 +879,8 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databasePrevalenceSex",
                           label = "Database",
-                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$database_name),
-                          selected = uploadedFiles$dataIP$prevalence_estimates$database_name[1],
+                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name),
+                          selected = uploadedFiles$dataIP$prevalence_estimates$cdm_name[1],
                           options = list(
                             maxOptions = 1
                           )
@@ -899,10 +899,10 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databasePrevalenceAge",
                           label = "Database",
-                          choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$database_name)),
+                          choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)),
                           selected = "All",
                           options = list(
-                            maxOptions = (length(unique(uploadedFiles$dataIP$prevalence_estimates$database_name))+1)
+                            maxOptions = (length(unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name))+1)
                           ))
 
         updatePickerInput(session,
@@ -918,8 +918,8 @@ reportGenerator <- function() {
         updatePickerInput(session,
                           inputId = "databasePrevalenceAge",
                           label = "Database",
-                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$database_name),
-                          selected = uploadedFiles$dataIP$prevalence_estimates$database_name[1],
+                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name),
+                          selected = uploadedFiles$dataIP$prevalence_estimates$cdm_name[1],
                           options = list(
                             maxOptions = 1
                           )

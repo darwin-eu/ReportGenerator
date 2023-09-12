@@ -5,8 +5,8 @@ test_that("check automatic character single", {
 
 test_that("check automatic character two databases", {
 
-  incidence_attrition_latest_two <- incidence_attrition_latest_multiple %>% filter(database_name %in% c("CHUBX", "CPRD GOLD"))
-  prevalence_attrition_latest_two <- prevalence_attrition_latest_multiple %>% filter(database_name %in% c("CHUBX", "CPRD GOLD"))
+  incidence_attrition_latest_two <- incidence_attrition_latest_multiple %>% filter(cdm_name %in% c("CHUBX", "CPRD GOLD"))
+  prevalence_attrition_latest_two <- prevalence_attrition_latest_multiple %>% filter(cdm_name %in% c("CHUBX", "CPRD GOLD"))
   autotext <- table1aAutText(incidence_attrition = incidence_attrition_latest_two, prevalence_attrition = prevalence_attrition_latest_two)
   expect_type(autotext, "character")
 })

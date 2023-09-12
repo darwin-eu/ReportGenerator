@@ -13,7 +13,7 @@ prevPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databasePrevalenceYear",
                          label = "Database",
-                         choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$database_name)),
+                         choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)),
                          selected = "All",
                          multiple = TRUE)
       ),
@@ -84,8 +84,8 @@ prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databasePrevalenceSex",
                          label = "Database",
-                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$database_name),
-                         selected = uploadedFiles$dataIP$prevalence_estimates$database_name[1],
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name),
+                         selected = uploadedFiles$dataIP$prevalence_estimates$cdm_name[1],
                          multiple = TRUE,
                          options = list(
                            maxOptions = 1
@@ -160,8 +160,8 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databasePrevalenceAge",
                          label = "Database",
-                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$database_name),
-                         selected = uploadedFiles$dataIP$prevalence_estimates$database_name[1],
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name),
+                         selected = uploadedFiles$dataIP$prevalence_estimates$cdm_name[1],
                          multiple = TRUE,
                          options = list(
                            maxOptions = 1

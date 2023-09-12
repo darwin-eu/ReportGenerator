@@ -37,7 +37,7 @@ incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databaseIncidenceYear",
                          label = "Database",
-                         choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$database_name)),
+                         choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)),
                          selected = "All",
                          multiple = TRUE)
       ),
@@ -107,8 +107,8 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databaseIncidenceSex",
                          label = "Database",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$database_name),
-                         selected = uploadedFiles$dataIP$incidence_estimates$database_name[1],
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$cdm_name),
+                         selected = uploadedFiles$dataIP$incidence_estimates$cdm_name[1],
                          multiple = TRUE,
                          options = list(
                            maxOptions = 1
@@ -183,8 +183,8 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "databaseIncidenceAge",
                          label = "Database",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$database_name),
-                         selected = uploadedFiles$dataIP$incidence_estimates$database_name[1],
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$cdm_name),
+                         selected = uploadedFiles$dataIP$incidence_estimates$cdm_name[1],
                          multiple = TRUE,
                          options = list(
                            maxOptions = 1

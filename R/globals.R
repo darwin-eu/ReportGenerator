@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 utils::globalVariables(c("age_strata",
-                         "database_name",
+                         "cdm_name",
                          "denominator",
                          "ir_100000_pys",
                          "ir_100000_pys_high",

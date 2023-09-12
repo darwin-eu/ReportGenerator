@@ -30,7 +30,7 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
   prevalence_attrition <- dataCleanAttrition(prevalence_attrition = prevalence_attrition)
   incidence_attrition <- dataCleanAttrition(incidence_attrition = incidence_attrition)
 
-  if (length(unique(prevalence_attrition$database_name)) == 1) {
+  if (length(unique(prevalence_attrition$cdm_name)) == 1) {
 
     # Table data prevalence
 
@@ -71,7 +71,7 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 
     tablePrevIncData <- union(tablePrevalenceAtt, tableIncidenceAtt)
 
-    databaseName <- unique(incidence_attrition$database_name)
+    databaseName <- unique(incidence_attrition$cdm_name)
 
     headerNames <- gsub("\\..*","", names(tablePrevIncData))
 
@@ -108,12 +108,12 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 
     # Table data prevalence
 
-    databaseNamePrev <- unique(prevalence_attrition$database_name)
+    databaseNamePrev <- unique(prevalence_attrition$cdm_name)
 
     # databaseNamePrev <- databaseNamePrev[1:3]
 
     tablePrevalenceAtt <- prevalence_attrition %>%
-      filter(database_name == databaseNamePrev[1]) %>%
+      filter(cdm_name == databaseNamePrev[1]) %>%
       group_by(reason_id,
                reason) %>%
       summarise(current_n = round(mean(number_subjects ), 0),
@@ -132,12 +132,12 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 
     # Table data incidence
 
-    databaseNameInc <- unique(incidence_attrition$database_name)
+    databaseNameInc <- unique(incidence_attrition$cdm_name)
 
     # databaseNameInc <- databaseNameInc[1:3]
 
     tableIncidenceAtt <- incidence_attrition %>%
-      filter(database_name == databaseNameInc[1]) %>%
+      filter(cdm_name == databaseNameInc[1]) %>%
       group_by(reason_id,
                reason) %>%
       summarise(current_n = round(mean(number_subjects ), 0),
@@ -163,7 +163,7 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
     for (i in databaseNamePrev[2:length(databaseNamePrev)]) {
 
       subPrevalenceAtt <- prevalence_attrition %>%
-        filter(database_name == i) %>%
+        filter(cdm_name == i) %>%
         group_by(reason_id,
                  reason) %>%
         summarise(current_n = round(mean(number_subjects ), 0),
@@ -181,7 +181,7 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
       # subPrevalenceAtt
 
       subIncidenceAtt <- incidence_attrition %>%
-        filter(database_name == i) %>%
+        filter(cdm_name == i) %>%
         group_by(reason_id,
                  reason) %>%
         summarise(current_n = round(mean(number_subjects ), 0),
@@ -256,13 +256,13 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 #' table1SexAge(incidence_estimates = ReportGenerator:::incidence_estimates_latest)
 table1SexAge <- function(incidence_estimates) {
 
-    databaseNameInc <- unique(incidence_estimates$database_name)
+    databaseNameInc <- unique(incidence_estimates$cdm_name)
 
     totalParSex <- incidence_estimates %>%
-      filter(database_name == databaseNameInc) %>%
+      filter(cdm_name == databaseNameInc) %>%
       filter(denominator_sex != "Both") %>%
-      select(database_name, outcome_cohort_name, denominator_sex, n_persons) %>%
-      group_by(database_name,
+      select(cdm_name, outcome_cohort_name, denominator_sex, n_persons) %>%
+      group_by(cdm_name,
                outcome_cohort_name,
                denominator_sex) %>%
       summarise(`Total Users` = sum(n_persons))
@@ -270,16 +270,16 @@ table1SexAge <- function(incidence_estimates) {
     totalParSex <- pivot_wider(totalParSex, names_from = denominator_sex, values_from = `Total Users`)
 
     totalParAge <- incidence_estimates %>%
-      filter(database_name == databaseNameInc) %>%
+      filter(cdm_name == databaseNameInc) %>%
       filter(denominator_sex != "Both") %>%
-      select(database_name, outcome_cohort_name, denominator_age_group, n_persons) %>%
-      group_by(database_name,
+      select(cdm_name, outcome_cohort_name, denominator_age_group, n_persons) %>%
+      group_by(cdm_name,
                outcome_cohort_name,
                denominator_age_group) %>%
       summarise(`Total Users` = sum(n_persons))
 
     totalParAge <- pivot_wider(totalParAge, names_from = denominator_age_group , values_from = `Total Users`)
-    totalSexAge <- left_join(totalParSex, totalParAge, by = c("database_name", "outcome_cohort_name"))
+    totalSexAge <- left_join(totalParSex, totalParAge, by = c("cdm_name", "outcome_cohort_name"))
     huxSexAge <- as_hux(totalSexAge)
     headerNames <- names(huxSexAge)
     headerNames <- gsub("outcome_cohort_name", "Outcome", headerNames)
@@ -314,7 +314,7 @@ table2IncOver <- function (incidence_estimates) {
 
   tableIncidence <- incidence_estimates %>%
     group_by(outcome_cohort_name,
-             database_name,
+             cdm_name,
              n_persons,
              person_years,
              n_events,
@@ -337,7 +337,7 @@ table3IncYear <- function (incidence_estimates) {
 
   tableIncidence <- incidence_estimates %>%
     group_by(outcome_cohort_name,
-             database_name,
+             cdm_name,
              incidence_start_date,
              n_persons,
              person_years,
@@ -363,7 +363,7 @@ table4IncAge <- function (incidence_estimates) {
 
   tableIncidence <- incidence_estimates %>%
     group_by(outcome_cohort_name,
-             database_name,
+             cdm_name,
              denominator_age_group,
              n_persons,
              person_years,
@@ -389,7 +389,7 @@ table5IncSex <- function (incidence_estimates) {
 
   tableIncidence <- incidence_estimates %>%
     group_by(outcome_cohort_name,
-             database_name,
+             cdm_name,
              denominator_sex,
              n_persons,
              person_years,
