@@ -752,7 +752,7 @@ reportGenerator <- function() {
         outputDirOutburst <- file.path(tempdir(), "outputDirOutburst")
         outputFile <- file.path(outputDirOutburst, "outburstDiagram.html")
         dataReport[[objectChoice]][["outputFile"]] <- outputFile
-        TreatmentPatterns::createSunburstPlot(treatmentPathways = treatmentPathways,
+        TreatmentPatterns::createSunburstPlot(treatmentPathways = uploadedFiles[["dataTP"]][["treatmentPathways"]],
                                               outputFile = outputFile,
                                               returnHTML = FALSE)
         fileNameOut <- file.path(outputDirOutburst, "OutburstDiagram.png")
@@ -771,7 +771,10 @@ reportGenerator <- function() {
       object <- eval(parse(text = menuFun() %>%
                              dplyr::filter(title == objectChoice) %>%
                              dplyr::pull(signature)), envir = uploadedFiles[["dataTP"]])
-      HTML(object)
+      sunburst <- object$sunburst
+      sunburstPlot <- HTML(sunburst)
+
+      sunburstPlot
     }
     )
 
@@ -779,14 +782,15 @@ reportGenerator <- function() {
 
     output$previewSankeyDiagram <- renderGvis({
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
-      # treatmentPathways[[objectChoice]][["treatmentPathways"]] <- uploadedFiles$dataTP$treatmentPathways
+      treatmentPathways <- uploadedFiles$dataTP$treatmentPathways
       if (input$lockTreatmentSankey == TRUE) {
         dataReport[[objectChoice]][["treatmentPathways"]] <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+        dataReport[[objectChoice]][["outputFile"]] <- outputFile
         dataReport[[objectChoice]][["returnHTML"]] <- FALSE
         outputDirSankey <- file.path(tempdir(), "outputDirSankey")
         dir.create(outputDirSankey)
         outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
-        TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentPathways,
+        TreatmentPatterns::createSankeyDiagram(treatmentPathways = uploadedFiles[["dataTP"]][["treatmentPathways"]],
                                                outputFile = outputFile,
                                                returnHTML = FALSE,
                                                groupCombinations = FALSE,
@@ -908,8 +912,17 @@ reportGenerator <- function() {
                                                               package = "ReportGenerator"))
       reverseList <- rev(input$objectSelection)
       for (i in reverseList) {
-        menuFunction <- menuSel() %>%
+        # menuFunction <- menuSel() %>%
+        #   dplyr::filter(title == i)
+
+        # i <- "Sunburst Plot - TreatmentPatterns"
+        i <- "Sankey Diagram - TreatmentPatterns"
+
+        menuFunction <- menuSel %>%
           dplyr::filter(title == i)
+
+
+
         itemOptions <- menuFunction %>%
           getItemOptions()
         expression <- menuFunction %>%
