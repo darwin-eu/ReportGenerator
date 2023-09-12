@@ -1,5 +1,7 @@
 ---
 title: "Darwin Style Guide"
+resource_files:
+  - kaplanMeyer.png
 ---
 
 ```{r, include = FALSE}
@@ -38,6 +40,11 @@ Number of participants and total number of drug/s user/s in each source populati
 ##### General considerations:
 
 ReportGenerator provides two options for this object. The first is derived from attrition data and is preferred to be the default option. ReportGenerator calls the function `table1NumPar()` to generate this table and include it in the report. It also generates an automated text description of the graph that the user can edit in the shiny app through the function `table1aAutText()`.
+
+##### DARWIN EU packages that generate the object:
+
+- ReportGenerator
+
 ```{r, include = FALSE}
 prevalence_attrition <- prevalence_attrition_general
 incidence_attrition <- incidence_attrition_general
@@ -71,7 +78,7 @@ ReportGenerator identifies how many databases and how many outcomes are availabl
 incidence_estimates <- incidence_estimates_general %>% filter(denominator_age_group == "18 to 99", denominator_sex == "Both", analysis_interval =="years")
 ```
 
-Option A – facet by outcome, lines per database
+##### Option A – facet by outcome, lines per database
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotIncidence(incidence_estimates, 
@@ -79,7 +86,7 @@ IncidencePrevalence::plotIncidence(incidence_estimates,
                                    colour = 'database_name')
 ```
 
-Option B – facet by database, lines per database
+##### Option B – facet by database, lines per database
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotIncidence(incidence_estimates,
@@ -101,7 +108,11 @@ ReportGenerator identifies how many databases and how many outcomes are availabl
 incidence_estimates <- incidence_estimates_general %>% filter(denominator_age_group == "18 to 99", denominator_sex != "Both", analysis_interval == "years", database_name == "CHUBX")
 ```
 
-Option A – facet by outcome
+##### DARWIN EU packages that generate the object:
+
+- IncidencePrevalence
+
+##### Option A – facet by outcome
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotIncidence(incidence_estimates,
@@ -109,7 +120,7 @@ IncidencePrevalence::plotIncidence(incidence_estimates,
                                    colour = 'denominator_sex')
 ```
 
-Option B – facet by database
+##### Option B – facet by database
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotIncidence(incidence_estimates,
@@ -117,17 +128,17 @@ IncidencePrevalence::plotIncidence(incidence_estimates,
                                    colour = 'denominator_sex')
 ```
 
-Option C – Facet by sex, outcome and database (IN PROGRESS)
+##### Option C – Facet by sex, outcome and database (IN PROGRESS)
 
 ```{r, echo=FALSE}
-knitr::include_graphics("man/figures/FigureIncSexOutDB.png")
+knitr::include_graphics("FigureIncSexOutDB.png")
 
 ```
 
-Option D – Facet by sex, database and database (IN PROGRESS)
+##### Option D – Facet by sex, database and database (IN PROGRESS)
 
 ```{r, echo=FALSE}
-knitr::include_graphics("man/figures/FigureIncSexDBOut.png")
+knitr::include_graphics("FigureIncSexDBOut.png")
 
 ```
 
@@ -141,11 +152,15 @@ Incidence rate/s of drug/s use over calendar time (per year) stratified by age.
 
 ReportGenerator identifies how many databases and how many outcomes are available to show in the figures. For each figure, the user interface of the package will show a drop-down menu to select the key visualisations of interest through a set of options. The user can select either a facet by outcome or database. ReportGenerator makes a call to the functions `plotIncidence()` from the IncidencePrevalence package to generate the figures.
 
+##### DARWIN EU packages that generate the object:
+
+- IncidencePrevalence
+
 ```{r, include = FALSE}
 incidence_estimates <- incidence_estimates_general %>% filter(denominator_sex == "Both", analysis_interval == "years", denominator_age_group != "18 to 99", database_name == "CHUBX")
 ```
 
-Option A – facet by outcome, lines per database
+##### Option A – facet by outcome, lines per database
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotIncidence(incidence_estimates,
@@ -153,7 +168,7 @@ IncidencePrevalence::plotIncidence(incidence_estimates,
                                    colour = 'denominator_age_group')
 ```
 
-Option B – facet by database, lines per database
+##### Option B – facet by database, lines per database
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotIncidence(incidence_estimates,
@@ -161,19 +176,19 @@ IncidencePrevalence::plotIncidence(incidence_estimates,
                                    colour = 'denominator_age_group')
 ```
 
-Option C – facet by outcome and database, lines per age group (IN PROGRESS)
+##### Option C – facet by outcome and database, lines per age group (IN PROGRESS)
 
 - Lines should be points with 95% CI. 
 
 ```{r, echo=FALSE}
-knitr::include_graphics("man/figures/Figure2cAgeGroup.png")
+knitr::include_graphics("Figure2cAgeGroup.png")
 
 ```
 
-Option D – facet by database and outcome, lines per database (IN PROGRESS)
+##### Option D – facet by database and outcome, lines per database (IN PROGRESS)
 
 ```{r, echo=FALSE}
-knitr::include_graphics("man/figures/Figure2cbAgeGroup.png")
+knitr::include_graphics("Figure2cbAgeGroup.png")
 
 ```
 
@@ -188,11 +203,15 @@ Prevalence rate/s of drug/s use over calendar time (per year) overall.
 
 ReportGenerator identifies how many databases and how many outcomes are available to show in the figures. For each figure, the user interface of the package will show a drop-down menu to select the key visualisations of interest through a set of options. The user can select either a facet by outcome or database. ReportGenerator makes a call to the functions `plotPrevalence()` from the IncidencePrevalence package to generate the figures.
 
+##### DARWIN EU packages that generate the object:
+
+- IncidencePrevalence
+
 ```{r, include = FALSE}
 prevalence_estimates <- prevalence_estimates_general %>% filter(denominator_age_group == "18 to 99", denominator_sex == "Both", analysis_interval =="years", analysis_type == "point")
 ```
 
-Option A – facet by outcome, lines per database
+##### Option A – facet by outcome, lines per database
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotPrevalence(prevalence_estimates, 
@@ -200,7 +219,7 @@ IncidencePrevalence::plotPrevalence(prevalence_estimates,
                                    colour = 'database_name')
 ```
 
-Option B – facet by database, lines per database
+##### Option B – facet by database, lines per database
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotPrevalence(prevalence_estimates,
@@ -218,11 +237,15 @@ Prevalence rate/s of drug/s use over calendar time (per year) stratified by sex 
 
 ReportGenerator identifies how many databases and how many outcomes are available to show in the figures. For each figure, the user interface of the package will show a drop-down menu to select the key visualisations of interest through a set of options. The user can select either a facet by outcome or database. ReportGenerator makes a call to the functions `plotPrevalence()` from the IncidencePrevalence package to generate the figures.
 
+##### DARWIN EU packages that generate the object:
+
+- IncidencePrevalence
+
 ```{r, include = FALSE}
 prevalence_estimates <- prevalence_estimates_general %>% filter(denominator_age_group == "18 to 99", denominator_sex != "Both", analysis_interval == "years", database_name == "CHUBX", analysis_type == "point")
 ```
 
-Option A – facet by outcome, lines per database
+##### Option A – facet by outcome, lines per database
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotPrevalence(prevalence_estimates,
@@ -230,24 +253,25 @@ IncidencePrevalence::plotPrevalence(prevalence_estimates,
                                    colour = 'denominator_sex')
 ```
 
-Option B – facet by database, lines per database
+##### Option B – facet by database, lines per database
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotPrevalence(prevalence_estimates,
                                    facet = 'database_name',
                                    colour = 'denominator_sex')
 ```
-Option C – facet by sex, outcome and database lines per database (IN PROGRESS)
+
+##### Option C – facet by sex, outcome and database lines per database (IN PROGRESS)
 
 ```{r, echo=FALSE}
-knitr::include_graphics("man/figures/FigureIncSexOutDB.png")
+knitr::include_graphics("FigureIncSexOutDB.png")
 
 ```
 
-Option D – facet by sex, database and outcome, lines per database (IN PROGRESS)
+##### Option D – facet by sex, database and outcome, lines per database (IN PROGRESS)
 
 ```{r, echo=FALSE}
-knitr::include_graphics("man/figures/FigureIncSexDBOut.png")
+knitr::include_graphics("FigureIncSexDBOut.png")
 
 ```
 
@@ -262,11 +286,15 @@ Prevalence rate/s of drug/s use over calendar time (per year) stratified by age.
 
 ReportGenerator identifies how many databases and how many outcomes are available to show in the figures. For each figure, the user interface of the package will show a drop-down menu to select the key visualisations of interest through a set of options. The user can select either a facet by outcome or database. ReportGenerator makes a call to the functions `plotPrevalence()` from the IncidencePrevalence package to generate the figures.
 
+##### DARWIN EU packages that generate the object:
+
+- IncidencePrevalence
+
 ```{r, include = FALSE}
 prevalence_estimates <- prevalence_estimates_general %>% filter(denominator_sex == "Both", analysis_interval == "years", denominator_age_group != "18 to 99", database_name == "CHUBX", analysis_type == "point")
 ```
 
-Option A – facet by outcome, lines per database
+##### Option A – facet by outcome, lines per database
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotPrevalence(prevalence_estimates,
@@ -274,7 +302,7 @@ IncidencePrevalence::plotPrevalence(prevalence_estimates,
                                    colour = 'denominator_age_group')
 ```
 
-Option B – facet by database, lines per database
+##### Option B – facet by database, lines per database
 
 ```{r, message= FALSE, warning=FALSE }
 IncidencePrevalence::plotPrevalence(prevalence_estimates,
@@ -295,7 +323,7 @@ Kaplan-Meier or Cumulative Incidence Function plots of the probability of a pre-
 
 ```{r, echo=FALSE}
 
-knitr::include_graphics("man/figures/kaplanMeyer.png")
+knitr::include_graphics("kaplanMeyer.png")
 
 ```
 
