@@ -94,15 +94,15 @@ joinDatabase <- function(uploadedFiles = NULL,
                          package = "IncidencePrevalence",
                          versionData = "0.4.1") {
 
-  csvLocation <- file.path(tempdir(), "dataLocation")
-  dir.create(csvLocation)
-
-  uploadedFiles <- c("D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/CDWBordeaux_IncidencePrevalenceResults.zip",
-                     "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/IPCI_IncidencePrevalenceResults.zip",
-                     "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/SIDIAP_IncidencePrevalenceResults.zip")
-
-  package <- "IncidencePrevalence"
-  versionData <- "0.4.1"
+  # csvLocation <- file.path(tempdir(), "dataLocation")
+  # dir.create(csvLocation)
+  #
+  # uploadedFiles <- c("D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/CDWBordeaux_IncidencePrevalenceResults.zip",
+  #                    "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/IPCI_IncidencePrevalenceResults.zip",
+  #                    "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/SIDIAP_IncidencePrevalenceResults.zip")
+  #
+  # package <- "IncidencePrevalence"
+  # versionData <- "0.4.1"
 
   if (grepl(".zip",
             uploadedFiles[1],
@@ -152,7 +152,36 @@ joinDatabase <- function(uploadedFiles = NULL,
   } else if (grepl(".csv",
                    uploadedFiles[1],
                    fixed = TRUE)) {
-    csvFiles <- uploadedFiles
+    # csvLocation <- file.path(tempdir(), "dataLocation")
+    # dir.create(csvLocation)
+    #
+    # uploadedFiles <- list.files("D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/0.4.1/csv", full.names = TRUE)
+    #
+    # package <- "IncidencePrevalence"
+    # versionData <- "0.4.1"
+
+
+    for (file in uploadedFiles) {
+      # file <- filesLocation[1]
+      resultsData <- read_csv(file, show_col_types = FALSE)
+      resultsColumns <- names(resultsData)
+      for (val in configDataTypes) {
+        # val <- "incidence_attrition"
+        configColumns <- configData[[val]]
+        configColumns <- unlist(configColumns$names)
+        if (length(configColumns) == length(resultsColumns)) {
+          message("Length correspondance yes")
+          if (identical(configColumns, resultsColumns)) {
+            message("Length correspondance yes")
+            data[[val]] <- bind_rows(data[[val]], resultsData)
+          } else {
+            message("Length correspondance no")
+          }
+        } else {
+          message("Length correspondance no")
+        }
+      }
+    }
   }
 
   return(data)

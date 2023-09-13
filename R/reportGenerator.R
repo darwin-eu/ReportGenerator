@@ -144,7 +144,10 @@ reportGenerator <- function() {
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           unlink(csvLocation, recursive = TRUE)
           } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
-              uploadedFiles$dataIP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+              uploadedFiles$dataIP <- joinDatabase(fileDataPath,
+                                                   csvLocation,
+                                                   versionData = input$dataVersion,
+                                                   package = "IncidencePrevalence")
               items <- names(uploadedFiles$dataIP)
               itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           }
@@ -163,9 +166,15 @@ reportGenerator <- function() {
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           unlink(csvLocation, recursive = TRUE)
         } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
-          uploadedFiles$dataIP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
+          csvLocation <- file.path(tempdir(), "dataLocation")
+          dir.create(csvLocation)
+          uploadedFiles$dataIP <- joinDatabase(fileDataPath,
+                                               csvLocation,
+                                               versionData = input$dataVersion,
+                                               package = "IncidencePrevalence")
           items <- names(uploadedFiles$dataIP)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
+          unlink(csvLocation, recursive = TRUE)
         }
         }
       })
