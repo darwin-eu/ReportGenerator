@@ -45,6 +45,8 @@ ReportGenerator provides two options for this object. The first is derived from 
 
 - ReportGenerator
 
+##### Option A – Attrition table
+
 ```{r, include = FALSE}
 prevalence_attrition <- prevalence_attrition_general
 incidence_attrition <- incidence_attrition_general
@@ -58,10 +60,10 @@ table1aAutText(incidence_attrition, prevalence_attrition)
 table1NumPar(prevalence_attrition, incidence_attrition)
 ```
 
-The second option describes the number of users by database, sex, age group, etc.
+##### Option B – Number of users by database, sex, age group
 
-```{r, message= FALSE, warning=FALSE }
-table1SexAge(incidence_estimates)
+```{r, echo=FALSE}
+knitr::include_graphics("Table1OptionB.png")
 ```
 
 ### Figure 1 Incidence over calendar time overall
@@ -105,7 +107,7 @@ Incidence rate/s of drug/s use over calendar time (per year) stratified by sex a
 ReportGenerator identifies how many databases and how many outcomes are available to show in the figures. For each figure, the user interface of the package will show a drop-down menu to select the key visualisations of interest through a set of options. The user can select either a facet by outcome or database. ReportGenerator makes a call to the functions `plotIncidence()` from the IncidencePrevalence package to generate the figures.
 
 ```{r, include = FALSE}
-incidence_estimates <- incidence_estimates_general %>% filter(denominator_age_group == "18 to 99", denominator_sex != "Both", analysis_interval == "years", cdm_name == "CHUBX")
+incidence_estimates <- incidence_estimates_general %>% filter(denominator_age_group == "18 to 99", denominator_sex != "Both", analysis_interval == "years", cdm_name == "IPCI")
 ```
 
 ##### DARWIN EU packages that generate the object:
@@ -115,7 +117,7 @@ incidence_estimates <- incidence_estimates_general %>% filter(denominator_age_gr
 ##### Option A – facet by outcome
 
 ```{r, message= FALSE, warning=FALSE }
-IncidencePrevalence::plotIncidence(incidence_estimates,
+IncidencePrevalence::plotIncidence(result = incidence_estimates,
                                    facet = 'outcome_cohort_name', 
                                    colour = 'denominator_sex')
 ```
@@ -157,7 +159,7 @@ ReportGenerator identifies how many databases and how many outcomes are availabl
 - IncidencePrevalence
 
 ```{r, include = FALSE}
-incidence_estimates <- incidence_estimates_general %>% filter(denominator_sex == "Both", analysis_interval == "years", denominator_age_group != "18 to 99", cdm_name == "CHUBX")
+incidence_estimates <- incidence_estimates_general %>% filter(denominator_sex == "Both", analysis_interval == "years", denominator_age_group != "18 to 99", cdm_name == "IPCI")
 ```
 
 ##### Option A – facet by outcome, lines per database
@@ -242,7 +244,7 @@ ReportGenerator identifies how many databases and how many outcomes are availabl
 - IncidencePrevalence
 
 ```{r, include = FALSE}
-prevalence_estimates <- prevalence_estimates_general %>% filter(denominator_age_group == "18 to 99", denominator_sex != "Both", analysis_interval == "years", cdm_name == "CHUBX", analysis_type == "point")
+prevalence_estimates <- prevalence_estimates_general %>% filter(denominator_age_group == "18 to 99", denominator_sex != "Both", analysis_interval == "years", cdm_name == "IPCI", analysis_type == "point")
 ```
 
 ##### Option A – facet by outcome, lines per database
@@ -291,7 +293,7 @@ ReportGenerator identifies how many databases and how many outcomes are availabl
 - IncidencePrevalence
 
 ```{r, include = FALSE}
-prevalence_estimates <- prevalence_estimates_general %>% filter(denominator_sex == "Both", analysis_interval == "years", denominator_age_group != "18 to 99", cdm_name == "CHUBX", analysis_type == "point")
+prevalence_estimates <- prevalence_estimates_general %>% filter(denominator_sex == "Both", analysis_interval == "years", denominator_age_group != "18 to 99", cdm_name == "IPCI", analysis_type == "point")
 ```
 
 ##### Option A – facet by outcome, lines per database
