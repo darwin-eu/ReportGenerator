@@ -35,6 +35,22 @@ incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
     ),
     fluidRow(
       column(4,
+             pickerInput(inputId = "washoutIncidenceYear",
+                         label = "Database",
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout),
+                         selected = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)[1],
+                         multiple = FALSE)
+      ),
+      column(4,
+             pickerInput(inputId = "daysPriorIncidenceYear",
+                         label = "Outcome",
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history),
+                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history)[1],
+                         multiple = FALSE)
+      )
+    ),
+    fluidRow(
+      column(4,
              pickerInput(inputId = "databaseIncidenceYear",
                          label = "Database",
                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)),
@@ -101,6 +117,22 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
     fluidRow(
       column(4,
              selectizeInput("facetIncidenceSex", "Select plot type", choices = c("Facet by outcome", "Facet by database"))
+      )
+    ),
+    fluidRow(
+      column(4,
+             pickerInput(inputId = "washoutIncidenceSex",
+                         label = "Database",
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout),
+                         selected = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)[1],
+                         multiple = FALSE)
+      ),
+      column(4,
+             pickerInput(inputId = "daysPriorIncidenceSex",
+                         label = "Outcome",
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history),
+                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history)[1],
+                         multiple = FALSE)
       )
     ),
     fluidRow(
@@ -177,6 +209,22 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
     fluidRow(
       column(4,
              selectizeInput("facetIncidenceAge", "Select plot type", choices = c("Facet by outcome", "Facet by database"))
+      )
+    ),
+    fluidRow(
+      column(4,
+             pickerInput(inputId = "washoutIncidenceAge",
+                         label = "Database",
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout),
+                         selected = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)[1],
+                         multiple = FALSE)
+      ),
+      column(4,
+             pickerInput(inputId = "daysPriorIncidenceAge",
+                         label = "Outcome",
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history),
+                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history)[1],
+                         multiple = FALSE)
       )
     ),
     fluidRow(

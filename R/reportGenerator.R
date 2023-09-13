@@ -340,6 +340,12 @@ reportGenerator <- function() {
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
+      # Washout
+      incidence_estimates <- incidence_estimates %>%
+        filter(analysis_outcome_washout %in% c(input$washoutIncidenceYear))
+      # Days Prior
+      incidence_estimates <- incidence_estimates %>%
+        filter(denominator_days_prior_history %in% c(input$daysPriorIncidenceYear))
       # Database
       if (length(input$databaseIncidenceYear) != 1 || input$databaseIncidenceYear != "All") {
         incidence_estimates <- incidence_estimates %>%
@@ -398,6 +404,12 @@ reportGenerator <- function() {
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
+      # Washout
+        incidence_estimates <- incidence_estimates %>%
+          filter(analysis_outcome_washout %in% c(input$washoutIncidenceSex))
+      # Days Prior
+        incidence_estimates <- incidence_estimates %>%
+          filter(denominator_days_prior_history %in% c(input$daysPriorIncidenceSex))
       # Database
       if (length(input$databaseIncidenceSex) != 1 || input$databaseIncidenceSex != "All") {
         incidence_estimates <- incidence_estimates %>%
@@ -457,6 +469,12 @@ reportGenerator <- function() {
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
+      # Washout
+      incidence_estimates <- incidence_estimates %>%
+        filter(analysis_outcome_washout %in% c(input$washoutIncidenceAge))
+      # Days Prior
+      incidence_estimates <- incidence_estimates %>%
+        filter(denominator_days_prior_history %in% c(input$daysPriorIncidenceAge))
       # Database
       if (length(input$databaseIncidenceAge) != 1 || input$databaseIncidenceAge != "All") {
         incidence_estimates <- incidence_estimates %>%
