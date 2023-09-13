@@ -93,7 +93,6 @@ joinDatabase <- function(uploadedFiles = NULL,
                          csvLocation,
                          package = "IncidencePrevalence",
                          versionData = "0.4.1") {
-
   # csvLocation <- file.path(tempdir(), "dataLocation")
   # dir.create(csvLocation)
   #
@@ -103,7 +102,6 @@ joinDatabase <- function(uploadedFiles = NULL,
   #
   # package <- "IncidencePrevalence"
   # versionData <- "0.4.1"
-
   if (grepl(".zip",
             uploadedFiles[1],
             fixed = TRUE)) {
@@ -135,15 +133,10 @@ joinDatabase <- function(uploadedFiles = NULL,
           configColumns <- configData[[val]]
           configColumns <- unlist(configColumns$names)
           if (length(configColumns) == length(resultsColumns)) {
-            message("Length correspondance yes")
             if (identical(configColumns, resultsColumns)) {
-              message("Length correspondance yes")
+              message(paste0(val, ": match yes"))
               data[[val]] <- bind_rows(data[[val]], resultsData)
-              } else {
-                message("Length correspondance no")
-                }
-            } else {
-              message("Length correspondance no")
+              }
             }
         }
       }
@@ -159,8 +152,6 @@ joinDatabase <- function(uploadedFiles = NULL,
     #
     # package <- "IncidencePrevalence"
     # versionData <- "0.4.1"
-
-
     for (file in uploadedFiles) {
       # file <- filesLocation[1]
       resultsData <- read_csv(file, show_col_types = FALSE)
@@ -170,15 +161,10 @@ joinDatabase <- function(uploadedFiles = NULL,
         configColumns <- configData[[val]]
         configColumns <- unlist(configColumns$names)
         if (length(configColumns) == length(resultsColumns)) {
-          message("Length correspondance yes")
           if (identical(configColumns, resultsColumns)) {
-            message("Length correspondance yes")
+            message(paste0(val, ": match yes"))
             data[[val]] <- bind_rows(data[[val]], resultsData)
-          } else {
-            message("Length correspondance no")
           }
-        } else {
-          message("Length correspondance no")
         }
       }
     }
