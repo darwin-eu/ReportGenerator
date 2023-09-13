@@ -213,11 +213,10 @@ reportGenerator <- function() {
                                        input_id = "objectMenu"),
                          add_rank_list(text = "to here",
                                        labels = NULL,
-                                       input_id = "objectSelection"
+                                       input_id = "objectSelection")
                          )
              )
-      )
-    })
+      })
 
     # Item preview
 
