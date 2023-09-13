@@ -116,7 +116,8 @@ reportGenerator <- function() {
 
     # ReactiveValues
     # General use
-    uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
+    uploadedFiles <- reactiveValues(dataIP = NULL,
+                                    dataTP = NULL)
     # uploadedFilesTP <- reactiveValues(data = NULL)
     itemsList <- reactiveValues(objects = NULL)
 
@@ -133,8 +134,12 @@ reportGenerator <- function() {
       if (length(fileDataPath) == 1) {
         if (grepl(".zip", fileDataPath, fixed = TRUE)) {
           csvLocation <- file.path(tempdir(), "dataLocation")
-          csvFiles <- joinZipFiles(fileDataPath, csvLocation)
-          uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
+          dir.create(csvLocation)
+          uploadedFiles$dataIP <- joinDatabase(fileDataPath,
+                                               csvLocation,
+                                               versionData = input$dataVersion,
+                                               package = "IncidencePrevalence")
+          # uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
           items <- names(uploadedFiles$dataIP)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           unlink(csvLocation, recursive = TRUE)
@@ -147,8 +152,13 @@ reportGenerator <- function() {
       else if (length(fileDataPath) > 1) {
         if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
           csvLocation <- file.path(tempdir(), "dataLocation")
-          csvFiles <- joinZipFiles(fileDataPath, csvLocation)
-          uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
+          dir.create(csvLocation)
+          # fileDataPath <- "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/CDWBordeaux_IncidencePrevalenceResults.zip"
+          uploadedFiles$dataIP <- joinDatabase(fileDataPath,
+                                               csvLocation,
+                                               versionData = input$dataVersion,
+                                               package = "IncidencePrevalence")
+          # uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
           items <- names(uploadedFiles$dataIP)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           unlink(csvLocation, recursive = TRUE)
@@ -179,7 +189,7 @@ reportGenerator <- function() {
       }
       #   if (grepl(".zip", fileDataPath, fixed = TRUE)) {
       #     csvLocation <- file.path(tempdir(), "dataLocation")
-      #     csvFiles <- joinZipFiles(fileDataPath, csvLocation)
+      #     csvFiles <- joinDatabase(fileDataPath, csvLocation)
       #     uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
       #     items <- names(uploadedFiles$dataIP)
       #     itemsList$objects[["items"]] <- getItemsList(items)
@@ -193,7 +203,7 @@ reportGenerator <- function() {
       # else if (length(fileDataPath) > 1) {
       #   if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
       #     csvLocation <- file.path(tempdir(), "dataLocation")
-      #     csvFiles <- joinZipFiles(fileDataPath, csvLocation)
+      #     csvFiles <- joinDatabase(fileDataPath, csvLocation)
       #     uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
       #     items <- names(uploadedFiles$dataIP)
       #     itemsList$objects[["items"]] <- getItemsList(items)
@@ -994,12 +1004,14 @@ reportGenerator <- function() {
                    value = i,
                    style = "Heading 1 (Agency)")
         } else if ("ggplot" %in% class(object)) {
+          body_end_section_landscape(incidencePrevalenceDocx)
           body_add_gg(x = incidencePrevalenceDocx,
                       value = object,
                       style = "Normal")
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
+          body_end_section_portrait(incidencePrevalenceDocx)
 
         } else if ("gvis" %in% class(object)) {
 

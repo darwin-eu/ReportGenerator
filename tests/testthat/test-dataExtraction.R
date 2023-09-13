@@ -14,7 +14,7 @@ test_that("loading zip files", {
 test_that("loading zip files", {
   uploadedFiles <- list.files(system.file("extdata", "zip", package = "ReportGenerator"), pattern = "zip", full.names = TRUE)
   csvLocation <- file.path(tempdir(), "testLocation")
-  joinedZipFiles <- joinZipFiles(uploadedFiles = uploadedFiles, csvLocation = csvLocation)
+  joinedZipFiles <- joinDatabase(uploadedFiles = uploadedFiles, csvLocation = csvLocation)
   unlink(csvLocation, recursive = TRUE)
   expect_equal(length(joinedZipFiles), 4)
   expect_type(joinedZipFiles, "character")
@@ -23,7 +23,7 @@ test_that("loading zip files", {
 test_that("loading csv files", {
   uploadedFiles <- list.files(system.file("extdata", "csv", package = "ReportGenerator"), pattern = "csv", full.names = TRUE)
   csvLocation <- file.path(tempdir(), "testLocation")
-  joinedZipFiles <- joinZipFiles(uploadedFiles = uploadedFiles, csvLocation = csvLocation)
+  joinedZipFiles <- joinDatabase(uploadedFiles = uploadedFiles, csvLocation = csvLocation)
   unlink(csvLocation, recursive = TRUE)
   expect_equal(length(joinedZipFiles), 4)
   expect_type(joinedZipFiles, "character")

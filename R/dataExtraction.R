@@ -89,7 +89,20 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     }
 }
 
-joinZipFiles <- function(uploadedFiles = NULL, csvLocation) {
+joinDatabase <- function(uploadedFiles = NULL,
+                         csvLocation,
+                         package = "IncidencePrevalence",
+                         versionData = "0.4.1") {
+
+  csvLocation <- file.path(tempdir(), "dataLocation")
+  dir.create(csvLocation)
+
+  uploadedFiles <- c("D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/CDWBordeaux_IncidencePrevalenceResults.zip",
+                     "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/IPCI_IncidencePrevalenceResults.zip",
+                     "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/SIDIAP_IncidencePrevalenceResults.zip")
+
+  package <- "IncidencePrevalence"
+  versionData <- "0.4.1"
 
   if (grepl(".zip",
             uploadedFiles[1],
@@ -101,54 +114,40 @@ joinZipFiles <- function(uploadedFiles = NULL, csvLocation) {
             exdir = paste0(csvLocation, "/", "database", as.character(folderNumber)))
     }
     databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
-    incidence_estimates <- data.frame()
-    incidence_attrition <- data.frame()
-    prevalence_estimates <- data.frame()
-    prevalence_attrition <-  data.frame()
-
-    for (folderLocation in databaseFolders) {
-      incidence_estimate_file <- list.files(folderLocation,
-                                            pattern = "incidence_estimates",
-                                            full.names = TRUE,
-                                            recursive = TRUE)
-      incidence_estimate_file <- read.csv(incidence_estimate_file)
-      incidence_estimates <- bind_rows(incidence_estimates, incidence_estimate_file)
-
-
-      incidence_attrition_file <- list.files(folderLocation,
-                                             pattern = "incidence_attrition",
-                                             full.names = TRUE,
-                                             recursive = TRUE)
-      incidence_attrition_file <- read.csv(incidence_attrition_file)
-      incidence_attrition <- bind_rows(incidence_attrition, incidence_attrition_file)
-
-      prevalence_estimates_file <- list.files(folderLocation,
-                                              pattern = "prevalence_estimates",
-                                              full.names = TRUE,
-                                              recursive = TRUE)
-      prevalence_estimates_file <- read.csv(prevalence_estimates_file)
-      prevalence_estimates <- bind_rows(prevalence_estimates, prevalence_estimates_file)
-
-      prevalence_attrition_file <- list.files(folderLocation,
-                                              pattern = "prevalence_attrition",
-                                              full.names = TRUE,
-                                              recursive = TRUE)
-      prevalence_attrition_file <- read.csv(prevalence_attrition_file)
-      prevalence_attrition <- bind_rows(prevalence_attrition, prevalence_attrition_file)
-    }
-
-    dir.create(path = paste0(csvLocation, "//", "csvFilesFolder"))
-    csvFilesLocation <- paste0(csvLocation, "//", "csvFilesFolder")
-
-    if (dir.exists(csvFilesLocation)) {
-      write.csv(incidence_estimates, file = paste0(csvFilesLocation, "//", "incidence_estimates.csv"), row.names = FALSE)
-      write.csv(incidence_attrition, file = paste0(csvFilesLocation, "//", "incidence_attrition.csv"), row.names = FALSE)
-      write.csv(prevalence_estimates, file = paste0(csvFilesLocation, "//", "prevalence_estimates.csv"), row.names = FALSE)
-      write.csv(prevalence_attrition, file = paste0(csvFilesLocation, "//", "prevalence_attrition.csv"), row.names = FALSE)
-    }
-
-    csvFiles <- list.files(csvFilesLocation, pattern = ".csv",
-                           full.names = TRUE)
+    configData <- yaml.load_file(system.file("config",
+                                             "variablesConfig.yaml",
+                                             package = "ReportGenerator"))
+    configData <- configData[[package]][[versionData]]
+    configDataTypes <- names(configData)
+    data <- list()
+    for (filesList in databaseFolders) {
+      # filesList <- databaseFolders[1]
+      filesLocation <- list.files(filesList,
+                                  pattern = ".csv",
+                                  full.names = TRUE,
+                                  recursive = TRUE)
+      for (file in filesLocation) {
+        # file <- filesLocation[1]
+        resultsData <- read_csv(file, show_col_types = FALSE)
+        resultsColumns <- names(resultsData)
+        for (val in configDataTypes) {
+          # val <- "incidence_attrition"
+          configColumns <- configData[[val]]
+          configColumns <- unlist(configColumns$names)
+          if (length(configColumns) == length(resultsColumns)) {
+            message("Length correspondance yes")
+            if (identical(configColumns, resultsColumns)) {
+              message("Length correspondance yes")
+              data[[val]] <- bind_rows(data[[val]], resultsData)
+              } else {
+                message("Length correspondance no")
+                }
+            } else {
+              message("Length correspondance no")
+            }
+        }
+      }
+      }
 
   } else if (grepl(".csv",
                    uploadedFiles[1],
@@ -156,7 +155,7 @@ joinZipFiles <- function(uploadedFiles = NULL, csvLocation) {
     csvFiles <- uploadedFiles
   }
 
-  return(csvFiles)
+  return(data)
 }
 
 columnCheck <- function(csvFiles,
@@ -165,7 +164,7 @@ columnCheck <- function(csvFiles,
   data <- list()
   for (fileLocation in csvFiles) {
     # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpCOhl36/mock_data_ReportGenerator_SIDIAP/test_database_incidence_attrition_2023_06_22.csv"
-    resultsData <- read_csv(fileLocation)
+    resultsData <- read_csv(fileLocation, show_col_types = FALSE)
     resultsColumns <- names(resultsData)
     for (val in configDataTypes) {
       # val <- "incidence_attrition"
