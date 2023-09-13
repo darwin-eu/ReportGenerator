@@ -139,7 +139,6 @@ reportGenerator <- function() {
                                                csvLocation,
                                                versionData = input$dataVersion,
                                                package = "IncidencePrevalence")
-          # uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
           items <- names(uploadedFiles$dataIP)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           unlink(csvLocation, recursive = TRUE)
@@ -156,12 +155,10 @@ reportGenerator <- function() {
         if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
           csvLocation <- file.path(tempdir(), "dataLocation")
           dir.create(csvLocation)
-          # fileDataPath <- "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/CDWBordeaux_IncidencePrevalenceResults.zip"
           uploadedFiles$dataIP <- joinDatabase(fileDataPath,
                                                csvLocation,
                                                versionData = input$dataVersion,
                                                package = "IncidencePrevalence")
-          # uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
           items <- names(uploadedFiles$dataIP)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           unlink(csvLocation, recursive = TRUE)
@@ -421,7 +418,11 @@ reportGenerator <- function() {
     output$previewFigure2 <- renderPlot({
       objectChoice <- "Plot - Incidence rate per year by sex"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
-      class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
+      class(incidence_estimates) <- c("IncidencePrevalenceResult",
+                                      "IncidenceResult",
+                                      "tbl_df",
+                                      "tbl",
+                                      "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
       # Washout
         incidence_estimates <- incidence_estimates %>%
@@ -486,7 +487,11 @@ reportGenerator <- function() {
     output$previewFigure3 <- renderPlot({
       objectChoice <- "Plot - Incidence rate per year by age"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
-      class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
+      class(incidence_estimates) <- c("IncidencePrevalenceResult",
+                                      "IncidenceResult",
+                                      "tbl_df",
+                                      "tbl",
+                                      "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
       # Washout
       incidence_estimates <- incidence_estimates %>%
@@ -629,7 +634,11 @@ reportGenerator <- function() {
     output$previewFigure4 <- renderPlot({
       objectChoice <- "Plot - Prevalence rate per year"
       prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
-      class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
+      class(prevalence_estimates) <- c("IncidencePrevalenceResult",
+                                       "PrevalenceResult",
+                                       "tbl_df",
+                                       "tbl",
+                                       "data.frame")
       prevalence_estimates[is.na(prevalence_estimates)] = 0
 
       # Database
