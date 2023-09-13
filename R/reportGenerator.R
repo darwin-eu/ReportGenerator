@@ -86,7 +86,6 @@ reportGenerator <- function() {
     # General use
     uploadedFiles <- reactiveValues(dataIP = NULL,
                                     dataTP = NULL)
-    # uploadedFilesTP <- reactiveValues(data = NULL)
     itemsList <- reactiveValues(objects = NULL)
 
     # Check input data
@@ -161,33 +160,6 @@ reportGenerator <- function() {
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
         }
       }
-      #   if (grepl(".zip", fileDataPath, fixed = TRUE)) {
-      #     csvLocation <- file.path(tempdir(), "dataLocation")
-      #     csvFiles <- joinDatabase(fileDataPath, csvLocation)
-      #     uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
-      #     items <- names(uploadedFiles$dataIP)
-      #     itemsList$objects[["items"]] <- getItemsList(items)
-      #     unlink(csvLocation, recursive = TRUE)
-      #   } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
-      #     uploadedFiles$dataIP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
-      #     items <- names(uploadedFiles$dataIP)
-      #     itemsList$objects[["items"]] <- getItemsList(items)
-      #   }
-      # }
-      # else if (length(fileDataPath) > 1) {
-      #   if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
-      #     csvLocation <- file.path(tempdir(), "dataLocation")
-      #     csvFiles <- joinDatabase(fileDataPath, csvLocation)
-      #     uploadedFiles$dataIP <- columnCheck(csvFiles, configData, configDataTypes)
-      #     items <- names(uploadedFiles$dataIP)
-      #     itemsList$objects[["items"]] <- getItemsList(items)
-      #     unlink(csvLocation, recursive = TRUE)
-      #   } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
-      #     uploadedFiles$dataIP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
-      #     items <- names(uploadedFiles$dataIP)
-      #     itemsList$objects[["items"]] <- getItemsList(items)
-      #   }
-      # }
     })
 
     # Reset and back to initial tab
@@ -958,17 +930,8 @@ reportGenerator <- function() {
                                                               package = "ReportGenerator"))
       reverseList <- rev(input$objectSelection)
       for (i in reverseList) {
-        # menuFunction <- menuSel() %>%
-        #   dplyr::filter(title == i)
-
-        # i <- "Sunburst Plot - TreatmentPatterns"
-        i <- "Sankey Diagram - TreatmentPatterns"
-
-        menuFunction <- menuSel %>%
+        menuFunction <- menuSel() %>%
           dplyr::filter(title == i)
-
-
-
         itemOptions <- menuFunction %>%
           getItemOptions()
         expression <- menuFunction %>%
