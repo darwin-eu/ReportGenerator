@@ -145,7 +145,6 @@ IncidencePrevalence:
       - denominator_strata_cohort_definition_id
       - denominator_strata_cohort_name
       - cdm_name
-      - cdm_name
     incidence_estimates:
       names:
       - analysis_id
@@ -177,7 +176,6 @@ IncidencePrevalence:
       - denominator_strata_cohort_definition_id
       - denominator_strata_cohort_name
       - cdm_name
-      - cdm_name
     prevalence_attrition:
       names:
       - analysis_id
@@ -203,7 +201,6 @@ IncidencePrevalence:
       - denominator_end_date
       - denominator_strata_cohort_definition_id
       - denominator_strata_cohort_name
-      - cdm_name
       - cdm_name
     prevalence_estimates:
       names:
@@ -235,7 +232,6 @@ IncidencePrevalence:
       - denominator_end_date
       - denominator_strata_cohort_definition_id
       - denominator_strata_cohort_name
-      - cdm_name
       - cdm_name
   0.1.0:
     incidence_attrition:
@@ -264,7 +260,6 @@ IncidencePrevalence:
       - denominator_strata_cohort_definition_id
       - denominator_strata_cohort_name
       - cdm_name
-      - cdm_name
     incidence_estimates:
       names:
       - analysis_id
@@ -296,7 +291,6 @@ IncidencePrevalence:
       - denominator_strata_cohort_definition_id
       - denominator_strata_cohort_name
       - cdm_name
-      - cdm_name
     prevalence_attrition:
       names:
       - analysis_id
@@ -322,7 +316,6 @@ IncidencePrevalence:
       - denominator_end_date
       - denominator_strata_cohort_definition_id
       - denominator_strata_cohort_name
-      - cdm_name
       - cdm_name
     prevalence_estimates:
       names:
@@ -354,7 +347,6 @@ IncidencePrevalence:
       - denominator_end_date
       - denominator_strata_cohort_definition_id
       - denominator_strata_cohort_name
-      - cdm_name
       - cdm_name
   0.4.1:
     incidence_attrition:
@@ -384,7 +376,6 @@ IncidencePrevalence:
       - denominator_strata_cohort_name
       - denominator_closed_cohort
       - cdm_name
-      - database_name
     incidence_estimates:
       names:
       - analysis_id
@@ -417,7 +408,6 @@ IncidencePrevalence:
       - denominator_strata_cohort_name
       - denominator_closed_cohort
       - cdm_name
-      - database_name
     prevalence_attrition:
       names:
       - analysis_id
@@ -445,7 +435,6 @@ IncidencePrevalence:
       - denominator_strata_cohort_name
       - denominator_closed_cohort
       - cdm_name
-      - database_name
     prevalence_estimates:
       names:
       - analysis_id
@@ -478,7 +467,6 @@ IncidencePrevalence:
       - denominator_strata_cohort_name
       - denominator_closed_cohort
       - cdm_name
-      - database_name
 TreatmentPatterns:
   2.5.0:
     treatmentPathways:

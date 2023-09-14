@@ -37,7 +37,8 @@ Imports:
     yaml,
     waldo,    
     googleVis,
-    gtools
+    gtools,
+    ggplot2
 Suggests: 
     testthat,
     DT,

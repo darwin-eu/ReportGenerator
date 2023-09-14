@@ -23,6 +23,7 @@
 #' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @importFrom utils read.csv tail unzip
 #' @importFrom gtools mixedsort
+#' @importFrom ggplot2 ggsave
 #' @export
 #' @examples
 #' \donttest{
@@ -279,7 +280,8 @@ reportGenerator <- function() {
 
     # Figure 1
 
-    output$previewFigure1 <- renderPlot({
+    incidenceFigure1 <- reactive({
+
       objectChoice <- "Plot - Incidence rate per year"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
@@ -297,8 +299,8 @@ reportGenerator <- function() {
       }
       # Outcome
       if (length(input$outcomeIncidenceYear) != 1 || input$outcomeIncidenceYear != "All") {
-      incidence_estimates <- incidence_estimates %>%
-        filter(outcome_cohort_name == input$outcomeIncidenceYear)
+        incidence_estimates <- incidence_estimates %>%
+          filter(outcome_cohort_name == input$outcomeIncidenceYear)
       }
       # Sex
       if (length(input$sexIncidenceYear) != 1 || input$sexIncidenceYear != "All") {
@@ -335,15 +337,29 @@ reportGenerator <- function() {
       itemOptions <- menuFunction %>% getItemOptions()
       expression <- menuFunction %>%
         dplyr::pull(signature)
-          expression <- expression %>%
-            addPreviewItemType(input$facetIncidenceYear)
+      expression <- expression %>%
+        addPreviewItemType(input$facetIncidenceYear)
       object <- eval(parse(text = expression))
       object
-      })
+
+    })
+
+    output$previewFigure1 <- renderPlot({incidenceFigure1()})
+
+    # Download Figure 1
+
+    output$downloadFigure1Inc <- downloadHandler(
+      filename = function() {
+        paste("Figure1Inc", ".png", sep = "")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file, plot = incidenceFigure1(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
 
     # Figure 2
 
-    output$previewFigure2 <- renderPlot({
+    incidenceFigure2Sex <- reactive({
       objectChoice <- "Plot - Incidence rate per year by sex"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult",
@@ -353,11 +369,11 @@ reportGenerator <- function() {
                                       "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
       # Washout
-        incidence_estimates <- incidence_estimates %>%
-          filter(analysis_outcome_washout %in% c(input$washoutIncidenceSex))
+      incidence_estimates <- incidence_estimates %>%
+        filter(analysis_outcome_washout %in% c(input$washoutIncidenceSex))
       # Days Prior
-        incidence_estimates <- incidence_estimates %>%
-          filter(denominator_days_prior_history %in% c(input$daysPriorIncidenceSex))
+      incidence_estimates <- incidence_estimates %>%
+        filter(denominator_days_prior_history %in% c(input$daysPriorIncidenceSex))
       # Database
       if (length(input$databaseIncidenceSex) != 1 || input$databaseIncidenceSex != "All") {
         incidence_estimates <- incidence_estimates %>%
@@ -365,8 +381,8 @@ reportGenerator <- function() {
       }
       # Outcome
       if (length(input$outcomeIncidenceSex) != 1 || input$outcomeIncidenceSex != "All") {
-      incidence_estimates <- incidence_estimates %>%
-        filter(outcome_cohort_name == input$outcomeIncidenceSex)
+        incidence_estimates <- incidence_estimates %>%
+          filter(outcome_cohort_name == input$outcomeIncidenceSex)
       }
       # Sex
       if (length(input$sexIncidenceSex) != 1 || input$sexIncidenceSex != "All") {
@@ -408,11 +424,26 @@ reportGenerator <- function() {
         addPreviewItemTypeSex(input$facetIncidenceSex)
       object <- eval(parse(text = expression))
       object
+
     })
+
+    output$previewFigure2 <- renderPlot({incidenceFigure2Sex()})
+
+    # Download Figure 2
+
+    output$downloadFigure2IncSex <- downloadHandler(
+      filename = function() {
+        paste("Figure2IncSex", ".png", sep = "")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file, plot = incidenceFigure2Sex(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
 
     # Figure 3
 
-    output$previewFigure3 <- renderPlot({
+    incidenceFigure3Age <- reactive({
+
       objectChoice <- "Plot - Incidence rate per year by age"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult",
@@ -434,8 +465,8 @@ reportGenerator <- function() {
       }
       # Outcome
       if (length(input$outcomeIncidenceAge) != 1 || input$outcomeIncidenceAge != "All") {
-      incidence_estimates <- incidence_estimates %>%
-        filter(outcome_cohort_name %in% input$outcomeIncidenceAge)
+        incidence_estimates <- incidence_estimates %>%
+          filter(outcome_cohort_name %in% input$outcomeIncidenceAge)
       }
       # Sex
       if (length(input$sexIncidenceAge) != 1 || input$sexIncidenceAge != "All") {
@@ -475,7 +506,21 @@ reportGenerator <- function() {
         addPreviewItemTypeAge(input$facetIncidenceAge)
       object <- eval(parse(text = expression))
       object
+
     })
+
+    output$previewFigure3 <- renderPlot({incidenceFigure3Age()})
+
+    # Download Figure 2
+
+    output$downloadFigure3IncAge <- downloadHandler(
+      filename = function() {
+        paste("Figure3IncAge", ".png", sep = "")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file, plot = incidenceFigure3Age(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
 
     # Update according to facet incidence
 
@@ -559,7 +604,7 @@ reportGenerator <- function() {
 
     # Figure 4: Prevalence rate per year
 
-    output$previewFigure4 <- renderPlot({
+    prevalenceFigure4 <- reactive({
       objectChoice <- "Plot - Prevalence rate per year"
       prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
       class(prevalence_estimates) <- c("IncidencePrevalenceResult",
@@ -627,9 +672,22 @@ reportGenerator <- function() {
       object
     })
 
+    output$previewFigure4 <- renderPlot({prevalenceFigure4()})
+
+    # Download Figure 4
+
+    output$downloadFigure4Prev <- downloadHandler(
+      filename = function() {
+        paste("Figure4Prev", ".png", sep = "")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file, plot = prevalenceFigure4(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
+
     # Figure 5: Prevalence rate per year by sex
 
-    output$previewFigure5 <- renderPlot({
+    prevalenceFigure5 <- reactive({
       objectChoice <- "Plot - Prevalence rate per year by sex"
       prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
       class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
@@ -693,9 +751,22 @@ reportGenerator <- function() {
       object
     })
 
+    output$previewFigure5 <- renderPlot({prevalenceFigure5()})
+
+    # Download Figure 5
+
+    output$downloadFigure5Prev <- downloadHandler(
+      filename = function() {
+        paste("Figure5PrevSex", ".png", sep = "")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file, plot = prevalenceFigure5(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
+
     # Figure 6: Prevalence rate per year by age
 
-    output$previewFigure6 <- renderPlot({
+    prevalenceFigure6 <- reactive({
       objectChoice <- "Plot - Prevalence rate per year by age"
       prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
       class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
@@ -758,6 +829,19 @@ reportGenerator <- function() {
       object <- eval(parse(text = expression))
       object
     })
+
+    output$previewFigure6 <- renderPlot({prevalenceFigure6()})
+
+    # Download Figure 6
+
+    output$downloadFigure6Prev <- downloadHandler(
+      filename = function() {
+        paste("Figure6PrevAge", ".png", sep = "")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file, plot = prevalenceFigure6(), device = "png", height = 500, width = 845, units = "mm")
+      }
+    )
 
     # SunburstPlot
 

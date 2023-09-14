@@ -85,6 +85,9 @@ incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
                            label = "Add data to report",
                            value = FALSE)
       ),
+      column(4,
+             downloadButton("downloadFigure1Inc", "Download Plot")
+      ),
     )
   )
 }
@@ -175,7 +178,10 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
              checkboxInput(inputId = "lockDataIncidenceSex",
                            label = "Add data to report",
                            value = FALSE)
-      )
+      ),
+      column(4,
+             downloadButton("downloadFigure2IncSex", "Download Plot")
+      ),
     )
   )
 }
@@ -267,6 +273,9 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
              checkboxInput(inputId = "lockDataIncidenceAge",
                            label = "Add data to report",
                            value = FALSE)
+      ),
+      column(4,
+             downloadButton("downloadFigure3IncAge", "Download Plot")
       ),
     )
   )

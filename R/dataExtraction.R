@@ -30,7 +30,7 @@
 variablesConfigYaml <- function(fileDataPath = NULL,
                                 package = "IncidencePrevalence",
                                 version = NULL) {
-
+  # fileDataPath <- "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/inst/extdata/examples/0.4.1/zip/mock_data_ReportGenerator_SIDIAP.zip"
   if (package == "IncidencePrevalence") {
     csvLocation <- file.path(tempdir(), "varDataLocation")
     utils::unzip(zipfile = fileDataPath,
@@ -89,6 +89,17 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     }
 }
 
+#' `joinDatabase()` gathers several zip or csv folders into a list of dataframes for ReportGenerator
+#'
+#' @param uploadedFiles A list of filepaths
+#' @param csvLocation Temporary folder
+#' @param package Name of the packages that generated the results
+#' @param versionData Version of the package
+#'
+#' @return A list of dataframes
+#'
+#' @import yaml
+#' @export
 joinDatabase <- function(uploadedFiles = NULL,
                          csvLocation,
                          package = "IncidencePrevalence",
@@ -102,6 +113,12 @@ joinDatabase <- function(uploadedFiles = NULL,
   #
   # package <- "IncidencePrevalence"
   # versionData <- "0.4.1"
+
+  configData <- yaml.load_file(system.file("config",
+                                           "variablesConfig.yaml",
+                                           package = "ReportGenerator"))
+  configData <- configData[[package]][[versionData]]
+  configDataTypes <- names(configData)
   if (grepl(".zip",
             uploadedFiles[1],
             fixed = TRUE)) {
@@ -112,11 +129,6 @@ joinDatabase <- function(uploadedFiles = NULL,
             exdir = paste0(csvLocation, "/", "database", as.character(folderNumber)))
     }
     databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
-    configData <- yaml.load_file(system.file("config",
-                                             "variablesConfig.yaml",
-                                             package = "ReportGenerator"))
-    configData <- configData[[package]][[versionData]]
-    configDataTypes <- names(configData)
     data <- list()
     for (filesList in databaseFolders) {
       # filesList <- databaseFolders[1]
@@ -129,7 +141,7 @@ joinDatabase <- function(uploadedFiles = NULL,
         resultsData <- read_csv(file, show_col_types = FALSE)
         resultsColumns <- names(resultsData)
         for (val in configDataTypes) {
-          # val <- "incidence_attrition"
+          # val <- "incidence_estimates"
           configColumns <- configData[[val]]
           configColumns <- unlist(configColumns$names)
           if (length(configColumns) == length(resultsColumns)) {

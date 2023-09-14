@@ -69,6 +69,9 @@ prevPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
                            label = "Add data to report",
                            value = FALSE)
       ),
+      column(4,
+             downloadButton("downloadFigure4Prev", "Download Plot")
+      ),
     )
   )
 }
@@ -145,6 +148,9 @@ prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
                            label = "Add data to report",
                            value = FALSE)
       ),
+      column(4,
+             downloadButton("downloadFigure5Prev", "Download Plot")
+      ),
     )
   )
 }
@@ -220,6 +226,9 @@ prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
              checkboxInput(inputId = "lockDataPrevalenceAge",
                            label = "Add data to report",
                            value = FALSE)
+      ),
+      column(4,
+             downloadButton("downloadFigure6Prev", "Download Plot")
       ),
     )
   )
