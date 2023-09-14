@@ -83,4 +83,5 @@ utils::globalVariables(c("age_strata",
                          "number_records",
                          "number_subjects",
                          "reason_id",
-                         "Total Users"))
+                         "Total Users",
+                         "analysis_outcome_washout"))
