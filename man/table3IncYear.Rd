@@ -12,6 +12,3 @@ table3IncYear(incidence_estimates)
 \description{
 table3IncYear
 }
-\examples{
-table3IncYear(incidence_estimates = ReportGenerator:::incidence_estimates_latest)
-}

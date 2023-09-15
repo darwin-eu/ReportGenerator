@@ -1,7 +1,7 @@
 test_that("TreatmentPatterns data extraction", {
   fileDataPath <- list.files(system.file("extdata",
                                          "examples",
-                                         "TreatmentPatterns",
+                                         "TrePat",
                                          "2.5.0",
                                          "csv",
                                          package = "ReportGenerator"),
@@ -23,8 +23,7 @@ test_that("TreatmentPatterns data extraction", {
 test_that("loading zip files", {
   fileDataPath <- list.files(system.file("extdata",
                                          "examples",
-                                         "IncidencePrevalence",
-                                         "0.4.1",
+                                         "IncPrev",
                                          "zip",
                                          package = "ReportGenerator"),
                              pattern = "zip",
@@ -45,8 +44,7 @@ test_that("loading zip files", {
 test_that("loading zip files", {
   uploadedFiles <- list.files(system.file("extdata",
                                           "examples",
-                                          "IncidencePrevalence",
-                                          "0.4.1",
+                                          "IncPrev",
                                           "zip",
                                           package = "ReportGenerator"),
                               pattern = "zip",
@@ -62,8 +60,7 @@ test_that("loading zip files", {
 test_that("loading csv files", {
   uploadedFiles <- list.files(system.file("extdata",
                                           "examples",
-                                          "IncidencePrevalence",
-                                          "0.4.1",
+                                          "IncPrev",
                                           "csv",
                                           package = "ReportGenerator"),
                               pattern = "csv",
@@ -78,8 +75,7 @@ test_that("loading csv files", {
 test_that("column check for csv files", {
   csvFiles <- list.files(system.file("extdata",
                                      "examples",
-                                     "IncidencePrevalence",
-                                     "0.4.1",
+                                     "IncPrev",
                                      "csv",
                                      package = "ReportGenerator"),
                          pattern = "csv",

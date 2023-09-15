@@ -39,8 +39,11 @@ Imports:
     googleVis,
     gtools,
     ggplot2,
-    gtsummary,
-    gto
+    gto,
+    gt,
+    DT,
+    TreatmentPatterns,
+    usethis
 Suggests: 
     testthat,
     rmarkdown

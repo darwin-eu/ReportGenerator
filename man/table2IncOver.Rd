@@ -12,6 +12,3 @@ table2IncOver(incidence_estimates)
 \description{
 table2IncOver
 }
-\examples{
-table2IncOver(incidence_estimates = ReportGenerator:::incidence_estimates_latest)
-}

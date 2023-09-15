@@ -300,7 +300,9 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
 
 #' `testData()` extracts data from zip results and saves it in .rda format
 #'
-#' @param fileDataPath A path to the zip file, in character
+#' @param internal Boolean
+#'
+#' @importFrom usethis use_data
 #'
 #' @return sysdata.rda instruction
 testData <- function(internal = TRUE) {

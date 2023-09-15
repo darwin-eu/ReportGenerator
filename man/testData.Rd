@@ -4,10 +4,10 @@
 \alias{testData}
 \title{`testData()` extracts data from zip results and saves it in .rda format}
 \usage{
-testData()
+testData(internal = TRUE)
 }
 \arguments{
-\item{fileDataPath}{A path to the zip file, in character}
+\item{internal}{Boolean}
 }
 \value{
 sysdata.rda instruction

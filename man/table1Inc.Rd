@@ -8,8 +8,6 @@ table1Inc(incidence_estimates)
 }
 \arguments{
 \item{incidence_estimates}{A data frame with incidence attrition data.}
-
-\item{prevalence_estimates}{A data frame with prevalence estimates.}
 }
 \description{
 `table1IncPrev()` returns Table 1 using incidence/prevalence estimates.
