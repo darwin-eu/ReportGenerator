@@ -119,6 +119,7 @@ joinDatabase <- function(uploadedFiles = NULL,
                                            package = "ReportGenerator"))
   configData <- configData[[package]][[versionData]]
   configDataTypes <- names(configData)
+  data <- list()
   if (grepl(".zip",
             uploadedFiles[1],
             fixed = TRUE)) {
@@ -129,7 +130,6 @@ joinDatabase <- function(uploadedFiles = NULL,
             exdir = paste0(csvLocation, "/", "database", as.character(folderNumber)))
     }
     databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
-    data <- list()
     for (filesList in databaseFolders) {
       # filesList <- databaseFolders[1]
       filesLocation <- list.files(filesList,
@@ -160,7 +160,7 @@ joinDatabase <- function(uploadedFiles = NULL,
     # csvLocation <- file.path(tempdir(), "dataLocation")
     # dir.create(csvLocation)
     #
-    # uploadedFiles <- list.files("D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/0.4.1/csv", full.names = TRUE)
+    uploadedFiles <- list.files("D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/Opiods/csv/", full.names = TRUE)
     #
     # package <- "IncidencePrevalence"
     # versionData <- "0.4.1"
