@@ -26,7 +26,7 @@
 #' @importFrom ggplot2 ggsave
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' reportGenerator()
 #' }
 reportGenerator <- function() {

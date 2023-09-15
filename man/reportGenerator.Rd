@@ -10,7 +10,7 @@ reportGenerator()
 `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 }
 \examples{
-\donttest{
+\dontrun{
 reportGenerator()
 }
 }
