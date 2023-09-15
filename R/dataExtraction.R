@@ -305,10 +305,12 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
 #' @return sysdata.rda instruction
 testData <- function(internal = TRUE) {
   # List
-  uploadedFiles <- list.files(system.file("extdata", "examples", "0.4.1", "zip",
+  uploadedFiles <- list.files(system.file("extdata", "examples", "IncidencePrevalence", "0.4.1", "zip",
                                           package = "ReportGenerator"),
                               pattern = ".zip",
                               full.names = TRUE)
+
+  checkmate::assertCharacter(uploadedFiles)
 
   csvLocation <- file.path(tempdir(), "varDataLocation")
   dir.create(csvLocation)

@@ -232,7 +232,7 @@ reportGenerator <- function() {
       menuFun <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
       menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$dataIP$incidence_estimates"
       menuFun$arguments[menuFun$name == "createSunburstPlot"] <- "uploadedFiles$dataTP$treatmentPathways"
-      menuFun$arguments[menuFun$name == "outputSankeyDiagram"] <- "uploadedFiles$dataTP$treatmentPathways"
+      menuFun$arguments[menuFun$name == "createSankeyDiagram"] <- "uploadedFiles$dataTP$treatmentPathways"
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
       menuFun
     })

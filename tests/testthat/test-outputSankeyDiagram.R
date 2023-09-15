@@ -14,7 +14,7 @@ test_that("void", {
 })
 
 test_that("minimal", {
-  outputSankey <- outputSankeyDiagram(
+  outputSankey <- createSankeyDiagram(
     treatmentPathways = data,
     groupCombinations = FALSE,
     minFreq = 5)
