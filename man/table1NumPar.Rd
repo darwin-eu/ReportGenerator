@@ -14,7 +14,3 @@ table1NumPar(prevalence_attrition, incidence_attrition)
 \description{
 `table1NumPar()` creates table 1 with number of participants from each database from attrition data
 }
-\examples{
-table1NumPar(prevalence_attrition = ReportGenerator:::prevalence_attrition_latest,
-             incidence_attrition = ReportGenerator:::incidence_attrition_latest)
-}

@@ -22,9 +22,6 @@
 #' @import flextable dplyr
 #' @importFrom huxtable as_hux set_contents insert_row set_align everywhere
 #' @export
-#' @examples
-#' table1NumPar(prevalence_attrition = ReportGenerator:::prevalence_attrition_latest,
-#'              incidence_attrition = ReportGenerator:::incidence_attrition_latest)
 table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 
   prevalence_attrition <- dataCleanAttrition(prevalence_attrition = prevalence_attrition)
@@ -245,16 +242,15 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
   }
 
 }
-#' `table1SexAge()` returns table with sex and age for each database
+#' `table1IncPrev()` returns Table 1 using incidence/prevalence estimates.
 #'
 #' @param incidence_estimates A data frame with incidence attrition data.
+#' @param prevalence_estimates A data frame with prevalence estimates.
 #'
-#' @import flextable dplyr
+#' @import flextable dplyr gt
 #' @importFrom huxtable as_hux set_contents insert_row set_align everywhere merge_cells
 #' @export
-#' @examples
-#' table1SexAge(incidence_estimates = ReportGenerator:::incidence_estimates_latest)
-table1SexAge <- function(incidence_estimates) {
+table1Inc <- function(incidence_estimates) {
 
     databaseNameInc <- unique(incidence_estimates$cdm_name)
 
@@ -265,41 +261,34 @@ table1SexAge <- function(incidence_estimates) {
       group_by(cdm_name,
                outcome_cohort_name,
                denominator_sex) %>%
-      summarise(`Total Users` = sum(n_persons))
+      summarise(`Number of Persons` = sum(n_persons))
 
-    totalParSex <- pivot_wider(totalParSex, names_from = denominator_sex, values_from = `Total Users`)
+    totalParSex <- pivot_wider(totalParSex, names_from = denominator_sex, values_from = `Number of Persons`)
 
     totalParAge <- incidence_estimates %>%
       filter(cdm_name == databaseNameInc) %>%
-      filter(denominator_sex != "Both") %>%
+      filter(denominator_sex == "Both") %>%
       select(cdm_name, outcome_cohort_name, denominator_age_group, n_persons) %>%
       group_by(cdm_name,
                outcome_cohort_name,
                denominator_age_group) %>%
-      summarise(`Total Users` = sum(n_persons))
+      summarise(`Number of Persons` = sum(n_persons))
 
-    totalParAge <- pivot_wider(totalParAge, names_from = denominator_age_group , values_from = `Total Users`)
+    totalParAge <- pivot_wider(totalParAge, names_from = denominator_age_group , values_from = `Number of Persons`)
     totalSexAge <- left_join(totalParSex, totalParAge, by = c("cdm_name", "outcome_cohort_name"))
-    huxSexAge <- as_hux(totalSexAge)
-    headerNames <- names(huxSexAge)
-    headerNames <- gsub("outcome_cohort_name", "Outcome", headerNames)
-    headerNames <- gsub(";", "-", headerNames)
 
-    lengthNames <- length(names(huxSexAge))
-
-    blankAgeGroup <- rep(" ", (lengthNames-3))
-
-    blankAgeGroup <- append(blankAgeGroup, list(x="Age Groups"), (length(blankAgeGroup)/2))
-
-    subtitlesHeader <- c("Database / Total Users, N", "Sex", unlist(blankAgeGroup))
-
-    huxSexAge <- huxSexAge %>%
-      set_contents(1, 1:lengthNames, headerNames)
-
-    huxSexAge <- huxSexAge %>% set_align(1, everywhere, "center")
-
-    return(huxSexAge)
-
+    table1Inc <- gt::gt(totalSexAge,
+                     rowname_col = "Outcome",
+                     groupname_col = "cdm_name") %>%
+      tab_spanner(
+        label = "Sex",
+        columns = c(Female, Male)
+      ) %>%
+      tab_spanner(
+        label = "Age Group",
+        columns = c(unique(incidence_estimates$denominator_age_group))
+      )
+    table1Inc
   }
 
 #' table2IncOver
