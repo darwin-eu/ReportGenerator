@@ -45,6 +45,8 @@ ReportGenerator provides two options for this object. The first is derived from 
 
 - ReportGenerator
 
+##### Option A – From attrition data
+
 ```{r, include = FALSE}
 prevalence_attrition <- prevalence_attrition_general
 incidence_attrition <- incidence_attrition_general
@@ -58,10 +60,10 @@ table1aAutText(incidence_attrition, prevalence_attrition)
 table1NumPar(prevalence_attrition, incidence_attrition)
 ```
 
-The second option describes the number of users by database, sex, age group, etc.
+##### Option B – Number of users by database, sex, age group (IN PROGRESS)
 
-```{r, message= FALSE, warning=FALSE }
-table1SexAge(incidence_estimates)
+```{r, echo=FALSE}
+knitr::include_graphics("Table1OptionB.png")
 ```
 
 ### Figure 1 Incidence over calendar time overall
