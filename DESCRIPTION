@@ -43,9 +43,6 @@ Imports:
     gto
 Suggests: 
     testthat,
-    DT,
-    quarto,
-    rmarkdown,
-    covr
+    rmarkdown
 Config/testthat/edition: 3
 URL: https://darwin-eu-dev.github.io/ReportGenerator/
