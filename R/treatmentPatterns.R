@@ -14,132 +14,154 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' `createSunburstPlot()` exports sunburst plot from a data frame
-#'
-#' @param data A data frame containing two columns: 1) column "path" should specify the
-#'     event cohorts separated by dashes - (combinations can be indicated using
-#'     &) and 2) column "freq" should specify how often that (unique) path
-#'     occurs.
-#' @param folder Root folder to store the results.
-#' @param fileName File name for the results.
-#' @importFrom utils write.table
-#'
-#' @export
-#'
-#' @return NULL
-#'
-#' @examples
-#' \dontrun{
-#' createSunburstPlot(
-#'   data = data.frame(
-#'     path = c("1", "2"),
-#'     freq = c("0.5", "0.5")))
-#' }
-createSunburstPlot <- function(data, folder, fileName) {
+createSankeyDiagram <- function(
+    treatmentPathways,
+    groupCombinations = FALSE,
+    minFreq = 5) {
+  data <- treatmentPathways %>%
+    rowwise() %>%
+    dplyr::mutate(path = stringr::str_split(.data$path, pattern = "-")) %>%
+    dplyr::mutate(freq = as.integer(.data$freq))
 
-  # Assertions
-  checkmate::assertDataFrame(x = data)
-  checkmate::checkSubset(x = names(data), choices = c("freq", "path"))
-  checkmate::assertCharacter(x = folder, null.ok = TRUE)
-  checkmate::assertCharacter(x = fileName, null.ok = TRUE)
-  outcomes <- unique(unlist(strsplit(
-    data$path,
-    split = "-", fixed = TRUE
-  )))
+  data <- data %>%
+    tidyr::unnest_wider(path, names_sep = "")
 
-  # Load CSV file and convert to JSON
-  json <- transformCSVtoJSON(
-    data = data,
-    outcomes = outcomes,
-    folder = folder,
-    fileName = unlist(stringr::str_split(string = fileName, "\\."))[2])
+  data <- data %>%
+    dplyr::group_by_at(grep("path", names(data))) %>%
+    dplyr::summarise(freq = sum(.data$freq), .groups = "drop")
 
-  # Load template HTML file
-  html <- paste(
-    readLines(
-      file.path(
-        system.file(package = "ReportGenerator"),
-        "TreatmentPatterns",
-        "sunburstPlot.html"
-      )
-    ),
-    collapse = "\n"
-  )
-
-  # Replace @insert_data
-  html <- sub("@insert_data", json, html)
-
-  # Save HTML file
-  writeLines(
-    text = html,
-    con = normalizePath(paste0(folder, fileName), mustWork = FALSE))
-}
-
-#' `outputSankeyDiagram()` generates the required Sankey Diagram
-#'
-#' @param data Dataframe with event cohorts of the target cohort in different columns.
-#' @param outputFolder Path to the output folder.
-#' @param groupCombinations Select to group all non-fixed combinations in one category "other" in the sunburst plot.
-#' @param fileName File name of the html-file to output.
-#'
-#' @import dplyr
-#' @importFrom googleVis gvisSankey
-#'
-#' @export
-#'
-#' @returns NULL
-#' @examples
-#' \dontrun{
-#' outputSankeyDiagram(
-#'     data = data
-#'     outputFolder = "~/output",
-#'     groupCombinations = "other",
-#'     fileName = "sankeyDiagram.html")
-#' }
-outputSankeyDiagram <- function(
-    data,
-    outputFolder,
-    groupCombinations,
-    fileName = "sankeyDiagram.html") {
-
-  # Group non-fixed combinations in one group according to groupCobinations
-  data <- groupInfrequentCombinations(data, groupCombinations)
-
-  # Define stop treatment
   data[is.na(data)] <- "Stopped"
 
-  # Sankey diagram for first three treatment layers
-  data$event_cohort_name1 <- paste0("1. ", data$event_cohort_name1)
-  data$event_cohort_name2 <- paste0("2. ", data$event_cohort_name2)
-  data$event_cohort_name3 <- paste0("3. ", data$event_cohort_name3)
+  result1 <- data %>%
+    mutate(
+      source = paste("1.", .data$path1),
+      target = paste("2.", .data$path2)
+    ) %>%
+    select("source", "target", "freq")
 
-  results1 <- data %>%
-    dplyr::group_by(event_cohort_name1, event_cohort_name2) %>%
-    dplyr::summarise(freq = sum(freq))
 
-  results2 <- data %>%
-    dplyr::group_by(event_cohort_name2, event_cohort_name3) %>%
-    dplyr::summarise(freq = sum(freq))
+  if (suppressWarnings(!is.null(data$path3))) {
+    result2 <- data %>%
+      mutate(
+        source = paste("2.", .data$path2),
+        target = paste("3.", .data$path3)
+      ) %>%
+      select("source", "target", "freq")
 
-  # Format in prep for sankey diagram
-  colnames(results1) <- c("source", "target", "value")
-  colnames(results2) <- c("source", "target", "value")
-  links <- as.data.frame(rbind(results1, results2))
+    links <- dplyr::bind_rows(
+      result1, result2
+    )
+  } else {
+    links <- result1
+  }
+
+  links <- links %>%
+    dplyr::filter(.data$freq >= minFreq) %>%
+    dplyr::mutate(`%` = round(freq / sum(freq) * 100, 2)) %>%
+    dplyr::select(-"freq")
+
+  if (groupCombinations) {
+    links$source <- stringr::str_replace_all(
+      string = links$source, "\\w+\\+\\w+", replacement = "Combination"
+    )
+    links$target <- stringr::str_replace_all(
+      string = links$target, "\\w+\\+\\w+", replacement = "Combination"
+    )
+  }
 
   # Draw sankey network
   plot <- googleVis::gvisSankey(
     links,
     from = "source",
     to = "target",
-    weight = "value",
+    weight = "%",
     chartid = 1,
     options = list(sankey = "{node: { colors: ['#B5482A'], width: 5}}")
   )
 
+  return(plot)
+
+  # message(sprintf("Writing Sankey diagram to %s", file.path(outputFile)))
+  # writeLines(
+  #   text = plot$html$chart,
+  #   con = file.path(outputFile)
+  # )
+  # return(invisible(NULL))
+}
+
+
+createSankeyDiagramHTML <- function(
+    treatmentPathways,
+    outputFile,
+    groupCombinations = FALSE,
+    minFreq = 5) {
+  data <- treatmentPathways %>%
+    rowwise() %>%
+    dplyr::mutate(path = stringr::str_split(.data$path, pattern = "-")) %>%
+    dplyr::mutate(freq = as.integer(.data$freq))
+
+  data <- data %>%
+    tidyr::unnest_wider(path, names_sep = "")
+
+  data <- data %>%
+    dplyr::group_by_at(grep("path", names(data))) %>%
+    dplyr::summarise(freq = sum(.data$freq), .groups = "drop")
+
+  data[is.na(data)] <- "Stopped"
+
+  result1 <- data %>%
+    mutate(
+      source = paste("1.", .data$path1),
+      target = paste("2.", .data$path2)
+    ) %>%
+    select("source", "target", "freq")
+
+
+  if (suppressWarnings(!is.null(data$path3))) {
+    result2 <- data %>%
+      mutate(
+        source = paste("2.", .data$path2),
+        target = paste("3.", .data$path3)
+      ) %>%
+      select("source", "target", "freq")
+
+    links <- dplyr::bind_rows(
+      result1, result2
+    )
+  } else {
+    links <- result1
+  }
+
+  links <- links %>%
+    dplyr::filter(.data$freq >= minFreq) %>%
+    dplyr::mutate(`%` = round(freq / sum(freq) * 100, 2)) %>%
+    dplyr::select(-"freq")
+
+  if (groupCombinations) {
+    links$source <- stringr::str_replace_all(
+      string = links$source, "\\w+\\+\\w+", replacement = "Combination"
+    )
+    links$target <- stringr::str_replace_all(
+      string = links$target, "\\w+\\+\\w+", replacement = "Combination"
+    )
+  }
+
+  # Draw sankey network
+  plot <- googleVis::gvisSankey(
+    links,
+    from = "source",
+    to = "target",
+    weight = "%",
+    chartid = 1,
+    options = list(sankey = "{node: { colors: ['#B5482A'], width: 5}}")
+  )
+
+  message(sprintf("Writing Sankey diagram to %s", file.path(outputFile)))
   writeLines(
     text = plot$html$chart,
-    con = normalizePath(paste0(outputFolder, fileName), mustWork = FALSE)
+    con = file.path(outputFile)
   )
+  return(invisible(NULL))
 }
 
 #' `saveAsFile()` saves an SVG-image from an html-file
@@ -198,213 +220,6 @@ createLegend <- function(inputJSON, fileName) {
   writeLines(
     text = html,
     con = fileName)
-}
-
-#' Finds the depth of a list element.
-#'
-#' @param x input list (element)
-#' @param thisdepth current list depth
-#'
-#' @return the depth of the list element
-depth <- function(x, thisdepth = 0) {
-  # Assertions
-  checkmate::assertTRUE(!is.null(x))
-  checkmate::assertNumeric(x = thisdepth, len = 1, lower = 0, null.ok = FALSE)
-
-  if (!is.list(x)) {
-    return(thisdepth)
-  } else {
-    return(max(unlist(
-      lapply(x, depth, thisdepth = thisdepth + 1)
-    )))
-  }
-}
-#' Removes the name from all levels of list.
-#'
-#' @param x input list
-#' @param name the name of the list item from which the names will be removed
-#'
-#' @return list with removed names
-stripname <- function(x, name) {
-  # Assertions
-  checkmate::assertTRUE(!is.null(x))
-  checkmate::assertCharacter(x = name, len = 1, null.ok = FALSE)
-
-  thisdepth <- depth(x)
-  if (thisdepth == 0) {
-    return(x)
-  } else if (length(nameIndex <- which(names(x) == name)) > 0) {
-    element <- names(x)[nameIndex]
-    x[[element]] <- unname(x[[element]])
-  }
-  return(lapply(x, stripname, name))
-}
-#' Creates a hierarchical data structure.
-#'
-#' @param csv
-#'     CSV
-#'
-#' @import stringr
-#' @importFrom rjson toJSON
-#'
-#' @returns JSON
-buildHierarchy <- function(csv) {
-  root <- list("name" = "root", "children" = list())
-
-  # Create nested structure of lists
-  for (i in 1:nrow(csv)) {
-    sequence <- csv[i, 1]
-    size <- csv[i, 2]
-
-    parts <- unlist(stringr::str_split(sequence, pattern = "-"))
-
-    currentNode <- root
-
-    for (j in 1:length(parts)) {
-      children <- currentNode[["children"]]
-      nodeName <- parts[j]
-
-      if (j < length(parts)) {
-        # Not yet at the end of the sequence; move down the tree
-        foundChild <- FALSE
-
-        if (length(children) != 0) {
-          for (k in 1:length(children)) {
-            if (children[[k]]$name == nodeName) {
-              childNode <- children[[k]]
-              foundChild <- TRUE
-              break
-            }
-          }
-        }
-
-        # If we dont already have a child node for this branch, create it
-        if (!foundChild) {
-          childNode <- list("name" = nodeName, "children" = list())
-          children[[nodeName]] <- childNode
-
-          # Add to main root
-          if (j == 1) {
-            root[["children"]] <- children
-          } else if (j == 2) {
-            root[["children"]][[parts[1]]][["children"]] <- children
-          } else if (j == 3) {
-            root[["children"]][[parts[1]]][["children"]][[parts[2]]][["children"]] <-
-              children
-          } else if (j == 4) {
-            root[["children"]][[parts[1]]][["children"]][[parts[2]]][["children"]][[parts[3]]][["children"]] <-
-              children
-          } else if (j == 5) {
-            root[["children"]][[parts[1]]][["children"]][[parts[2]]][["children"]][[parts[3]]][["children"]][[parts[4]]][["children"]] <-
-              children
-          }
-        }
-        currentNode <- childNode
-      } else {
-        # Reached the end of the sequence; create a leaf node
-        childNode <- list("name" = nodeName, "size" = size)
-        children[[nodeName]] <- childNode
-
-        # Add to main root
-        if (j == 1) {
-          root[["children"]] <- children
-        } else if (j == 2) {
-          root[["children"]][[parts[1]]][["children"]] <- children
-        } else if (j == 3) {
-          root[["children"]][[parts[1]]][["children"]][[parts[2]]][["children"]] <-
-            children
-        } else if (j == 4) {
-          root[["children"]][[parts[1]]][["children"]][[parts[2]]][["children"]][[parts[3]]][["children"]] <-
-            children
-        } else if (j == 5) {
-          root[["children"]][[parts[1]]][["children"]][[parts[2]]][["children"]][[parts[3]]][["children"]][[parts[4]]][["children"]] <-
-            children
-        }
-      }
-    }
-  }
-
-  # Remove list names
-  root <- suppressWarnings(stripname(root, "children"))
-
-  # Convert nested list structure to json
-  json <- rjson::toJSON(root)
-  return(json)
-}
-#' Transforms CSV into JSON for HTML
-#'
-#' @param data input data.frame
-#' @param outcomes character vector containing all event cohorts
-#' @param folder output folder
-#' @param fileName output file name
-#'
-#' @import stringr
-#' @importFrom stringi stri_replace_all_fixed
-#'
-#' @return the transformed csv as a json string
-transformCSVtoJSON <- function(data, outcomes, folder, fileName) {
-  # Assertions
-  checkmate::assertDataFrame(x = data)
-  checkmate::assertCharacter(x = outcomes, null.ok = FALSE)
-  #checkmate::assertDirectoryExists(x = folder)
-  checkmate::assertCharacter(x = fileName, len = 1, null.ok = FALSE)
-  # Add bitwise numbers to define combination treatments
-  bitwiseNumbers <- sapply(
-    X = seq_along(outcomes),
-    FUN = function(o) {
-      2 ^ (o - 1)
-    })
-
-  linking <- data.frame(outcomes, bitwiseNumbers)
-
-  # Generate lookup file
-  series <- sapply(
-    X = seq_len(nrow(linking)),
-    FUN = function(row) {
-      paste0(
-        '{ "key": "', linking$bitwiseNumbers[row],
-        '", "value": "', linking$outcomes[row], '"}')
-    })
-
-  series <- c(series, '{ "key": "End", "value": "End"}')
-  lookup <- paste0("[", paste(series, collapse = ","), "]")
-
-  # Order names from longest to shortest to adjust in the right order
-  linking <- linking[
-    order(-sapply(linking$outcomes, function(x) stringr::str_length(x))), ]
-
-  # Apply linking
-  # Change all outcomes to bitwise number
-  updated_path <- sapply(data$path, function(p) {
-    stringi::stri_replace_all_fixed(
-      p,
-      replacement = as.character(linking$bitwiseNumbers),
-      pattern = as.character(linking$outcomes),
-      vectorize = FALSE)
-  })
-
-  # Sum the bitwise numbers of combinations (indicated by +)
-  digitsPlusRegex <- "[[:digit:]]+[+][[:digit:]]+"
-  updated_path <- sapply(
-    X = updated_path,
-    FUN = function(p) {
-      while (!is.na(stringr::str_extract(p, digitsPlusRegex))) {
-        pattern <- stringr::str_extract(p, digitsPlusRegex)
-        p <- sub(digitsPlusRegex, eval(parse(text = pattern)), p)
-      }
-      return(p)
-    })
-
-  transformed_json <- buildHierarchy(cbind(oath = updated_path,
-                                           freq = data$freq))
-
-  result <- paste0(
-    "{ \"data\" : ", transformed_json, ", \"lookup\" : ", lookup, "}")
-
-  file <- paste0(folder, fileName)
-  writeLines(text = result, con = file)
-  # close(file)
-  return(result)
 }
 
 #' Help function to group combinations

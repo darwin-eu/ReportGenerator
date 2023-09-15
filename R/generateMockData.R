@@ -83,7 +83,7 @@ generateMockData <- function(databaseName = c("CHUBX",
                                         sex  = c("Female", "Male", "Both"),
                                         daysPriorHistory  = 365)
 
-    # %>% mutate(database_name = i)
+    # %>% mutate(cdm_name = i)
 
     # Incidence data
     incidence_estimates <- estimateIncidence(
@@ -130,10 +130,10 @@ generateMockData <- function(databaseName = c("CHUBX",
     prevalence_attrition <- rbind(prevalence_point_attrition, prevalence_period_attrition)
 
     # Add database label
-    incidence_estimates <- incidence_estimates %>% mutate(database_name = i)
-    incidence_attrition <- incidence_attrition %>% mutate(database_name = i)
-    prevalence_estimates <- prevalence_estimates %>% mutate(database_name = i)
-    prevalence_attrition <- prevalence_attrition %>% mutate(database_name = i)
+    incidence_estimates <- incidence_estimates %>% mutate(cdm_name = i)
+    incidence_attrition <- incidence_attrition %>% mutate(cdm_name = i)
+    prevalence_estimates <- prevalence_estimates %>% mutate(cdm_name = i)
+    prevalence_attrition <- prevalence_attrition %>% mutate(cdm_name = i)
 
     class(incidence_attrition) <- c("IncidencePrevalenceResult",
                                     "IncidenceResult",

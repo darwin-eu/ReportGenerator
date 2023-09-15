@@ -35,9 +35,12 @@ Imports:
     zip,
     glue,
     yaml,
-    waldo,    
+    waldo,
     googleVis,
-    gtools
+    gtools,
+    ggplot2,
+    gtsummary,
+    gto
 Suggests: 
     testthat,
     DT,

@@ -4,13 +4,13 @@ tableNumParFilters <- function(uploadedFiles) {
       column(4,
              selectInput(inputId = "analysisIdTable1",
                          label = "Analysis ID",
-                         choices = unique(uploadedFiles$data$incidence_attrition$analysis_id))
+                         choices = unique(uploadedFiles$dataIP$incidence_attrition$analysis_id))
       ),
       column(8,
              textAreaInput("captionTable1",
                            "Caption",
-                           table1aAutText(uploadedFiles$data$incidence_attrition,
-                                          uploadedFiles$data$prevalence_attrition),
+                           table1aAutText(uploadedFiles$dataIP$incidence_attrition,
+                                          uploadedFiles$dataIP$prevalence_attrition),
                            height = "130px")
       )
     ),
@@ -26,20 +26,20 @@ tableNumParFilters <- function(uploadedFiles) {
 
 tableSexFilters <- function(uploadedFiles) {
   tagList(
-    fluidRow(
-      column(4,
-             selectInput(inputId = "analysisIdTable1",
-                         label = "Analysis ID",
-                         choices = unique(uploadedFiles$data$incidence_attrition$analysis_id))
-      ),
-      column(8,
-             textAreaInput("captionTable1",
-                           "Caption",
-                           table1aAutText(uploadedFiles$data$incidence_attrition,
-                                          uploadedFiles$data$prevalence_attrition),
-                           height = "130px")
-      )
-    ),
+    # fluidRow(
+    #   column(4,
+    #          selectInput(inputId = "analysisIdTable1",
+    #                      label = "Analysis ID",
+    #                      choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_id))
+    #   ),
+    #   column(8,
+    #          textAreaInput("captionTable1",
+    #                        "Caption",
+    #                        table1aAutText(uploadedFiles$dataIP$incidence_estimates,
+    #                                       uploadedFiles$dataIP$prevalence_estimates),
+    #                        height = "130px")
+    #   )
+    # ),
     fluidRow(
       column(4,
              checkboxInput(inputId = "lockTableSex",

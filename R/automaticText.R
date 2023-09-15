@@ -12,21 +12,21 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 
   tablePrevalenceAttTotal <- prevalence_attrition %>%
     filter(reason == "Starting population") %>%
-    group_by(database_name,
+    group_by(cdm_name,
              reason) %>%
     summarise(current_n = unique(number_records)) %>%
     arrange(desc(current_n))
 
   tablePrevalenceAttFem <- prevalence_attrition %>%
     filter(reason == "Not Male") %>%
-    group_by(database_name,
+    group_by(cdm_name,
              reason) %>%
     summarise(current_n = unique(number_records)) %>%
     arrange(desc(current_n))
 
   tablePrevNotObs <- prevalence_attrition %>%
     filter(reason == "Not observed during the complete database interval") %>%
-    group_by(database_name,
+    group_by(cdm_name,
              reason) %>%
     summarise(excluded = sum(excluded_subjects)) %>%
     arrange(desc(excluded))
@@ -35,12 +35,12 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
   totalParticipantsChar <- format(sum(tablePrevalenceAttTotal$current_n), big.mark=",", scientific = FALSE)
   minParticipants <- tablePrevalenceAttTotal$current_n[which.min(tablePrevalenceAttTotal$current_n)]
   minParticipantsChar <- format(tablePrevalenceAttTotal$current_n[which.min(tablePrevalenceAttTotal$current_n)], big.mark=",", scientific = FALSE)
-  databaseNameMin <- tablePrevalenceAttTotal$database_name[which.min(tablePrevalenceAttTotal$current_n)]
+  databaseNameMin <- tablePrevalenceAttTotal$cdm_name[which.min(tablePrevalenceAttTotal$current_n)]
   maxParticipantsChar <- format(tablePrevalenceAttTotal$current_n[which.max(tablePrevalenceAttTotal$current_n)], big.mark=",", scientific = FALSE)
   maxParticipants <- tablePrevalenceAttTotal$current_n[which.max(tablePrevalenceAttTotal$current_n)]
-  databaseNameMax <- tablePrevalenceAttTotal$database_name[which.max(tablePrevalenceAttTotal$current_n)]
-  minFemales <- tablePrevalenceAttFem  %>% filter(database_name == databaseNameMin) %>% pull(current_n)
-  maxFemales <- tablePrevalenceAttFem  %>% filter(database_name == databaseNameMax) %>% pull(current_n)
+  databaseNameMax <- tablePrevalenceAttTotal$cdm_name[which.max(tablePrevalenceAttTotal$current_n)]
+  minFemales <- tablePrevalenceAttFem  %>% filter(cdm_name == databaseNameMin) %>% pull(current_n)
+  maxFemales <- tablePrevalenceAttFem  %>% filter(cdm_name == databaseNameMax) %>% pull(current_n)
   minFemaleProp <- (minFemales / as.numeric(minParticipants))
   maxFemaleProp <- (maxFemales / as.numeric(maxParticipants))
   minFemaleProp <- label_percent(accuracy = 0.01)(minFemaleProp)
@@ -49,19 +49,19 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
   numberDatabaseChar <- phraseList(initialPhrase = " of which ",
                                    adjective = "",
                                    totalParticipants,
-                                   databaseName = tablePrevalenceAttTotal$database_name,
+                                   databaseName = tablePrevalenceAttTotal$cdm_name,
                                    individuals = tablePrevalenceAttTotal$current_n)
 
   femPropChar <- phraseList(initialPhrase = " From those, ",
                             adjective = "female",
                             totalParticipants,
-                            databaseName = tablePrevalenceAttFem$database_name,
+                            databaseName = tablePrevalenceAttFem$cdm_name,
                             individuals = tablePrevalenceAttFem$current_n)
 
   excludedRec <- phraseList(initialPhrase = " A further ",
                             adjective = "excluded due to not having been observed for the complete database interval ",
                             totalParticipants,
-                            databaseName = tablePrevNotObs$database_name,
+                            databaseName = tablePrevNotObs$cdm_name,
                             individuals = tablePrevNotObs$excluded)
 
 
