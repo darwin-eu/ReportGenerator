@@ -27,12 +27,6 @@
 #' @importFrom zip zip
 #' @return csv files
 #' @export
-#' @examples
-#' \dontrun{
-#' generateMockData <- function(databaseName = c("CHUBX"),
-#'                              simulatePopulation = TRUE,
-#'                              outputDir = getwd())
-#' }
 generateMockData <- function(databaseName = c("CHUBX",
                                               "CPRD GOLD",
                                               "IMASIS",

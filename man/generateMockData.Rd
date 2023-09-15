@@ -23,10 +23,3 @@ csv files
 \description{
 `generateMockData()` uses [IncidencePrevalence::mockIncidencePrevalenceRef()] function to create csv files to test ReportGenerator.
 }
-\examples{
-\dontrun{
-generateMockData <- function(databaseName = c("CHUBX"),
-                             simulatePopulation = TRUE,
-                             outputDir = getwd())
-}
-}

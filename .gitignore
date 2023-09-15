@@ -35,3 +35,5 @@ prevalence_estimates_ab.rda
 publish/
 .rscignore
 app.R
+docs/
+docs
