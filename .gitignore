@@ -36,3 +36,4 @@ publish/
 .rscignore
 app.R
 docs/
+docs
