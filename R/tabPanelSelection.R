@@ -2,7 +2,7 @@ tabPanelSelection <- function(selection, uploadedFiles, menuFun) {
   if (selection == "Table - Number of participants") {
     tabPanel(selection, tableNumParFilters(uploadedFiles), tableOutput("previewTable1"))
   } else if (selection == "Table - Number of participants by sex and age group") {
-    tabPanel(selection, tableSexFilters(uploadedFiles), tableOutput("previewTableSex"))
+    tabPanel(selection, tableSexFilters(uploadedFiles), gt_output("previewTableSex"))
   } else if (selection == "Plot - Incidence rate per year") {
     tabPanel(selection, incPlotByYearFilters(uploadedFiles, menuFun, selection), plotOutput("previewFigure1"))
   } else if (selection == "Plot - Incidence rate per year by sex") {

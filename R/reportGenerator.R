@@ -24,9 +24,10 @@
 #' @importFrom utils read.csv tail unzip
 #' @importFrom gtools mixedsort
 #' @importFrom ggplot2 ggsave
+#' @importFrom gto body_add_gt
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' reportGenerator()
 #' }
 reportGenerator <- function() {
@@ -263,8 +264,9 @@ reportGenerator <- function() {
 
     # Table 2
 
-    output$previewTableSex <- renderTable({
+    output$previewTableSex <- render_gt({
       objectChoice <- "Table - Number of participants by sex and age group"
+      incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       # Lock data
       if (input$lockTableSex == TRUE) {
         dataReport[[objectChoice]][["incidence_estimates"]] <- uploadedFiles$dataIP$incidence_estimates
@@ -276,7 +278,7 @@ reportGenerator <- function() {
                              dplyr::filter(title == objectChoice) %>%
                              dplyr::pull(signature)))
       object
-    }, colnames = FALSE)
+    })
 
     # Figure 1
 
@@ -1032,11 +1034,13 @@ reportGenerator <- function() {
           }
         }
         object <- eval(parse(text = expression), envir = dataReport[[i]])
-        if ("flextable" %in% class(object)) {
-          body_add_flextable(incidencePrevalenceDocx, value = object)
+        if ("gt_tbl" %in% class(object)) {
+          body_end_section_landscape(incidencePrevalenceDocx)
+          body_add_gt(incidencePrevalenceDocx, value = object)
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
+          body_end_section_portrait(incidencePrevalenceDocx)
         } else if ("ggplot" %in% class(object)) {
           body_end_section_landscape(incidencePrevalenceDocx)
           body_add_gg(x = incidencePrevalenceDocx,

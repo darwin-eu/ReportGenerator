@@ -297,3 +297,34 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
     return(incidence_attrition)
   }
 }
+
+#' `testData()` extracts data from zip results and saves it in .rda format
+#'
+#' @param fileDataPath A path to the zip file, in character
+#'
+#' @return sysdata.rda instruction
+testData <- function() {
+  # List
+  uploadedFiles <- list.files(system.file("extdata", "examples", "0.4.1", "zip",
+                                          package = "ReportGenerator"),
+                              pattern = ".zip",
+                              full.names = TRUE)
+
+  csvLocation <- file.path(tempdir(), "varDataLocation")
+  dir.create(csvLocation)
+
+  # Extract
+  testData <- joinDatabase(uploadedFiles = uploadedFiles, csvLocation = csvLocation)
+
+  # Assign
+  incidence_attrition_test <- testData$incidence_attrition
+  incidence_estimates_test <- testData$incidence_estimates
+  prevalence_attrition_test <- testData$prevalence_attrition
+  prevalence_estimates_test <- testData$prevalence_estimates
+
+  # Save
+  usethis::use_data(incidence_attrition_test, prevalence_attrition_test,
+                    incidence_estimates_test, prevalence_estimates_test,
+                    internal = TRUE)
+  unlink(csvLocation, recursive = TRUE)
+}
