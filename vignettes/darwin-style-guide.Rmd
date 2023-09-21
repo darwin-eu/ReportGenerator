@@ -63,7 +63,7 @@ table1NumPar(prevalence_attrition, incidence_attrition)
 
 ##### Option B – Number of users by database, sex, age group (IN PROGRESS)
 
-```{r, echo=FALSE}
+```{r, message= FALSE, warning=FALSE}
 table1Inc(incidence_estimates)
 
 ```
