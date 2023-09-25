@@ -809,7 +809,7 @@ reportGenerator <- function() {
       prevalence_estimates <- prevalence_estimates %>%
         filter(analysis_type == input$typePrevalenceAge)
       # Lock data
-      if (input$lockDataPrevalenceSex == TRUE) {
+      if (input$lockDataPrevalenceAge == TRUE) {
         dataReport[[objectChoice]][["prevalence_estimates"]] <- prevalence_estimates
         dataReport[[objectChoice]][["plotOption"]] <- input$facetPrevalenceAge
       } else {
