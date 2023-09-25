@@ -43,7 +43,8 @@ Imports:
     gt,
     DT,
     TreatmentPatterns,
-    usethis
+    usethis,
+    shinytest
 Suggests: 
     testthat,
     rmarkdown
