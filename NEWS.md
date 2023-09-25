@@ -1,3 +1,5 @@
+# ReportGenerator 1.12.0
+
 # ReportGenerator 1.11.0
 
 * CRAN release test.
