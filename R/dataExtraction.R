@@ -30,7 +30,7 @@
 variablesConfigYaml <- function(fileDataPath = NULL,
                                 package = "IncidencePrevalence",
                                 version = NULL) {
-  # fileDataPath <- "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/inst/extdata/examples/0.4.1/zip/mock_data_ReportGenerator_SIDIAP.zip"
+  # fileDataPath <- "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/PAH/IPCI_P2_C1_003_20230926.zip"
   if (package == "IncidencePrevalence") {
     csvLocation <- file.path(tempdir(), "varDataLocation")
     utils::unzip(zipfile = fileDataPath,
@@ -307,13 +307,16 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
 #' @return sysdata.rda instruction
 testData <- function(internal = TRUE) {
   # List
-  uploadedFiles <- list.files(system.file("extdata", "examples", "IncidencePrevalence", "0.4.1", "zip",
+  uploadedFiles <- list.files(system.file("extdata", "examples", "IncPrev", "zip",
                                           package = "ReportGenerator"),
                               pattern = ".zip",
                               full.names = TRUE)
 
+  treatmentPathways_test <- read_csv(system.file("extdata", "examples",
+                                                 "TrePat", "csv", "treatmentPathways.csv",
+                                                 package = "ReportGenerator"))
   checkmate::assertCharacter(uploadedFiles)
-
+  checkmate::assertTibble(treatmentPathways_test)
   csvLocation <- file.path(tempdir(), "varDataLocation")
   dir.create(csvLocation)
 
@@ -330,14 +333,15 @@ testData <- function(internal = TRUE) {
   # Save
   usethis::use_data(incidence_attrition_test, prevalence_attrition_test,
                     incidence_estimates_test, prevalence_estimates_test,
-                    internal = TRUE)
+                    treatmentPathways_test,
+                    internal = TRUE,
+                    overwrite = TRUE)
   unlink(csvLocation, recursive = TRUE)
   } else {
-
     saveRDS(incidence_attrition_test, file = file.path(system.file("vignettes", package  = "ReportGenerator"), "incidence_attrition.rds"))
     saveRDS(incidence_estimates_test, file = file.path(system.file("vignettes", package  = "ReportGenerator"), "incidence_estimates.rds"))
     saveRDS(prevalence_attrition_test, file = file.path(system.file("vignettes", package  = "ReportGenerator"), "prevalence_attrition.rds"))
     saveRDS(prevalence_estimates_test, file = file.path(system.file("vignettes", package  = "ReportGenerator"), "prevalence_estimates.rds"))
-
+    saveRDS(treatmentPathways_test, file = file.path(system.file("vignettes", package  = "ReportGenerator"), "treatmentPathways.rds"))
   }
 }

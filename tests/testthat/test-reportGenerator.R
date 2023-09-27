@@ -50,7 +50,7 @@ test_that("previewTable1() TRUE", {
   })
 })
 
-test_that("previewTableSex() TRUE", {
+test_that("previewTableSex() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
@@ -60,12 +60,12 @@ test_that("previewTableSex() TRUE", {
   })
 })
 
-test_that("previewTableSex() FALSE", {
+test_that("previewTableSex() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
     menuFun()
-    session$setInputs(lockTableSex = FALSE)
+    session$setInputs(lockTableSex = TRUE)
     expect_equal(class(output$previewTableSex), "list")
   })
 })
@@ -291,7 +291,7 @@ test_that("prevalenceFigure6() FALSE", {
   })
 })
 
-test_that("prevalenceFigure6() FALSE", {
+test_that("prevalenceFigure6() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
@@ -309,5 +309,31 @@ test_that("prevalenceFigure6() FALSE", {
     expect_class(prevalenceFigure6(), "ggplot")
   })
 })
+
+test_that("previewOutburstPlot renderUI FALSE", {
+  testServer(reportGenerator(), {
+    uploadedFiles <- list()
+    uploadedFiles[["dataTP"]][["treatmentPathways"]] <- treatmentPathways_test
+    dataReport <- list()
+    menuFun()
+    session$setInputs(lockTreatmentOutburst = FALSE)
+
+  #   objectChoice <- "Sunburst Plot - TreatmentPatterns"
+  #   outputDirOutburst <- file.path(tempdir(), "outputDirOutburst")
+  #   dir.create(outputDirOutburst)
+  # 	outputFile <- file.path(outputDirOutburst, "outburstDiagram.html")
+  #   uploadedFiles[["dataTP"]][["outputFile"]] <- outputFile
+  #   uploadedFiles[["dataTP"]][["returnHTML"]] <- TRUE
+  #   object <- eval(parse(text = menuFun %>%
+  #                          dplyr::filter(title == objectChoice) %>%
+  #                          dplyr::pull(signature)), envir = uploadedFiles[["dataTP"]])
+  #   sunburst <- object$sunburst
+  #   sunburstPlot <- HTML(sunburst)
+
+    # print(output$previewOutburstPlot)
+    expect_error(output$previewOutburstPlot, "object 'treatmentPathways' not found")
+  })
+})
+
 
 
