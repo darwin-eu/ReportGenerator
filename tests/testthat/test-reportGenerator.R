@@ -310,30 +310,24 @@ test_that("prevalenceFigure6() TRUE", {
   })
 })
 
-test_that("previewOutburstPlot renderUI FALSE", {
+test_that("previewSunburstPlot renderUI", {
   testServer(reportGenerator(), {
-    uploadedFiles <- list()
-    uploadedFiles[["dataTP"]][["treatmentPathways"]] <- treatmentPathways_test
-    dataReport <- list()
-    menuFun()
-    session$setInputs(lockTreatmentOutburst = FALSE)
-
-  #   objectChoice <- "Sunburst Plot - TreatmentPatterns"
-  #   outputDirOutburst <- file.path(tempdir(), "outputDirOutburst")
-  #   dir.create(outputDirOutburst)
-  # 	outputFile <- file.path(outputDirOutburst, "outburstDiagram.html")
-  #   uploadedFiles[["dataTP"]][["outputFile"]] <- outputFile
-  #   uploadedFiles[["dataTP"]][["returnHTML"]] <- TRUE
-  #   object <- eval(parse(text = menuFun %>%
-  #                          dplyr::filter(title == objectChoice) %>%
-  #                          dplyr::pull(signature)), envir = uploadedFiles[["dataTP"]])
-  #   sunburst <- object$sunburst
-  #   sunburstPlot <- HTML(sunburst)
-
-    # print(output$previewOutburstPlot)
-    expect_error(output$previewOutburstPlot, "object 'treatmentPathways' not found")
+    uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
+    expect_class(output$previewSunburstPlot, "list")
+    expect_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
   })
 })
+
+# test_that("previewSunburstPlot reportData", {
+#   testServer(reportGenerator(), {
+#     uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
+#     session$setInputs(lockTreatmentSunburst = TRUE)
+#     print(dataReport()$objectChoice$sunburstDiagramImage)
+#     # expect_class(dataReport$objectChoice$sunburstDiagramImage, "character")
+#   })
+# })
+
+
 
 
 
