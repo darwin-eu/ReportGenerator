@@ -846,6 +846,7 @@ reportGenerator <- function() {
     output$previewSunburstPlot <- renderImage({
       objectChoice <- "Sunburst Plot - TreatmentPatterns"
       outputDirSunburst <- file.path(tempdir(), "outputDirSunburst")
+      dir.create(outputDirSunburst, showWarnings = FALSE)
       outputFile <- file.path(outputDirSunburst, "outburstDiagram.html")
       uploadedFiles[["dataTP"]][["outputFile"]] <- outputFile
       uploadedFiles[["dataTP"]][["returnHTML"]] <- TRUE
@@ -867,6 +868,7 @@ reportGenerator <- function() {
       if (input$lockTreatmentSunburst == TRUE) {
         outputDirSunburst <- file.path(tempdir(), "outputDirSunburst")
         outputFile <- file.path(outputDirSunburst, "sunburstDiagram.html")
+        dir.create(outputDirSunburst, showWarnings = FALSE)
         dataReport[[objectChoice]][["treatmentPathways"]] <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
         dataReport[[objectChoice]][["returnHTML"]] <- FALSE
         dataReport[[objectChoice]][["outputFile"]] <- outputFile
