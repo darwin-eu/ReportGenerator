@@ -156,6 +156,31 @@ reportGenerator <- function() {
           uploadedFiles$dataTP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
           items <- names(uploadedFiles$dataTP)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
+        } else if (grepl(".zip", fileDataPath, fixed = TRUE)) {
+          # fileDataPath <- "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/inst/extdata/examples/TrePat/zip/CHUBX_results.zip"
+          csvLocation <- normalizePath(file.path(tempdir(), "dataLocation"))
+          dir.create(csvLocation)
+          uploadedFiles$dataTP <- joinDatabase(fileDataPath,
+                                               csvLocation,
+                                               versionData = versionData,
+                                               package = "TreatmentPatterns")
+          items <- names(uploadedFiles$dataTP)
+          itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
+          unlink(csvLocation, recursive = TRUE)
+        }
+      } else if (length(fileDataPath) > 1) {
+        if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
+          itemsList$objects[["items"]] <- NULL
+          # fileDataPath <- list.files(system.file("extdata", "examples", "TrePat", "zip", package = "ReportGenerator"), pattern = ".zip", full.names = TRUE)
+          csvLocation <- normalizePath(file.path(tempdir(), "dataLocation"))
+          dir.create(csvLocation)
+          uploadedFiles$dataTP <- joinDatabase(fileDataPath,
+                                               csvLocation,
+                                               versionData = versionData,
+                                               package = "TreatmentPatterns")
+          items <- names(uploadedFiles$dataTP)
+          itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
+          unlink(csvLocation, recursive = TRUE)
         }
       }
     })
@@ -846,7 +871,8 @@ reportGenerator <- function() {
     treatmentDataSunburst <- reactive({
       treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
       treatmentPathways %>%
-        filter(sex == input$sexSunburst,
+        filter(cdmName == input$cdmSunburst,
+               sex == input$sexSunburst,
                age == input$ageSunburst,
                indexYear == input$indexSunburst)
     })
@@ -854,7 +880,8 @@ reportGenerator <- function() {
     treatmentDataSankey <- reactive({
       treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
       treatmentPathways %>%
-        filter(sex == input$sexSankey,
+        filter(cdmName == input$cdmSankey,
+               sex == input$sexSankey,
                age == input$ageSankey,
                indexYear == input$indexSankey)
     })

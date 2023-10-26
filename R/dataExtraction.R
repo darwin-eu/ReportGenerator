@@ -104,55 +104,47 @@ joinDatabase <- function(uploadedFiles = NULL,
                          csvLocation,
                          package = "IncidencePrevalence",
                          versionData = "0.4.1") {
-  # csvLocation <- file.path(tempdir(), "dataLocation")
-  # dir.create(csvLocation)
-  #
-  # uploadedFiles <- c("D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/CDWBordeaux_IncidencePrevalenceResults.zip",
-  #                    "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/IPCI_IncidencePrevalenceResults.zip",
-  #                    "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/SIDIAP_IncidencePrevalenceResults.zip")
-  #
-  # package <- "IncidencePrevalence"
-  # versionData <- "0.4.1"
 
-  configData <- yaml.load_file(system.file("config",
-                                           "variablesConfig.yaml",
-                                           package = "ReportGenerator"))
-  configData <- configData[[package]][[versionData]]
-  configDataTypes <- names(configData)
-  data <- list()
-  if (grepl(".zip",
-            uploadedFiles[1],
-            fixed = TRUE)) {
-    folderNumber <- 0
-    for (fileLocation in uploadedFiles) {
-      folderNumber <- folderNumber + 1
-      unzip(zipfile = fileLocation,
-            exdir = paste0(csvLocation, "/", "database", as.character(folderNumber)))
-    }
-    databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
-    for (filesList in databaseFolders) {
-      # filesList <- databaseFolders[1]
-      filesLocation <- list.files(filesList,
-                                  pattern = ".csv",
-                                  full.names = TRUE,
-                                  recursive = TRUE)
-      for (file in filesLocation) {
-        # file <- filesLocation[1]
-        resultsData <- read_csv(file, show_col_types = FALSE)
-        resultsColumns <- names(resultsData)
-        for (val in configDataTypes) {
-          # val <- "incidence_estimates"
-          configColumns <- configData[[val]]
-          configColumns <- unlist(configColumns$names)
-          if (length(configColumns) == length(resultsColumns)) {
-            if (identical(configColumns, resultsColumns)) {
-              message(paste0(val, ": match yes"))
-              data[[val]] <- bind_rows(data[[val]], resultsData)
+  if (package == "IncidencePrevalence") {
+    configData <- yaml.load_file(system.file("config",
+                                             "variablesConfig.yaml",
+                                             package = "ReportGenerator"))
+    configData <- configData[[package]][[versionData]]
+    configDataTypes <- names(configData)
+    data <- list()
+    if (grepl(".zip",
+              uploadedFiles[1],
+              fixed = TRUE)) {
+      folderNumber <- 0
+      for (fileLocation in uploadedFiles) {
+        folderNumber <- folderNumber + 1
+        unzip(zipfile = fileLocation,
+              exdir = paste0(csvLocation, "/", "database", as.character(folderNumber)))
+      }
+      databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
+      for (filesList in databaseFolders) {
+        # filesList <- databaseFolders[1]
+        filesLocation <- list.files(filesList,
+                                    pattern = ".csv",
+                                    full.names = TRUE,
+                                    recursive = TRUE)
+        for (file in filesLocation) {
+          # file <- filesLocation[1]
+          resultsData <- read_csv(file, show_col_types = FALSE)
+          resultsColumns <- names(resultsData)
+          for (val in configDataTypes) {
+            # val <- "incidence_estimates"
+            configColumns <- configData[[val]]
+            configColumns <- unlist(configColumns$names)
+            if (length(configColumns) == length(resultsColumns)) {
+              if (identical(configColumns, resultsColumns)) {
+                message(paste0(val, ": match yes"))
+                data[[val]] <- bind_rows(data[[val]], resultsData)
+                }
               }
-            }
+          }
         }
-      }
-      }
+        }
 
   } else if (grepl(".csv",
                    uploadedFiles[1],
@@ -181,9 +173,36 @@ joinDatabase <- function(uploadedFiles = NULL,
       }
     }
   }
-
   return(data)
-}
+  } else if (package == "TreatmentPatterns") {
+    configData <- yaml.load_file(system.file("config",
+                                             "variablesConfig.yaml",
+                                             package = "ReportGenerator"))
+    configData <- configData[[package]][[versionData]]
+    configDataTypes <- names(configData)
+    treatmentPathways <- list()
+    if (grepl(".zip", uploadedFiles[1], fixed = TRUE)) {
+      for (i in 1:length(uploadedFiles)) {
+        csvLocation <- normalizePath(csvLocation)
+        unzip(zipfile = uploadedFiles[i],
+              exdir = normalizePath(paste0(csvLocation, "/", "database", i)))
+        }
+      databaseFolders <- normalizePath(dir(csvLocation, pattern = "database", full.names = TRUE))
+      for (i in 1:length(databaseFolders)) {
+          # database <- databaseFolders[1]
+          files <- list.files(databaseFolders[i],
+                             full.names = TRUE,
+                             recursive = TRUE)
+          metadata <- read_csv(files[stringr::str_detect(files, "metadata.csv")], show_col_types = FALSE)
+          databaseName <- metadata$cdmSourceAbbreviation
+          treatmentPathways[["treatmentPathways"]][[databaseName]] <- read_csv(files[stringr::str_detect(files, "treatmentPathways.csv")], show_col_types = FALSE) %>%
+            mutate(cdmName = databaseName)
+          }
+    }
+    treatmentPathways[["treatmentPathways"]] <- bind_rows(treatmentPathways[["treatmentPathways"]])
+    return(treatmentPathways)
+    }
+  }
 
 columnCheck <- function(csvFiles,
                         configData,

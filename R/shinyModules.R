@@ -15,8 +15,8 @@ datasetLoadServer <- function(id) {
     } else if (id == "TreatmentPatterns") {
       datasetLoad <- "datasetLoadTP"
       inputId <- "dataVersionTP"
-      accept <- c(".csv")
-      placeholder <- "CSV"
+      accept <- c(".zip", ".csv")
+      placeholder <- "ZIP or CSV"
     }
     output$datasetLoad <- renderUI({
       tagList(tags$div(tags$h4("Load results"), class = "form-group shiny-input-container"),

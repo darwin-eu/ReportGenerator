@@ -2,7 +2,6 @@ test_that("TreatmentPatterns data extraction", {
   fileDataPath <- list.files(system.file("extdata",
                                          "examples",
                                          "TrePat",
-                                         "2.5.0",
                                          "csv",
                                          package = "ReportGenerator"),
                              pattern = "csv",
@@ -20,7 +19,25 @@ test_that("TreatmentPatterns data extraction", {
   expect_type(configData, "list")
 })
 
-test_that("loading zip files", {
+test_that("loading zip files TratmentPatterns", {
+  uploadedFiles <- list.files(system.file("extdata",
+                                         "examples",
+                                         "TrePat",
+                                         "zip",
+                                         package = "ReportGenerator"),
+                             pattern = ".zip",
+                             full.names = TRUE)
+  csvLocation <- normalizePath(file.path(tempdir(), "testLocation"))
+  joinedZipFiles <- joinDatabase(uploadedFiles = uploadedFiles,
+                                 csvLocation = csvLocation,
+                                 package = "TreatmentPatterns",
+                                 versionData = "2.5.0")
+  unlink(csvLocation, recursive = TRUE)
+  expect_equal(length(joinedZipFiles), 6)
+  expect_s3_class(joinedZipFiles, "tbl_df")
+})
+
+test_that("loading zip files IncPrev", {
   fileDataPath <- list.files(system.file("extdata",
                                          "examples",
                                          "IncPrev",
@@ -41,7 +58,7 @@ test_that("loading zip files", {
   expect_type(configData, "list")
 })
 
-test_that("loading zip files", {
+test_that("loading zip files IncPrev", {
   uploadedFiles <- list.files(system.file("extdata",
                                           "examples",
                                           "IncPrev",

@@ -2,6 +2,13 @@ sankeyDiagramFilters <- function(uploadedFiles) {
   tagList(
     fluidRow(
       pickerInput(
+        inputId = "cdmSankey",
+        label = "CDM",
+        choices = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdmName),
+        selected = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdmName)[1],
+        multiple = FALSE
+      ),
+      pickerInput(
         inputId = "sexSankey",
         label = "Sex",
         choices = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$sex),
@@ -39,6 +46,13 @@ sankeyDiagramFilters <- function(uploadedFiles) {
 sunburstDiagramFilters <- function(uploadedFiles) {
   tagList(
     fluidRow(
+      pickerInput(
+        inputId = "cdmSunburst",
+        label = "CDM",
+        choices = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdmName),
+        selected = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdmName)[1],
+        multiple = FALSE
+      ),
       pickerInput(
         inputId = "sexSunburst",
         label = "Sex",
