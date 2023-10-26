@@ -843,11 +843,48 @@ reportGenerator <- function() {
 
     # SunburstPlot
 
+    treatmentDataSunburst <- reactive({
+      treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+      treatmentPathways %>%
+        filter(sex == input$sexSunburst,
+               age == input$ageSunburst,
+               indexYear == input$indexSunburst)
+    })
+
+    treatmentDataSankey <- reactive({
+      treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+      treatmentPathways %>%
+        filter(sex == input$sexSankey,
+               age == input$ageSankey,
+               indexYear == input$indexSankey)
+    })
+
     output$previewSunburstPlot <- renderUI({
       objectChoice <- "Sunburst Plot - TreatmentPatterns"
-      treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+      treatmentPathways <- treatmentDataSunburst()
       createSunburstPlot2(treatmentPathways, groupCombinations = FALSE)
     })
+
+    output$downloadSunburst <- downloadHandler(
+      filename = function() {
+        paste("SunburstDiagram", ".png", sep = "")
+      },
+      content = function(file) {
+        sunburstHTML <- here::here("sunburstDiagram.html")
+        TreatmentPatterns::createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
+                                              outputFile = sunburstHTML,
+                                              returnHTML = FALSE)
+        sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
+        print(sunburstPNG)
+        webshot2::webshot(
+          url = sunburstHTML,
+          file = sunburstPNG,
+          vwidth = 1200,
+          vheight = 10)
+        sunburstPath <- normalizePath(sunburstPNG)
+        file.copy(sunburstPath, file)
+      }
+    )
 
     observeEvent(input$lockTreatmentSunburst, {
       objectChoice <- "Sunburst Plot - TreatmentPatterns"
@@ -855,10 +892,10 @@ reportGenerator <- function() {
         outputDirSunburst <- file.path(tempdir(), "outputDirSunburst")
         outputFile <- file.path(outputDirSunburst, "sunburstDiagram.html")
         dir.create(outputDirSunburst, showWarnings = FALSE)
-        dataReport[[objectChoice]][["treatmentPathways"]] <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+        dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSunburst()
         dataReport[[objectChoice]][["returnHTML"]] <- FALSE
         dataReport[[objectChoice]][["outputFile"]] <- outputFile
-        TreatmentPatterns::createSunburstPlot(treatmentPathways = uploadedFiles[["dataTP"]][["treatmentPathways"]],
+        TreatmentPatterns::createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
                                               outputFile = outputFile,
                                               returnHTML = FALSE)
         fileNameOut <- file.path(outputDirSunburst, "sunburstDiagram.png")
@@ -871,13 +908,14 @@ reportGenerator <- function() {
       }
     })
 
-    # SunburstPlot
+    # Sankey
 
     output$previewSankeyDiagram <- renderGvis({
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
       outputDirSankey <- file.path(tempdir(), "outputDirSankey")
       dir.create(outputDirSankey)
       outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
+      dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSankey()
       uploadedFiles[["dataTP"]][["outputFile"]] <- outputFile
       uploadedFiles[["dataTP"]][["returnHTML"]] <- TRUE
       object <- eval(parse(text = menuFun() %>%
@@ -886,12 +924,35 @@ reportGenerator <- function() {
       return(object)
     })
 
+    output$downloadSankey <- downloadHandler(
+      filename = function() {
+        paste("SankeyDiagram", ".png", sep = "")
+      },
+      content = function(file) {
+        sankeyHTML <- here::here("sunburstDiagram.html")
+        createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
+                            outputFile = sankeyHTML,
+                            returnHTML = FALSE,
+                            groupCombinations = FALSE,
+                            minFreq = 1)
+        sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
+        print(sankeytPNG)
+        webshot2::webshot(
+          url = sankeyHTML,
+          file = sankeytPNG,
+          vwidth = 1200,
+          vheight = 10)
+        sankeyPath <- normalizePath(sankeytPNG)
+        file.copy(sankeyPath, file)
+      }
+    )
+
     observeEvent(input$lockTreatmentSankey, {
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
       if (input$lockTreatmentSankey == TRUE) {
         outputDirSankey <- file.path(tempdir(), "outputDirSankey")
         outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
-        dataReport[[objectChoice]][["treatmentPathways"]] <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+        dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSankey()
         dataReport[[objectChoice]][["outputFile"]] <- outputFile
         dataReport[[objectChoice]][["returnHTML"]] <- FALSE
         outputDirSankey <- file.path(tempdir(), "outputDirSankey")
@@ -901,7 +962,7 @@ reportGenerator <- function() {
                                                outputFile = outputFile,
                                                returnHTML = FALSE,
                                                groupCombinations = FALSE,
-                                               minFreq = 5)
+                                               minFreq = 1)
         fileNameOut <- file.path(outputDirSankey, "sankeyDiagram.png")
         saveAsFile(fileName = outputFile, fileNameOut = fileNameOut)
         dataReport[[objectChoice]][["sankeyDiagramImage"]] <- fileNameOut
