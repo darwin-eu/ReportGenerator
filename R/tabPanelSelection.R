@@ -18,6 +18,6 @@ tabPanelSelection <- function(selection, uploadedFiles, menuFun) {
   } else if (selection == "Sankey Diagram - TreatmentPatterns") {
     tabPanel(selection, sankeyDiagramFilters(uploadedFiles), htmlOutput("previewSankeyDiagram"))
   } else if (selection == "Sunburst Plot - TreatmentPatterns") {
-    tabPanel(selection, outburstDiagramFilters(uploadedFiles), imageOutput("previewSunburstPlot"))
+    tabPanel(selection, outburstDiagramFilters(uploadedFiles), htmlOutput("previewSunburstPlot"))
   }
 }

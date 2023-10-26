@@ -508,4 +508,4 @@ TreatmentPatterns:
       - freq
       - sex
       - age
-      - index_year
+      - indexYear

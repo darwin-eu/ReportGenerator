@@ -42,7 +42,6 @@ Imports:
     gto,
     gt,
     DT,
-    TreatmentPatterns,
     usethis,
     shinytest
 Suggests: 

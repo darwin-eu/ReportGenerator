@@ -152,7 +152,7 @@ reportGenerator <- function() {
       configDataTypes <- names(configData)
       if (length(fileDataPath) == 1) {
         if (grepl(".csv", fileDataPath, fixed = TRUE)) {
-          # fileDataPath <- "D:/Users/cbarboza/Documents/all_in_one/treatmentPathways.csv"
+          # fileDataPath <- "D:/Users/cbarboza/Documents/darwin-docs/studyPackages/P2C1003PulmonaryHypertension/results/dataPartners/CHUBX/CDWBordeaux_runDuration/class_tp_Clinical DataWarehouse Bordeaux University Hospital/treatmentPathways.csv"
           uploadedFiles$dataTP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
           items <- names(uploadedFiles$dataTP)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
@@ -230,9 +230,9 @@ reportGenerator <- function() {
     # Retrieves list of functions available and places the correct arguments
     menuFun  <- reactive({
       menuFun <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
-      menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$dataIP$incidence_estimates"
-      menuFun$arguments[menuFun$name == "createSunburstPlot"] <- "uploadedFiles$dataTP$treatmentPathways"
-      menuFun$arguments[menuFun$name == "createSankeyDiagram"] <- "uploadedFiles$dataTP$treatmentPathways"
+      # menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$dataIP$incidence_estimates"
+      # menuFun$arguments[menuFun$name == "createSunburstPlot"] <- "uploadedFiles$dataTP$treatmentPathways"
+      # menuFun$arguments[menuFun$name == "createSankeyDiagram"] <- "uploadedFiles$dataTP$treatmentPathways"
       menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
       menuFun
     })
@@ -843,25 +843,11 @@ reportGenerator <- function() {
 
     # SunburstPlot
 
-    output$previewSunburstPlot <- renderImage({
+    output$previewSunburstPlot <- renderUI({
       objectChoice <- "Sunburst Plot - TreatmentPatterns"
-      outputDirSunburst <- file.path(tempdir(), "outputDirSunburst")
-      dir.create(outputDirSunburst, showWarnings = FALSE)
-      outputFile <- file.path(outputDirSunburst, "outburstDiagram.html")
-      uploadedFiles[["dataTP"]][["outputFile"]] <- outputFile
-      uploadedFiles[["dataTP"]][["returnHTML"]] <- TRUE
-      TreatmentPatterns::createSunburstPlot(treatmentPathways = uploadedFiles[["dataTP"]][["treatmentPathways"]],
-                                            outputFile = outputFile,
-                                            returnHTML = FALSE)
-      fileNameOut <- file.path(outputDirSunburst, "sunburstDiagram.png")
-      saveAsFile(fileName = outputFile, fileNameOut = fileNameOut)
-      filename <- normalizePath(fileNameOut)
-      imageList <- list(src = filename,
-                        width = 800,
-                        height = 600,
-                        alt = "Sunburst")
-      return(imageList)
-    }, deleteFile = FALSE)
+      treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+      createSunburstPlot2(treatmentPathways, groupCombinations = FALSE)
+    })
 
     observeEvent(input$lockTreatmentSunburst, {
       objectChoice <- "Sunburst Plot - TreatmentPatterns"
@@ -911,7 +897,7 @@ reportGenerator <- function() {
         outputDirSankey <- file.path(tempdir(), "outputDirSankey")
         dir.create(outputDirSankey)
         outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
-        TreatmentPatterns::createSankeyDiagram(treatmentPathways = uploadedFiles[["dataTP"]][["treatmentPathways"]],
+        createSankeyDiagram(treatmentPathways = uploadedFiles[["dataTP"]][["treatmentPathways"]],
                                                outputFile = outputFile,
                                                returnHTML = FALSE,
                                                groupCombinations = FALSE,
@@ -923,6 +909,8 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["sankeyDiagramImage"]] <- NULL
       }
     })
+
+
 
 
 

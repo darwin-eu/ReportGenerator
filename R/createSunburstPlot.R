@@ -1,11 +1,3 @@
-#' depth
-#'
-#' Function to find depth of a list element.
-#'
-#' @param x input list (element)
-#' @param thisdepth current list depth
-#'
-#' @return the depth of the list element
 depth <- function(x, thisdepth = 0) {
   # Assertions
   checkmate::assertTRUE(!is.null(x))
@@ -20,14 +12,6 @@ depth <- function(x, thisdepth = 0) {
   }
 }
 
-#' stripname
-#'
-#' Recursive function to remove name from all levels of list.
-#'
-#' @param x input list
-#' @param name the name of the list item from which the names will be removed
-#'
-#' @return list with removed names
 stripname <- function(x, name) {
   # Assertions
   checkmate::assertTRUE(!is.null(x))
@@ -43,14 +27,6 @@ stripname <- function(x, name) {
   return(lapply(x, stripname, name))
 }
 
-#' addChild
-#'
-#' @param j iterator
-#' @param children children to add
-#' @param parts labels of treatments
-#' @param root root list
-#'
-#' @return root list with added childs
 addChild <- function(j, children, parts, root) {
   switch(j,
          root[["children"]] <- children,
@@ -62,11 +38,6 @@ addChild <- function(j, children, parts, root) {
   return(root)
 }
 
-#' buildHierarchy
-#'
-#' @param csv matrix
-#'
-#' @return JSON
 buildHierarchy <- function(csv) {
   root <- list(
     name = "root",
@@ -128,16 +99,6 @@ buildHierarchy <- function(csv) {
   return(json)
 }
 
-
-#' transformCSVtoJSON
-#'
-#' Help function to transform data in csv format to required JSON format for
-#' HTML.
-#'
-#' @param data (`data.frame()`)
-#' @param outcomes (`c()`)
-#'
-#' @return the transformed csv as a json string
 transformCSVtoJSON <- function(data, outcomes) {
   # Add bitwise numbers to define combination treatments
   bitwiseNumbers <- sapply(
@@ -191,13 +152,14 @@ transformCSVtoJSON <- function(data, outcomes) {
       return(p)
     }
   )
-
-  transformed_json <- buildHierarchy(
-    cbind(
-      oath = updated_path,
-      freq = data$freq
-    )
+  transformed_csv <- data.frame(
+    path = updated_path,
+    freq = data$freq,
+    path_length = stringr::str_count(updated_path, "-")
   )
+
+  transformed_csv <- transformed_csv[order(transformed_csv$path_length),]
+  transformed_json <- buildHierarchy(transformed_csv)
 
   result <- paste0(
     "{ \"data\" : ", transformed_json, ", \"lookup\" : ", lookup, "}"
@@ -207,93 +169,128 @@ transformCSVtoJSON <- function(data, outcomes) {
 }
 
 
-#' createTreatmentPathways
-#'
-#' @param treatmentHistory (`data.frame()`)
-#'
-#' @return (`data.frame()`)
 createTreatmentPathways <- function(treatmentHistory) {
   treatmentPathways <- treatmentHistory %>%
-    dplyr::group_by(.data$person_id, .data$index_year) %>%
+    dplyr::group_by(.data$personId, .data$indexYear) %>%
     dplyr::summarise(
-      pathway = list(.data$event_cohort_name[.data$event_seq]),
+      pathway = list(.data$eventCohortName[.data$eventSeq]),
       .groups = "drop"
     )
 
-  layers <- treatmentPathways %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(l = length(.data$pathway)) %>%
-    dplyr::select("l") %>%
-    max()
+  # layers <- treatmentPathways %>%
+  #   dplyr::rowwise() %>%
+  #   dplyr::mutate(l = length(.data$pathway)) %>%
+  #   dplyr::select("l") %>%
+  #   max()
 
   treatmentPathways <- treatmentPathways %>%
-    dplyr::group_by(.data$index_year, .data$pathway) %>%
-    dplyr::summarise(freq = length(.data$person_id), .groups = "drop")
+    dplyr::group_by(.data$indexYear, .data$pathway) %>%
+    dplyr::summarise(freq = length(.data$personId), .groups = "drop")
 
   return(treatmentPathways)
 }
 
-#' prepData
-#'
-#' @param treatmentHistory (`data.frame()`)
-#' @param year (`integer(1)`)
-#'
-#' @return (`data.frame()`)
 prepData <- function(treatmentHistory, year) {
   treatmentPathways <- createTreatmentPathways(treatmentHistory)
 
   dat <- treatmentPathways %>%
     rowwise() %>%
     mutate(path = paste(.data$pathway, collapse = "-")) %>%
-    select("index_year", "path", "freq")
+    select("indexYear", "path", "freq")
 
-  if (year == "all") {
-    dat <- dat %>%
-      group_by(.data$path) %>%
-      summarise(freq = sum(.data$freq))
-  } else {
-    dat <- dat %>%
-      filter(.data$index_year == year)
-    if (nrow(dat) == 0) {
-      NULL
-      # message(sprintf("Not enough data for year: %s", year))
+  if (!is.na(year) || !is.null(year)) {
+    if (year == "all") {
+      dat <- dat %>%
+        group_by(.data$path) %>%
+        summarise(freq = sum(.data$freq))
+    } else {
+      dat <- dat %>%
+        filter(.data$indexYear == year)
+      if (nrow(dat) == 0) {
+        NULL
+        # message(sprintf("Not enough data for year: %s", year))
+      }
     }
   }
   return(dat)
 }
 
+toList <- function(json) {
+  # Load template HTML file
+  html <- paste(
+    readLines(
+      system.file(
+        package = "ReportGenerator",
+        "templates",
+        "htmlTemplates", "sunburst_shiny.html"
+      )
+    ),
+    collapse = "\n"
+  )
 
-#' createSunburstPlot
-#'
-#' Generate a sunburst plot from the treatment pathways.
-#'
-#' @param treatmentPathways The contents of the treatmentPathways.csv-file as a data.frame().
-#' @param outputFile Path where the Sankey diagram should be written to.
-#'
-#' @export
-#'
-#' @returns (`NULL`)
-#'
-#' @examples
-#' # treatmentPathways <- read.csv("treatmentPathways.csv")
-#'
-#' # Dummy data, typically read from treatmentPathways.csv
-#' treatmentPatwhays <- data.frame(
-#'   path = c("Acetaminophen", "Acetaminophen-Amoxicillin+Clavulanate",
-#'            "Acetaminophen-Aspirin", "Amoxicillin+Clavulanate", "Aspirin"),
-#'   freq = c(206, 6, 14, 48, 221),
-#'   sex = rep("all", 5),
-#'   age = rep("all", 5),
-#'   index_year = rep("all", 5)
-#' )
-#'
-#' outputFile <- tempfile(pattern = "mySunburstPlot", fileext = "html")
-#'
-#' createSunburstPlot(
-#'   treatmentPatwhays,
-#'   outputFile
-#' )
-createSunburstPlot <- function(treatmentPathways, outputFile) {
+  legend <- paste(
+    readLines(
+      system.file(
+        package = "ReportGenerator",
+        "templates",
+        "htmlTemplates", "legend.html"
+      )
+    ),
+    collapse = "\n"
+  )
+
+  legend <- sub("@insert_data", json, legend)
+
+  # Replace @insert_data
+  html <- sub("@insert_data", json, html)
+
+  list(sunburst = html, legend = legend)
+}
+
+toFile <- function(json, treatmentPathways, outputFile) {
+  # Load template HTML file
+  html <- paste(
+    readLines(
+      system.file(
+        package = "ReportGenerator",
+        "templates",
+        "htmlTemplates", "sunburst_standalone.html"
+      )
+    ),
+    collapse = "\n"
+  )
+
+  # Replace @insert_data
+  html <- sub("@insert_data", json, html)
+  html <- sub(
+    "@name",
+    sprintf(
+      "Strata:\n\nAges: %s\nSex: %s\nYears: %s\n",
+      paste(unique(treatmentPathways$age), collapse = ", "),
+      paste(unique(treatmentPathways$sex), collapse = ", "),
+      paste(unique(treatmentPathways$indexYear), collapse = ", ")
+    ),
+    html
+  )
+
+  message(sprintf(
+    "Writing sunburst plot to %s",
+    file.path(outputFile)
+  ))
+
+  # Save HTML file
+  writeLines(
+    text = html,
+    con = file.path(outputFile)
+  )
+}
+
+createSunburstPlot <- function(treatmentPathways, outputFile, groupCombinations = FALSE, returnHTML = FALSE) {
+  treatmentPathways <- doGroupCombinations(
+    treatmentPathways = treatmentPathways,
+    groupCombinations = groupCombinations
+  )
+
   data <- treatmentPathways %>%
     mutate(freq = as.integer(.data$freq)) %>%
     select("path", "freq")
@@ -309,34 +306,29 @@ createSunburstPlot <- function(treatmentPathways, outputFile) {
     outcomes = outcomes
   )
 
-  # Load template HTML file
-  html <- paste(
-    readLines(
-      system.file(
-        package = "TreatmentPatterns",
-        "htmlTemplates", "sunburst_standalone.html"
+  if (returnHTML) {
+    return(toList(json))
+  } else {
+    toFile(json, treatmentPathways, outputFile)
+  }
+}
+
+doGroupCombinations <- function(treatmentPathways, groupCombinations) {
+  if (groupCombinations) {
+    treatmentPathways$path <- treatmentPathways$path %>%
+      stringr::str_replace_all(
+        pattern = "\\w+\\+\\w+",
+        replacement = "Combination"
       )
-    ),
-    collapse = "\n"
+  }
+  return(treatmentPathways)
+}
+
+createSunburstPlot2 <- function(treatmentPathways, groupCombinations = FALSE, ...) {
+  treatmentPathways <- doGroupCombinations(
+    treatmentPathways = treatmentPathways,
+    groupCombinations = groupCombinations
   )
 
-  # Replace @insert_data
-  html <- sub("@insert_data", json, html)
-  html <- sub(
-    "@name",
-    sprintf(
-      "Strata:\n\nAges: %s\nYears: %s\n",
-      paste(unique(treatmentPathways$age), collapse = ", "),
-      paste(unique(treatmentPathways$index_year), collapse = ", ")
-    ),
-    html
-  )
-
-  # Save HTML file
-  writeLines(
-    text = html,
-    con = file.path(outputFile)
-  )
-  message(glue::glue("Wrote sunburst plot to {file.path(outputFile)}"))
-  return(message(glue::glue("Wrote sunburst plot to {file.path(outputFile)}")))
+  sunburstR::sunburst(data = treatmentPathways, ...)
 }
