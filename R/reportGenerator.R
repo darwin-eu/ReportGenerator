@@ -938,11 +938,15 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSunburst()
         dataReport[[objectChoice]][["returnHTML"]] <- FALSE
         dataReport[[objectChoice]][["outputFile"]] <- outputFile
-        TreatmentPatterns::createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
-                                              outputFile = outputFile,
-                                              returnHTML = FALSE)
+        createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
+                           outputFile = outputFile,
+                           returnHTML = FALSE)
         fileNameOut <- file.path(outputDirSunburst, "sunburstDiagram.png")
-        saveAsFile(fileName = outputFile, fileNameOut = fileNameOut)
+        webshot2::webshot(
+          url = outputFile,
+          file = fileNameOut,
+          vwidth = 1200,
+          vheight = 10)
         filename <- normalizePath(fileNameOut)
         message("Adding filename to dataReport")
         dataReport[[objectChoice]][["sunburstDiagramImage"]] <- filename
@@ -976,7 +980,7 @@ reportGenerator <- function() {
         createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
                             outputFile = sankeyHTML,
                             returnHTML = FALSE,
-                            groupCombinations = FALSE,
+                            groupCombinations = TRUE,
                             minFreq = 1)
         sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
         print(sankeytPNG)
@@ -994,20 +998,23 @@ reportGenerator <- function() {
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
       if (input$lockTreatmentSankey == TRUE) {
         outputDirSankey <- file.path(tempdir(), "outputDirSankey")
+        dir.create(outputDirSankey)
         outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
         dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSankey()
         dataReport[[objectChoice]][["outputFile"]] <- outputFile
         dataReport[[objectChoice]][["returnHTML"]] <- FALSE
-        outputDirSankey <- file.path(tempdir(), "outputDirSankey")
-        dir.create(outputDirSankey)
         outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
-        createSankeyDiagram(treatmentPathways = uploadedFiles[["dataTP"]][["treatmentPathways"]],
-                                               outputFile = outputFile,
-                                               returnHTML = FALSE,
-                                               groupCombinations = FALSE,
-                                               minFreq = 1)
+        createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
+                            outputFile = outputFile,
+                            returnHTML = FALSE,
+                            groupCombinations = TRUE,
+                            minFreq = 1)
         fileNameOut <- file.path(outputDirSankey, "sankeyDiagram.png")
-        saveAsFile(fileName = outputFile, fileNameOut = fileNameOut)
+        webshot2::webshot(
+          url = outputFile,
+          file = fileNameOut,
+          vwidth = 1200,
+          vheight = 10)
         dataReport[[objectChoice]][["sankeyDiagramImage"]] <- fileNameOut
       } else {
         dataReport[[objectChoice]][["sankeyDiagramImage"]] <- NULL

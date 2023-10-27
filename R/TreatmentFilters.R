@@ -30,11 +30,11 @@ sankeyDiagramFilters <- function(uploadedFiles) {
         multiple = FALSE
       ),
     fluidRow(
-      # column(4,
-      #        checkboxInput(inputId = "lockTreatmentSankey",
-      #                      label = "Add data to report",
-      #                      value = FALSE)
-      #        ),
+      column(4,
+             checkboxInput(inputId = "lockTreatmentSankey",
+                           label = "Add data to report",
+                           value = FALSE)
+             ),
       column(4,
              downloadButton("downloadSankey", "Download Plot")
       ),
@@ -75,11 +75,11 @@ sunburstDiagramFilters <- function(uploadedFiles) {
         multiple = FALSE
       ),
     fluidRow(
-      # column(4,
-      #        checkboxInput(inputId = "lockTreatmentSunburst",
-      #                      label = "Add data to report",
-      #                      value = FALSE)
-      #        ),
+      column(4,
+             checkboxInput(inputId = "lockTreatmentSunburst",
+                           label = "Add data to report",
+                           value = FALSE)
+             ),
       column(4,
              downloadButton("downloadSunburst", "Download Plot")
       ),
