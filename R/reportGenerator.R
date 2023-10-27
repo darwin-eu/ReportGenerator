@@ -104,6 +104,7 @@ reportGenerator <- function() {
                                                csvLocation,
                                                versionData = input$dataVersion,
                                                package = "IncidencePrevalence")
+
           items <- names(uploadedFiles$dataIP)
           itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
           unlink(csvLocation, recursive = TRUE)
@@ -870,20 +871,35 @@ reportGenerator <- function() {
 
     treatmentDataSunburst <- reactive({
       treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
-      treatmentPathways %>%
-        filter(cdmName == input$cdmSunburst,
-               sex == input$sexSunburst,
-               age == input$ageSunburst,
-               indexYear == input$indexSunburst)
+      if (is.null(treatmentPathways$cdmName)) {
+        treatmentPathways %>%
+          filter(sex == input$sexSunburst,
+                 age == input$ageSunburst,
+                 indexYear == input$indexSunburst)
+      } else {
+        treatmentPathways %>%
+          filter(cdmName == input$cdmSunburst,
+                 sex == input$sexSunburst,
+                 age == input$ageSunburst,
+                 indexYear == input$indexSunburst)
+      }
     })
 
     treatmentDataSankey <- reactive({
       treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
-      treatmentPathways %>%
-        filter(cdmName == input$cdmSankey,
-               sex == input$sexSankey,
-               age == input$ageSankey,
-               indexYear == input$indexSankey)
+      if (is.null(treatmentPathways$cdmName)) {
+        treatmentPathways %>%
+          filter(sex == input$sexSankey,
+                 age == input$ageSankey,
+                 indexYear == input$indexSankey)
+      } else {
+        treatmentPathways %>%
+          filter(cdmName == input$cdmSankey,
+                 sex == input$sexSankey,
+                 age == input$ageSankey,
+                 indexYear == input$indexSankey)
+
+      }
     })
 
     output$previewSunburstPlot <- renderUI({
