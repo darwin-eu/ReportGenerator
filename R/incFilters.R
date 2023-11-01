@@ -20,8 +20,8 @@ incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "daysPriorIncidenceYear",
                          label = "Days Prior History",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history),
-                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history)[1],
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation),
+                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)[1],
                          multiple = FALSE)
       )
     ),
@@ -108,9 +108,9 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       ),
       column(4,
              pickerInput(inputId = "daysPriorIncidenceSex",
-                         label = "Days Prior History",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history),
-                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history)[1],
+                         label = "Days Prior Observation",
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation),
+                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)[1],
                          multiple = FALSE)
       )
     ),
@@ -204,8 +204,8 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "daysPriorIncidenceAge",
                          label = "Days Prior History",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history),
-                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history)[1],
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation),
+                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)[1],
                          multiple = FALSE)
       )
     ),
