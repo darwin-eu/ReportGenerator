@@ -74,71 +74,38 @@ reportGenerator <- function() {
   server <- function(input, output, session) {
 
     # 1. Load data
+
     # IncidencePrevalence Module
     datasetLoadServer("IncidencePrevalence")
     # TreatmentPatterns Module
     datasetLoadServer("TreatmentPatterns")
 
-
     # ReactiveValues
-    # General use
-    uploadedFiles <- reactiveValues(dataIP = NULL,
-                                    dataTP = NULL)
+    uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
     itemsList <- reactiveValues(objects = NULL)
 
     # Check input data
     # IncidencePrevalence
     observeEvent(input$datasetLoad, {
+      # Read  file paths
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
-      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      package <- "IncidencePrevalence"
-      versionData <- input$dataVersion
-      configData <- configData[[package]][[versionData]]
-      configDataTypes <- names(configData)
-      if (length(fileDataPath) == 1) {
-        if (grepl(".zip", fileDataPath, fixed = TRUE)) {
-          csvLocation <- file.path(tempdir(), "dataLocation")
-          dir.create(csvLocation)
-          uploadedFiles$dataIP <- joinDatabase(fileDataPath,
-                                               csvLocation,
-                                               versionData = input$dataVersion,
-                                               package = "IncidencePrevalence")
-          items <- names(uploadedFiles$dataIP)
-          itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
-          unlink(csvLocation, recursive = TRUE)
-          } else if (grepl(".csv", fileDataPath, fixed = TRUE)) {
-              uploadedFiles$dataIP <- joinDatabase(fileDataPath,
-                                                   csvLocation,
-                                                   versionData = input$dataVersion,
-                                                   package = "IncidencePrevalence")
-              items <- names(uploadedFiles$dataIP)
-              itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
-          }
-      }
-      else if (length(fileDataPath) > 1) {
-        if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
-          csvLocation <- file.path(tempdir(), "dataLocation")
-          dir.create(csvLocation)
-          uploadedFiles$dataIP <- joinDatabase(fileDataPath,
-                                               csvLocation,
-                                               versionData = input$dataVersion,
-                                               package = "IncidencePrevalence")
-          items <- names(uploadedFiles$dataIP)
-          itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
-          unlink(csvLocation, recursive = TRUE)
-        } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
-          csvLocation <- file.path(tempdir(), "dataLocation")
-          dir.create(csvLocation)
-          uploadedFiles$dataIP <- joinDatabase(fileDataPath,
-                                               csvLocation,
-                                               versionData = input$dataVersion,
-                                               package = "IncidencePrevalence")
-          items <- names(uploadedFiles$dataIP)
-          itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
-          unlink(csvLocation, recursive = TRUE)
-        }
-        }
+      fileName <- inFile$name
+      # Temp directory to unzip files
+      csvLocation <- file.path(tempdir(), "dataLocation")
+      dir.create(csvLocation)
+      # Joins one or several zips from different data partners into the reactive value
+      dataVersion <- input$dataVersion
+      uploadedFiles$dataIP <- joinDatabase(fileDataPath = fileDataPath,
+                                           fileName = fileName,
+                                           package = "IncidencePrevalence",
+                                           versionData = dataVersion,
+                                           csvLocation = csvLocation)
+      # Get list of items to show in toggle menu
+      items <- names(uploadedFiles$dataIP)
+      # Items list into reactive value to show in toggle menu
+      itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]], getItemsList(items))
+      unlink(csvLocation, recursive = TRUE)
       })
 
     # TreatmentPatterns
@@ -152,10 +119,9 @@ reportGenerator <- function() {
       configDataTypes <- names(configData)
       if (length(fileDataPath) == 1) {
         if (grepl(".csv", fileDataPath, fixed = TRUE)) {
-          # fileDataPath <- "D:/Users/cbarboza/Documents/darwin-docs/studyPackages/P2C1003PulmonaryHypertension/results/dataPartners/CHUBX/CDWBordeaux_runDuration/class_tp_Clinical DataWarehouse Bordeaux University Hospital/treatmentPathways.csv"
           uploadedFiles$dataTP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
           items <- names(uploadedFiles$dataTP)
-          itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]] , getItemsList(items))
+          itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]], getItemsList(items))
         }
       }
     })

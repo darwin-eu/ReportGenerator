@@ -30,69 +30,66 @@
 variablesConfigYaml <- function(fileDataPath = NULL,
                                 package = "IncidencePrevalence",
                                 version = NULL) {
-  # fileDataPath <- "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/PAH/IPCI_P2_C1_003_20230926.zip"
+  # fileDataPath <- fileDataPath[1]
+
   if (package == "IncidencePrevalence") {
-    csvLocation <- file.path(tempdir(), "varDataLocation")
+    csvLocation <- file.path(tempdir(), "dataLocation")
+    dir.create(csvLocation)
     utils::unzip(zipfile = fileDataPath,
                  exdir = csvLocation)
     csvFiles <- list.files(path = csvLocation,
                            pattern = ".csv",
                            full.names = TRUE,
                            recursive = TRUE)
-    for (fileLocation in csvFiles) {
-      if (grepl("prevalence_attrition", fileLocation)) {
-        prevalence_attrition <- read_csv(fileLocation, show_col_types = FALSE)
-        tempNames <- names(prevalence_attrition)
-        tempTitle <- "prevalence_attrition"
-        configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-        configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- tempNames
-        write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      } else if (grepl("incidence_attrition", fileLocation)) {
-        incidence_attrition <- read_csv(fileLocation, show_col_types = FALSE)
-        tempNames <- names(incidence_attrition)
-        tempTitle <- "incidence_attrition"
-        configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-        configData[[package]][[version]][["incidence_attrition"]][["names"]] <- tempNames
-        write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      } else if(grepl("incidence_estimates", fileLocation)) {
-        incidence_estimates <- read_csv(fileLocation, show_col_types = FALSE)
-        tempNames <- names(incidence_estimates)
-        tempTitle <- "incidence_estimates"
-        configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-        configData[[package]][[version]][["incidence_estimates"]][["names"]] <- tempNames
-        write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      } else {
-        prevalence_estimates <- read_csv(fileLocation, show_col_types = FALSE)
-        tempNames <- names(prevalence_estimates)
-        tempTitle <- "prevalence_estimates"
-        configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-        configData[[package]][[version]][["prevalence_estimates"]][["names"]] <- tempNames
-        write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      }
-    }
+
+    incidenceEstimatesPath <- csvFiles[stringr::str_detect(csvFiles, "incidence_estimates")]
+    incidenceEstimates <- read_csv(incidenceEstimatesPath, show_col_types = FALSE)
+    columnNamesIncidence <- names(incidenceEstimates)[grepl("incidence", names(incidenceEstimates))]
+    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData[[package]][[version]][["incidence_estimates"]][["names"]] <- columnNamesIncidence
+    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+    prevalenceEstimatesPath <- csvFiles[stringr::str_detect(csvFiles, "prevalence_estimates")]
+    prevalenceEstimates <- read_csv(prevalenceEstimatesPath, show_col_types = FALSE)
+    columnNamesPrevalence <- names(prevalenceEstimates)[grepl("prevalence", names(prevalenceEstimates))]
+    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData[[package]][[version]][["prevalence_estimates"]][["names"]] <- columnNamesPrevalence
+    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+    incidenceAttritionPath <- csvFiles[stringr::str_detect(csvFiles, "incidence_attrition")]
+    incidenceAttrition <- read_csv(incidenceAttritionPath, show_col_types = FALSE)
+    columnNamesIncidenceAttrition <- setdiff(names(incidenceAttrition), names(incidenceEstimates))
+    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData[[package]][[version]][["incidence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
+    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+    prevalenceAttritionPath <- csvFiles[stringr::str_detect(csvFiles, "prevalence_attrition")]
+    prevalenceAttrition <- read_csv(prevalenceAttritionPath, show_col_types = FALSE)
+    columnNamesPrevalenceAttrition <- setdiff(names(prevalenceAttrition), names(prevalenceEstimates))
+    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- columnNamesPrevalenceAttrition
+    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
     unlink(csvLocation, recursive = TRUE)
+
   } else if (package == "TreatmentPatterns") {
-    csvFiles <- list.files(path = fileDataPath,
-                           pattern = ".csv",
-                           full.names = TRUE,
-                           recursive = TRUE)
-    for (fileLocation in csvFiles) {
-      if (grepl("treatmentPathways.csv", fileLocation)) {
-        treatmentPathways <- read_csv(fileLocation, show_col_types = FALSE)
-        tempNames <- names(treatmentPathways)
-        tempTitle <- "treatmentPathways"
-        configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-        configData[[package]][[version]][[tempTitle]][["names"]] <- tempNames
-        write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-        }
-      }
-    }
+    csvFiles <- fileDataPath
+    treatmentPathwaysPath <- csvFiles[stringr::str_detect(csvFiles, "treatmentPathways")]
+    treatmentPathways <- read_csv(treatmentPathwaysPath, show_col_types = FALSE)
+    columnNamesTreatmentPathways <- names(treatmentPathways)
+    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData[[package]][[version]][["treatmentPathways"]][["names"]] <- columnNamesTreatmentPathways
+    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+  }
+
 }
 
-#' `joinDatabase()` gathers several zip or csv folders into a list of dataframes for ReportGenerator
+# -------------------------------------------------------------------------
+
+
+#' `joinDatabase()` joins several zip or csv folders into a list of dataframes.
 #'
-#' @param uploadedFiles A list of filepaths
-#' @param csvLocation Temporary folder
+#' @param fileDataPath File path(s) in character
 #' @param package Name of the packages that generated the results
 #' @param versionData Version of the package
 #'
@@ -100,114 +97,129 @@ variablesConfigYaml <- function(fileDataPath = NULL,
 #'
 #' @import yaml
 #' @export
-joinDatabase <- function(uploadedFiles = NULL,
-                         csvLocation,
+joinDatabase <- function(fileDataPath = NULL,
+                         fileName = NULL,
                          package = "IncidencePrevalence",
-                         versionData = "0.4.1") {
-  # csvLocation <- file.path(tempdir(), "dataLocation")
-  # dir.create(csvLocation)
-  #
-  # uploadedFiles <- c("D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/CDWBordeaux_IncidencePrevalenceResults.zip",
-  #                    "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/IPCI_IncidencePrevalenceResults.zip",
-  #                    "D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/opiodsDataPartners/SIDIAP_IncidencePrevalenceResults.zip")
-  #
-  # package <- "IncidencePrevalence"
-  # versionData <- "0.4.1"
+                         versionData = "0.5.1",
+                         csvLocation = NULL) {
 
-  configData <- yaml.load_file(system.file("config",
-                                           "variablesConfig.yaml",
-                                           package = "ReportGenerator"))
+  # Loading yml file
+  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
   configData <- configData[[package]][[versionData]]
   configDataTypes <- names(configData)
-  data <- list()
-  if (grepl(".zip",
-            uploadedFiles[1],
-            fixed = TRUE)) {
+  # Check zip
+  if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
+    # Empty list to allocate data
+    data <- list()
+    # Folder count to allocate multiple databases
     folderNumber <- 0
-    for (fileLocation in uploadedFiles) {
+    # Unzips every zip and puts the files in a separate folder in the temp dir
+    for (fileLocation in fileDataPath) {
+      # fileLocation <- fileLocation[1]
       folderNumber <- folderNumber + 1
       unzip(zipfile = fileLocation,
-            exdir = paste0(csvLocation, "/", "database", as.character(folderNumber)))
+            exdir = file.path(csvLocation, paste0("database", as.character(folderNumber))))
     }
+    # List of unzipped database directories where files are located
     databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
+    # Iterates through each database folder to list the files inside
     for (filesList in databaseFolders) {
       # filesList <- databaseFolders[1]
       filesLocation <- list.files(filesList,
                                   pattern = ".csv",
                                   full.names = TRUE,
                                   recursive = TRUE)
+      # Iterates every individual file
       for (file in filesLocation) {
         # file <- filesLocation[1]
         resultsData <- read_csv(file, show_col_types = FALSE)
         resultsColumns <- names(resultsData)
+        # Checks the type of every individual file
         for (val in configDataTypes) {
-          # val <- "incidence_estimates"
-          configColumns <- configData[[val]]
-          configColumns <- unlist(configColumns$names)
-          if (length(configColumns) == length(resultsColumns)) {
-            if (identical(configColumns, resultsColumns)) {
+          # val <- "incidence_attrition"
+          if (val == "incidence_attrition" & grepl("incidence_attrition", file)) {
+            configColumns <- configData[[val]]
+            configColumns <- unlist(configColumns$names)
+            if (all(configColumns %in% resultsColumns)) {
+                message(paste0(val, ": match yes"))
+                data[[val]] <- bind_rows(data[[val]], resultsData)
+              }
+          } else if (val == "prevalence_attrition" & grepl("prevalence_attrition", file)) {
+              configColumns <- configData[[val]]
+              configColumns <- unlist(configColumns$names)
+              if (all(configColumns %in% resultsColumns)) {
+                message(paste0(val, ": match yes"))
+                data[[val]] <- bind_rows(data[[val]], resultsData)
+            }
+          } else if (val == "incidence_estimates") {
+            configColumns <- configData[[val]]
+            configColumns <- unlist(configColumns$names)
+            if (all(configColumns %in% resultsColumns)) {
               message(paste0(val, ": match yes"))
               data[[val]] <- bind_rows(data[[val]], resultsData)
               }
+          } else if (val == "prevalence_estimates") {
+            configColumns <- configData[[val]]
+            configColumns <- unlist(configColumns$names)
+            if (all(configColumns %in% resultsColumns)) {
+              message(paste0(val, ": match yes"))
+              data[[val]] <- bind_rows(data[[val]], resultsData)
             }
-        }
-      }
-      }
-
-  } else if (grepl(".csv",
-                   uploadedFiles[1],
-                   fixed = TRUE)) {
-    # csvLocation <- file.path(tempdir(), "dataLocation")
-    # dir.create(csvLocation)
-    #
-    # uploadedFiles <- list.files("D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/0.4.1/csv", full.names = TRUE)
-    #
-    # package <- "IncidencePrevalence"
-    # versionData <- "0.4.1"
-    for (file in uploadedFiles) {
-      # file <- filesLocation[1]
-      resultsData <- read_csv(file, show_col_types = FALSE)
-      resultsColumns <- names(resultsData)
-      for (val in configDataTypes) {
-        # val <- "incidence_attrition"
-        configColumns <- configData[[val]]
-        configColumns <- unlist(configColumns$names)
-        if (length(configColumns) == length(resultsColumns)) {
-          if (identical(configColumns, resultsColumns)) {
-            message(paste0(val, ": match yes"))
-            data[[val]] <- bind_rows(data[[val]], resultsData)
           }
         }
       }
     }
+    } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
+      data <- columnCheck(csvFiles = fileDataPath,
+                          fileName = fileName,
+                          configData = configData,
+                          configDataTypes = configDataTypes)
+    }
+  return(data)
   }
 
-  return(data)
-}
-
 columnCheck <- function(csvFiles,
+                        fileName,
                         configData,
                         configDataTypes) {
   data <- list()
-  for (fileLocation in csvFiles) {
-    # fileLocation <- "C:\\Users\\cbarboza\\AppData\\Local\\Temp\\RtmpCOhl36/mock_data_ReportGenerator_SIDIAP/test_database_incidence_attrition_2023_06_22.csv"
-    resultsData <- read_csv(fileLocation, show_col_types = FALSE)
+  # print("File to the loop")
+  # print(csvFiles)
+  for (i in seq(1:length(csvFiles))) {
+    # i <- 1
+    resultsData <- read_csv(csvFiles[i], show_col_types = FALSE)
     resultsColumns <- names(resultsData)
     for (val in configDataTypes) {
-      # val <- "incidence_attrition"
-      configColumns <- configData[[val]]
-      configColumns <- unlist(configColumns$names)
-      if (length(configColumns) == length(resultsColumns)) {
-        message("Length correspondance yes")
-        if (identical(configColumns, resultsColumns)) {
-          message("Length correspondance yes")
-          data[[val]] <- resultsData
-          } else {
-            message("Length correspondance no")
-            }
-        } else {
-          message("Length correspondance no")
+      # val <- "prevalence_attrition"
+      if (val == "incidence_attrition" & grepl("incidence_attrition", fileName[i])) {
+        configColumns <- configData[[val]]
+        configColumns <- unlist(configColumns$names)
+        if (all(configColumns %in% resultsColumns)) {
+            message(paste0(val, ": match yes"))
+            data[[val]] <- bind_rows(data[[val]], resultsData)
           }
+      } else if (val == "prevalence_attrition" & grepl("prevalence_attrition", fileName[i])) {
+        configColumns <- configData[[val]]
+        configColumns <- unlist(configColumns$names)
+        if (all(configColumns %in% resultsColumns)) {
+            message(paste0(val, ": match yes"))
+            data[[val]] <- bind_rows(data[[val]], resultsData)
+          }
+      } else if (val == "incidence_estimates") {
+        configColumns <- configData[[val]]
+        configColumns <- unlist(configColumns$names)
+        if (all(configColumns %in% resultsColumns)) {
+          message(paste0(val, ": match yes"))
+          data[[val]] <- bind_rows(data[[val]], resultsData)
+        }
+      } else if (val == "prevalence_estimates") {
+        configColumns <- configData[[val]]
+        configColumns <- unlist(configColumns$names)
+        if (all(configColumns %in% resultsColumns)) {
+          message(paste0(val, ": match yes"))
+          data[[val]] <- bind_rows(data[[val]], resultsData)
+        }
+      }
       }
   }
   return(data)

@@ -43,7 +43,8 @@ Imports:
     gt,
     DT,
     usethis,
-    shinytest
+    shinytest,
+    data.tree
 Suggests: 
     testthat,
     rmarkdown

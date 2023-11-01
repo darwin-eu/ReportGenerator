@@ -67,10 +67,10 @@ generateMockData <- function(databaseName = c("CHUBX",
 
         }
 
-    cdm <- mockIncidencePrevalenceRef(
+    cdm <- IncidencePrevalence::mockIncidencePrevalenceRef(
       sampleSize = sampleSize,
       outPre = 0.5
-    )
+      )
 
     # Denominator data
     cdm <- generateDenominatorCohortSet(cdm = cdm,
@@ -81,7 +81,7 @@ generateMockData <- function(databaseName = c("CHUBX",
                                                          c(60, 99),
                                                          c(18, 99)),
                                         sex  = c("Female", "Male", "Both"),
-                                        daysPriorHistory  = 365)
+                                        daysPriorObservation = 365)
 
     # %>% mutate(cdm_name = i)
 
@@ -90,7 +90,7 @@ generateMockData <- function(databaseName = c("CHUBX",
       cdm = cdm,
       denominatorTable = "denominator",
       outcomeTable = "outcome",
-      outcomeCohortId = as.integer(1),
+      outcomeCohortId = NULL,
       interval = c("years", "overall"),
       completeDatabaseIntervals = TRUE,
       outcomeWashout = 180,
@@ -106,7 +106,7 @@ generateMockData <- function(databaseName = c("CHUBX",
       cdm = cdm,
       denominatorTable = "denominator",
       outcomeTable = "outcome",
-      outcomeCohortId   = as.integer(1),
+      outcomeCohortId   = NULL,
       outcomeLookbackDays = 0,
       interval = "years",
       timePoint = "start",
@@ -118,7 +118,7 @@ generateMockData <- function(databaseName = c("CHUBX",
       cdm = cdm,
       denominatorTable = "denominator",
       outcomeTable = "outcome",
-      outcomeCohortId   = as.integer(1),
+      outcomeCohortId   = NULL,
       outcomeLookbackDays = 0,
       interval = "years",
       completeDatabaseIntervals = TRUE,

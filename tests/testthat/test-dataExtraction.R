@@ -1,95 +1,135 @@
-test_that("TreatmentPatterns data extraction", {
-  fileDataPath <- list.files(system.file("extdata",
-                                         "examples",
-                                         "TrePat",
-                                         "2.5.0",
-                                         "csv",
-                                         package = "ReportGenerator"),
+test_that("VariablesConfig IncidencePrevalence", {
+  fileDataPath <- list.files(testthat::test_path("IncPrev",
+                                                 "0.5.1",
+                                                 "zip"),
+                              pattern = "zip",
+                              full.names = TRUE)
+  variablesConfigYaml(fileDataPath = fileDataPath[1],
+                      package = "IncidencePrevalence",
+                      version = "0.5.1")
+  package <- "IncidencePrevalence"
+  version <- "0.5.1"
+  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+  expect_equal(length(configData[[package]][[version]]), 4)
+  expect_type(configData[[package]][[version]], "list")
+})
+
+test_that("VariablesConfig TreatmentPatterns", {
+  fileDataPath <- list.files(testthat::test_path("TrePat", "csv"),
                              pattern = "csv",
                              full.names = TRUE)
   variablesConfigYaml(fileDataPath = fileDataPath,
                       package = "TreatmentPatterns",
                       version = "2.5.0")
-  configData <- yaml.load_file(system.file("config",
-                                           "variablesConfig.yaml",
-                                           package = "ReportGenerator"))
   package <- "TreatmentPatterns"
-  versionData <- "2.5.0"
-  configData <- configData[[package]][[versionData]]
-  expect_equal(length(configData[["treatmentPathways"]][["names"]]), 5)
-  expect_type(configData, "list")
+  version <- "2.5.0"
+  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+  expect_equal(length(configData[[package]][[version]]), 1)
+  expect_type(configData[[package]][[version]], "list")
 })
 
-test_that("loading zip files", {
-  fileDataPath <- list.files(system.file("extdata",
-                                         "examples",
-                                         "IncPrev",
-                                         "zip",
-                                         package = "ReportGenerator"),
-                             pattern = "zip",
-                             full.names = TRUE)[1]
-  variablesConfigYaml(fileDataPath = fileDataPath,
-                      package = "IncidencePrevalence",
-                      version = "0.4.1")
-  configData <- yaml.load_file(system.file("config",
-                                           "variablesConfig.yaml",
-                                           package = "ReportGenerator"))
-  package <- "IncidencePrevalence"
-  versionData <- "0.4.1"
-  configData <- configData[[package]][[versionData]]
-  expect_equal(length(configData), 4)
-  expect_type(configData, "list")
-})
-
-test_that("loading zip files", {
-  uploadedFiles <- list.files(system.file("extdata",
-                                          "examples",
-                                          "IncPrev",
-                                          "zip",
-                                          package = "ReportGenerator"),
+test_that("Loading 1 zip files", {
+  csvLocation <- file.path(tempdir(), "dataLocation")
+  dir.create(csvLocation)
+  fileDataPath <- list.files(testthat::test_path("IncPrev",
+                                                  "0.5.1",
+                                                  "zip"),
                               pattern = "zip",
                               full.names = TRUE)
-  csvLocation <- file.path(tempdir(), "testLocation")
-  joinedZipFiles <- joinDatabase(uploadedFiles = uploadedFiles,
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
+                                 package = "IncidencePrevalence",
+                                 versionData = "0.5.1",
                                  csvLocation = csvLocation)
+  expect_equal(length(uploadedFiles), 4)
+  expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
-  expect_equal(length(joinedZipFiles), 4)
-  expect_type(joinedZipFiles, "list")
 })
 
-test_that("loading csv files", {
-  uploadedFiles <- list.files(system.file("extdata",
-                                          "examples",
-                                          "IncPrev",
-                                          "csv",
-                                          package = "ReportGenerator"),
+test_that("Loading multiple zip files", {
+  csvLocation <- file.path(tempdir(), "dataLocation")
+  dir.create(csvLocation)
+  fileDataPath <- list.files(testthat::test_path("IncPrev",
+                                                  "0.5.1",
+                                                  "zip"),
+                              pattern = "zip",
+                              full.names = TRUE)
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
+                                 package = "IncidencePrevalence",
+                                 versionData = "0.5.1",
+                                 csvLocation = csvLocation)
+  expect_equal(length(uploadedFiles), 4)
+  expect_type(uploadedFiles, "list")
+  unlink(csvLocation, recursive = TRUE)
+})
+
+test_that("Loading 1 csv files", {
+  csvLocation <- file.path(tempdir(), "dataLocation")
+  dir.create(csvLocation)
+  fileDataPath <- list.files(testthat::test_path("IncPrev",
+                                                  "0.5.1",
+                                                  "csv"),
                               pattern = "csv",
                               full.names = TRUE)
-  csvLocation <- file.path(tempdir(), "testLocation")
-  joinedZipFiles <- joinDatabase(uploadedFiles = uploadedFiles, csvLocation = csvLocation)
+  fileName <- list.files(testthat::test_path("IncPrev",
+                                                 "0.5.1",
+                                                 "csv"),
+                             pattern = "csv")
+  fileName <- tools::file_path_sans_ext(fileName)
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[3],
+                                fileName = fileName[3],
+                                package = "IncidencePrevalence",
+                                versionData = "0.5.1",
+                                csvLocation = csvLocation)
+  expect_equal(length(uploadedFiles), 1)
+  expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
-  expect_equal(length(joinedZipFiles), 4)
-  expect_type(joinedZipFiles, "list")
 })
 
-test_that("column check for csv files", {
-  csvFiles <- list.files(system.file("extdata",
-                                     "examples",
-                                     "IncPrev",
-                                     "csv",
-                                     package = "ReportGenerator"),
-                         pattern = "csv",
-                         full.names = TRUE)
-  configData <- yaml.load_file(system.file("config",
-                                           "variablesConfig.yaml",
-                                           package = "ReportGenerator"))
+test_that("Loading 1 csv files extra column check", {
+  csvFiles <- list.files(testthat::test_path("IncPrev",
+                                             "extras"),
+                             pattern = "csv",
+                             full.names = TRUE)
+  csvFiles <- csvFiles[1]
+  fileName <- list.files(testthat::test_path("IncPrev",
+                                             "extras"),
+                         pattern = "csv")
+  fileName <- tools::file_path_sans_ext(fileName)
+  fileName <- fileName[1]
   package <- "IncidencePrevalence"
-  versionData <- "0.4.1"
+  versionData <- "0.5.1"
+  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
   configData <- configData[[package]][[versionData]]
   configDataTypes <- names(configData)
-  data <- columnCheck(csvFiles, configData, configDataTypes)
-  expect_equal(length(data), 4)
-  expect_type(data, "list")
+  uploadedFiles <- columnCheck(csvFiles = csvFiles,
+                                fileName = fileName,
+                                configData = configData,
+                                configDataTypes = configDataTypes)
+  expect_equal(length(uploadedFiles), 1)
+  expect_type(uploadedFiles, "list")
+})
+
+test_that("Loading multiple csv files", {
+  csvLocation <- file.path(tempdir(), "dataLocation")
+  dir.create(csvLocation)
+  fileDataPath <- list.files(testthat::test_path("IncPrev",
+                                                  "0.5.1",
+                                                  "csv"),
+                              pattern = "csv",
+                              full.names = TRUE)
+  fileName <- list.files(testthat::test_path("IncPrev",
+                                             "0.5.1",
+                                             "csv"),
+                         pattern = "csv")
+  fileName <- tools::file_path_sans_ext(fileName)
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
+                                fileName = fileName,
+                                package = "IncidencePrevalence",
+                                versionData = "0.5.1",
+                                csvLocation = csvLocation)
+  expect_equal(length(uploadedFiles), 4)
+  expect_type(uploadedFiles, "list")
+  unlink(csvLocation, recursive = TRUE)
 })
 
 test_that("data clean incidence attrition type", {
