@@ -66,3 +66,4 @@ test_that("addPreviewItemType edge cases", {
                                previewItemType = "Facet by outcome")
   expect_equal(result, "")
 })
+
