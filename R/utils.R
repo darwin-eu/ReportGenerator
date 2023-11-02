@@ -39,6 +39,19 @@ getItemsList <- function(items) {
   return(result)
 }
 
+#' Checks items available for ReportGenerator
+#'
+#' Get the items that the user can choose from in the report generator. The list is loaded from the configuration file
+#' and filtered by the files that have been uploaded.
+#'
+#' @param name vector of uploaded filenames.
+#'
+#' @return a dataframe with the properties of the items
+getFunction <- function(name) {
+  menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
+  return(menuData[[name]][["function"]])
+}
+
 #' Adds the given type to the current previewItem string.
 #'
 #' @param previewItemString string representing the previewItem

@@ -1,86 +1,73 @@
 table1NumPar:
   title: "Table - Number of participants"
-  nameFunction: table1NumPar
+  function: table1NumPar(incidence_attrition, prevalence_attrition)
   type:
     - incidence_attrition
     - prevalence_attrition
-  arguments:
+  options: .na.character
+table1IncAtt:
+  title: "Table - Incidence Attrition"
+  function: table1Att(incidence_attrition, attritionDataType)
+  type:
     - incidence_attrition
+  options: .na.character
+table1PrevAtt:
+  title: "Table - Prevalence Attrition"
+  function: table1Att(prevalence_attrition, attritionDataType)
+  type:
     - prevalence_attrition
   options: .na.character
 table1Inc:
   title: "Table - Number of participants by sex and age group"
-  nameFunction: table1NumPar
+  function: table1Inc(incidence_estimates)
   type:
-    - incidence_estimates
-  arguments:
     - incidence_estimates
   options: .na.character
 plotIncidenceYear:
   title: "Plot - Incidence rate per year"
-  nameFunction: plotIncidence
+  function: plotIncidence(incidence_estimates, colour, facet)
   type:
     - incidence_estimates
-  arguments:
-    - incidence_estimates
-  options: .na.character
+  options: Facet by outcome, Facet by database
 plotIncidenceSex:
   title: "Plot - Incidence rate per year by sex"
-  nameFunction: plotIncidence
+  function: plotIncidence(incidence_estimates, colour, facet)
   type:
     - incidence_estimates
-  arguments:
-    - incidence_estimates
-  options: .na.character
+  options: Facet by outcome, Facet by database
 plotIncidenceAge:
   title: "Plot - Incidence rate per year by age"
-  nameFunction: plotIncidence
+  function: plotIncidence(incidence_estimates, colour, facet)
   type:
     - incidence_estimates
-  arguments:
-    - incidence_estimates
-  options: .na.character
+  options: Facet by outcome, Facet by database
 plotPrevalenceYear:
   title: "Plot - Prevalence rate per year"
-  nameFunction: plotPrevalence
+  function: plotPrevalence(prevalence_estimates, colour, facet)
   type:
     - prevalence_estimates
-  arguments:
-    - prevalence_estimates
-  options: .na.character
+  options: Facet by outcome, Facet by database
 plotPrevalenceSex:
   title: "Plot - Prevalence rate per year by sex"
-  nameFunction: plotPrevalence
+  function: plotPrevalence(prevalence_estimates, colour, facet)
   type:
     - prevalence_estimates
-  arguments:
-    - prevalence_estimates
-  options: .na.character
+  options: Facet by outcome, Facet by database
 plotPrevalenceAge:
   title: "Plot - Prevalence rate per year by age"
-  nameFunction: plotPrevalence
+  function: plotPrevalence(prevalence_estimates, colour, facet)
   type:
     - prevalence_estimates
-  arguments:
-    - prevalence_estimates
-  options: .na.character
+  options: Facet by outcome, Facet by database
 createSunburstPlot:
   title: "Sunburst Plot - TreatmentPatterns"
-  nameFunction: createSunburstPlot
+  function: createSunburstPlot(treatmentPathways, outputFile, returnHTML)
   type:
     - treatmentPathways
-  arguments:
-    - treatmentPathways
-    - outputFile
-    - returnHTML
   options: TRUE, FALSE
 createSankeyDiagram:
   title: "Sankey Diagram - TreatmentPatterns"
-  nameFunction: createSankeyDiagram
+  function: createSankeyDiagram()treatmentPathways, outputFile, returnHTML)
   type:
     - treatmentPathways
-  arguments:
-    - treatmentPathways
-    - outputFile
-    - returnHTML
   options: TRUE, FALSE

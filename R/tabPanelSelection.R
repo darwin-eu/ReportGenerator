@@ -1,6 +1,10 @@
 tabPanelSelection <- function(selection, uploadedFiles, menuFun) {
   if (selection == "Table - Number of participants") {
     tabPanel(selection, tableNumParFilters(uploadedFiles), tableOutput("previewTable1"))
+  } else if (selection == "Table - Incidence Attrition") {
+    tabPanel(selection, tableAttIncFilters(uploadedFiles), tableOutput("previewTableAttInc"))
+  } else if (selection == "Table - Prevalence Attrition") {
+    tabPanel(selection, tableAttPrevFilters(uploadedFiles), tableOutput("previewTableAttPrev"))
   } else if (selection == "Table - Number of participants by sex and age group") {
     tabPanel(selection, tableSexFilters(uploadedFiles), gt_output("previewTableSex"))
   } else if (selection == "Plot - Incidence rate per year") {

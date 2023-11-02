@@ -19,6 +19,34 @@ test_that("Table 1 Inc Prev returns table", {
   expect_s3_class(table1Inc, "gt_tbl")
 })
 
+test_that("table1Att 1 database incidence", {
+  incidence_attrition_test <- incidence_attrition_test %>%
+    filter(cdm_name == "IPCI")
+  table1Att <- table1Att(attritionData = incidence_attrition_test,
+                         attritionDataType = "incidence")
+  expect_s3_class(table1Att, "huxtable")
+})
+
+test_that("table1Att 1 database prevalence", {
+  prevalence_attrition_test <- prevalence_attrition_test %>%
+    filter(cdm_name == "IPCI")
+  table1Att <- table1Att(attritionData = prevalence_attrition_test,
+                         attritionDataType = "prevalence")
+  expect_s3_class(table1Att, "huxtable")
+})
+
+test_that("table1Att multiple database incidence", {
+  table1Att <- table1Att(attritionData = incidence_attrition_test,
+                         attritionDataType = "incidence")
+  expect_s3_class(table1Att, "huxtable")
+})
+
+test_that("table1Att multiple database prevalence", {
+  table1Att <- table1Att(attritionData = prevalence_attrition_test,
+                         attritionDataType = "prevalence")
+  expect_s3_class(table1Att, "huxtable")
+})
+
 test_that("Table 2 Inc Over", {
   table2IncOver <- table2IncOver(incidence_estimates = incidence_estimates_test)
   expect_s3_class(table2IncOver, "huxtable")

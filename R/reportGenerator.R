@@ -221,7 +221,8 @@ reportGenerator <- function() {
     # Table 1
 
     output$previewTable1 <- renderTable({
-      objectChoice <- "Table - Number of participants"
+      # objectChoice <- "Table - Number of participants"
+      objectChoice <- "table1NumPar"
       prevalence_attrition <- prevalenceAttritionCommon()
       incidence_attrition <- incidenceAttritionCommon()
       if (input$lockTableNumPar == TRUE) {
@@ -231,16 +232,39 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["prevalence_attrition"]] <- NULL
         dataReport[[objectChoice]][["incidence_attrition"]] <- NULL
       }
-      object <- eval(parse(text = menuFun() %>%
-                             dplyr::filter(title == objectChoice) %>%
-                             dplyr::pull(signature)))
-      object
+      eval(parse(text = getFunction(name = objectChoice)))
     }, colnames = FALSE)
 
-    # Table 2
+    output$previewTableAttInc <- renderTable({
+      # objectChoice <- "Table - Number of participants"
+      objectChoice <- "table1IncAtt"
+      attritionDataType <- "incidence"
+      incidence_attrition <- incidenceAttritionCommon()
+      if (input$lockTableIncAtt == TRUE) {
+        dataReport[[objectChoice]][["incidence_attrition"]] <- incidence_attrition
+      } else {
+        dataReport[[objectChoice]][["incidence_attrition"]] <- NULL
+      }
+      eval(parse(text = getFunction(name = objectChoice)))
+    }, colnames = FALSE)
+
+    output$previewTableAttPrev <- renderTable({
+      # objectChoice <- "Table - Number of participants"
+      objectChoice <- "table1PrevAtt"
+      attritionDataType <- "prevalence"
+      prevalence_attrition <- prevalenceAttritionCommon()
+      if (input$lockTablePrevAtt == TRUE) {
+        dataReport[[objectChoice]][["prevalence_attrition"]] <- prevalence_attrition
+      } else {
+        dataReport[[objectChoice]][["prevalence_attrition"]] <- NULL
+      }
+      eval(parse(text = getFunction(name = objectChoice)))
+    }, colnames = FALSE)
+
+    # Table Att Inc
 
     output$previewTableSex <- render_gt({
-      objectChoice <- "Table - Number of participants by sex and age group"
+      objectChoice <- "table1Inc"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       # Lock data
       if (input$lockTableSex == TRUE) {
@@ -249,10 +273,7 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
       }
       # Preview object
-      object <- eval(parse(text = menuFun() %>%
-                             dplyr::filter(title == objectChoice) %>%
-                             dplyr::pull(signature)))
-      object
+      eval(parse(text = getFunction(name = objectChoice)))
     })
 
     # Figure 1

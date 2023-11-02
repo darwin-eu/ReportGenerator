@@ -3,6 +3,7 @@
 export(generateMockData)
 export(joinDatabase)
 export(reportGenerator)
+export(table1Att)
 export(table1Inc)
 export(table1NumPar)
 export(table1NumParPreview)

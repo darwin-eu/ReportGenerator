@@ -1,16 +1,30 @@
 test_that("getItemsList all", {
   items <- c("incidence_attrition", "prevalence_attrition", "incidence_estimates", "prevalence_estimates", "treatmentPathways")
   menuList <- getItemsList(items)
-  expect_equal(length(menuList), 10)
+  expect_equal(length(menuList), 12)
 })
 
 test_that("getItemsList attrition both", {
   items <- c("incidence_attrition", "prevalence_attrition")
   menuList <- getItemsList(items)
-  expect_equal(menuList, "Table - Number of participants")
+  expect_equal(menuList, c("Table - Number of participants",
+                           "Table - Incidence Attrition",
+                           "Table - Prevalence Attrition"))
 })
 
-test_that("getItemsList only incidence", {
+test_that("getItemsList only incidence_attrition", {
+  items <- c("incidence_attrition")
+  menuList <- getItemsList(items)
+  expect_equal(menuList, c("Table - Incidence Attrition"))
+})
+
+test_that("getItemsList only prevalence_attrition", {
+  items <- c("prevalence_attrition")
+  menuList <- getItemsList(items)
+  expect_equal(menuList, c("Table - Prevalence Attrition"))
+})
+
+test_that("getItemsList only incidence_estimate", {
   items <- c("incidence_estimates")
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 4)
@@ -25,9 +39,14 @@ test_that("getItemsList only prevalence", {
 test_that("getItemsList treatmentPatterns", {
   items <- c("treatmentPathways")
   menuList <- getItemsList(items)
-  expect_equal(menuList, c("Sunburst Plot - TreatmentPatterns", "Sankey Diagram - TreatmentPatterns"))
+  expect_equal(menuList, c("Sunburst Plot - TreatmentPatterns",
+                           "Sankey Diagram - TreatmentPatterns"))
 })
 
+test_that("getFunction table1NumPar", {
+  functionText <- getFunction(name = "table1NumPar")
+  expect_equal(functionText, c("table1NumPar(incidence_attrition, prevalence_attrition)"))
+})
 
 test_that("addPreviewItemType happy flow", {
   result <- addPreviewItemType(previewItemString = "plotIncidence(incidenceCommonData(), colour, facet)",

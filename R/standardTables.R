@@ -242,6 +242,104 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
   }
 
 }
+#' `table1IncAtt()` creates table 1 with number of participants from each database from attrition data
+#'
+#' @param incidence_attrition A dataframe with incidence attrition data.
+#' @param attritionDataType Either "incidence" or prevalence
+#'
+#' @import flextable dplyr
+#' @importFrom huxtable as_hux set_contents insert_row set_align everywhere
+#' @export
+table1Att <- function(attritionData, attritionDataType) {
+
+  if (attritionDataType == "incidence") {
+    attritionData <- dataCleanAttrition(incidence_attrition = attritionData)
+  } else {
+    attritionData <- dataCleanAttrition(prevalence_attrition = attritionData)
+  }
+
+  if (length(unique(attritionData$cdm_name)) == 1) {
+    # Table data incidence
+    tableAtt <- attritionData %>%
+      group_by(reason_id,
+               reason) %>%
+      summarise(current_n = round(mean(number_subjects ), 0),
+                excluded = round(mean(excluded_subjects ), 0)) %>%
+      mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
+                                       between(reason_id, 10, 16) ~ attritionDataType)) %>%
+      filter(reason != "Do not satisfy full contribution requirement for an interval")
+    tableAtt <- tableAtt[,-1]
+    tableAtt <- tableAtt %>%
+      select(analysis_step, everything())
+    databaseName <- unique(attritionData$cdm_name)
+    headerNames <- gsub("\\..*","", names(tableAtt))
+    subtitles <- c(" ", databaseName)
+    subtitlesHeader <- c()
+    for (i in subtitles) {
+      subtitlesHeader <- c(subtitlesHeader, i, " ")
+    }
+    huxTableAtt <- as_hux(tableAtt)
+    lengthNames <- length(names(huxTableAtt))
+    huxTableAtt <- huxTableAtt %>%
+      set_contents(1, 1:lengthNames, headerNames)
+    huxTableAtt <- huxTableAtt %>%
+      insert_row(subtitlesHeader, after = 0)
+    huxTableAtt <- huxTableAtt %>% set_align(1, everywhere, "center")
+    # huxTableAtt
+    return(huxTableAtt)
+  } else {
+    databaseName <- unique(attritionData$cdm_name)
+    # databaseName <- databaseName[1:3]
+    tableAtt <- attritionData %>%
+      filter(cdm_name == databaseName[1]) %>%
+      group_by(reason_id,
+               reason) %>%
+      summarise(current_n = round(mean(number_subjects ), 0),
+                excluded = round(mean(excluded_subjects ), 0)) %>%
+      mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
+                                       between(reason_id, 10, 16) ~ attritionDataType)) %>%
+      filter(reason != "Do not satisfy full contribution requirement for an interval")
+    tableAtt <- tableAtt[,-1]
+    tableAtt <- tableAtt %>%
+      select(analysis_step, everything())
+    # for (i in databaseName[2:3]) {
+    for (i in databaseName[2:length(databaseName)]) {
+      # i <- "SIDIAP"
+      subAtt <- attritionData %>%
+        filter(cdm_name == i) %>%
+        group_by(reason_id,
+                 reason) %>%
+        summarise(current_n = round(mean(number_subjects ), 0),
+                  excluded = round(mean(excluded_subjects ), 0)) %>%
+        mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
+                                         between(reason_id, 10, 16) ~ attritionDataType)) %>%
+        filter(reason != "Do not satisfy full contribution requirement for an interval")
+      subAtt <- subAtt[,-1]
+      subAtt <- subAtt %>%
+        select(analysis_step, everything())
+      subAtt <- subAtt[, -c(1:2)]
+      tableAtt <- bind_cols(tableAtt, subAtt)
+    }
+    names(tableAtt)
+    headerNames <- gsub("\\..*","", names(tableAtt))
+
+    # headerNames
+
+    subtitles <- c(" ", databaseName)
+    subtitlesHeader <- c()
+    for (i in subtitles) {
+      subtitlesHeader <- c(subtitlesHeader, i, " ")
+    }
+    huxTableAtt <- as_hux(tableAtt)
+    lengthNames <- length(names(huxTableAtt))
+    huxTableAtt <- huxTableAtt %>%
+      set_contents(1, 1:lengthNames, headerNames)
+    huxTableAtt <- huxTableAtt %>%
+      insert_row(subtitlesHeader, after = 0)
+    huxTableAtt <- huxTableAtt %>% set_align(1, everywhere, "center")
+    return(huxTableAtt)
+  }
+}
 #' `table1IncPrev()` returns Table 1 using incidence/prevalence estimates.
 #'
 #' @param incidence_estimates A data frame with incidence attrition data.
