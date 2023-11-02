@@ -109,7 +109,6 @@ reportGenerator <- function() {
       })
 
     # TreatmentPatterns
-    # TreatmentPatterns
     observeEvent(input$datasetLoadTP, {
       # Read  file paths
       inFile <- input$datasetLoadTP
