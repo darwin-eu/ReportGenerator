@@ -4,7 +4,7 @@
 \alias{testData}
 \title{`testData()` extracts data from zip results and saves it in .rda format}
 \usage{
-testData(internal = TRUE)
+testData()
 }
 \arguments{
 \item{internal}{Boolean}

@@ -152,21 +152,29 @@ reportGenerator <- function() {
     # prevalence_attrition
 
     prevalenceAttritionCommon <- reactive({
-      commonData <- uploadedFiles$dataIP$prevalence_attrition
-      commonData[is.na(commonData)] = 0
-      commonData <- commonData %>%
-        filter(analysis_id %in% c(input$analysisIdTable1))
-      commonData
+      if (!is.null(uploadedFiles$dataIP$prevalence_attrition)) {
+        commonData <- uploadedFiles$dataIP$prevalence_attrition
+        commonData[is.na(commonData)] = 0
+        commonData <- commonData %>%
+          filter(analysis_id %in% c(input$analysisIdTable1))
+        commonData
+      } else {
+        NULL
+      }
     })
 
     # incidence_attrition
 
     incidenceAttritionCommon <- reactive({
-      commonData <- uploadedFiles$dataIP$incidence_attrition
-      commonData[is.na(commonData)] = 0
-      commonData <- commonData %>%
-        filter(analysis_id %in% c(input$analysisIdTable1))
-      commonData
+      if (!is.null(uploadedFiles$dataIP$incidence_attrition)) {
+        commonData <- uploadedFiles$dataIP$incidence_attrition
+        commonData[is.na(commonData)] = 0
+        commonData <- commonData %>%
+          filter(analysis_id %in% c(input$analysisIdTable1))
+        commonData
+      } else {
+        NULL
+      }
     })
 
     # 3. Interactive menu

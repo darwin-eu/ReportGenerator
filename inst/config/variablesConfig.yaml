@@ -39,3 +39,6 @@ TreatmentPatterns:
       - sex
       - age
       - indexYear
+  2.5.0:
+    treatmentPathways:
+      names: []

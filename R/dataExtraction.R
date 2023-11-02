@@ -61,14 +61,15 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     columnNamesIncidenceAttrition <- setdiff(names(incidenceAttrition), names(incidenceEstimates))
     configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
     configData[[package]][[version]][["incidence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
+    configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
     write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
-    prevalenceAttritionPath <- csvFiles[stringr::str_detect(csvFiles, "prevalence_attrition")]
-    prevalenceAttrition <- read_csv(prevalenceAttritionPath, show_col_types = FALSE)
-    columnNamesPrevalenceAttrition <- setdiff(names(prevalenceAttrition), names(prevalenceEstimates))
-    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-    configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- columnNamesPrevalenceAttrition
-    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    # prevalenceAttritionPath <- csvFiles[stringr::str_detect(csvFiles, "prevalence_attrition")]
+    # prevalenceAttrition <- read_csv(prevalenceAttritionPath, show_col_types = FALSE)
+    # columnNamesPrevalenceAttrition <- setdiff(names(prevalenceAttrition), names(prevalenceEstimates))
+    # configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    # configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
+    # write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
     unlink(csvLocation, recursive = TRUE)
 
@@ -338,43 +339,36 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
 #' @importFrom usethis use_data
 #'
 #' @return sysdata.rda instruction
-testData <- function(internal = TRUE) {
-  # List
-  uploadedFiles <- list.files(system.file("extdata", "examples", "IncPrev", "zip",
-                                          package = "ReportGenerator"),
+testData <- function() {
+  uploadedFiles <- list.files(test_path("IncPrev", "0.5.1"),
                               pattern = ".zip",
-                              full.names = TRUE)
-
-  treatmentPathways_test <- read_csv(system.file("extdata", "examples",
-                                                 "TrePat", "csv", "treatmentPathways.csv",
-                                                 package = "ReportGenerator"))
+                              full.names = TRUE,
+                              recursive = TRUE)
+  treatmentPathways_test <- read_csv(test_path("TrePat",
+                                               "2.5.2",
+                                               "csv",
+                                               "CHUBX",
+                                               "treatmentPathways.csv"),
+                                     show_col_types = FALSE)
   checkmate::assertCharacter(uploadedFiles)
   checkmate::assertTibble(treatmentPathways_test)
-  csvLocation <- file.path(tempdir(), "varDataLocation")
+  csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
 
   # Extract
-  testData <- joinDatabase(uploadedFiles = uploadedFiles, csvLocation = csvLocation)
-
-  # Assign
-  incidence_attrition_test <- testData$incidence_attrition
-  incidence_estimates_test <- testData$incidence_estimates
-  prevalence_attrition_test <- testData$prevalence_attrition
-  prevalence_estimates_test <- testData$prevalence_estimates
-
-  if (internal) {
-  # Save
-  usethis::use_data(incidence_attrition_test, prevalence_attrition_test,
-                    incidence_estimates_test, prevalence_estimates_test,
-                    treatmentPathways_test,
-                    internal = TRUE,
-                    overwrite = TRUE)
+  testData <- joinDatabase(fileDataPath  = uploadedFiles,
+                           package = "IncidencePrevalence",
+                           versionData = "0.5.1",
+                           csvLocation = csvLocation)
+  testData[["treatmentPathways_test"]] <- treatmentPathways_test
   unlink(csvLocation, recursive = TRUE)
-  } else {
-    saveRDS(incidence_attrition_test, file = file.path(system.file("vignettes", package  = "ReportGenerator"), "incidence_attrition.rds"))
-    saveRDS(incidence_estimates_test, file = file.path(system.file("vignettes", package  = "ReportGenerator"), "incidence_estimates.rds"))
-    saveRDS(prevalence_attrition_test, file = file.path(system.file("vignettes", package  = "ReportGenerator"), "prevalence_attrition.rds"))
-    saveRDS(prevalence_estimates_test, file = file.path(system.file("vignettes", package  = "ReportGenerator"), "prevalence_estimates.rds"))
-    saveRDS(treatmentPathways_test, file = file.path(system.file("vignettes", package  = "ReportGenerator"), "treatmentPathways.rds"))
-  }
+  return(testData)
+
+  # Assign in tests
+
+  # incidence_attrition_test <- testData$incidence_attrition
+  # incidence_estimates_test <- testData$incidence_estimates
+  # prevalence_attrition_test <- testData$prevalence_attrition
+  # prevalence_estimates_test <- testData$prevalence_estimates
+  # treatmentPathways_test <- treatmentPathways_test
 }
