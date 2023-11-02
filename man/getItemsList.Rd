@@ -4,10 +4,10 @@
 \alias{getItemsList}
 \title{Checks items available for ReportGenerator}
 \usage{
-getItemsList(uploadedFiles)
+getItemsList(items)
 }
 \arguments{
-\item{uploadedFiles}{vector of uploaded filenames.}
+\item{items}{vector of uploaded filenames.}
 }
 \value{
 a dataframe with the properties of the items

@@ -1,0 +1,86 @@
+table1NumPar:
+  title: "Table - Number of participants"
+  nameFunction: table1NumPar
+  type:
+    - incidence_attrition
+    - prevalence_attrition
+  arguments:
+    - incidence_attrition
+    - prevalence_attrition
+  options: .na.character
+table1Inc:
+  title: "Table - Number of participants by sex and age group"
+  nameFunction: table1NumPar
+  type:
+    - incidence_estimates
+  arguments:
+    - incidence_estimates
+  options: .na.character
+plotIncidenceYear:
+  title: "Plot - Incidence rate per year"
+  nameFunction: plotIncidence
+  type:
+    - incidence_estimates
+  arguments:
+    - incidence_estimates
+  options: .na.character
+plotIncidenceSex:
+  title: "Plot - Incidence rate per year by sex"
+  nameFunction: plotIncidence
+  type:
+    - incidence_estimates
+  arguments:
+    - incidence_estimates
+  options: .na.character
+plotIncidenceAge:
+  title: "Plot - Incidence rate per year by age"
+  nameFunction: plotIncidence
+  type:
+    - incidence_estimates
+  arguments:
+    - incidence_estimates
+  options: .na.character
+plotPrevalenceYear:
+  title: "Plot - Prevalence rate per year"
+  nameFunction: plotPrevalence
+  type:
+    - prevalence_estimates
+  arguments:
+    - prevalence_estimates
+  options: .na.character
+plotPrevalenceSex:
+  title: "Plot - Prevalence rate per year by sex"
+  nameFunction: plotPrevalence
+  type:
+    - prevalence_estimates
+  arguments:
+    - prevalence_estimates
+  options: .na.character
+plotPrevalenceAge:
+  title: "Plot - Prevalence rate per year by age"
+  nameFunction: plotPrevalence
+  type:
+    - prevalence_estimates
+  arguments:
+    - prevalence_estimates
+  options: .na.character
+createSunburstPlot:
+  title: "Sunburst Plot - TreatmentPatterns"
+  nameFunction: createSunburstPlot
+  type:
+    - treatmentPathways
+  arguments:
+    - treatmentPathways
+    - outputFile
+    - returnHTML
+  options: TRUE, FALSE
+createSankeyDiagram:
+  title: "Sankey Diagram - TreatmentPatterns"
+  nameFunction: createSankeyDiagram
+  type:
+    - treatmentPathways
+  arguments:
+    - treatmentPathways
+    - outputFile
+    - returnHTML
+  options: TRUE, FALSE

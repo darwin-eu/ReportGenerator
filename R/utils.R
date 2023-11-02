@@ -19,33 +19,24 @@
 #' Get the items that the user can choose from in the report generator. The list is loaded from the configuration file
 #' and filtered by the files that have been uploaded.
 #'
-#' @param uploadedFiles vector of uploaded filenames.
+#' @param items vector of uploaded filenames.
 #'
 #' @return a dataframe with the properties of the items
-getItemsList <- function(uploadedFiles) {
-
-  menuFunctions <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"),
-                            sep = ";") %>%
-    dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-
-  # uploadedFiles <- items
-
-  checkNeeds <- function(menuFunctions, uploadedFiles) {
-    unlist(lapply(menuFunctions, FUN = function(menuFunction) {
-      required <- trimws(unlist(strsplit(menuFunction , ",")))
-      exists <- required %in% uploadedFiles
-      if (TRUE %in% exists) {
-        return(TRUE)
-      } else {
-        return(FALSE)
-      }
+getItemsList <- function(items) {
+  menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
+  menuList <- lapply(menuData, function(menuData, itemsList) {
+    if (all(menuData[["type"]] %in% itemsList)) {
+      menuData[["title"]]
     }
-    )
-    )
+  }, itemsList = items)
+  result <- list()
+  for (i in menuList) {
+    if (!is.null(i)) {
+      result <- rbind(result, i)
+    }
   }
-  menuFunctions  %>%
-    dplyr::filter(checkNeeds(menuFunctions$arguments, uploadedFiles)) %>%
-    dplyr::select(title, signature)
+  result <- unlist(result)
+  return(result)
 }
 
 #' Adds the given type to the current previewItem string.

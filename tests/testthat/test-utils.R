@@ -1,45 +1,33 @@
-genericChecks <- function(result) {
-  expect_equal(class(result), "data.frame")
-  expect_equal(colnames(result), c("title", "signature"))
-}
-
-test_that("getItemsList happy flow", {
-
-  uploadedFiles <- c("incidence_attrition",
-                     "prevalence_attrition")
-
-  result <- getItemsList(uploadedFiles)
-
-  genericChecks(result)
-  expect_equal(nrow(result), 1)
-
-  uploadedFiles <- c("incidence_attrition",
-                     "prevalence_attrition",
-                     "incidence_estimates")
-
-  result <- getItemsList(uploadedFiles)
-
-  genericChecks(result)
-  expect_equal(nrow(result), 5)
-
-  uploadedFiles <- c("incidence_attrition",
-                     "prevalence_attrition",
-                     "incidence_estimates",
-                     "prevalence_estimates")
-
-  result <- getItemsList(uploadedFiles)
-
-  genericChecks(result)
-  expect_equal(nrow(result), 8)
+test_that("getItemsList all", {
+  items <- c("incidence_attrition", "prevalence_attrition", "incidence_estimates", "prevalence_estimates", "treatmentPathways")
+  menuList <- getItemsList(items)
+  expect_equal(length(menuList), 10)
 })
 
-test_that("getItemsList edge cases", {
-
-  result <- getItemsList(uploadedFiles = NULL)
-
-  genericChecks(result)
-  expect_equal(nrow(result), 0)
+test_that("getItemsList attrition both", {
+  items <- c("incidence_attrition", "prevalence_attrition")
+  menuList <- getItemsList(items)
+  expect_equal(menuList, "Table - Number of participants")
 })
+
+test_that("getItemsList only incidence", {
+  items <- c("incidence_estimates")
+  menuList <- getItemsList(items)
+  expect_equal(length(menuList), 4)
+})
+
+test_that("getItemsList only prevalence", {
+  items <- c("prevalence_estimates")
+  menuList <- getItemsList(items)
+  expect_equal(length(menuList), 3)
+})
+
+test_that("getItemsList treatmentPatterns", {
+  items <- c("treatmentPathways")
+  menuList <- getItemsList(items)
+  expect_equal(menuList, c("Sunburst Plot - TreatmentPatterns", "Sankey Diagram - TreatmentPatterns"))
+})
+
 
 test_that("addPreviewItemType happy flow", {
   result <- addPreviewItemType(previewItemString = "plotIncidence(incidenceCommonData(), colour, facet)",

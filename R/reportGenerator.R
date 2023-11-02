@@ -186,7 +186,7 @@ reportGenerator <- function() {
                          group_name = "bucket_list_group",
                          orientation = "horizontal",
                          add_rank_list(text = "Drag from here",
-                                       labels = itemsList$objects$items$title,
+                                       labels = itemsList$objects$items,
                                        input_id = "objectMenu"),
                          add_rank_list(text = "to here",
                                        labels = NULL,

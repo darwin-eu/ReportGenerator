@@ -14,80 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' Writes variablesConfig file in Yaml
-#'
-#' `variablesConfigYaml()` the user can load the column names to the variablesConfig.yaml so ReportGenerator can recognize its data.
-#'
-#' @param fileDataPath A list of zipped csv files.
-#' @param package A string to identify the name of the package, default IncidencePrevalence.
-#' @param version A string to identify which version of IncidencePrevalence is used to generate the results.
-#'
-#' @return Adds column names to the variablesConfig.yaml
-#' @export
-#' @import dplyr
-#' @importFrom utils unzip
-#' @importFrom readr read_csv
-variablesConfigYaml <- function(fileDataPath = NULL,
-                                package = "IncidencePrevalence",
-                                version = NULL) {
-  # fileDataPath <- fileDataPath[1]
-
-  if (package == "IncidencePrevalence") {
-    csvLocation <- file.path(tempdir(), "dataLocation")
-    dir.create(csvLocation)
-    utils::unzip(zipfile = fileDataPath,
-                 exdir = csvLocation)
-    csvFiles <- list.files(path = csvLocation,
-                           pattern = ".csv",
-                           full.names = TRUE,
-                           recursive = TRUE)
-
-    incidenceEstimatesPath <- csvFiles[stringr::str_detect(csvFiles, "incidence_estimates")]
-    incidenceEstimates <- read_csv(incidenceEstimatesPath, show_col_types = FALSE)
-    columnNamesIncidence <- names(incidenceEstimates)[grepl("incidence", names(incidenceEstimates))]
-    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-    configData[[package]][[version]][["incidence_estimates"]][["names"]] <- columnNamesIncidence
-    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-
-    prevalenceEstimatesPath <- csvFiles[stringr::str_detect(csvFiles, "prevalence_estimates")]
-    prevalenceEstimates <- read_csv(prevalenceEstimatesPath, show_col_types = FALSE)
-    columnNamesPrevalence <- names(prevalenceEstimates)[grepl("prevalence", names(prevalenceEstimates))]
-    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-    configData[[package]][[version]][["prevalence_estimates"]][["names"]] <- columnNamesPrevalence
-    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-
-    incidenceAttritionPath <- csvFiles[stringr::str_detect(csvFiles, "incidence_attrition")]
-    incidenceAttrition <- read_csv(incidenceAttritionPath, show_col_types = FALSE)
-    columnNamesIncidenceAttrition <- setdiff(names(incidenceAttrition), names(incidenceEstimates))
-    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-    configData[[package]][[version]][["incidence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
-    configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
-    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-
-    # prevalenceAttritionPath <- csvFiles[stringr::str_detect(csvFiles, "prevalence_attrition")]
-    # prevalenceAttrition <- read_csv(prevalenceAttritionPath, show_col_types = FALSE)
-    # columnNamesPrevalenceAttrition <- setdiff(names(prevalenceAttrition), names(prevalenceEstimates))
-    # configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-    # configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
-    # write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-
-    unlink(csvLocation, recursive = TRUE)
-
-  } else if (package == "TreatmentPatterns") {
-    csvFiles <- fileDataPath
-    treatmentPathwaysPath <- csvFiles[stringr::str_detect(csvFiles, "treatmentPathways")]
-    treatmentPathways <- read_csv(treatmentPathwaysPath, show_col_types = FALSE)
-    columnNamesTreatmentPathways <- names(treatmentPathways)
-    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-    configData[[package]][[version]][["treatmentPathways"]][["names"]] <- columnNamesTreatmentPathways
-    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  }
-
-}
-
-# -------------------------------------------------------------------------
-
-
 #' `joinDatabase()` joins several zip or csv folders into a list of dataframes.
 #'
 #' @param fileDataPath File path(s) in character
@@ -245,6 +171,77 @@ columnCheck <- function(csvFiles,
       }
   }
   return(data)
+}
+
+#' Writes variablesConfig file in Yaml
+#'
+#' `variablesConfigYaml()` the user can load the column names to the variablesConfig.yaml so ReportGenerator can recognize its data.
+#'
+#' @param fileDataPath A list of zipped csv files.
+#' @param package A string to identify the name of the package, default IncidencePrevalence.
+#' @param version A string to identify which version of IncidencePrevalence is used to generate the results.
+#'
+#' @return Adds column names to the variablesConfig.yaml
+#' @export
+#' @import dplyr
+#' @importFrom utils unzip
+#' @importFrom readr read_csv
+variablesConfigYaml <- function(fileDataPath = NULL,
+                                package = "IncidencePrevalence",
+                                version = NULL) {
+  # fileDataPath <- fileDataPath[1]
+
+  if (package == "IncidencePrevalence") {
+    csvLocation <- file.path(tempdir(), "dataLocation")
+    dir.create(csvLocation)
+    utils::unzip(zipfile = fileDataPath,
+                 exdir = csvLocation)
+    csvFiles <- list.files(path = csvLocation,
+                           pattern = ".csv",
+                           full.names = TRUE,
+                           recursive = TRUE)
+
+    incidenceEstimatesPath <- csvFiles[stringr::str_detect(csvFiles, "incidence_estimates")]
+    incidenceEstimates <- read_csv(incidenceEstimatesPath, show_col_types = FALSE)
+    columnNamesIncidence <- names(incidenceEstimates)[grepl("incidence", names(incidenceEstimates))]
+    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData[[package]][[version]][["incidence_estimates"]][["names"]] <- columnNamesIncidence
+    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+    prevalenceEstimatesPath <- csvFiles[stringr::str_detect(csvFiles, "prevalence_estimates")]
+    prevalenceEstimates <- read_csv(prevalenceEstimatesPath, show_col_types = FALSE)
+    columnNamesPrevalence <- names(prevalenceEstimates)[grepl("prevalence", names(prevalenceEstimates))]
+    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData[[package]][[version]][["prevalence_estimates"]][["names"]] <- columnNamesPrevalence
+    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+    incidenceAttritionPath <- csvFiles[stringr::str_detect(csvFiles, "incidence_attrition")]
+    incidenceAttrition <- read_csv(incidenceAttritionPath, show_col_types = FALSE)
+    columnNamesIncidenceAttrition <- setdiff(names(incidenceAttrition), names(incidenceEstimates))
+    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData[[package]][[version]][["incidence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
+    configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
+    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+    # prevalenceAttritionPath <- csvFiles[stringr::str_detect(csvFiles, "prevalence_attrition")]
+    # prevalenceAttrition <- read_csv(prevalenceAttritionPath, show_col_types = FALSE)
+    # columnNamesPrevalenceAttrition <- setdiff(names(prevalenceAttrition), names(prevalenceEstimates))
+    # configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    # configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
+    # write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+    unlink(csvLocation, recursive = TRUE)
+
+  } else if (package == "TreatmentPatterns") {
+    csvFiles <- fileDataPath
+    treatmentPathwaysPath <- csvFiles[stringr::str_detect(csvFiles, "treatmentPathways")]
+    treatmentPathways <- read_csv(treatmentPathwaysPath, show_col_types = FALSE)
+    columnNamesTreatmentPathways <- names(treatmentPathways)
+    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData[[package]][[version]][["treatmentPathways"]][["names"]] <- columnNamesTreatmentPathways
+    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+  }
+
 }
 
 dataCleanAttrition <- function(incidence_attrition = NULL,
