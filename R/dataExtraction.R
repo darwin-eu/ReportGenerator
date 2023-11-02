@@ -165,6 +165,20 @@ joinDatabase <- function(fileDataPath = NULL,
               message(paste0(val, ": match yes"))
               data[[val]] <- bind_rows(data[[val]], resultsData)
             }
+          } else if (val == "prevalence_estimates") {
+            configColumns <- configData[[val]]
+            configColumns <- unlist(configColumns$names)
+            if (all(configColumns %in% resultsColumns)) {
+              message(paste0(val, ": match yes"))
+              data[[val]] <- bind_rows(data[[val]], resultsData)
+            }
+          } else if (val == "treatmentPathways") {
+            configColumns <- configData[[val]]
+            configColumns <- unlist(configColumns$names)
+            if (all(configColumns %in% resultsColumns)) {
+              message(paste0(val, ": match yes"))
+              data[[val]] <- bind_rows(data[[val]], resultsData)
+            }
           }
         }
       }
@@ -213,6 +227,13 @@ columnCheck <- function(csvFiles,
           data[[val]] <- bind_rows(data[[val]], resultsData)
         }
       } else if (val == "prevalence_estimates") {
+        configColumns <- configData[[val]]
+        configColumns <- unlist(configColumns$names)
+        if (all(configColumns %in% resultsColumns)) {
+          message(paste0(val, ": match yes"))
+          data[[val]] <- bind_rows(data[[val]], resultsData)
+        }
+      } else if (val == "treatmentPathways") {
         configColumns <- configData[[val]]
         configColumns <- unlist(configColumns$names)
         if (all(configColumns %in% resultsColumns)) {

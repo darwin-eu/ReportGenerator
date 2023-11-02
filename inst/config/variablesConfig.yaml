@@ -31,11 +31,11 @@ IncidencePrevalence:
       - excluded_records
       - excluded_subjects
 TreatmentPatterns:
-  2.5.0:
+  2.5.2:
     treatmentPathways:
       names:
       - path
       - freq
       - sex
       - age
-      - index_year
+      - indexYear

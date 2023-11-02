@@ -109,21 +109,27 @@ reportGenerator <- function() {
       })
 
     # TreatmentPatterns
+    # TreatmentPatterns
     observeEvent(input$datasetLoadTP, {
+      # Read  file paths
       inFile <- input$datasetLoadTP
       fileDataPath <- inFile$datapath
-      configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-      package <- "TreatmentPatterns"
-      versionData <- "2.5.0"
-      configData <- configData[[package]][[versionData]]
-      configDataTypes <- names(configData)
-      if (length(fileDataPath) == 1) {
-        if (grepl(".csv", fileDataPath, fixed = TRUE)) {
-          uploadedFiles$dataTP <- columnCheck(csvFiles = fileDataPath, configData, configDataTypes)
-          items <- names(uploadedFiles$dataTP)
-          itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]], getItemsList(items))
-        }
-      }
+      fileName <- inFile$name
+      # Temp directory to unzip files
+      csvLocation <- file.path(tempdir(), "dataLocation")
+      dir.create(csvLocation)
+      # Joins one or several zips from different data partners into the reactive value
+      versionData <- input$dataVersionTP
+      uploadedFiles$dataTP <- joinDatabase(fileDataPath = fileDataPath,
+                                           fileName = fileName,
+                                           package = "TreatmentPatterns",
+                                           versionData = versionData,
+                                           csvLocation = csvLocation)
+      # Get list of items to show in toggle menu
+      items <- names(uploadedFiles$dataTP)
+      # Items list into reactive value to show in toggle menu
+      itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]], getItemsList(items))
+      unlink(csvLocation, recursive = TRUE)
     })
 
     # Reset and back to initial tab

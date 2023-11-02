@@ -28,7 +28,7 @@ test_that("VariablesConfig TreatmentPatterns", {
   expect_type(configData[[package]][[version]], "list")
 })
 
-test_that("Loading 1 zip files", {
+test_that("Loading 1 zip files IncidencePrevalence", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
   fileDataPath <- list.files(testthat::test_path("IncPrev",
@@ -45,7 +45,7 @@ test_that("Loading 1 zip files", {
   unlink(csvLocation, recursive = TRUE)
 })
 
-test_that("Loading multiple zip files", {
+test_that("Loading multiple zip files IncidencePrevalence", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
   fileDataPath <- list.files(testthat::test_path("IncPrev",
@@ -62,7 +62,7 @@ test_that("Loading multiple zip files", {
   unlink(csvLocation, recursive = TRUE)
 })
 
-test_that("Loading 1 csv files", {
+test_that("Loading 1 csv files IncidencePrevalence", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
   fileDataPath <- list.files(testthat::test_path("IncPrev",
@@ -85,7 +85,7 @@ test_that("Loading 1 csv files", {
   unlink(csvLocation, recursive = TRUE)
 })
 
-test_that("Loading 1 csv files extra column check", {
+test_that("Loading 1 csv files extra column check IncidencePrevalence", {
   csvFiles <- list.files(testthat::test_path("IncPrev",
                                              "extras"),
                              pattern = "csv",
@@ -109,7 +109,7 @@ test_that("Loading 1 csv files extra column check", {
   expect_type(uploadedFiles, "list")
 })
 
-test_that("Loading multiple csv files", {
+test_that("Loading multiple csv files IncidencePrevalence", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
   fileDataPath <- list.files(testthat::test_path("IncPrev",
@@ -128,6 +128,94 @@ test_that("Loading multiple csv files", {
                                 versionData = "0.5.1",
                                 csvLocation = csvLocation)
   expect_equal(length(uploadedFiles), 4)
+  expect_type(uploadedFiles, "list")
+  unlink(csvLocation, recursive = TRUE)
+})
+
+test_that("Loading 1 csv files TreatmentPatterns", {
+  csvLocation <- file.path(tempdir(), "dataLocation")
+  dir.create(csvLocation)
+  fileDataPath <- list.files(testthat::test_path("TrePat",
+                                                 "2.5.2",
+                                                 "csv",
+                                                 "CHUBX"),
+                             pattern = "csv",
+                             full.names = TRUE)
+  fileDataPath <- fileDataPath[stringr::str_detect(fileDataPath, "treatmentPathways")]
+  package <- "TreatmentPatterns"
+  versionData <- "2.5.2"
+  fileName <- "treatmentPathways"
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
+                                fileName = fileName,
+                                package = package,
+                                versionData = versionData,
+                                csvLocation = csvLocation)
+  expect_equal(length(uploadedFiles), 1)
+  expect_type(uploadedFiles, "list")
+  unlink(csvLocation, recursive = TRUE)
+})
+
+test_that("Loading multiple csv files TreatmentPatterns", {
+  csvLocation <- file.path(tempdir(), "dataLocation")
+  dir.create(csvLocation)
+  fileDataPath <- list.files(testthat::test_path("TrePat",
+                                                 "2.5.2",
+                                                 "csv"),
+                             pattern = "treatmentPathways.csv",
+                             full.names = TRUE,
+                             recursive = TRUE)
+  package <- "TreatmentPatterns"
+  versionData <- "2.5.2"
+  fileName <- list.files(testthat::test_path("TrePat",
+                                             "2.5.2",
+                                             "csv"),
+                         pattern = "treatmentPathways.csv",
+                         recursive = TRUE)
+  fileName <- tools::file_path_sans_ext(fileName)
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
+                                fileName = fileName,
+                                package = package,
+                                versionData = versionData,
+                                csvLocation = csvLocation)
+  expect_equal(length(uploadedFiles), 1)
+  expect_type(uploadedFiles, "list")
+  unlink(csvLocation, recursive = TRUE)
+})
+
+test_that("Loading 1 zip files TreatmentPatterns", {
+  csvLocation <- file.path(tempdir(), "dataLocation")
+  dir.create(csvLocation)
+  fileDataPath <- list.files(testthat::test_path("TrePat",
+                                                 "2.5.2",
+                                                 "zip"),
+                             pattern = "zip",
+                             full.names = TRUE)
+  package <- "TreatmentPatterns"
+  versionData <- "2.5.2"
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
+                                package = package,
+                                versionData = versionData,
+                                csvLocation = csvLocation)
+  expect_equal(length(uploadedFiles), 1)
+  expect_type(uploadedFiles, "list")
+  unlink(csvLocation, recursive = TRUE)
+})
+
+test_that("Loading multiple zip files TreatmentPatterns", {
+  csvLocation <- file.path(tempdir(), "dataLocation")
+  dir.create(csvLocation)
+  fileDataPath <- list.files(testthat::test_path("TrePat",
+                                                 "2.5.2",
+                                                 "zip"),
+                             pattern = "zip",
+                             full.names = TRUE)
+  package <- "TreatmentPatterns"
+  versionData <- "2.5.2"
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
+                                package = package,
+                                versionData = versionData,
+                                csvLocation = csvLocation)
+  expect_equal(length(uploadedFiles), 1)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
 })
