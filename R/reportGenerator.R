@@ -31,7 +31,6 @@ reportGenerator <- function() {
   # set max file upload size
   options(shiny.maxRequestSize = 30*1024^2)
 
-
   ui <- dashboardPage(
     dashboardHeader(title = "ReportGenerator"),
     dashboardSidebar(
@@ -69,7 +68,6 @@ reportGenerator <- function() {
       )
     )
   )
-
 
   server <- function(input, output, session) {
 
@@ -951,10 +949,6 @@ reportGenerator <- function() {
       }
     })
 
-
-
-
-
     # Update according to facet prevalence
 
     observeEvent(input$facetPrevalenceSex, {
@@ -1142,9 +1136,7 @@ reportGenerator <- function() {
       print(incidencePrevalenceDocx,
             target = file)
     }
-
     )
-
   }
   shinyApp(ui, server)
 }
