@@ -43,9 +43,27 @@ test_that("getItemsList treatmentPatterns", {
                            "Sankey Diagram - TreatmentPatterns"))
 })
 
-test_that("getFunction table1NumPar", {
-  functionText <- getFunction(name = "table1NumPar")
-  expect_equal(functionText, c("table1NumPar(incidence_attrition, prevalence_attrition)"))
+test_that("getItemConfig for getting a function", {
+  title <- c("Table - Number of participants")
+  expression <- getItemConfig(input = "title",
+                              output = "function",
+                              inputValue = title)
+  expect_equal(expression, c("table1NumPar(incidence_attrition, prevalence_attrition)"))
+})
+
+test_that("getItemConfig for getting options", {
+  title <- c("Table - Number of participants")
+  itemOptions <- getItemConfig(input = "title",
+                               output = "options",
+                               inputValue = title)
+  expect_equal(itemOptions, NULL)
+})
+
+test_that("getFunctionReport error more than length 1", {
+  title <- c("Table - Number of participants", "Table - Incidence Attrition")
+  expect_error(getItemConfig(input = "title",
+                             output = "function",
+                             inputValue = title))
 })
 
 test_that("addPreviewItemType happy flow", {

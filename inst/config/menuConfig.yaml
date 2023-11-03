@@ -4,25 +4,25 @@ table1NumPar:
   type:
     - incidence_attrition
     - prevalence_attrition
-  options: .na.character
+  options: NULL
 table1IncAtt:
   title: "Table - Incidence Attrition"
   function: table1Att(incidence_attrition, attritionDataType)
   type:
     - incidence_attrition
-  options: .na.character
+  options: NULL
 table1PrevAtt:
   title: "Table - Prevalence Attrition"
   function: table1Att(prevalence_attrition, attritionDataType)
   type:
     - prevalence_attrition
-  options: .na.character
+  options: NULL
 table1Inc:
   title: "Table - Number of participants by sex and age group"
   function: table1Inc(incidence_estimates)
   type:
     - incidence_estimates
-  options: .na.character
+  options: NULL
 plotIncidenceYear:
   title: "Plot - Incidence rate per year"
   function: plotIncidence(incidence_estimates, colour, facet)

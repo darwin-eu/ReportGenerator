@@ -47,9 +47,54 @@ getItemsList <- function(items) {
 #' @param name vector of uploaded filenames.
 #'
 #' @return a dataframe with the properties of the items
-getFunction <- function(name) {
+getItemConfig <- function(input = NULL,
+                          output = NULL,
+                          inputValue = NULL) {
+
+  checkmate::assertSetEqual(length(input), 1)
+  checkmate::assertSetEqual(length(output), 1)
+  checkmate::assertSetEqual(length(inputValue), 1)
+  checkmate::assertCharacter(input)
+  checkmate::assertCharacter(output)
+  checkmate::assertCharacter(inputValue)
+
   menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
-  return(menuData[[name]][["function"]])
+  functionText <- lapply(menuData, function(menuData, title) {
+    if (menuData[[input]] == inputValue) {
+      menuData[[output]]
+    }
+  }, title = title)
+  result <- list()
+  for (i in functionText) {
+    if (!is.null(i)) {
+      result <- rbind(result, i)
+    }
+  }
+  result <- unlist(result)
+  return(result)
+}
+
+#' Get options for given item.
+#'
+#' @param item the menu item
+#'
+#' @return the options
+getItemOptions <- function(title) {
+  checkmate::assertSetEqual(length(title), 1)
+  menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
+  functionText <- lapply(menuData, function(menuData, title) {
+    if (all(menuData[["title"]] %in% title)) {
+      menuData[["options"]]
+    }
+  }, title = title)
+  result <- list()
+  for (i in functionText) {
+    if (!is.null(i)) {
+      result <- rbind(result, i)
+    }
+  }
+  result <- unlist(result)
+  return(result)
 }
 
 #' Adds the given type to the current previewItem string.
@@ -148,17 +193,6 @@ addPreviewItemTypeAge <- function(previewItemString, previewItemType) {
 
   }
   return(result)
-}
-#' Get options for given item.
-#'
-#' @param item the menu item
-#'
-#' @return the options
-getItemOptions <- function(item) {
-  item %>%
-    dplyr::pull(options) %>%
-    strsplit(split = ", ") %>%
-    unlist()
 }
 
 #' Increase the facet strip size for better readability.

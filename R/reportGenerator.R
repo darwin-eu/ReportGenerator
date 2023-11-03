@@ -206,14 +206,14 @@ reportGenerator <- function() {
     })
 
     # Retrieves list of functions available and places the correct arguments
-    menuFun  <- reactive({
-      menuFun <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
-      # menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$dataIP$incidence_estimates"
-      # menuFun$arguments[menuFun$name == "createSunburstPlot"] <- "uploadedFiles$dataTP$treatmentPathways"
-      # menuFun$arguments[menuFun$name == "createSankeyDiagram"] <- "uploadedFiles$dataTP$treatmentPathways"
-      menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-      menuFun
-    })
+    # menuFun  <- reactive({
+    #   menuFun <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
+    #   # menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$dataIP$incidence_estimates"
+    #   # menuFun$arguments[menuFun$name == "createSunburstPlot"] <- "uploadedFiles$dataTP$treatmentPathways"
+    #   # menuFun$arguments[menuFun$name == "createSankeyDiagram"] <- "uploadedFiles$dataTP$treatmentPathways"
+    #   menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
+    #   menuFun
+    # })
 
     # Objects to be rendered in the UI
 
@@ -221,7 +221,7 @@ reportGenerator <- function() {
 
     output$previewTable1 <- renderTable({
       # objectChoice <- "Table - Number of participants"
-      objectChoice <- "table1NumPar"
+      objectChoice <- "Table - Number of participants"
       prevalence_attrition <- prevalenceAttritionCommon()
       incidence_attrition <- incidenceAttritionCommon()
       if (input$lockTableNumPar == TRUE) {
@@ -231,39 +231,48 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["prevalence_attrition"]] <- NULL
         dataReport[[objectChoice]][["incidence_attrition"]] <- NULL
       }
-      eval(parse(text = getFunction(name = objectChoice)))
+      eval(parse(text = getItemConfig(input = "title",
+                                      output = "function",
+                                      inputValue = objectChoice)))
     }, colnames = FALSE)
 
     output$previewTableAttInc <- renderTable({
-      # objectChoice <- "Table - Number of participants"
-      objectChoice <- "table1IncAtt"
+      objectChoice <- "Table - Incidence Attrition"
       attritionDataType <- "incidence"
       incidence_attrition <- incidenceAttritionCommon()
       if (input$lockTableIncAtt == TRUE) {
         dataReport[[objectChoice]][["incidence_attrition"]] <- incidence_attrition
+        dataReport[[objectChoice]][["attritionDataType"]] <- attritionDataType
       } else {
         dataReport[[objectChoice]][["incidence_attrition"]] <- NULL
+        dataReport[[objectChoice]][["attritionDataType"]] <- NULL
       }
-      eval(parse(text = getFunction(name = objectChoice)))
+      eval(parse(text = getItemConfig(input = "title",
+                                      output = "function",
+                                      inputValue = objectChoice)))
     }, colnames = FALSE)
 
     output$previewTableAttPrev <- renderTable({
       # objectChoice <- "Table - Number of participants"
-      objectChoice <- "table1PrevAtt"
+      objectChoice <- "Table - Prevalence Attrition"
       attritionDataType <- "prevalence"
       prevalence_attrition <- prevalenceAttritionCommon()
       if (input$lockTablePrevAtt == TRUE) {
         dataReport[[objectChoice]][["prevalence_attrition"]] <- prevalence_attrition
+        dataReport[[objectChoice]][["attritionDataType"]] <- attritionDataType
       } else {
         dataReport[[objectChoice]][["prevalence_attrition"]] <- NULL
+        dataReport[[objectChoice]][["attritionDataType"]] <- NULL
       }
-      eval(parse(text = getFunction(name = objectChoice)))
+      eval(parse(text = getItemConfig(input = "title",
+                                      output = "function",
+                                      inputValue = objectChoice)))
     }, colnames = FALSE)
 
     # Table Att Inc
 
     output$previewTableSex <- render_gt({
-      objectChoice <- "table1Inc"
+      objectChoice <- "Table - Number of participants by sex and age group"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       # Lock data
       if (input$lockTableSex == TRUE) {
@@ -272,14 +281,16 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
       }
       # Preview object
-      eval(parse(text = getFunction(name = objectChoice)))
+      eval(parse(text = getItemConfig(input = "title",
+                                      output = "function",
+                                      inputValue = objectChoice)))
     })
 
     # Figure 1
 
     incidenceFigure1 <- reactive({
 
-      objectChoice <- "plotIncidenceYear"
+      objectChoice <- "Plot - Incidence rate per year"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
@@ -331,7 +342,9 @@ reportGenerator <- function() {
 
       # Add facets and render functions
 
-      expression <- getFunction(name = objectChoice) %>%
+      expression <- getItemConfig(input = "title",
+                                  output = "function",
+                                  inputValue = objectChoice) %>%
         addPreviewItemType(input$facetIncidenceYear)
       eval(parse(text = expression))
 
@@ -353,7 +366,7 @@ reportGenerator <- function() {
     # Figure 2
 
     incidenceFigure2Sex <- reactive({
-      objectChoice <- "plotIncidenceSex"
+      objectChoice <- "Plot - Incidence rate per year by sex"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult",
                                       "IncidenceResult",
@@ -409,7 +422,9 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["plotOption"]] <- NULL
       }
 
-      expression <- getFunction(name = objectChoice) %>%
+      expression <- getItemConfig(input = "title",
+                                  output = "function",
+                                  inputValue = objectChoice) %>%
         addPreviewItemTypeSex(input$facetIncidenceSex)
       eval(parse(text = expression))
 
@@ -432,7 +447,7 @@ reportGenerator <- function() {
 
     incidenceFigure3Age <- reactive({
 
-      objectChoice <- "plotIncidenceAge"
+      objectChoice <- "Plot - Incidence rate per year by age"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult",
                                       "IncidenceResult",
@@ -485,7 +500,9 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
         dataReport[[objectChoice]][["plotOption"]] <- NULL
       }
-      expression <- getFunction(name = objectChoice) %>%
+      expression <- getItemConfig(input = "title",
+                                  output = "function",
+                                  inputValue = objectChoice) %>%
         addPreviewItemTypeAge(input$facetIncidenceAge)
       eval(parse(text = expression))
 
@@ -587,7 +604,7 @@ reportGenerator <- function() {
     # Figure 4: Prevalence rate per year
 
     prevalenceFigure4 <- reactive({
-      objectChoice <- "plotPrevalenceYear"
+      objectChoice <- "Plot - Prevalence rate per year"
       prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
       class(prevalence_estimates) <- c("IncidencePrevalenceResult",
                                        "PrevalenceResult",
@@ -643,7 +660,9 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["plotOption"]] <- NULL
       }
       # Preview object
-      expression <- getFunction(name = objectChoice) %>%
+      expression <- getItemConfig(input = "title",
+                                  output = "function",
+                                  inputValue = objectChoice) %>%
         addPreviewItemType(input$facetIncidenceYear)
       eval(parse(text = expression))
     })
@@ -664,7 +683,7 @@ reportGenerator <- function() {
     # Figure 5: Prevalence rate per year by sex
 
     prevalenceFigure5 <- reactive({
-      objectChoice <- "plotPrevalenceSex"
+      objectChoice <- "Plot - Prevalence rate per year by sex"
       prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
       class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
       prevalence_estimates[is.na(prevalence_estimates)] = 0
@@ -716,7 +735,9 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["plotOption"]] <- NULL
       }
       # Preview object
-      expression <- getFunction(name = objectChoice) %>%
+      expression <- getItemConfig(input = "title",
+                                  output = "function",
+                                  inputValue = objectChoice) %>%
         addPreviewItemTypeSex(input$facetPrevalenceSex)
       eval(parse(text = expression))
     })
@@ -737,7 +758,7 @@ reportGenerator <- function() {
     # Figure 6: Prevalence rate per year by age
 
     prevalenceFigure6 <- reactive({
-      objectChoice <- "plotPrevalenceAge"
+      objectChoice <- "Plot - Prevalence rate per year by age"
       prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
       class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
       prevalence_estimates[is.na(prevalence_estimates)] = 0
@@ -789,7 +810,9 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["plotOption"]] <- NULL
       }
       # Preview object
-      expression <- getFunction(name = objectChoice) %>%
+      expression <- getItemConfig(input = "title",
+                                  output = "function",
+                                  inputValue = objectChoice) %>%
         addPreviewItemTypeAge(input$facetPrevalenceAge)
       eval(parse(text = expression))
     })
@@ -877,14 +900,16 @@ reportGenerator <- function() {
     # Sankey
 
     output$previewSankeyDiagram <- renderGvis({
-      objectChoice <- "createSankeyDiagram"
+      objectChoice <- "Sankey Diagram - TreatmentPatterns"
       outputDirSankey <- file.path(tempdir(), "outputDirSankey")
       dir.create(outputDirSankey)
       outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
       dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSankey()
       uploadedFiles[["dataTP"]][["outputFile"]] <- outputFile
       uploadedFiles[["dataTP"]][["returnHTML"]] <- TRUE
-      object <- eval(parse(text = getFunction(name = objectChoice)),
+      object <- eval(parse(text = getItemConfig(input = "title",
+                                                output = "function",
+                                                inputValue = objectChoice)),
                      envir = uploadedFiles[["dataTP"]])
       return(object)
     })
@@ -1020,11 +1045,11 @@ reportGenerator <- function() {
       }
     })
 
-    menuSel  <- reactive({
-      menuSel  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
-      menuSel  <- menuSel %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-      menuSel
-    })
+    # menuSel  <- reactive({
+    #   menuSel  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
+    #   menuSel  <- menuSel %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
+    #   menuSel
+    # })
 
     # Word report generator
     output$generateReport <- downloadHandler(
@@ -1038,12 +1063,16 @@ reportGenerator <- function() {
                                                               package = "ReportGenerator"))
       reverseList <- rev(input$objectSelection)
       for (i in reverseList) {
-        menuFunction <- menuSel() %>%
-          dplyr::filter(title == i)
-        itemOptions <- menuFunction %>%
-          getItemOptions()
-        expression <- menuFunction %>%
-          dplyr::pull(signature)
+        # menuFunction <- menuSel() %>%
+        #   dplyr::filter(title == i)
+        itemOptions <- getItemConfig(input = "title",
+                                     output = "options",
+                                     inputValue = i)
+
+        expression <- getItemConfig(input = "title",
+                                    output = "function",
+                                    inputValue = i)
+
         if (!identical(itemOptions, character(0))) {
           if (grepl("by sex", i)) {
             expression <- expression %>%
