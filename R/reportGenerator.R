@@ -205,16 +205,6 @@ reportGenerator <- function() {
       do.call(navlistPanel, previewPanels)
     })
 
-    # Retrieves list of functions available and places the correct arguments
-    # menuFun  <- reactive({
-    #   menuFun <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
-    #   # menuFun$arguments[menuFun$name == "table1SexAge"] <- "uploadedFiles$dataIP$incidence_estimates"
-    #   # menuFun$arguments[menuFun$name == "createSunburstPlot"] <- "uploadedFiles$dataTP$treatmentPathways"
-    #   # menuFun$arguments[menuFun$name == "createSankeyDiagram"] <- "uploadedFiles$dataTP$treatmentPathways"
-    #   menuFun  <- menuFun  %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-    #   menuFun
-    # })
-
     # Objects to be rendered in the UI
 
     # Table 1
@@ -1045,35 +1035,34 @@ reportGenerator <- function() {
       }
     })
 
-    # menuSel  <- reactive({
-    #   menuSel  <- read.csv(system.file("config/itemsConfigExternal.csv", package = "ReportGenerator"), sep = ";")
-    #   menuSel  <- menuSel %>% dplyr::mutate(signature = paste0(name, "(", arguments, ")"))
-    #   menuSel
-    # })
-
     # Word report generator
     output$generateReport <- downloadHandler(
       filename = function() {
         paste0("generatedReport.docx")
       },
       content = function(file) {
+      # Load template
       incidencePrevalenceDocx <- read_docx(path = system.file("templates",
                                                               "word",
                                                               "darwinTemplate.docx",
                                                               package = "ReportGenerator"))
+      # Reverse selection menu list
       reverseList <- rev(input$objectSelection)
+
+      # Loop through ever object selected in the menu
       for (i in reverseList) {
-        # menuFunction <- menuSel() %>%
-        #   dplyr::filter(title == i)
+        # i <- "Table - Incidence Attrition"
+        # Get the function to generate and print in report
+        expression <- getItemConfig(input = "title",
+                                    output = "function",
+                                    inputValue = i)
+        # Get relevant options for the function
         itemOptions <- getItemConfig(input = "title",
                                      output = "options",
                                      inputValue = i)
 
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = i)
-
-        if (!identical(itemOptions, character(0))) {
+        # Additional parameter if there are options for the graphs
+        if (!is.null(itemOptions)) {
           if (grepl("by sex", i)) {
             expression <- expression %>%
               addPreviewItemTypeSex(dataReport[[i]][["plotOption"]])
@@ -1085,7 +1074,11 @@ reportGenerator <- function() {
               addPreviewItemType(dataReport[[i]][["plotOption"]])
           }
         }
+
+        # Evaluate function
         object <- eval(parse(text = expression), envir = dataReport[[i]])
+
+        # Check class of every function and add it to the word report accordingly
         if ("gt_tbl" %in% class(object)) {
           body_end_section_landscape(incidencePrevalenceDocx)
           body_add_gt(incidencePrevalenceDocx, value = object)
@@ -1093,6 +1086,7 @@ reportGenerator <- function() {
                    value = i,
                    style = "Heading 1 (Agency)")
           body_end_section_portrait(incidencePrevalenceDocx)
+
         } else if ("ggplot" %in% class(object)) {
           body_end_section_landscape(incidencePrevalenceDocx)
           body_add_gg(x = incidencePrevalenceDocx,
@@ -1117,13 +1111,17 @@ reportGenerator <- function() {
 
         } else if ("html" %in% class(object)) {
 
-          body_add_img(x = incidencePrevalenceDocx,
-                       src = dataReport[[i]][["sunburstDiagramImage"]],
-                       height = 8,
-                       width = 3)
-          body_add(incidencePrevalenceDocx,
-                   value = i,
-                   style = "Heading 1 (Agency)")
+          if (i == "Sunburst Plot - TreatmentPatterns") {
+
+            body_add_img(x = incidencePrevalenceDocx,
+                         src = dataReport[[i]][["sunburstDiagramImage"]],
+                         height = 8,
+                         width = 3)
+            body_add(incidencePrevalenceDocx,
+                     value = i,
+                     style = "Heading 1 (Agency)")
+
+          }
 
         } else if ("huxtable" %in% class(object)) {
           body_end_section_landscape(incidencePrevalenceDocx)
@@ -1132,8 +1130,8 @@ reportGenerator <- function() {
                          style = "TableOverall",
                          header = FALSE)
           body_add_par(incidencePrevalenceDocx, " ")
-          body_add(incidencePrevalenceDocx,
-                   value = input$captionTable1)
+          # body_add(incidencePrevalenceDocx,
+          #          value = input$captionTable1)
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
