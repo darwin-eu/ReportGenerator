@@ -49,18 +49,18 @@ test_that("getFunction table1NumPar", {
 })
 
 test_that("addPreviewItemType happy flow", {
-  result <- addPreviewItemType(previewItemString = "plotIncidence(incidenceCommonData(), colour, facet)",
+  result <- addPreviewItemType(previewItemString = getFunction(name = "plotIncidenceYear"),
                                previewItemType = "Facet by outcome")
 
   expect_equal(class(result), "character")
-  expect_equal(result, "plotIncidence(incidenceCommonData(), colour = 'cdm_name', facet = 'outcome_cohort_name')")
+  expect_equal(result, "plotIncidence(incidence_estimates, colour = 'cdm_name', facet = 'outcome_cohort_name')")
 
   # type might be empty, set default
-  result <- addPreviewItemType(previewItemString = "plotIncidence(incidenceCommonData(), colour, facet)",
+  result <- addPreviewItemType(previewItemString = getFunction(name = "plotIncidenceYear"),
                                previewItemType = NULL)
 
   expect_equal(class(result), "character")
-  expect_equal(result, "plotIncidence(incidenceCommonData(), colour = 'cdm_name', facet = 'outcome_cohort_name')")
+  expect_equal(result, "plotIncidence(incidence_estimates, colour = 'cdm_name', facet = 'outcome_cohort_name')")
 })
 
 
