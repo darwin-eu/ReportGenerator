@@ -1,4 +1,4 @@
-prevPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
+prevPlotByYearFilters <- function(uploadedFiles, objectChoice) {
   tagList(
     fluidRow(
       column(4,
@@ -76,7 +76,7 @@ prevPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
   )
 }
 
-prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
+prevPlotSexFilters <- function(uploadedFiles, objectChoice) {
   tagList(
     fluidRow(
       column(4,
@@ -155,7 +155,7 @@ prevPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
   )
 }
 
-prevPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
+prevPlotAgeFilters <- function(uploadedFiles, objectChoice) {
   tagList(
     fluidRow(
       column(4,

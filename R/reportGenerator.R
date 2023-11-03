@@ -201,8 +201,7 @@ reportGenerator <- function() {
     output$navPanelPreview <- renderUI({
       previewPanels <- lapply(input$objectSelection,
                               tabPanelSelection,
-                              uploadedFiles = uploadedFiles,
-                              menuFun = menuFun())
+                              uploadedFiles = uploadedFiles)
       do.call(navlistPanel, previewPanels)
     })
 
@@ -878,16 +877,15 @@ reportGenerator <- function() {
     # Sankey
 
     output$previewSankeyDiagram <- renderGvis({
-      objectChoice <- "Sankey Diagram - TreatmentPatterns"
+      objectChoice <- "createSankeyDiagram"
       outputDirSankey <- file.path(tempdir(), "outputDirSankey")
       dir.create(outputDirSankey)
       outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
       dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSankey()
       uploadedFiles[["dataTP"]][["outputFile"]] <- outputFile
       uploadedFiles[["dataTP"]][["returnHTML"]] <- TRUE
-      object <- eval(parse(text = menuFun() %>%
-                             dplyr::filter(title == objectChoice) %>%
-                             dplyr::pull(signature)), envir = uploadedFiles[["dataTP"]])
+      object <- eval(parse(text = getFunction(name = objectChoice)),
+                     envir = uploadedFiles[["dataTP"]])
       return(object)
     })
 
