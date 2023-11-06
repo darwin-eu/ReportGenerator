@@ -37,12 +37,6 @@ test_that("if incidenceAttritionCommon is NULL", {
 })
 
 
-test_that("menuFun()", {
-  testServer(reportGenerator(), {
-    expect_equal(length(names(menuFun())), 5)
-  })
-})
-
 test_that("previewTable1() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_attrition <- prevalence_attrition_test
@@ -52,7 +46,6 @@ test_that("previewTable1() FALSE", {
     prevalenceAttritionCommon()
     session$setInputs(analysisIdTable1 = 1)
     incidenceAttritionCommon()
-    menuFun()
     session$setInputs(lockTableNumPar = FALSE)
     expect_equal(class(output$previewTable1), "character")
   })
@@ -67,7 +60,6 @@ test_that("previewTable1() TRUE", {
     prevalenceAttritionCommon()
     session$setInputs(analysisIdTable1 = 1)
     incidenceAttritionCommon()
-    menuFun()
     session$setInputs(lockTableNumPar = TRUE)
     expect_equal(class(output$previewTable1), "character")
   })
@@ -77,7 +69,6 @@ test_that("previewTableSex() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockTableSex = FALSE)
     expect_equal(class(output$previewTableSex), "list")
   })
@@ -87,7 +78,6 @@ test_that("previewTableSex() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockTableSex = TRUE)
     testthat::expect_equal(class(output$previewTableSex), "list")
   })
@@ -97,7 +87,6 @@ test_that("incidenceFigure1() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataIncidenceYear = FALSE,
                       washoutIncidenceYear = 180,
                       daysPriorIncidenceYear = 365,
@@ -118,7 +107,6 @@ test_that("incidenceFigure1() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataIncidenceYear = TRUE,
                       washoutIncidenceYear = 180,
                       daysPriorIncidenceYear = 365,
@@ -139,7 +127,6 @@ test_that("incidenceFigure2Sex() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataIncidenceSex = FALSE,
                       washoutIncidenceSex = 180,
                       daysPriorIncidenceSex = 365,
@@ -160,7 +147,6 @@ test_that("incidenceFigure2Sex() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataIncidenceSex = TRUE,
                       washoutIncidenceSex = 180,
                       daysPriorIncidenceSex = 365,
@@ -181,7 +167,6 @@ test_that("incidenceFigure3Age() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataIncidenceAge = FALSE,
                       washoutIncidenceAge = 180,
                       daysPriorIncidenceAge = 365,
@@ -202,7 +187,6 @@ test_that("incidenceFigure3Age() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataIncidenceAge = TRUE,
                       washoutIncidenceAge = 180,
                       daysPriorIncidenceAge = 365,
@@ -223,7 +207,7 @@ test_that("prevalenceFigure4() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
-    menuFun()
+
     session$setInputs(lockDataPrevalenceYear = FALSE,
                       databasePrevalenceYear = "CHUBX",
                       outcomePrevalenceYear = "cohort_1",
@@ -242,7 +226,6 @@ test_that("prevalenceFigure4() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataPrevalenceYear = TRUE,
                       databasePrevalenceYear = "CHUBX",
                       outcomePrevalenceYear = "cohort_1",
@@ -261,7 +244,6 @@ test_that("prevalenceFigure5() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataPrevalenceSex = FALSE,
                       databasePrevalenceSex = "CHUBX",
                       outcomePrevalenceSex = "cohort_1",
@@ -280,7 +262,6 @@ test_that("prevalenceFigure5() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataPrevalenceSex = TRUE,
                       databasePrevalenceSex = "CHUBX",
                       outcomePrevalenceSex = "cohort_1",
@@ -299,7 +280,6 @@ test_that("prevalenceFigure6() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataPrevalenceAge = FALSE,
                       databasePrevalenceAge = "CHUBX",
                       outcomePrevalenceAge = "cohort_1",
@@ -318,7 +298,6 @@ test_that("prevalenceFigure6() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataPrevalenceAge = TRUE,
                       databasePrevalenceAge = "CHUBX",
                       outcomePrevalenceAge = "cohort_1",

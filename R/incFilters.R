@@ -80,6 +80,15 @@ incPlotByYearFilters <- function(uploadedFiles, objectChoice) {
       )
     ),
     fluidRow(
+      column(8,
+             textAreaInput("captionIncYear",
+                           "Caption",
+                           "Figure 1. Incidence rate/s of drug/s use over calendar time (per year) overall by database [Add months if relevant]",
+                           width = '100%',
+                           height = "130px")
+      ),
+    ),
+    fluidRow(
       column(4,
              checkboxInput(inputId = "lockDataIncidenceYear",
                            label = "Add data to report",
@@ -171,6 +180,15 @@ incPlotSexFilters <- function(uploadedFiles, objectChoice) {
                          label = "To",
                          choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
                          selected = max(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
+      ),
+    ),
+    fluidRow(
+      column(8,
+             textAreaInput("captionIncSex",
+                           "Caption",
+                           "Figure 2. Incidence rate/s of drug/s use over calendar time (per year) stratified by sex and database [Add months if relevant]",
+                           width = '100%',
+                           height = "130px")
       ),
     ),
     fluidRow(
@@ -266,6 +284,15 @@ incPlotAgeFilters <- function(uploadedFiles, objectChoice) {
                          label = "To",
                          choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
                          selected = max(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
+      ),
+    ),
+    fluidRow(
+      column(8,
+             textAreaInput("captionIncAge",
+                           "Caption",
+                           "Figure 3. Incidence rate/s of drug/s use over calendar time (per year) overall stratified by age and database [Add months if relevant]",
+                           width = '100%',
+                           height = "130px")
       ),
     ),
     fluidRow(

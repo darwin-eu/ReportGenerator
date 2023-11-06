@@ -84,6 +84,7 @@ reportGenerator <- function() {
 
     # Check input data
     # IncidencePrevalence
+    # TODO Create modules for datasetLoad
     observeEvent(input$datasetLoad, {
       # Read  file paths
       inFile <- input$datasetLoad
@@ -215,9 +216,12 @@ reportGenerator <- function() {
       if (input$lockTableNumPar == TRUE) {
         dataReport[[objectChoice]][["prevalence_attrition"]] <- prevalence_attrition
         dataReport[[objectChoice]][["incidence_attrition"]] <- incidence_attrition
+        dataReport[[objectChoice]][["caption"]] <- input$captionTable1
+
       } else {
         dataReport[[objectChoice]][["prevalence_attrition"]] <- NULL
         dataReport[[objectChoice]][["incidence_attrition"]] <- NULL
+        dataReport[[objectChoice]][["caption"]] <- NULL
       }
       eval(parse(text = getItemConfig(input = "title",
                                       output = "function",
@@ -231,9 +235,11 @@ reportGenerator <- function() {
       if (input$lockTableIncAtt == TRUE) {
         dataReport[[objectChoice]][["incidence_attrition"]] <- incidence_attrition
         dataReport[[objectChoice]][["attritionDataType"]] <- attritionDataType
+        dataReport[[objectChoice]][["caption"]] <- input$captionTableInc
       } else {
         dataReport[[objectChoice]][["incidence_attrition"]] <- NULL
         dataReport[[objectChoice]][["attritionDataType"]] <- NULL
+        dataReport[[objectChoice]][["caption"]] <- NULL
       }
       eval(parse(text = getItemConfig(input = "title",
                                       output = "function",
@@ -248,9 +254,11 @@ reportGenerator <- function() {
       if (input$lockTablePrevAtt == TRUE) {
         dataReport[[objectChoice]][["prevalence_attrition"]] <- prevalence_attrition
         dataReport[[objectChoice]][["attritionDataType"]] <- attritionDataType
+        dataReport[[objectChoice]][["caption"]] <- input$captionTablePrev
       } else {
         dataReport[[objectChoice]][["prevalence_attrition"]] <- NULL
         dataReport[[objectChoice]][["attritionDataType"]] <- NULL
+        dataReport[[objectChoice]][["caption"]] <- NULL
       }
       eval(parse(text = getItemConfig(input = "title",
                                       output = "function",
@@ -265,8 +273,10 @@ reportGenerator <- function() {
       # Lock data
       if (input$lockTableSex == TRUE) {
         dataReport[[objectChoice]][["incidence_estimates"]] <- uploadedFiles$dataIP$incidence_estimates
+        dataReport[[objectChoice]][["caption"]] <- input$captionTableSexAge
       } else {
         dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
+        dataReport[[objectChoice]][["caption"]] <- NULL
       }
       # Preview object
       eval(parse(text = getItemConfig(input = "title",
@@ -323,9 +333,11 @@ reportGenerator <- function() {
       if (input$lockDataIncidenceYear == TRUE) {
         dataReport[[objectChoice]][["incidence_estimates"]] <- incidence_estimates
         dataReport[[objectChoice]][["plotOption"]] <- input$facetIncidenceYear
+        dataReport[[objectChoice]][["caption"]] <- input$captionIncAge
       } else {
         dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
         dataReport[[objectChoice]][["plotOption"]] <- NULL
+        dataReport[[objectChoice]][["caption"]] <- NULL
       }
 
       # Add facets and render functions
@@ -405,9 +417,11 @@ reportGenerator <- function() {
       if (input$lockDataIncidenceSex == TRUE) {
         dataReport[[objectChoice]][["incidence_estimates"]] <- incidence_estimates
         dataReport[[objectChoice]][["plotOption"]] <- input$facetIncidenceSex
+        dataReport[[objectChoice]][["caption"]] <- input$captionIncSex
       } else {
         dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
         dataReport[[objectChoice]][["plotOption"]] <- NULL
+        dataReport[[objectChoice]][["caption"]] <- NULL
       }
 
       expression <- getItemConfig(input = "title",
@@ -484,9 +498,11 @@ reportGenerator <- function() {
       if (input$lockDataIncidenceAge == TRUE) {
         dataReport[[objectChoice]][["incidence_estimates"]] <- incidence_estimates
         dataReport[[objectChoice]][["plotOption"]] <- input$facetIncidenceAge
+        dataReport[[objectChoice]][["caption"]] <- input$captionIncAge
       } else {
         dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
         dataReport[[objectChoice]][["plotOption"]] <- NULL
+        dataReport[[objectChoice]][["caption"]] <- NULL
       }
       expression <- getItemConfig(input = "title",
                                   output = "function",
@@ -643,9 +659,11 @@ reportGenerator <- function() {
       if (input$lockDataPrevalenceYear == TRUE) {
         dataReport[[objectChoice]][["prevalence_estimates"]] <- prevalence_estimates
         dataReport[[objectChoice]][["plotOption"]] <- input$facetPrevalenceYear
+        dataReport[[objectChoice]][["caption"]] <- input$captionPrevYear
       } else {
         dataReport[[objectChoice]][["prevalence_estimates"]] <- NULL
         dataReport[[objectChoice]][["plotOption"]] <- NULL
+        dataReport[[objectChoice]][["caption"]] <- NULL
       }
       # Preview object
       expression <- getItemConfig(input = "title",
@@ -718,9 +736,11 @@ reportGenerator <- function() {
       if (input$lockDataPrevalenceSex == TRUE) {
         dataReport[[objectChoice]][["prevalence_estimates"]] <- prevalence_estimates
         dataReport[[objectChoice]][["plotOption"]] <- input$facetPrevalenceSex
+        dataReport[[objectChoice]][["caption"]] <- input$captionPrevSex
       } else {
         dataReport[[objectChoice]][["prevalence_estimates"]] <- NULL
         dataReport[[objectChoice]][["plotOption"]] <- NULL
+        dataReport[[objectChoice]][["caption"]] <- NULL
       }
       # Preview object
       expression <- getItemConfig(input = "title",
@@ -793,9 +813,11 @@ reportGenerator <- function() {
       if (input$lockDataPrevalenceAge == TRUE) {
         dataReport[[objectChoice]][["prevalence_estimates"]] <- prevalence_estimates
         dataReport[[objectChoice]][["plotOption"]] <- input$facetPrevalenceAge
+        dataReport[[objectChoice]][["caption"]] <- input$captionPrevAge
       } else {
         dataReport[[objectChoice]][["prevalence_estimates"]] <- NULL
         dataReport[[objectChoice]][["plotOption"]] <- NULL
+        dataReport[[objectChoice]][["caption"]] <- NULL
       }
       # Preview object
       expression <- getItemConfig(input = "title",
@@ -1041,7 +1063,7 @@ reportGenerator <- function() {
                                                               "darwinTemplate.docx",
                                                               package = "ReportGenerator"))
       # Reverse selection menu list
-      reverseList <- rev(input$objectSelection)
+      reverseList <- rev(names(dataReport))
 
       # Loop through ever object selected in the menu
       for (i in reverseList) {
@@ -1077,6 +1099,8 @@ reportGenerator <- function() {
           body_end_section_landscape(incidencePrevalenceDocx)
           body_add_gt(incidencePrevalenceDocx, value = object)
           body_add(incidencePrevalenceDocx,
+                   value = dataReport[[i]][["caption"]])
+          body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
           body_end_section_portrait(incidencePrevalenceDocx)
@@ -1086,6 +1110,8 @@ reportGenerator <- function() {
           body_add_gg(x = incidencePrevalenceDocx,
                       value = object,
                       style = "Normal")
+          body_add(incidencePrevalenceDocx,
+                   value = dataReport[[i]][["caption"]])
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")
@@ -1124,8 +1150,8 @@ reportGenerator <- function() {
                          style = "TableOverall",
                          header = FALSE)
           body_add_par(incidencePrevalenceDocx, " ")
-          # body_add(incidencePrevalenceDocx,
-          #          value = input$captionTable1)
+          body_add(incidencePrevalenceDocx,
+                   value = dataReport[[i]][["caption"]])
           body_add(incidencePrevalenceDocx,
                    value = i,
                    style = "Heading 1 (Agency)")

@@ -67,14 +67,18 @@ test_that("getFunctionReport error more than length 1", {
 })
 
 test_that("addPreviewItemType happy flow", {
-  result <- addPreviewItemType(previewItemString = getFunction(name = "plotIncidenceYear"),
+  result <- addPreviewItemType(previewItemString = getItemConfig(input = "title",
+                                                                 output = "function",
+                                                                 inputValue = "Plot - Incidence rate per year"),
                                previewItemType = "Facet by outcome")
 
   expect_equal(class(result), "character")
   expect_equal(result, "plotIncidence(incidence_estimates, colour = 'cdm_name', facet = 'outcome_cohort_name')")
 
   # type might be empty, set default
-  result <- addPreviewItemType(previewItemString = getFunction(name = "plotIncidenceYear"),
+  result <- addPreviewItemType(previewItemString = getItemConfig(input = "title",
+                                                                 output = "function",
+                                                                 inputValue = "Plot - Incidence rate per year"),
                                previewItemType = NULL)
 
   expect_equal(class(result), "character")

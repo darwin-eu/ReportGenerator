@@ -64,6 +64,15 @@ prevPlotByYearFilters <- function(uploadedFiles, objectChoice) {
       )
     ),
     fluidRow(
+      column(8,
+             textAreaInput("captionPrevYear",
+                           "Caption",
+                           "Figure 4. Prevalence of drug/s use over calendar time (month/year) overall.",
+                           width = '100%',
+                           height = "130px")
+      ),
+    ),
+    fluidRow(
       column(4,
              checkboxInput(inputId = "lockDataPrevalenceYear",
                            label = "Add data to report",
@@ -143,6 +152,15 @@ prevPlotSexFilters <- function(uploadedFiles, objectChoice) {
       )
     ),
     fluidRow(
+      column(8,
+             textAreaInput("captionPrevSex",
+                           "Caption",
+                           "Figure 5. Prevalence of drug/s use over calendar time (per month/year) stratified by sex and age.",
+                           width = '100%',
+                           height = "130px")
+      ),
+    ),
+    fluidRow(
       column(4,
              checkboxInput(inputId = "lockDataPrevalenceSex",
                            label = "Add data to report",
@@ -220,6 +238,15 @@ prevPlotAgeFilters <- function(uploadedFiles, objectChoice) {
                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date),
                          selected = max(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date)))
       )
+    ),
+    fluidRow(
+      column(8,
+             textAreaInput("captionPrevAge",
+                           "Caption",
+                           "Figure 6. Prevalence of drug/s use over calendar time (per month/year) stratified by sex and age.",
+                           width = '100%',
+                           height = "130px")
+      ),
     ),
     fluidRow(
       column(4,
