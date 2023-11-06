@@ -41,9 +41,4 @@ TreatmentPatterns:
       - indexYear
   2.5.0:
     treatmentPathways:
-      names:
-      - path
-      - freq
-      - sex
-      - age
-      - index_year
+      names: []

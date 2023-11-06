@@ -317,7 +317,8 @@ test_that("Sunburst data", {
     uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
     session$setInputs(sexSunburst = "all",
                       ageSunburst = "all",
-                      indexSunburst = "all")
+                      indexSunburst = "all",
+                      dataVersionTP = "2.5.2")
     testthat::expect_s3_class(treatmentDataSunburst(), "data.frame")
     testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
   })
@@ -328,7 +329,8 @@ test_that("Sankey data", {
     uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
     session$setInputs(sexSankey = "all",
                       ageSankey = "all",
-                      indexSankey = "all")
+                      indexSankey = "all",
+                      dataVersionTP = "2.5.2")
     testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
     testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
   })
