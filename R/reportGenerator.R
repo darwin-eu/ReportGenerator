@@ -869,8 +869,8 @@ reportGenerator <- function() {
       } else if (input$dataVersionTP == "2.5.0") {
         treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
         treatmentPathways %>%
-          filter(sex == input$sexSunburst,
-                 age == input$ageSunburst,
+          filter(sex == input$sexSankey,
+                 age == input$ageSankey,
                  index_year == input$indexSankey)
       }
     })
