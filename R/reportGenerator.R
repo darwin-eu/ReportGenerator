@@ -100,10 +100,15 @@ reportGenerator <- function() {
                                            package = "IncidencePrevalence",
                                            versionData = dataVersion,
                                            csvLocation = csvLocation)
+      if (length(uploadedFiles$dataIP) == 0) {
+        show_alert(title = "Data mismatch",
+                   text = "Not a valid IncidencePrevalence file or check version")
+      }
       # Get list of items to show in toggle menu
       items <- names(uploadedFiles$dataIP)
       # Items list into reactive value to show in toggle menu
-      itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]], getItemsList(items))
+      # itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]], getItemsList(items))
+      itemsList$objects[["items"]] <- getItemsList(items)
       unlink(csvLocation, recursive = TRUE)
     })
 
@@ -123,10 +128,14 @@ reportGenerator <- function() {
                                            package = "TreatmentPatterns",
                                            versionData = versionData,
                                            csvLocation = csvLocation)
+      if (length(uploadedFiles$dataTP) == 0) {
+        show_alert(title = "Data mismatch",
+                   text = "Not a valid TreatmentPathways file or check version")
+      }
       # Get list of items to show in toggle menu
-      items <- names(uploadedFiles$dataTP)
+      itemsTP <- names(uploadedFiles$dataTP)
       # Items list into reactive value to show in toggle menu
-      itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]], getItemsList(items))
+      itemsList$objects[["items"]] <- getItemsList(itemsTP)
       unlink(csvLocation, recursive = TRUE)
     })
 
@@ -905,25 +914,28 @@ reportGenerator <- function() {
     observeEvent(input$lockTreatmentSunburst, {
       objectChoice <- "Sunburst Plot - TreatmentPatterns"
       if (input$lockTreatmentSunburst == TRUE) {
-        outputDirSunburst <- file.path(tempdir(), "outputDirSunburst")
-        outputFile <- file.path(outputDirSunburst, "sunburstDiagram.html")
-        dir.create(outputDirSunburst, showWarnings = FALSE)
-        dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSunburst()
-        dataReport[[objectChoice]][["returnHTML"]] <- FALSE
-        dataReport[[objectChoice]][["outputFile"]] <- outputFile
+        sunburstHTML <- here::here("sunburstDiagram.html")
         TreatmentPatterns::createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
-                                              outputFile = outputFile,
+                                              outputFile = sunburstHTML,
                                               returnHTML = FALSE)
-        fileNameOut <- file.path(outputDirSunburst, "sunburstDiagram.png")
+        sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
+        print(sunburstPNG)
         webshot2::webshot(
-          url = outputFile,
-          file = fileNameOut,
+          url = sunburstHTML,
+          file = sunburstPNG,
           vwidth = 1200,
           vheight = 10)
-        filename <- normalizePath(fileNameOut)
+        sunburstPath <- normalizePath(sunburstPNG)
         message("Adding filename to dataReport")
-        dataReport[[objectChoice]][["fileImage"]] <- filename
+        dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSunburst()
+        dataReport[[objectChoice]][["outputFile"]] <- sunburstHTML
+        dataReport[[objectChoice]][["returnHTML"]] <- FALSE
+        dataReport[[objectChoice]][["fileImage"]] <- sunburstPath
+        print(dataReport[[objectChoice]][["fileImage"]])
       } else {
+        dataReport[[objectChoice]][["treatmentPathways"]] <- NULL
+        dataReport[[objectChoice]][["outputFile"]] <- NULL
+        dataReport[[objectChoice]][["returnHTML"]] <- NULL
         dataReport[[objectChoice]][["fileImage"]] <- NULL
       }
     })
@@ -935,7 +947,6 @@ reportGenerator <- function() {
       outputDirSankey <- file.path(tempdir(), "outputDirSankey")
       dir.create(outputDirSankey)
       outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
-      dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSankey()
       uploadedFiles[["dataTP"]][["outputFile"]] <- outputFile
       uploadedFiles[["dataTP"]][["returnHTML"]] <- TRUE
       object <- eval(parse(text = getItemConfig(input = "title",
@@ -950,7 +961,7 @@ reportGenerator <- function() {
         paste("SankeyDiagram", ".png", sep = "")
       },
       content = function(file) {
-        sankeyHTML <- here::here("sunburstDiagram.html")
+        sankeyHTML <- here::here("sankeyDiagram.html")
         createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
                             outputFile = sankeyHTML,
                             returnHTML = FALSE,
@@ -971,27 +982,29 @@ reportGenerator <- function() {
     observeEvent(input$lockTreatmentSankey, {
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
       if (input$lockTreatmentSankey == TRUE) {
-        outputDirSankey <- file.path(tempdir(), "outputDirSankey")
-        outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
-        dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSankey()
-        dataReport[[objectChoice]][["outputFile"]] <- outputFile
-        dataReport[[objectChoice]][["returnHTML"]] <- FALSE
-        outputDirSankey <- file.path(tempdir(), "outputDirSankey")
-        dir.create(outputDirSankey)
-        outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
-        createSankeyDiagram(treatmentPathways = uploadedFiles[["dataTP"]][["treatmentPathways"]],
-                            outputFile = outputFile,
+        sankeyHTML <- here::here("sankeyDiagram.html")
+        createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
+                            outputFile = sankeyHTML,
                             returnHTML = FALSE,
                             groupCombinations = FALSE,
                             minFreq = 1)
-        fileNameOut <- file.path(outputDirSankey, "sankeyDiagram.png")
+        sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
+        print(sankeytPNG)
         webshot2::webshot(
-          url = outputFile,
-          file = fileNameOut,
+          url = sankeyHTML,
+          file = sankeytPNG,
           vwidth = 1200,
           vheight = 10)
-        dataReport[[objectChoice]][["fileImage"]] <- fileNameOut
+        sankeyPath <- normalizePath(sankeytPNG)
+        dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSankey()
+        dataReport[[objectChoice]][["outputFile"]] <- sankeyHTML
+        dataReport[[objectChoice]][["returnHTML"]] <- FALSE
+        dataReport[[objectChoice]][["fileImage"]] <- sankeytPNG
+        print(dataReport[[objectChoice]][["fileImage"]])
       } else {
+        dataReport[[objectChoice]][["treatmentPathways"]] <- NULL
+        dataReport[[objectChoice]][["outputFile"]] <- NULL
+        dataReport[[objectChoice]][["returnHTML"]] <- NULL
         dataReport[[objectChoice]][["fileImage"]] <- NULL
       }
     })
@@ -1142,32 +1155,6 @@ reportGenerator <- function() {
                      style = "Heading 1 (Agency)")
             body_end_section_portrait(incidencePrevalenceDocx)
 
-          } else if ("gvis" %in% class(object)) {
-
-            # if (i == "Sankey Diagram - TreatmentPatterns") {
-              body_add_img(x = incidencePrevalenceDocx,
-                           src = dataReport[[i]][["fileImage"]],
-                           height = 8,
-                           width = 5)
-              body_add(incidencePrevalenceDocx,
-                       value = i,
-                       style = "Heading 1 (Agency)")
-            # }
-
-          } else if ("html" %in% class(object)) {
-
-            # if (i == "Sunburst Plot - TreatmentPatterns") {
-
-              body_add_img(x = incidencePrevalenceDocx,
-                           src = dataReport[[i]][["fileImage"]],
-                           height = 8,
-                           width = 3)
-              body_add(incidencePrevalenceDocx,
-                       value = i,
-                       style = "Heading 1 (Agency)")
-
-            # }
-
           } else if ("huxtable" %in% class(object)) {
             body_end_section_landscape(incidencePrevalenceDocx)
             body_add_table(incidencePrevalenceDocx,
@@ -1182,6 +1169,25 @@ reportGenerator <- function() {
                      style = "Heading 1 (Agency)")
             body_end_section_portrait(incidencePrevalenceDocx)
           }
+
+          if (i == "Sunburst Plot - TreatmentPatterns") {
+            body_add_img(x = incidencePrevalenceDocx,
+                         src = dataReport[[i]][["fileImage"]],
+                         height = 5.5,
+                         width = 7)
+            body_add(incidencePrevalenceDocx,
+                     value = i,
+                     style = "Heading 1 (Agency)")
+
+            }  else if (i == "Sankey Diagram - TreatmentPatterns") {
+              body_add_img(x = incidencePrevalenceDocx,
+                           src = dataReport[[i]][["fileImage"]],
+                           height = 3,
+                           width = 7)
+              body_add(incidencePrevalenceDocx,
+                       value = i,
+                       style = "Heading 1 (Agency)")
+              }
         }
         body_add_toc(incidencePrevalenceDocx)
         print(incidencePrevalenceDocx,

@@ -37,3 +37,5 @@ publish/
 app.R
 docs/
 docs
+sunburstDiagram.html
+sankeyDiagram.html
