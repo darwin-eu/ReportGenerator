@@ -4,7 +4,7 @@
 \alias{getItemOptions}
 \title{Get options for given item.}
 \usage{
-getItemOptions(item)
+getItemOptions(title)
 }
 \arguments{
 \item{item}{the menu item}
