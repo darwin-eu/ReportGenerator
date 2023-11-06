@@ -78,6 +78,85 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
   return(autoText)
 }
 
+#' Generates automatic text paragraph for Table Incidence Attrition
+#'
+#' @param incidence_attrition Data frame with incidence attrition data
+#'
+#' @return Automatic text as a character string
+#' @export
+#'
+#' @import glue
+#' @importFrom scales label_percent
+tableAttrition <- function(attritionData) {
+
+  tableAttTotal <- attritionData %>%
+    filter(reason == "Starting population") %>%
+    group_by(cdm_name,
+             reason) %>%
+    summarise(current_n = unique(number_records)) %>%
+    arrange(desc(current_n))
+
+  tableAttFem <- attritionData %>%
+    filter(reason == "Not Male") %>%
+    group_by(cdm_name,
+             reason) %>%
+    summarise(current_n = unique(number_records)) %>%
+    arrange(desc(current_n))
+
+  tablePrevNotObs <- attritionData %>%
+    filter(reason == "Not observed during the complete database interval") %>%
+    group_by(cdm_name,
+             reason) %>%
+    summarise(excluded = sum(excluded_subjects)) %>%
+    arrange(desc(excluded))
+
+  totalParticipants <- sum(tableAttTotal$current_n)
+  totalParticipantsChar <- format(sum(tableAttTotal$current_n), big.mark=",", scientific = FALSE)
+  minParticipants <- tableAttTotal$current_n[which.min(tableAttTotal$current_n)]
+  minParticipantsChar <- format(tableAttTotal$current_n[which.min(tableAttTotal$current_n)], big.mark=",", scientific = FALSE)
+  databaseNameMin <- tableAttTotal$cdm_name[which.min(tableAttTotal$current_n)]
+  maxParticipantsChar <- format(tableAttTotal$current_n[which.max(tableAttTotal$current_n)], big.mark=",", scientific = FALSE)
+  maxParticipants <- tableAttTotal$current_n[which.max(tableAttTotal$current_n)]
+  databaseNameMax <- tableAttTotal$cdm_name[which.max(tableAttTotal$current_n)]
+  minFemales <- tableAttFem  %>% filter(cdm_name == databaseNameMin) %>% pull(current_n)
+  maxFemales <- tableAttFem  %>% filter(cdm_name == databaseNameMax) %>% pull(current_n)
+  minFemaleProp <- (minFemales / as.numeric(minParticipants))
+  maxFemaleProp <- (maxFemales / as.numeric(maxParticipants))
+  minFemaleProp <- label_percent(accuracy = 0.01)(minFemaleProp)
+  maxFemaleProp <- label_percent(accuracy = 0.01)(maxFemaleProp)
+
+  numberDatabaseChar <- phraseList(initialPhrase = " of which ",
+                                   adjective = "",
+                                   totalParticipants,
+                                   databaseName = tableAttTotal$cdm_name,
+                                   individuals = tableAttTotal$current_n)
+
+  femPropChar <- phraseList(initialPhrase = " From those, ",
+                            adjective = "female",
+                            totalParticipants,
+                            databaseName = tableAttFem$cdm_name,
+                            individuals = tableAttFem$current_n)
+
+  excludedRec <- phraseList(initialPhrase = " A further ",
+                            adjective = "excluded due to not having been observed for the complete database interval ",
+                            totalParticipants,
+                            databaseName = tablePrevNotObs$cdm_name,
+                            individuals = tablePrevNotObs$excluded)
+
+
+  autoText <- glue(
+    "Table 1. A total of {totalParticipantsChar} participants were included in the study,",
+    "{numberDatabaseChar}",
+    "The starting populations ranged from {minParticipantsChar} ({label_percent(accuracy = 0.01)(minParticipants/totalParticipants)} in {databaseNameMin}) to {maxParticipantsChar} ({label_percent(accuracy = 0.01)(maxParticipants/totalParticipants)} in {databaseNameMax}).",
+    "{femPropChar}",
+    "{excludedRec}",
+    .sep = " ")
+
+  autoText <- gsub("  ", " ", autoText)
+  autoText <- gsub("  ", " ", autoText)
+  return(autoText)
+}
+
 phraseList <- function(initialPhrase,
                        adjective = "",
                        totalParticipants,

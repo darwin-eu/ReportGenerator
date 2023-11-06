@@ -1,0 +1,73 @@
+table1NumPar:
+  title: "Table - Number of participants"
+  function: table1NumPar(incidence_attrition, prevalence_attrition)
+  type:
+    - incidence_attrition
+    - prevalence_attrition
+  options: NULL
+table1IncAtt:
+  title: "Table - Incidence Attrition"
+  function: table1Att(incidence_attrition, attritionDataType)
+  type:
+    - incidence_attrition
+  options: NULL
+table1PrevAtt:
+  title: "Table - Prevalence Attrition"
+  function: table1Att(prevalence_attrition, attritionDataType)
+  type:
+    - prevalence_attrition
+  options: NULL
+table1Inc:
+  title: "Table - Number of participants by sex and age group"
+  function: table1Inc(incidence_estimates)
+  type:
+    - incidence_estimates
+  options: NULL
+plotIncidenceYear:
+  title: "Plot - Incidence rate per year"
+  function: plotIncidence(incidence_estimates, colour, facet)
+  type:
+    - incidence_estimates
+  options: Facet by outcome, Facet by database
+plotIncidenceSex:
+  title: "Plot - Incidence rate per year by sex"
+  function: plotIncidence(incidence_estimates, colour, facet)
+  type:
+    - incidence_estimates
+  options: Facet by outcome, Facet by database
+plotIncidenceAge:
+  title: "Plot - Incidence rate per year by age"
+  function: plotIncidence(incidence_estimates, colour, facet)
+  type:
+    - incidence_estimates
+  options: Facet by outcome, Facet by database
+plotPrevalenceYear:
+  title: "Plot - Prevalence rate per year"
+  function: plotPrevalence(prevalence_estimates, colour, facet)
+  type:
+    - prevalence_estimates
+  options: Facet by outcome, Facet by database
+plotPrevalenceSex:
+  title: "Plot - Prevalence rate per year by sex"
+  function: plotPrevalence(prevalence_estimates, colour, facet)
+  type:
+    - prevalence_estimates
+  options: Facet by outcome, Facet by database
+plotPrevalenceAge:
+  title: "Plot - Prevalence rate per year by age"
+  function: plotPrevalence(prevalence_estimates, colour, facet)
+  type:
+    - prevalence_estimates
+  options: Facet by outcome, Facet by database
+createSunburstPlot:
+  title: "Sunburst Plot - TreatmentPatterns"
+  function: createSunburstPlot(treatmentPathways, outputFile, returnHTML)
+  type:
+    - treatmentPathways
+  options: TRUE, FALSE
+createSankeyDiagram:
+  title: "Sankey Diagram - TreatmentPatterns"
+  function: createSankeyDiagram(treatmentPathways, outputFile, returnHTML)
+  type:
+    - treatmentPathways
+  options: TRUE, FALSE

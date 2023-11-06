@@ -7,16 +7,18 @@ data <- data.frame(
   freq = c(206, 6, 14),
   sex = c("all", "all", "all"),
   age = c("all", "all", "all"),
-  index_year = c("all", "all", "all"))
+  indexYear = c("all", "all", "all"))
 
 test_that("void", {
   expect_error(outputSankeyDiagram())
 })
 
-test_that("minimal", {
+test_that("Sankey created file", {
+  outputFile <- tempfile(fileext = "html")
   outputSankey <- createSankeyDiagram(
     treatmentPathways = data,
-    groupCombinations = FALSE,
+    outputFile = outputFile,
+    groupCombinations = TRUE,
     minFreq = 5)
-  expect_class(outputSankey, "gvis")
+  expect_true(file.exists(outputFile))
 })

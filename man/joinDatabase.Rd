@@ -2,19 +2,18 @@
 % Please edit documentation in R/dataExtraction.R
 \name{joinDatabase}
 \alias{joinDatabase}
-\title{`joinDatabase()` gathers several zip or csv folders into a list of dataframes for ReportGenerator}
+\title{`joinDatabase()` joins several zip or csv folders into a list of dataframes.}
 \usage{
 joinDatabase(
-  uploadedFiles = NULL,
-  csvLocation,
+  fileDataPath = NULL,
+  fileName = NULL,
   package = "IncidencePrevalence",
-  versionData = "0.4.1"
+  versionData = "0.5.1",
+  csvLocation = NULL
 )
 }
 \arguments{
-\item{uploadedFiles}{A list of filepaths}
-
-\item{csvLocation}{Temporary folder}
+\item{fileDataPath}{File path(s) in character}
 
 \item{package}{Name of the packages that generated the results}
 
@@ -24,5 +23,5 @@ joinDatabase(
 A list of dataframes
 }
 \description{
-`joinDatabase()` gathers several zip or csv folders into a list of dataframes for ReportGenerator
+`joinDatabase()` joins several zip or csv folders into a list of dataframes.
 }

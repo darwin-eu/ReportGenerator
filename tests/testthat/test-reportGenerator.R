@@ -1,8 +1,23 @@
+testData <- testData()
+
+incidence_attrition_test <- testData$incidence_attrition
+incidence_estimates_test <- testData$incidence_estimates
+prevalence_attrition_test <- testData$prevalence_attrition
+prevalence_estimates_test <- testData$prevalence_estimates
+treatmentPathways_test <- testData$treatmentPathways_test
+
 test_that("prevalenceAttritionCommon correct columns", {
   testServer(reportGenerator(), {
     session$setInputs(analysisIdTable1 = 1)
     uploadedFiles$dataIP$prevalence_attrition <- prevalence_attrition_test
-    expect_equal(length(names(prevalenceAttritionCommon())), 25)
+    expect_equal(length(names(prevalenceAttritionCommon())), 24)
+  })
+})
+
+test_that("if prevalenceAttritionCommon is NULL", {
+  testServer(reportGenerator(), {
+    session$setInputs(analysisIdTable1 = 1)
+    expect_equal(prevalenceAttritionCommon(), NULL)
   })
 })
 
@@ -10,15 +25,17 @@ test_that("incidenceAttritionCommon correct columns", {
   testServer(reportGenerator(), {
     session$setInputs(analysisIdTable1 = 1)
     uploadedFiles$dataIP$incidence_attrition <- incidence_attrition_test
-    expect_equal(length(names(incidenceAttritionCommon())), 25)
+    expect_equal(length(names(incidenceAttritionCommon())), 24)
   })
 })
 
-test_that("menuFun()", {
+test_that("if incidenceAttritionCommon is NULL", {
   testServer(reportGenerator(), {
-    expect_equal(length(names(menuFun())), 5)
+    session$setInputs(analysisIdTable1 = 1)
+    expect_equal(incidenceAttritionCommon(), NULL)
   })
 })
+
 
 test_that("previewTable1() FALSE", {
   testServer(reportGenerator(), {
@@ -29,7 +46,6 @@ test_that("previewTable1() FALSE", {
     prevalenceAttritionCommon()
     session$setInputs(analysisIdTable1 = 1)
     incidenceAttritionCommon()
-    menuFun()
     session$setInputs(lockTableNumPar = FALSE)
     expect_equal(class(output$previewTable1), "character")
   })
@@ -44,7 +60,6 @@ test_that("previewTable1() TRUE", {
     prevalenceAttritionCommon()
     session$setInputs(analysisIdTable1 = 1)
     incidenceAttritionCommon()
-    menuFun()
     session$setInputs(lockTableNumPar = TRUE)
     expect_equal(class(output$previewTable1), "character")
   })
@@ -54,7 +69,6 @@ test_that("previewTableSex() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockTableSex = FALSE)
     expect_equal(class(output$previewTableSex), "list")
   })
@@ -64,9 +78,8 @@ test_that("previewTableSex() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockTableSex = TRUE)
-    expect_equal(class(output$previewTableSex), "list")
+    testthat::expect_equal(class(output$previewTableSex), "list")
   })
 })
 
@@ -74,7 +87,6 @@ test_that("incidenceFigure1() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataIncidenceYear = FALSE,
                       washoutIncidenceYear = 180,
                       daysPriorIncidenceYear = 365,
@@ -87,7 +99,7 @@ test_that("incidenceFigure1() FALSE", {
                       intervalIncidenceYear = "years",
                       repeatedIncidenceYear = FALSE,
                       facetIncidenceYear = "Facet by database")
-    expect_class(incidenceFigure1(), "ggplot")
+    testthat::expect_s3_class(incidenceFigure1(), "ggplot")
   })
 })
 
@@ -95,7 +107,6 @@ test_that("incidenceFigure1() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataIncidenceYear = TRUE,
                       washoutIncidenceYear = 180,
                       daysPriorIncidenceYear = 365,
@@ -108,7 +119,7 @@ test_that("incidenceFigure1() TRUE", {
                       intervalIncidenceYear = "years",
                       repeatedIncidenceYear = FALSE,
                       facetIncidenceYear = "Facet by outcome")
-    expect_class(incidenceFigure1(), "ggplot")
+    testthat::expect_s3_class(incidenceFigure1(), "ggplot")
   })
 })
 
@@ -116,7 +127,6 @@ test_that("incidenceFigure2Sex() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataIncidenceSex = FALSE,
                       washoutIncidenceSex = 180,
                       daysPriorIncidenceSex = 365,
@@ -129,7 +139,7 @@ test_that("incidenceFigure2Sex() FALSE", {
                       intervalIncidenceSex = "Years",
                       repeatedIncidenceSex = FALSE,
                       facetIncidenceSex = "Facet by database")
-    expect_class(incidenceFigure2Sex(), "ggplot")
+    testthat::expect_s3_class(incidenceFigure2Sex(), "ggplot")
   })
 })
 
@@ -137,7 +147,6 @@ test_that("incidenceFigure2Sex() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataIncidenceSex = TRUE,
                       washoutIncidenceSex = 180,
                       daysPriorIncidenceSex = 365,
@@ -150,7 +159,7 @@ test_that("incidenceFigure2Sex() TRUE", {
                       intervalIncidenceSex = "Years",
                       repeatedIncidenceSex = FALSE,
                       facetIncidenceSex = "Facet by outcome")
-    expect_class(incidenceFigure2Sex(), "ggplot")
+    testthat::expect_s3_class(incidenceFigure2Sex(), "ggplot")
   })
 })
 
@@ -158,7 +167,6 @@ test_that("incidenceFigure3Age() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataIncidenceAge = FALSE,
                       washoutIncidenceAge = 180,
                       daysPriorIncidenceAge = 365,
@@ -171,7 +179,7 @@ test_that("incidenceFigure3Age() FALSE", {
                       intervalIncidenceAge = "Years",
                       repeatedIncidenceAge = FALSE,
                       facetIncidenceAge = "Facet by database")
-    expect_class(incidenceFigure3Age(), "ggplot")
+    testthat::expect_s3_class(incidenceFigure3Age(), "ggplot")
   })
 })
 
@@ -179,7 +187,6 @@ test_that("incidenceFigure3Age() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$incidence_estimates <- incidence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataIncidenceAge = TRUE,
                       washoutIncidenceAge = 180,
                       daysPriorIncidenceAge = 365,
@@ -192,7 +199,7 @@ test_that("incidenceFigure3Age() TRUE", {
                       intervalIncidenceAge = "Years",
                       repeatedIncidenceAge = FALSE,
                       facetIncidenceAge = "Facet by outcome")
-    expect_class(incidenceFigure3Age(), "ggplot")
+    testthat::expect_s3_class(incidenceFigure3Age(), "ggplot")
   })
 })
 
@@ -200,7 +207,7 @@ test_that("prevalenceFigure4() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
-    menuFun()
+
     session$setInputs(lockDataPrevalenceYear = FALSE,
                       databasePrevalenceYear = "CHUBX",
                       outcomePrevalenceYear = "cohort_1",
@@ -211,7 +218,7 @@ test_that("prevalenceFigure4() FALSE", {
                       intervalPrevalenceYear = "Years",
                       typePrevalenceYear = "period",
                       facetPrevalenceYear = "Facet by database")
-    expect_class(prevalenceFigure4(), "ggplot")
+    testthat::expect_s3_class(prevalenceFigure4(), "ggplot")
   })
 })
 
@@ -219,7 +226,6 @@ test_that("prevalenceFigure4() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataPrevalenceYear = TRUE,
                       databasePrevalenceYear = "CHUBX",
                       outcomePrevalenceYear = "cohort_1",
@@ -230,7 +236,7 @@ test_that("prevalenceFigure4() TRUE", {
                       intervalPrevalenceYear = "Years",
                       typePrevalenceYear = "point",
                       facetPrevalenceYear = "Facet by outcome")
-    expect_class(prevalenceFigure4(), "ggplot")
+    testthat::expect_s3_class(prevalenceFigure4(), "ggplot")
   })
 })
 
@@ -238,7 +244,6 @@ test_that("prevalenceFigure5() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataPrevalenceSex = FALSE,
                       databasePrevalenceSex = "CHUBX",
                       outcomePrevalenceSex = "cohort_1",
@@ -249,7 +254,7 @@ test_that("prevalenceFigure5() FALSE", {
                       intervalPrevalenceSex = "Years",
                       typePrevalenceSex = "period",
                       facetPrevalenceSex = "Facet by database")
-    expect_class(prevalenceFigure5(), "ggplot")
+    testthat::expect_s3_class(prevalenceFigure5(), "ggplot")
   })
 })
 
@@ -257,7 +262,6 @@ test_that("prevalenceFigure5() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataPrevalenceSex = TRUE,
                       databasePrevalenceSex = "CHUBX",
                       outcomePrevalenceSex = "cohort_1",
@@ -268,7 +272,7 @@ test_that("prevalenceFigure5() TRUE", {
                       intervalPrevalenceSex = "Years",
                       typePrevalenceSex = "point",
                       facetPrevalenceSex = "Facet by outcome")
-    expect_class(prevalenceFigure5(), "ggplot")
+    testthat::expect_s3_class(prevalenceFigure5(), "ggplot")
   })
 })
 
@@ -276,7 +280,6 @@ test_that("prevalenceFigure6() FALSE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataPrevalenceAge = FALSE,
                       databasePrevalenceAge = "CHUBX",
                       outcomePrevalenceAge = "cohort_1",
@@ -287,7 +290,7 @@ test_that("prevalenceFigure6() FALSE", {
                       intervalPrevalenceAge = "Years",
                       typePrevalenceAge = "period",
                       facetPrevalenceAge = "Facet by database")
-    expect_class(prevalenceFigure6(), "ggplot")
+    testthat::expect_s3_class(prevalenceFigure6(), "ggplot")
   })
 })
 
@@ -295,7 +298,6 @@ test_that("prevalenceFigure6() TRUE", {
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_estimates <- prevalence_estimates_test
     dataReport <- list()
-    menuFun()
     session$setInputs(lockDataPrevalenceAge = TRUE,
                       databasePrevalenceAge = "CHUBX",
                       outcomePrevalenceAge = "cohort_1",
@@ -306,26 +308,31 @@ test_that("prevalenceFigure6() TRUE", {
                       intervalPrevalenceAge = "Years",
                       typePrevalenceAge = "point",
                       facetPrevalenceAge = "Facet by outcome")
-    expect_class(prevalenceFigure6(), "ggplot")
+    testthat::expect_s3_class(prevalenceFigure6(), "ggplot")
   })
 })
 
-test_that("previewSunburstPlot renderUI", {
+test_that("Sunburst data", {
   testServer(reportGenerator(), {
     uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
-    expect_class(output$previewSunburstPlot, "list")
-    expect_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
+    session$setInputs(sexSunburst = "all",
+                      ageSunburst = "all",
+                      indexSunburst = "all")
+    testthat::expect_s3_class(treatmentDataSunburst(), "data.frame")
+    testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
   })
 })
 
-# test_that("previewSunburstPlot reportData", {
-#   testServer(reportGenerator(), {
-#     uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
-#     session$setInputs(lockTreatmentSunburst = TRUE)
-#     print(dataReport()$objectChoice$sunburstDiagramImage)
-#     # expect_class(dataReport$objectChoice$sunburstDiagramImage, "character")
-#   })
-# })
+test_that("Sankey data", {
+  testServer(reportGenerator(), {
+    uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
+    session$setInputs(sexSankey = "all",
+                      ageSankey = "all",
+                      indexSankey = "all")
+    testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
+    testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
+  })
+})
 
 
 

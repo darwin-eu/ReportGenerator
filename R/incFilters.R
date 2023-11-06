@@ -1,4 +1,4 @@
-incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
+incPlotByYearFilters <- function(uploadedFiles, objectChoice) {
   tagList(
     fluidRow(
       column(4,
@@ -20,8 +20,8 @@ incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "daysPriorIncidenceYear",
                          label = "Days Prior History",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history),
-                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history)[1],
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation),
+                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)[1],
                          multiple = FALSE)
       )
     ),
@@ -80,6 +80,15 @@ incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
       )
     ),
     fluidRow(
+      column(8,
+             textAreaInput("captionIncYear",
+                           "Caption",
+                           "Figure 1. Incidence rate/s of drug/s use over calendar time (per year) overall by database [Add months if relevant]",
+                           width = '100%',
+                           height = "130px")
+      ),
+    ),
+    fluidRow(
       column(4,
              checkboxInput(inputId = "lockDataIncidenceYear",
                            label = "Add data to report",
@@ -91,7 +100,7 @@ incPlotByYearFilters <- function(uploadedFiles, menuFun, objectChoice) {
     )
   )
 }
-incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
+incPlotSexFilters <- function(uploadedFiles, objectChoice) {
   tagList(
     fluidRow(
       column(4,
@@ -108,9 +117,9 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       ),
       column(4,
              pickerInput(inputId = "daysPriorIncidenceSex",
-                         label = "Days Prior History",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history),
-                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history)[1],
+                         label = "Days Prior Observation",
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation),
+                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)[1],
                          multiple = FALSE)
       )
     ),
@@ -174,6 +183,15 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
       ),
     ),
     fluidRow(
+      column(8,
+             textAreaInput("captionIncSex",
+                           "Caption",
+                           "Figure 2. Incidence rate/s of drug/s use over calendar time (per year) stratified by sex and database [Add months if relevant]",
+                           width = '100%',
+                           height = "130px")
+      ),
+    ),
+    fluidRow(
       column(4,
              checkboxInput(inputId = "lockDataIncidenceSex",
                            label = "Add data to report",
@@ -186,7 +204,7 @@ incPlotSexFilters <- function(uploadedFiles, menuFun, objectChoice) {
   )
 }
 
-incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
+incPlotAgeFilters <- function(uploadedFiles, objectChoice) {
   tagList(
     fluidRow(
       column(4,
@@ -204,8 +222,8 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
       column(4,
              pickerInput(inputId = "daysPriorIncidenceAge",
                          label = "Days Prior History",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history),
-                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_history)[1],
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation),
+                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)[1],
                          multiple = FALSE)
       )
     ),
@@ -266,6 +284,15 @@ incPlotAgeFilters <- function(uploadedFiles, menuFun, objectChoice) {
                          label = "To",
                          choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
                          selected = max(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
+      ),
+    ),
+    fluidRow(
+      column(8,
+             textAreaInput("captionIncAge",
+                           "Caption",
+                           "Figure 3. Incidence rate/s of drug/s use over calendar time (per year) overall stratified by age and database [Add months if relevant]",
+                           width = '100%',
+                           height = "130px")
       ),
     ),
     fluidRow(
