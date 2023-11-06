@@ -200,7 +200,8 @@ reportGenerator <- function() {
     output$navPanelPreview <- renderUI({
       previewPanels <- lapply(input$objectSelection,
                               tabPanelSelection,
-                              uploadedFiles = uploadedFiles)
+                              uploadedFiles = uploadedFiles,
+                              version = input$dataVersionTP)
       do.call(navlistPanel, previewPanels)
     })
 
@@ -843,19 +844,35 @@ reportGenerator <- function() {
     # SunburstPlot
 
     treatmentDataSunburst <- reactive({
-      treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
-      treatmentPathways %>%
-        filter(sex == input$sexSunburst,
-               age == input$ageSunburst,
-               indexYear == input$indexSunburst)
+      if (input$dataVersionTP == "2.5.2") {
+        treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+        treatmentPathways %>%
+          filter(sex == input$sexSunburst,
+                 age == input$ageSunburst,
+                 indexYear == input$indexSunburst)
+      } else if (input$dataVersionTP == "2.5.0") {
+        treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+        treatmentPathways %>%
+          filter(sex == input$sexSunburst,
+                 age == input$ageSunburst,
+                 index_year == input$indexSunburst)
+      }
     })
 
     treatmentDataSankey <- reactive({
-      treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
-      treatmentPathways %>%
-        filter(sex == input$sexSankey,
-               age == input$ageSankey,
-               indexYear == input$indexSankey)
+      if (input$dataVersionTP == "2.5.2") {
+        treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+        treatmentPathways %>%
+          filter(sex == input$sexSankey,
+                 age == input$ageSankey,
+                 indexYear == input$indexSankey)
+      } else if (input$dataVersionTP == "2.5.0") {
+        treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+        treatmentPathways %>%
+          filter(sex == input$sexSunburst,
+                 age == input$ageSunburst,
+                 index_year == input$indexSankey)
+      }
     })
 
     output$previewSunburstPlot <- renderUI({
@@ -898,12 +915,16 @@ reportGenerator <- function() {
                                               outputFile = outputFile,
                                               returnHTML = FALSE)
         fileNameOut <- file.path(outputDirSunburst, "sunburstDiagram.png")
-        saveAsFile(fileName = outputFile, fileNameOut = fileNameOut)
+        webshot2::webshot(
+          url = outputFile,
+          file = fileNameOut,
+          vwidth = 1200,
+          vheight = 10)
         filename <- normalizePath(fileNameOut)
         message("Adding filename to dataReport")
-        dataReport[[objectChoice]][["sunburstDiagramImage"]] <- filename
+        dataReport[[objectChoice]][["fileImage"]] <- filename
       } else {
-        dataReport[[objectChoice]][["sunburstDiagramImage"]] <- NULL
+        dataReport[[objectChoice]][["fileImage"]] <- NULL
       }
     })
 
@@ -964,10 +985,14 @@ reportGenerator <- function() {
                             groupCombinations = FALSE,
                             minFreq = 1)
         fileNameOut <- file.path(outputDirSankey, "sankeyDiagram.png")
-        saveAsFile(fileName = outputFile, fileNameOut = fileNameOut)
-        dataReport[[objectChoice]][["sankeyDiagramImage"]] <- fileNameOut
+        webshot2::webshot(
+          url = outputFile,
+          file = fileNameOut,
+          vwidth = 1200,
+          vheight = 10)
+        dataReport[[objectChoice]][["fileImage"]] <- fileNameOut
       } else {
-        dataReport[[objectChoice]][["sankeyDiagramImage"]] <- NULL
+        dataReport[[objectChoice]][["fileImage"]] <- NULL
       }
     })
 
@@ -1119,29 +1144,29 @@ reportGenerator <- function() {
 
           } else if ("gvis" %in% class(object)) {
 
-            if (i == "Sankey Diagram - TreatmentPatterns") {
+            # if (i == "Sankey Diagram - TreatmentPatterns") {
               body_add_img(x = incidencePrevalenceDocx,
-                           src = dataReport[[i]][["sankeyDiagramImage"]],
+                           src = dataReport[[i]][["fileImage"]],
                            height = 8,
                            width = 5)
               body_add(incidencePrevalenceDocx,
                        value = i,
                        style = "Heading 1 (Agency)")
-            }
+            # }
 
           } else if ("html" %in% class(object)) {
 
-            if (i == "Sunburst Plot - TreatmentPatterns") {
+            # if (i == "Sunburst Plot - TreatmentPatterns") {
 
               body_add_img(x = incidencePrevalenceDocx,
-                           src = dataReport[[i]][["sunburstDiagramImage"]],
+                           src = dataReport[[i]][["fileImage"]],
                            height = 8,
                            width = 3)
               body_add(incidencePrevalenceDocx,
                        value = i,
                        style = "Heading 1 (Agency)")
 
-            }
+            # }
 
           } else if ("huxtable" %in% class(object)) {
             body_end_section_landscape(incidencePrevalenceDocx)

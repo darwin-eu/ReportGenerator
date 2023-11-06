@@ -1,4 +1,4 @@
-tabPanelSelection <- function(selection, uploadedFiles) {
+tabPanelSelection <- function(selection, uploadedFiles, version) {
   if (selection == "Table - Number of participants") {
     tabPanel(selection, tableNumParFilters(uploadedFiles), tableOutput("previewTable1"))
   } else if (selection == "Table - Incidence Attrition") {
@@ -20,8 +20,8 @@ tabPanelSelection <- function(selection, uploadedFiles) {
   } else if (selection == "Plot - Prevalence rate per year by age") {
     tabPanel(selection, prevPlotAgeFilters(uploadedFiles, selection), plotOutput("previewFigure6"))
   } else if (selection == "Sankey Diagram - TreatmentPatterns") {
-    tabPanel(selection, sankeyDiagramFilters(uploadedFiles), htmlOutput("previewSankeyDiagram"))
+    tabPanel(selection, sankeyDiagramFilters(uploadedFiles, version), htmlOutput("previewSankeyDiagram"))
   } else if (selection == "Sunburst Plot - TreatmentPatterns") {
-    tabPanel(selection, sunburstDiagramFilters(uploadedFiles), htmlOutput("previewSunburstPlot"))
+    tabPanel(selection, sunburstDiagramFilters(uploadedFiles, version), htmlOutput("previewSunburstPlot"))
   }
 }
