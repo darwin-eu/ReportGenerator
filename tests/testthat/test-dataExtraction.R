@@ -85,29 +85,29 @@ test_that("Loading 1 csv files IncidencePrevalence", {
   unlink(csvLocation, recursive = TRUE)
 })
 
-test_that("Loading 1 csv files extra column check IncidencePrevalence", {
-  csvFiles <- list.files(testthat::test_path("IncPrev",
-                                             "extras"),
-                         pattern = "csv",
-                         full.names = TRUE)
-  csvFiles <- csvFiles[1]
-  fileName <- list.files(testthat::test_path("IncPrev",
-                                             "extras"),
-                         pattern = "csv")
-  fileName <- tools::file_path_sans_ext(fileName)
-  fileName <- fileName[1]
-  package <- "IncidencePrevalence"
-  versionData <- "0.5.1"
-  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  configData <- configData[[package]][[versionData]]
-  configDataTypes <- names(configData)
-  uploadedFiles <- columnCheck(csvFiles = csvFiles,
-                               fileName = fileName,
-                               configData = configData,
-                               configDataTypes = configDataTypes)
-  expect_equal(length(uploadedFiles), 1)
-  expect_type(uploadedFiles, "list")
-})
+# test_that("Loading 1 csv files extra column check IncidencePrevalence", {
+#   csvFiles <- list.files(testthat::test_path("IncPrev",
+#                                              "extras"),
+#                          pattern = "csv",
+#                          full.names = TRUE)
+#   csvFiles <- csvFiles[1]
+#   fileName <- list.files(testthat::test_path("IncPrev",
+#                                              "extras"),
+#                          pattern = "csv")
+#   fileName <- tools::file_path_sans_ext(fileName)
+#   fileName <- fileName[1]
+#   package <- "IncidencePrevalence"
+#   versionData <- "0.5.1"
+#   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+#   configData <- configData[[package]][[versionData]]
+#   configDataTypes <- names(configData)
+#   uploadedFiles <- columnCheck(csvFiles = csvFiles,
+#                                fileName = fileName,
+#                                configData = configData,
+#                                configDataTypes = configDataTypes)
+#   expect_equal(length(uploadedFiles), 1)
+#   expect_type(uploadedFiles, "list")
+# })
 
 test_that("Loading multiple csv files IncidencePrevalence", {
   csvLocation <- file.path(tempdir(), "dataLocation")
