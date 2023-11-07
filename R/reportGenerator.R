@@ -858,13 +858,15 @@ reportGenerator <- function() {
         treatmentPathways %>%
           filter(sex == input$sexSunburst,
                  age == input$ageSunburst,
-                 indexYear == input$indexSunburst)
+                 indexYear == input$indexSunburst,
+                 cdm_name == input$cdmSunburst)
       } else if (input$dataVersionTP == "2.5.0") {
         treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
         treatmentPathways %>%
           filter(sex == input$sexSunburst,
                  age == input$ageSunburst,
-                 index_year == input$indexSunburst)
+                 index_year == input$indexSunburst,
+                 cdm_name == input$cdmSunburst)
       }
     })
 
@@ -874,13 +876,15 @@ reportGenerator <- function() {
         treatmentPathways %>%
           filter(sex == input$sexSankey,
                  age == input$ageSankey,
-                 indexYear == input$indexSankey)
+                 indexYear == input$indexSankey,
+                 cdm_name == input$cdmSankey)
       } else if (input$dataVersionTP == "2.5.0") {
         treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
         treatmentPathways %>%
           filter(sex == input$sexSankey,
                  age == input$ageSankey,
-                 index_year == input$indexSankey)
+                 index_year == input$indexSankey,
+                 cdm_name == input$cdmSankey)
       }
     })
 

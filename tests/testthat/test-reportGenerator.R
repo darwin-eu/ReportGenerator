@@ -314,10 +314,12 @@ test_that("prevalenceFigure6() TRUE", {
 
 test_that("Sunburst data", {
   testServer(reportGenerator(), {
+    treatmentPathways_test <- mutate(treatmentPathways_test, cdm_name = "1")
     uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
     session$setInputs(sexSunburst = "all",
                       ageSunburst = "all",
                       indexSunburst = "all",
+                      cdmSunburst = "1",
                       dataVersionTP = "2.5.2")
     testthat::expect_s3_class(treatmentDataSunburst(), "data.frame")
     testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
@@ -326,10 +328,12 @@ test_that("Sunburst data", {
 
 test_that("Sankey data", {
   testServer(reportGenerator(), {
+    treatmentPathways_test <- mutate(treatmentPathways_test, cdm_name = "1")
     uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
     session$setInputs(sexSankey = "all",
                       ageSankey = "all",
                       indexSankey = "all",
+                      cdmSankey = "1",
                       dataVersionTP = "2.5.2")
     testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
     testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")

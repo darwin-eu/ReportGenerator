@@ -2,13 +2,13 @@ sankeyDiagramFilters <- function(uploadedFiles, version) {
   if (version == "2.5.2") {
     tagList(
       fluidRow(
-        # pickerInput(
-        #   inputId = "cdmSankey",
-        #   label = "CDM",
-        #   choices = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdmName),
-        #   selected = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdmName)[1],
-        #   multiple = FALSE
-        # ),
+        pickerInput(
+          inputId = "cdmSankey",
+          label = "CDM",
+          choices = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdm_name),
+          selected = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdm_name)[1],
+          multiple = FALSE
+        ),
         pickerInput(
           inputId = "sexSankey",
           label = "Sex",
@@ -45,13 +45,13 @@ sankeyDiagramFilters <- function(uploadedFiles, version) {
     } else if (version == "2.5.0") {
         tagList(
           fluidRow(
-            # pickerInput(
-            #   inputId = "cdmSankey",
-            #   label = "CDM",
-            #   choices = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdmName),
-            #   selected = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdmName)[1],
-            #   multiple = FALSE
-            # ),
+            pickerInput(
+              inputId = "cdmSankey",
+              label = "CDM",
+              choices = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdm_name),
+              selected = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdm_name)[1],
+              multiple = FALSE
+            ),
             pickerInput(
               inputId = "sexSankey",
               label = "Sex",
@@ -93,13 +93,13 @@ sunburstDiagramFilters <- function(uploadedFiles, version) {
   if (version == "2.5.2") {
     tagList(
       fluidRow(
-        # pickerInput(
-        #   inputId = "cdmSunburst",
-        #   label = "CDM",
-        #   choices = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdmName),
-        #   selected = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdmName)[1],
-        #   multiple = FALSE
-        # ),
+        pickerInput(
+          inputId = "cdmSunburst",
+          label = "CDM",
+          choices = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdm_name),
+          selected = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdm_name)[1],
+          multiple = FALSE
+        ),
         pickerInput(
           inputId = "sexSunburst",
           label = "Sex",
@@ -136,13 +136,13 @@ sunburstDiagramFilters <- function(uploadedFiles, version) {
   } else if (version == "2.5.0") {
     tagList(
       fluidRow(
-        # pickerInput(
-        #   inputId = "cdmSunburst",
-        #   label = "CDM",
-        #   choices = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdmName),
-        #   selected = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdmName)[1],
-        #   multiple = FALSE
-        # ),
+        pickerInput(
+          inputId = "cdmSunburst",
+          label = "CDM",
+          choices = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdm_name),
+          selected = unique(uploadedFiles[["dataTP"]][["treatmentPathways"]]$cdm_name)[1],
+          multiple = FALSE
+        ),
         pickerInput(
           inputId = "sexSunburst",
           label = "Sex",

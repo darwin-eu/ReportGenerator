@@ -58,9 +58,14 @@ joinDatabase <- function(fileDataPath = NULL,
                                   recursive = TRUE)
       # Iterates every individual file
       for (file in filesLocation) {
-        # file <- filesLocation[1]
+        # file <- filesLocation[4]
         resultsData <- read_csv(file, show_col_types = FALSE)
         resultsColumns <- names(resultsData)
+        if (grepl("metadata.csv", file)) {
+          metadata <- read_csv(file = file,
+                               show_col_types = FALSE)
+          databaseName <- metadata$cdmSourceName
+        }
         # Checks the type of every individual file
         for (val in configDataTypes) {
           # val <- "incidence_attrition"
@@ -103,6 +108,10 @@ joinDatabase <- function(fileDataPath = NULL,
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)
             if (all(configColumns %in% resultsColumns)) {
+              if (!('cdm_name' %in% colnames(df))) {
+                resultsData <- mutate(resultsData,
+                                      cdm_name = databaseName)
+              }
               message(paste0(val, ": match yes"))
               data[[val]] <- bind_rows(data[[val]], resultsData)
             }
@@ -164,6 +173,10 @@ columnCheck <- function(csvFiles,
         configColumns <- configData[[val]]
         configColumns <- unlist(configColumns$names)
         if (all(configColumns %in% resultsColumns)) {
+          if (!('cdm_name' %in% colnames(df))) {
+            resultsData <- mutate(resultsData,
+                                  cdm_name = i)
+          }
           message(paste0(val, ": match yes"))
           data[[val]] <- bind_rows(data[[val]], resultsData)
         }
