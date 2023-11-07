@@ -6,9 +6,6 @@
 \usage{
 testData()
 }
-\arguments{
-\item{internal}{Boolean}
-}
 \value{
 sysdata.rda instruction
 }

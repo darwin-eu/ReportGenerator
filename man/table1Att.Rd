@@ -7,9 +7,9 @@
 table1Att(attritionData, attritionDataType)
 }
 \arguments{
-\item{attritionDataType}{Either "incidence" or prevalence}
+\item{attritionData}{A dataframe with attrition data.}
 
-\item{incidence_attrition}{A dataframe with incidence attrition data.}
+\item{attritionDataType}{Either "incidence" or prevalence}
 }
 \description{
 `table1IncAtt()` creates table 1 with number of participants from each database from attrition data

@@ -244,7 +244,7 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 }
 #' `table1IncAtt()` creates table 1 with number of participants from each database from attrition data
 #'
-#' @param incidence_attrition A dataframe with incidence attrition data.
+#' @param attritionData A dataframe with attrition data.
 #' @param attritionDataType Either "incidence" or prevalence
 #'
 #' @import flextable dplyr

@@ -7,7 +7,7 @@
 getItemOptions(title)
 }
 \arguments{
-\item{item}{the menu item}
+\item{title}{the menu item}
 }
 \value{
 the options

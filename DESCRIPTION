@@ -29,7 +29,6 @@ Imports:
     webshot2 (>= 0.1.0),
     stringr,
     rjson,
-    data.table,
     huxtable,
     sortable,
     zip,
@@ -43,10 +42,15 @@ Imports:
     gt,
     DT,
     usethis,
-    shinytest,
-    data.tree
+    here
 Suggests: 
     testthat,
-    rmarkdown
+    rmarkdown,
+    networkD3,
+    sunburstR,
+    knitr
 Config/testthat/edition: 3
 URL: https://darwin-eu-dev.github.io/ReportGenerator/
+VignetteBuilder: knitr
+VignetteIndexEntry:
+    Darwin Style Guide

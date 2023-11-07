@@ -17,8 +17,10 @@
 #' `joinDatabase()` joins several zip or csv folders into a list of dataframes.
 #'
 #' @param fileDataPath File path(s) in character
+#' @param fileName Name of the file in character to process in case the input is only csv
 #' @param package Name of the packages that generated the results
 #' @param versionData Version of the package
+#' @param csvLocation Path folder location to uncompress the zip files
 #'
 #' @return A list of dataframes
 #'
@@ -108,7 +110,7 @@ joinDatabase <- function(fileDataPath = NULL,
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)
             if (all(configColumns %in% resultsColumns)) {
-              if (!('cdm_name' %in% colnames(df))) {
+              if (!('cdm_name' %in% colnames(resultsData))) {
                 resultsData <- mutate(resultsData,
                                       cdm_name = databaseName)
               }
@@ -173,7 +175,7 @@ columnCheck <- function(csvFiles,
         configColumns <- configData[[val]]
         configColumns <- unlist(configColumns$names)
         if (all(configColumns %in% resultsColumns)) {
-          if (!('cdm_name' %in% colnames(df))) {
+          if (!('cdm_name' %in% colnames(resultsData))) {
             resultsData <- mutate(resultsData,
                                   cdm_name = i)
           }
@@ -344,17 +346,16 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
 
 #' `testData()` extracts data from zip results and saves it in .rda format
 #'
-#' @param internal Boolean
 #'
 #' @importFrom usethis use_data
 #'
 #' @return sysdata.rda instruction
 testData <- function() {
-  uploadedFiles <- list.files(test_path("IncPrev", "0.5.1"),
+  uploadedFiles <- list.files(testthat::test_path("IncPrev", "0.5.1"),
                               pattern = ".zip",
                               full.names = TRUE,
                               recursive = TRUE)
-  treatmentPathways_test <- read_csv(test_path("TrePat",
+  treatmentPathways_test <- read_csv(testthat::test_path("TrePat",
                                                "2.5.2",
                                                "csv",
                                                "CHUBX",

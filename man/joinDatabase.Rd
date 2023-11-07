@@ -15,9 +15,13 @@ joinDatabase(
 \arguments{
 \item{fileDataPath}{File path(s) in character}
 
+\item{fileName}{Name of the file in character to process in case the input is only csv}
+
 \item{package}{Name of the packages that generated the results}
 
 \item{versionData}{Version of the package}
+
+\item{csvLocation}{Path folder location to uncompress the zip files}
 }
 \value{
 A list of dataframes

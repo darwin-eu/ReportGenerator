@@ -44,7 +44,9 @@ getItemsList <- function(items) {
 #' Get the items that the user can choose from in the report generator. The list is loaded from the configuration file
 #' and filtered by the files that have been uploaded.
 #'
-#' @param name vector of uploaded filenames.
+#' @param input Declare the type of value such as "title" to look up in the yml file.
+#' @param output Expected value from the yml file such as the "function" to evaluate.
+#' @param inputValue The actual value in character to look up.
 #'
 #' @return a dataframe with the properties of the items
 getItemConfig <- function(input = NULL,
@@ -76,7 +78,7 @@ getItemConfig <- function(input = NULL,
 
 #' Get options for given item.
 #'
-#' @param item the menu item
+#' @param title the menu item
 #'
 #' @return the options
 getItemOptions <- function(title) {

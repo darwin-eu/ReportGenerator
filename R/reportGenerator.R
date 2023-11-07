@@ -25,6 +25,7 @@
 #' @importFrom gtools mixedsort
 #' @importFrom ggplot2 ggsave
 #' @importFrom gto body_add_gt
+#' @importFrom here here
 #' @export
 reportGenerator <- function() {
 
@@ -900,7 +901,7 @@ reportGenerator <- function() {
       },
       content = function(file) {
         sunburstHTML <- here::here("sunburstDiagram.html")
-        TreatmentPatterns::createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
+        createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
                                               outputFile = sunburstHTML,
                                               returnHTML = FALSE)
         sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
@@ -919,7 +920,7 @@ reportGenerator <- function() {
       objectChoice <- "Sunburst Plot - TreatmentPatterns"
       if (input$lockTreatmentSunburst == TRUE) {
         sunburstHTML <- here::here("sunburstDiagram.html")
-        TreatmentPatterns::createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
+        createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
                                               outputFile = sunburstHTML,
                                               returnHTML = FALSE)
         sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")

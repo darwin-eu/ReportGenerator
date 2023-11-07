@@ -1,7 +1,12 @@
 ---
 title: "Darwin Style Guide"
+author: "Cesar Barboza"
 resource_files:
   - kaplanMeyer.png
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{Darwin Style Guide}
 ---
 
 ```{r, include = FALSE}

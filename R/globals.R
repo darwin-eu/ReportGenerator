@@ -88,4 +88,8 @@ utils::globalVariables(c("age_strata",
                          "Number of Persons",
                          "Female",
                          "Male",
-                         "path"))
+                         "path",
+                         "sex",
+                         "age",
+                         "indexYear",
+                         "index_year"))

@@ -80,7 +80,7 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 
 #' Generates automatic text paragraph for Table Incidence Attrition
 #'
-#' @param incidence_attrition Data frame with incidence attrition data
+#' @param attritionData Data frame with incidence attrition data
 #'
 #' @return Automatic text as a character string
 #' @export

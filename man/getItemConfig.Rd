@@ -7,7 +7,11 @@
 getItemConfig(input = NULL, output = NULL, inputValue = NULL)
 }
 \arguments{
-\item{name}{vector of uploaded filenames.}
+\item{input}{Declare the type of value such as "title" to look up in the yml file.}
+
+\item{output}{Expected value from the yml file such as the "function" to evaluate.}
+
+\item{inputValue}{The actual value in character to look up.}
 }
 \value{
 a dataframe with the properties of the items

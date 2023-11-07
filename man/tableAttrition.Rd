@@ -7,7 +7,7 @@
 tableAttrition(attritionData)
 }
 \arguments{
-\item{incidence_attrition}{Data frame with incidence attrition data}
+\item{attritionData}{Data frame with incidence attrition data}
 }
 \value{
 Automatic text as a character string
