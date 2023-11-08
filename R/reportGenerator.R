@@ -18,7 +18,7 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
-#' @import dplyr shiny shinydashboard shinyWidgets officer flextable waldo readr yaml googleVis
+#' @import dplyr shiny shinydashboard shinyWidgets officer flextable waldo readr yaml googleVis TreatmentPatterns
 #' @importFrom sortable bucket_list add_rank_list
 #' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @importFrom utils read.csv tail unzip
@@ -26,6 +26,7 @@
 #' @importFrom ggplot2 ggsave
 #' @importFrom gto body_add_gt
 #' @importFrom here here
+#' @importFrom TreatmentPatterns createSankeyDiagram
 #' @export
 reportGenerator <- function() {
 
@@ -965,11 +966,11 @@ reportGenerator <- function() {
       },
       content = function(file) {
         sankeyHTML <- here::here("sankeyDiagram.html")
-        createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
-                            outputFile = sankeyHTML,
-                            returnHTML = FALSE,
-                            groupCombinations = FALSE,
-                            minFreq = 1)
+        TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
+                                               outputFile = sankeyHTML,
+                                               returnHTML = FALSE,
+                                               groupCombinations = FALSE,
+                                               minFreq = 1)
         sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
         webshot2::webshot(
           url = sankeyHTML,
@@ -985,11 +986,11 @@ reportGenerator <- function() {
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
       if (input$lockTreatmentSankey == TRUE) {
         sankeyHTML <- here::here("sankeyDiagram.html")
-        createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
-                            outputFile = sankeyHTML,
-                            returnHTML = FALSE,
-                            groupCombinations = FALSE,
-                            minFreq = 1)
+        TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
+                                               outputFile = sankeyHTML,
+                                               returnHTML = FALSE,
+                                               groupCombinations = FALSE,
+                                               minFreq = 1)
         sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
         webshot2::webshot(
           url = sankeyHTML,

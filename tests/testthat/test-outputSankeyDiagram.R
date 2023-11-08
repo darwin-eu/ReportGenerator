@@ -1,6 +1,3 @@
-library(testthat)
-library(ReportGenerator)
-
 # Dummy data
 data <- data.frame(
   path = c("Acetaminophen", "Acetaminophen-Amoxicillin+Clavulanate", "Acetaminophen-Aspirin"),
@@ -15,7 +12,7 @@ test_that("void", {
 
 test_that("Sankey created file", {
   outputFile <- tempfile(fileext = "html")
-  outputSankey <- createSankeyDiagram(
+  outputSankey <- TreatmentPatterns::createSankeyDiagram(
     treatmentPathways = data,
     outputFile = outputFile,
     groupCombinations = TRUE,

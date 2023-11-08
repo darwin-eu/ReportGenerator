@@ -521,14 +521,16 @@ test_that("Sankey data 2.5.0", {
 test_that("lockTreatmentSankey TRUE", {
   testServer(reportGenerator(), {
     treatmentPathways_test <- mutate(treatmentPathways_test,
-                                     cdm_name = "1")
+                                     cdm_name = "1",
+                                     index_year = indexYear)
     uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
     dataReport <- list()
     session$setInputs(sexSankey = "all",
                       ageSankey = "all",
                       indexSankey = "all",
                       cdmSankey = "1",
-                      dataVersionTP = "2.5.2")
+                      dataVersionTP = "2.5.2",
+                      lockTreatmentSankey = TRUE)
     testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
   })
 })
@@ -536,14 +538,16 @@ test_that("lockTreatmentSankey TRUE", {
 test_that("lockTreatmentSankey FALSE", {
   testServer(reportGenerator(), {
     treatmentPathways_test <- mutate(treatmentPathways_test,
-                                     cdm_name = "1")
+                                     cdm_name = "1",
+                                     index_year = indexYear)
     uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
     dataReport <- list()
     session$setInputs(sexSankey = "all",
                       ageSankey = "all",
                       indexSankey = "all",
                       cdmSankey = "1",
-                      dataVersionTP = "2.5.2")
+                      dataVersionTP = "2.5.2",
+                      lockTreatmentSankey = FALSE)
     testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
   })
 })

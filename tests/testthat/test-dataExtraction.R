@@ -229,7 +229,23 @@ test_that("data clean incidence attrition type", {
   expect_type(incidence_attrition, "list")
 })
 
+test_that("data clean incidence attrition type no reason_id", {
+  incidence_attrition <- incidence_attrition_test %>% select(-reason_id) %>%
+    mutate(current_n = number_subjects,
+           excluded = excluded_subjects)
+  incidence_attrition <- dataCleanAttrition(incidence_attrition = incidence_attrition)
+  expect_type(incidence_attrition, "list")
+})
+
 test_that("data clean prevalence attrition type", {
   prevalence_attrition <- dataCleanAttrition(prevalence_attrition = prevalence_attrition_test)
+  expect_type(prevalence_attrition, "list")
+})
+
+test_that("data clean prevalence attrition type no reason_id", {
+  prevalence_attrition <- prevalence_attrition_test %>% select(-reason_id) %>%
+    mutate(current_n = number_subjects,
+           excluded = excluded_subjects)
+  prevalence_attrition <- dataCleanAttrition(prevalence_attrition = prevalence_attrition)
   expect_type(prevalence_attrition, "list")
 })

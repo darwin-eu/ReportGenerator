@@ -42,7 +42,8 @@ Imports:
     gt,
     usethis,
     here,
-    duckdb
+    duckdb,
+    TreatmentPatterns
 Suggests: 
     testthat,
     rmarkdown,
