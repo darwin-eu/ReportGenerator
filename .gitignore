@@ -39,3 +39,5 @@ docs/
 docs
 sunburstDiagram.html
 sankeyDiagram.html
+renv.lock
+renv/
