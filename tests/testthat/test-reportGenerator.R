@@ -62,6 +62,17 @@ test_that("datasetLoad TrePat Wrong Data", {
   })
 })
 
+test_that("reset data", {
+  testServer(reportGenerator(), {
+    session$setInputs(resetData = TRUE)
+    expect_equal(uploadedFiles$dataIP, NULL)
+    expect_equal(uploadedFiles$dataTP, NULL)
+    expect_equal(itemsList$objects, NULL)
+    expect_s3_class(datasetLoadServer("IncidencePrevalence"), "shiny.render.function")
+    expect_s3_class(datasetLoadServer("TreatmentPatterns"), "shiny.render.function")
+  })
+})
+
 test_that("prevalenceAttritionCommon correct columns", {
   testServer(reportGenerator(), {
     session$setInputs(analysisIdTable1 = 1)
@@ -118,6 +129,50 @@ test_that("previewTable1() TRUE", {
     incidenceAttritionCommon()
     session$setInputs(lockTableNumPar = TRUE)
     expect_equal(class(output$previewTable1), "character")
+  })
+})
+
+test_that("previewTableAttInc() FALSE", {
+  testServer(reportGenerator(), {
+    uploadedFiles$dataIP$incidence_attrition <- incidence_attrition_test
+    dataReport <- list()
+    session$setInputs(analysisIdTable1 = 1)
+    incidenceAttritionCommon()
+    session$setInputs(lockTableIncAtt  = FALSE)
+    expect_equal(class(output$previewTableAttInc), "character")
+  })
+})
+
+test_that("previewTableAttInc() TRUE", {
+  testServer(reportGenerator(), {
+    uploadedFiles$dataIP$incidence_attrition <- incidence_attrition_test
+    dataReport <- list()
+    session$setInputs(analysisIdTable1 = 1)
+    incidenceAttritionCommon()
+    session$setInputs(lockTableIncAtt  = TRUE)
+    expect_equal(class(output$previewTableAttInc), "character")
+  })
+})
+
+test_that("previewTableAttPrev() FALSE", {
+  testServer(reportGenerator(), {
+    uploadedFiles$dataIP$prevalence_attrition <- prevalence_attrition_test
+    dataReport <- list()
+    session$setInputs(analysisIdTable1 = 1)
+    prevalenceAttritionCommon()
+    session$setInputs(lockTablePrevAtt  = FALSE)
+    expect_equal(class(output$previewTableAttPrev), "character")
+  })
+})
+
+test_that("previewTableAttPrev() TRUE", {
+  testServer(reportGenerator(), {
+    uploadedFiles$dataIP$prevalence_attrition <- prevalence_attrition_test
+    dataReport <- list()
+    session$setInputs(analysisIdTable1 = 1)
+    prevalenceAttritionCommon()
+    session$setInputs(lockTablePrevAtt  = TRUE)
+    expect_equal(class(output$previewTableAttPrev), "character")
   })
 })
 

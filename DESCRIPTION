@@ -40,7 +40,6 @@ Imports:
     ggplot2,
     gto,
     gt,
-    DT,
     usethis,
     here,
     duckdb
