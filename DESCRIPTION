@@ -42,7 +42,8 @@ Imports:
     gt,
     DT,
     usethis,
-    here
+    here,
+    duckdb
 Suggests: 
     testthat,
     rmarkdown,
