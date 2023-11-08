@@ -916,8 +916,8 @@ reportGenerator <- function() {
     )
 
     observeEvent(input$lockTreatmentSunburst, {
-      objectChoice <- "Sunburst Plot - TreatmentPatterns"
       if (input$lockTreatmentSunburst == TRUE) {
+        objectChoice <- "Sunburst Plot - TreatmentPatterns"
         sunburstHTML <- here::here("sunburstDiagram.html")
         createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
                                               outputFile = sunburstHTML,
@@ -935,6 +935,7 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["returnHTML"]] <- FALSE
         dataReport[[objectChoice]][["fileImage"]] <- sunburstPath
       } else {
+        objectChoice <- "Sunburst Plot - TreatmentPatterns"
         dataReport[[objectChoice]][["treatmentPathways"]] <- NULL
         dataReport[[objectChoice]][["outputFile"]] <- NULL
         dataReport[[objectChoice]][["returnHTML"]] <- NULL
