@@ -89,6 +89,14 @@ joinDatabase <- function(fileDataPath = NULL,
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)
             if (all(configColumns %in% resultsColumns)) {
+              if (!('denominator_days_prior_observation' %in% resultsColumns)) {
+                resultsData <- mutate(resultsData,
+                                      denominator_days_prior_observation = denominator_days_prior_history)
+              }
+              if (!('analysis_outcome_washout' %in% resultsColumns)) {
+                resultsData <- mutate(resultsData,
+                                      analysis_outcome_washout = 0)
+              }
               message(paste0(val, ": match yes"))
               data[[val]] <- bind_rows(data[[val]], resultsData)
             }
@@ -96,6 +104,10 @@ joinDatabase <- function(fileDataPath = NULL,
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)
             if (all(configColumns %in% resultsColumns)) {
+              if (!('denominator_days_prior_observation' %in% resultsColumns)) {
+                resultsData <- mutate(resultsData,
+                                      denominator_days_prior_observation = denominator_days_prior_history)
+              }
               message(paste0(val, ": match yes"))
               data[[val]] <- bind_rows(data[[val]], resultsData)
             }
@@ -103,7 +115,7 @@ joinDatabase <- function(fileDataPath = NULL,
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)
             if (all(configColumns %in% resultsColumns)) {
-              if (!('cdm_name' %in% colnames(resultsData))) {
+              if (!('cdm_name' %in% resultsColumns)) {
                 resultsData <- mutate(resultsData,
                                       cdm_name = databaseName)
               }
@@ -154,6 +166,14 @@ columnCheck <- function(csvFiles,
         configColumns <- configData[[val]]
         configColumns <- unlist(configColumns$names)
         if (all(configColumns %in% resultsColumns)) {
+          if (!('denominator_days_prior_observation' %in% resultsColumns)) {
+            resultsData <- mutate(resultsData,
+                                  denominator_days_prior_observation = denominator_days_prior_history)
+          }
+          if (!('analysis_outcome_washout' %in% resultsColumns)) {
+            resultsData <- mutate(resultsData,
+                                  analysis_outcome_washout = 0)
+          }
           message(paste0(val, ": match yes"))
           data[[val]] <- bind_rows(data[[val]], resultsData)
         }
@@ -161,6 +181,10 @@ columnCheck <- function(csvFiles,
         configColumns <- configData[[val]]
         configColumns <- unlist(configColumns$names)
         if (all(configColumns %in% resultsColumns)) {
+          if (!('denominator_days_prior_observation' %in% resultsColumns)) {
+            resultsData <- mutate(resultsData,
+                                  denominator_days_prior_observation = denominator_days_prior_history)
+          }
           message(paste0(val, ": match yes"))
           data[[val]] <- bind_rows(data[[val]], resultsData)
         }
