@@ -6,6 +6,62 @@ prevalence_attrition_test <- testData$prevalence_attrition
 prevalence_estimates_test <- testData$prevalence_estimates
 treatmentPathways_test <- testData$treatmentPathways_test
 
+test_that("datasetLoad IncPrev", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoad = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip",
+                                                        "mock_data_ReportGenerator_CHUBX.zip",
+                                                        "mock_data_ReportGenerator_IMASIS.zip"),
+                                               datapath = c(test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_CHUBX.zip"),
+                                                            test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_CPRD_GOLD.zip"),
+                                                            test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_IMASIS.zip"))),
+                      dataVersion = "0.5.1")
+
+    expect_equal(length(uploadedFiles$dataIP), 4)
+  })
+})
+
+test_that("datasetLoad IncPrev Wrong Data", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoad = data.frame(name = c("CHUBX.zip",
+                                                        "CPRD.zip",
+                                                        "IQVIA.zip"),
+                                               datapath = c(test_path("TrePat", "2.5.2", "zip", "CHUBX.zip"),
+                                                            test_path("TrePat", "2.5.2", "zip", "CPRD.zip"),
+                                                            test_path("TrePat", "2.5.2", "zip", "IQVIA.zip"))),
+                      dataVersion = "0.5.1")
+
+    expect_equal(length(uploadedFiles$dataIP), 0)
+  })
+})
+
+test_that("datasetLoad TrePat", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoadTP = data.frame(name = c("CHUBX.zip",
+                                                          "CPRD.zip",
+                                                          "IQVIA.zip"),
+                                                 datapath = c(test_path("TrePat", "2.5.2", "zip", "CHUBX.zip"),
+                                                              test_path("TrePat", "2.5.2", "zip", "CPRD.zip"),
+                                                              test_path("TrePat", "2.5.2", "zip", "IQVIA.zip"))),
+                      dataVersionTP = "2.5.2")
+
+    expect_equal(length(uploadedFiles$dataTP), 1)
+  })
+})
+
+test_that("datasetLoad TrePat Wrong Data", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoadTP = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip",
+                                                          "mock_data_ReportGenerator_CHUBX.zip",
+                                                          "mock_data_ReportGenerator_IMASIS.zip"),
+                                                 datapath = c(test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_CHUBX.zip"),
+                                                              test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_CPRD_GOLD.zip"),
+                                                              test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_IMASIS.zip"))),
+                      dataVersionTP = "2.5.2")
+
+    expect_equal(length(uploadedFiles$dataTP), 0)
+  })
+})
+
 test_that("prevalenceAttritionCommon correct columns", {
   testServer(reportGenerator(), {
     session$setInputs(analysisIdTable1 = 1)

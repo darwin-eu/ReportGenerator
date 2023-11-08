@@ -25,6 +25,7 @@
 #' @importFrom utils head write.csv packageVersion
 #' @importFrom stats time
 #' @importFrom zip zip
+#' @importFrom DBI
 #' @return csv files
 #' @export
 generateMockData <- function(databaseName = c("CHUBX",
@@ -78,7 +79,6 @@ generateMockData <- function(databaseName = c("CHUBX",
                                         cohortDateRange = c(as.Date("2008-01-01"), as.Date("2012-01-01")),
                                         ageGroup  = list(c(18, 39),
                                                          c(40, 59),
-                                                         c(60, 99),
                                                          c(18, 99)),
                                         sex  = c("Female", "Male", "Both"),
                                         daysPriorObservation = 365)
@@ -165,4 +165,5 @@ generateMockData <- function(databaseName = c("CHUBX",
                                      outputFolder = paste0(outputDirExp))
 
   }
+  DBI::dbDisconnect(DBI::dbConnect(duckdb::duckdb()), shutdown=TRUE)
 }

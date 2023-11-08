@@ -905,7 +905,6 @@ reportGenerator <- function() {
                                               outputFile = sunburstHTML,
                                               returnHTML = FALSE)
         sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
-        print(sunburstPNG)
         webshot2::webshot(
           url = sunburstHTML,
           file = sunburstPNG,
@@ -924,7 +923,6 @@ reportGenerator <- function() {
                                               outputFile = sunburstHTML,
                                               returnHTML = FALSE)
         sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
-        print(sunburstPNG)
         webshot2::webshot(
           url = sunburstHTML,
           file = sunburstPNG,
@@ -936,7 +934,6 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["outputFile"]] <- sunburstHTML
         dataReport[[objectChoice]][["returnHTML"]] <- FALSE
         dataReport[[objectChoice]][["fileImage"]] <- sunburstPath
-        print(dataReport[[objectChoice]][["fileImage"]])
       } else {
         dataReport[[objectChoice]][["treatmentPathways"]] <- NULL
         dataReport[[objectChoice]][["outputFile"]] <- NULL
@@ -973,7 +970,6 @@ reportGenerator <- function() {
                             groupCombinations = FALSE,
                             minFreq = 1)
         sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
-        print(sankeytPNG)
         webshot2::webshot(
           url = sankeyHTML,
           file = sankeytPNG,
@@ -994,7 +990,6 @@ reportGenerator <- function() {
                             groupCombinations = FALSE,
                             minFreq = 1)
         sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
-        print(sankeytPNG)
         webshot2::webshot(
           url = sankeyHTML,
           file = sankeytPNG,
@@ -1005,7 +1000,6 @@ reportGenerator <- function() {
         dataReport[[objectChoice]][["outputFile"]] <- sankeyHTML
         dataReport[[objectChoice]][["returnHTML"]] <- FALSE
         dataReport[[objectChoice]][["fileImage"]] <- sankeytPNG
-        print(dataReport[[objectChoice]][["fileImage"]])
       } else {
         dataReport[[objectChoice]][["treatmentPathways"]] <- NULL
         dataReport[[objectChoice]][["outputFile"]] <- NULL
