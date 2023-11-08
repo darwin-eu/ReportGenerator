@@ -43,7 +43,7 @@ Imports:
     usethis,
     here,
     duckdb,
-    TreatmentPatterns
+    TreatmentPatterns (>= 2.5.2)
 Suggests: 
     testthat,
     rmarkdown,
