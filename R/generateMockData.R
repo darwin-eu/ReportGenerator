@@ -25,7 +25,6 @@
 #' @importFrom utils head write.csv packageVersion
 #' @importFrom stats time
 #' @importFrom zip zip
-#' @importFrom DBI
 #' @return csv files
 #' @export
 generateMockData <- function(databaseName = c("CHUBX",
