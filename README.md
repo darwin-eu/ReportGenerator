@@ -9,7 +9,7 @@
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Codecov test
-coverage](https://codecov.io/github/darwin-eu-dev/ReportGenerator/branch/develop/graph/badge.svg)](https://app.codecov.io/github/darwin-eu-dev/ReportGenerator?branch=develop)
+coverage](https://codecov.io/github/darwin-eu-dev/ReportGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/github/darwin-eu-dev/ReportGenerator?branch=main)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ReportGenerator)](https://CRAN.R-project.org/package=ReportGenerator)
 
