@@ -164,5 +164,4 @@ generateMockData <- function(databaseName = c("CHUBX",
                                      outputFolder = paste0(outputDirExp))
 
   }
-  DBI::dbDisconnect(DBI::dbConnect(duckdb::duckdb()), shutdown=TRUE)
 }
