@@ -437,15 +437,49 @@ test_that("Sunburst data", {
   })
 })
 
+test_that("Sunburst data 2.5.0", {
+  testServer(reportGenerator(), {
+    treatmentPathways_test <- mutate(treatmentPathways_test,
+                                     cdm_name = "1",
+                                     index_year = indexYear)
+    uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
+    session$setInputs(sexSunburst = "all",
+                      ageSunburst = "all",
+                      indexSunburst = "all",
+                      cdmSunburst = "1",
+                      dataVersionTP = "2.5.0")
+    testthat::expect_s3_class(treatmentDataSunburst(), "data.frame")
+    testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
+  })
+})
+
 test_that("Sankey data", {
   testServer(reportGenerator(), {
-    treatmentPathways_test <- mutate(treatmentPathways_test, cdm_name = "1")
+    treatmentPathways_test <- mutate(treatmentPathways_test,
+                                     cdm_name = "1",
+                                     index_year = indexYear)
     uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
     session$setInputs(sexSankey = "all",
                       ageSankey = "all",
                       indexSankey = "all",
                       cdmSankey = "1",
                       dataVersionTP = "2.5.2")
+    testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
+    testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
+  })
+})
+
+test_that("Sankey data 2.5.0", {
+  testServer(reportGenerator(), {
+    treatmentPathways_test <- mutate(treatmentPathways_test,
+                                     cdm_name = "1",
+                                     index_year = indexYear)
+    uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
+    session$setInputs(sexSankey = "all",
+                      ageSankey = "all",
+                      indexSankey = "all",
+                      cdmSankey = "1",
+                      dataVersionTP = "2.5.0")
     testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
     testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
   })
