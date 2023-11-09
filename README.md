@@ -41,14 +41,20 @@ ReportGenerator::reportGenerator()
 Alternatively, you can access to an [online version
 here](https://data-dev.darwin-eu.org/content/46c367cd-6e29-4382-9d7d-aff8caaa582a/).
 
-Load your own results from the
+Load your own results from
 [IncidencePrevalence](https://darwin-eu.github.io/IncidencePrevalence/)
-package. ReportGenerator accepts data from the latest version of
-IncidencePrevalence and offers limited support for previous versions. To
-test the package, the user can generate some mock data with
-`ReportGenerator::generateMockData()`, which will create a “Results”
-folder with data in zip format.
+or
+[TreatmentPatterns](https://darwin-eu-dev.github.io/TreatmentPatterns/).
+ReportGenerator accepts data from the latest version of those DARWIN EU
+packages, but offers limited support for previous versions. To test the
+package, the user can generate some mock data with
+`ReportGenerator::generateMockData()`, which will create a “results”
+folder with IncidencePrevalence data in zip format.
 
 ``` r
 ReportGenerator::generateMockData()
 ```
+
+## Data Specifications
+
+To load data into \`

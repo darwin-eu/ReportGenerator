@@ -147,6 +147,7 @@ reportGenerator <- function() {
       uploadedFiles$dataIP <- NULL
       uploadedFiles$dataTP <- NULL
       itemsList$objects <- NULL
+      dataReport <- reactiveValues()
       updateTabsetPanel(session, "mainPanel",
                         selected = "Item selection")
       datasetLoadServer("IncidencePrevalence")
