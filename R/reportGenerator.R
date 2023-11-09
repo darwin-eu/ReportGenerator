@@ -61,10 +61,15 @@ reportGenerator <- function() {
                  fluidRow(
                    column(width = 12,
                           fluidRow(
-                            uiOutput("navPanelPreview"),
-                            downloadButton("generateReport", "Generate Report")
+                            uiOutput("navPanelPreview")
                           )
                    )
+                 ),
+                 fluidRow(
+                   column(width = 4,
+                            verbatimTextOutput("dataReportMenu"),
+                            downloadButton("generateReport", "Generate Report")
+                          )
                  )
         )
       )
@@ -225,20 +230,19 @@ reportGenerator <- function() {
       objectChoice <- "Table - Number of participants"
       prevalence_attrition <- prevalenceAttritionCommon()
       incidence_attrition <- incidenceAttritionCommon()
-      if (input$lockTableNumPar == TRUE) {
-        dataReport[[objectChoice]][["prevalence_attrition"]] <- prevalence_attrition
-        dataReport[[objectChoice]][["incidence_attrition"]] <- incidence_attrition
-        dataReport[[objectChoice]][["caption"]] <- input$captionTable1
-
-      } else {
-        dataReport[[objectChoice]][["prevalence_attrition"]] <- NULL
-        dataReport[[objectChoice]][["incidence_attrition"]] <- NULL
-        dataReport[[objectChoice]][["caption"]] <- NULL
-      }
       eval(parse(text = getItemConfig(input = "title",
                                       output = "function",
                                       inputValue = objectChoice)))
     }, colnames = FALSE)
+
+    observeEvent(input$lockTableNumPar, {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        objectChoice <- "Table - Number of participants"
+        dataReport[[randomId]][[objectChoice]][["prevalence_attrition"]] <- prevalenceAttritionCommon()
+        dataReport[[randomId]][[objectChoice]][["incidence_attrition"]] <- incidenceAttritionCommon()
+        dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTable1
+    })
 
     output$previewTableAttInc <- renderTable({
       objectChoice <- "Table - Incidence Attrition"
@@ -1090,6 +1094,13 @@ reportGenerator <- function() {
       }
     })
 
+    output$dataReportMenu <- renderPrint({
+      dataReportList <- reactiveValuesToList(dataReport)
+      for (i in seq(1:length(dataReportList))) {
+        print(names(dataReportList[[i]]))
+      }
+    })
+
     # Word report generator
     output$generateReport <- downloadHandler(
       filename = function() {
@@ -1102,45 +1113,49 @@ reportGenerator <- function() {
                                                                 "darwinTemplate.docx",
                                                                 package = "ReportGenerator"))
         # Reverse selection menu list
-        reverseList <- rev(names(dataReport))
+        # reverseList <- rev(names(dataReport))
+
+        dataReportList <- reactiveValuesToList(dataReport)
+        dataReportList <- rev(dataReportList)
 
         # Loop through ever object selected in the menu
-        for (i in reverseList) {
+        for (i in seq(1:length(dataReportList))) {
           # i <- "Table - Incidence Attrition"
           # Get the function to generate and print in report
+          titleText <- names(dataReportList[[i]])
           expression <- getItemConfig(input = "title",
                                       output = "function",
-                                      inputValue = i)
+                                      inputValue = titleText)
           # Get relevant options for the function
           itemOptions <- getItemConfig(input = "title",
                                        output = "options",
-                                       inputValue = i)
+                                       inputValue = titleText)
 
           # Additional parameter if there are options for the graphs
           if (!is.null(itemOptions)) {
             if (grepl("by sex", i)) {
               expression <- expression %>%
-                addPreviewItemTypeSex(dataReport[[i]][["plotOption"]])
+                addPreviewItemTypeSex(dataReportList[[i]][["plotOption"]])
             } else if (grepl("by age", i)) {
               expression <- expression %>%
-                addPreviewItemTypeAge(dataReport[[i]][["plotOption"]])
+                addPreviewItemTypeAge(dataReportList[[i]][["plotOption"]])
             } else  {
               expression <- expression %>%
-                addPreviewItemType(dataReport[[i]][["plotOption"]])
+                addPreviewItemType(dataReportList[[i]][["plotOption"]])
             }
           }
 
           # Evaluate function
-          object <- eval(parse(text = expression), envir = dataReport[[i]])
+          object <- eval(parse(text = expression), envir = dataReportList[[i]][[1]])
 
           # Check class of every function and add it to the word report accordingly
           if ("gt_tbl" %in% class(object)) {
             body_end_section_landscape(incidencePrevalenceDocx)
             body_add_gt(incidencePrevalenceDocx, value = object)
             body_add(incidencePrevalenceDocx,
-                     value = dataReport[[i]][["caption"]])
+                     value = dataReportList[[i]][[1]][["caption"]])
             body_add(incidencePrevalenceDocx,
-                     value = i,
+                     value = titleText,
                      style = "Heading 1 (Agency)")
             body_end_section_portrait(incidencePrevalenceDocx)
 
@@ -1150,9 +1165,9 @@ reportGenerator <- function() {
                         value = object,
                         style = "Normal")
             body_add(incidencePrevalenceDocx,
-                     value = dataReport[[i]][["caption"]])
+                     value = dataReportList[[i]][[1]][["caption"]])
             body_add(incidencePrevalenceDocx,
-                     value = i,
+                     value = titleText,
                      style = "Heading 1 (Agency)")
             body_end_section_portrait(incidencePrevalenceDocx)
 
@@ -1164,29 +1179,29 @@ reportGenerator <- function() {
                            header = FALSE)
             body_add_par(incidencePrevalenceDocx, " ")
             body_add(incidencePrevalenceDocx,
-                     value = dataReport[[i]][["caption"]])
+                     value = dataReportList[[i]][[1]][["caption"]])
             body_add(incidencePrevalenceDocx,
-                     value = i,
+                     value = titleText,
                      style = "Heading 1 (Agency)")
             body_end_section_portrait(incidencePrevalenceDocx)
           }
 
           if (i == "Sunburst Plot - TreatmentPatterns") {
             body_add_img(x = incidencePrevalenceDocx,
-                         src = dataReport[[i]][["fileImage"]],
+                         src = dataReportList[[i]][[1]][["fileImage"]],
                          height = 5.5,
                          width = 7)
             body_add(incidencePrevalenceDocx,
-                     value = i,
+                     value = titleText,
                      style = "Heading 1 (Agency)")
 
             }  else if (i == "Sankey Diagram - TreatmentPatterns") {
               body_add_img(x = incidencePrevalenceDocx,
-                           src = dataReport[[i]][["fileImage"]],
+                           src = dataReportList[[i]][[1]][["fileImage"]],
                            height = 3,
                            width = 7)
               body_add(incidencePrevalenceDocx,
-                       value = i,
+                       value = titleText,
                        style = "Heading 1 (Agency)")
               }
         }
