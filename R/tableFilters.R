@@ -17,7 +17,8 @@ tableNumParFilters <- function(uploadedFiles) {
     ),
     fluidRow(
       column(4,
-             actionButton("lockTableNumPar", "Add table to report")
+             actionButton("lockTableNumPar", "Add item to report")
+             # lockItemsUI("lockTableNumPar")
       )
     )
   )
@@ -41,9 +42,8 @@ tableAttIncFilters <- function(uploadedFiles) {
     ),
     fluidRow(
       column(4,
-             checkboxInput(inputId = "lockTableIncAtt",
-                           label = "Add data to report",
-                           value = FALSE)
+             actionButton("lockTableIncAtt", "Add item to report")
+             # lockItemsUI("lockTableIncAtt")
       )
     )
   )
@@ -67,9 +67,8 @@ tableAttPrevFilters <- function(uploadedFiles) {
     ),
     fluidRow(
       column(4,
-             checkboxInput(inputId = "lockTablePrevAtt",
-                           label = "Add data to report",
-                           value = FALSE)
+             actionButton("lockTablePrevAtt", "Add item to report")
+             # lockItemsUI("lockTablePrevAtt")
       )
     )
   )
@@ -88,9 +87,8 @@ tableSexFilters <- function(uploadedFiles) {
     ),
     fluidRow(
       column(4,
-             checkboxInput(inputId = "lockTableSex",
-                           label = "Add data to report",
-                           value = FALSE)
+             actionButton("lockTableSex", "Add item to report")
+             # lockItemsUI("lockTableSex")
       ),
     )
   )

@@ -152,6 +152,7 @@ reportGenerator <- function() {
       uploadedFiles$dataIP <- NULL
       uploadedFiles$dataTP <- NULL
       itemsList$objects <- NULL
+      dataReport <- reactiveValues(NULL)
       updateTabsetPanel(session, "mainPanel",
                         selected = "Item selection")
       datasetLoadServer("IncidencePrevalence")
@@ -236,69 +237,92 @@ reportGenerator <- function() {
     }, colnames = FALSE)
 
     observeEvent(input$lockTableNumPar, {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-        objectChoice <- "Table - Number of participants"
-        dataReport[[randomId]][[objectChoice]][["prevalence_attrition"]] <- prevalenceAttritionCommon()
-        dataReport[[randomId]][[objectChoice]][["incidence_attrition"]] <- incidenceAttritionCommon()
-        dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTable1
+      objectChoice <- "Table - Number of participants"
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["prevalence_attrition"]] <- prevalenceAttritionCommon()
+      dataReport[[randomId]][[objectChoice]][["incidence_attrition"]] <- incidenceAttritionCommon()
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTable1
     })
+
+    # lockItemsServer(id = "lockTableNumPar",
+    #                 dataReport = dataReport,
+    #                 prevalenceAttrition = prevalenceAttritionCommon(),
+    #                 incidenceAttrition = incidenceAttritionCommon(),
+    #                 captionInput = input$captionTable1)
 
     output$previewTableAttInc <- renderTable({
       objectChoice <- "Table - Incidence Attrition"
-      attritionDataType <- "incidence"
       incidence_attrition <- incidenceAttritionCommon()
-      if (input$lockTableIncAtt == TRUE) {
-        dataReport[[objectChoice]][["incidence_attrition"]] <- incidence_attrition
-        dataReport[[objectChoice]][["attritionDataType"]] <- attritionDataType
-        dataReport[[objectChoice]][["caption"]] <- input$captionTableInc
-      } else {
-        dataReport[[objectChoice]][["incidence_attrition"]] <- NULL
-        dataReport[[objectChoice]][["attritionDataType"]] <- NULL
-        dataReport[[objectChoice]][["caption"]] <- NULL
-      }
+      attritionDataType <- "incidence"
       eval(parse(text = getItemConfig(input = "title",
                                       output = "function",
                                       inputValue = objectChoice)))
     }, colnames = FALSE)
 
+    observeEvent(input$lockTableIncAtt, {
+      objectChoice <- "Table - Incidence Attrition"
+      attritionDataType <- "incidence"
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["incidence_attrition"]] <- incidenceAttritionCommon()
+      dataReport[[randomId]][[objectChoice]][["attritionDataType"]] <- attritionDataType
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTableInc
+    })
+
+
+    # lockItemsServer(id = "lockTableIncAtt",
+    #                 dataReport = dataReport,
+    #                 incidenceAttrition = incidenceAttritionCommon(),
+    #                 captionInput = input$captionTableInc)
+
     output$previewTableAttPrev <- renderTable({
-      # objectChoice <- "Table - Number of participants"
       objectChoice <- "Table - Prevalence Attrition"
       attritionDataType <- "prevalence"
       prevalence_attrition <- prevalenceAttritionCommon()
-      if (input$lockTablePrevAtt == TRUE) {
-        dataReport[[objectChoice]][["prevalence_attrition"]] <- prevalence_attrition
-        dataReport[[objectChoice]][["attritionDataType"]] <- attritionDataType
-        dataReport[[objectChoice]][["caption"]] <- input$captionTablePrev
-      } else {
-        dataReport[[objectChoice]][["prevalence_attrition"]] <- NULL
-        dataReport[[objectChoice]][["attritionDataType"]] <- NULL
-        dataReport[[objectChoice]][["caption"]] <- NULL
-      }
       eval(parse(text = getItemConfig(input = "title",
                                       output = "function",
                                       inputValue = objectChoice)))
     }, colnames = FALSE)
+
+    observeEvent(input$lockTablePrevAtt, {
+      objectChoice <- "Table - Prevalence Attrition"
+      attritionDataType <- "prevalence"
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["prevalence_attrition"]] <- prevalenceAttritionCommon()
+      dataReport[[randomId]][[objectChoice]][["attritionDataType"]] <- attritionDataType
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTablePrev
+    })
+
+    # lockItemsServer(id = "lockTablePrevAtt",
+    #                 dataReport = dataReport,
+    #                 prevalenceAttrition = prevalenceAttritionCommon(),
+    #                 captionInput = input$captionTablePrev)
 
     # Table Att Inc
 
     output$previewTableSex <- render_gt({
       objectChoice <- "Table - Number of participants by sex and age group"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
-      # Lock data
-      if (input$lockTableSex == TRUE) {
-        dataReport[[objectChoice]][["incidence_estimates"]] <- uploadedFiles$dataIP$incidence_estimates
-        dataReport[[objectChoice]][["caption"]] <- input$captionTableSexAge
-      } else {
-        dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
-        dataReport[[objectChoice]][["caption"]] <- NULL
-      }
       # Preview object
       eval(parse(text = getItemConfig(input = "title",
                                       output = "function",
                                       inputValue = objectChoice)))
     })
+
+    observeEvent(input$lockTableSex, {
+      objectChoice <- "Table - Number of participants by sex and age group"
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["incidence_estimates"]] <- uploadedFiles$dataIP$incidence_estimates
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTableSexAge
+    })
+
+    # lockItemsServer(id = "lockTableSex",
+    #                 dataReport = dataReport,
+    #                 incidenceEstimates = uploadedFiles$dataIP$incidence_estimates,
+    #                 captionInput = input$captionTableSexAge)
 
     # Figure 1
 
@@ -345,28 +369,34 @@ reportGenerator <- function() {
       # Repeated events
       incidence_estimates <- incidence_estimates %>%
         filter(analysis_repeated_events == input$repeatedIncidenceYear)
-      # Lock data
-      if (input$lockDataIncidenceYear == TRUE) {
-        dataReport[[objectChoice]][["incidence_estimates"]] <- incidence_estimates
-        dataReport[[objectChoice]][["plotOption"]] <- input$facetIncidenceYear
-        dataReport[[objectChoice]][["caption"]] <- input$captionIncAge
-      } else {
-        dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
-        dataReport[[objectChoice]][["plotOption"]] <- NULL
-        dataReport[[objectChoice]][["caption"]] <- NULL
-      }
 
-      # Add facets and render functions
+      return(incidence_estimates)
+    })
 
+    previewFigure1 <- reactive({
+      objectChoice <- "Plot - Incidence rate per year"
       expression <- getItemConfig(input = "title",
                                   output = "function",
                                   inputValue = objectChoice) %>%
         addPreviewItemType(input$facetIncidenceYear)
+      incidence_estimates <- incidenceFigure1()
       eval(parse(text = expression))
-
     })
 
-    output$previewFigure1 <- renderPlot({incidenceFigure1()})
+    output$previewFigure1 <- renderPlot({
+      req(previewFigure1())
+      previewFigure1()
+    })
+
+    # Lock data Figure 1
+    observeEvent(input$lockDataIncidenceYear, {
+      objectChoice <- "Plot - Incidence rate per year"
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["incidence_estimates"]] <- incidenceFigure1()
+      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- input$facetIncidenceYear
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionIncYear
+    })
 
     # Download Figure 1
 
@@ -375,7 +405,7 @@ reportGenerator <- function() {
         paste("Figure1Inc", ".png", sep = "")
       },
       content = function(file) {
-        ggplot2::ggsave(file, plot = incidenceFigure1(), device = "png", height = 500, width = 845, units = "mm")
+        ggplot2::ggsave(file, plot = previewFigure1(), device = "png", height = 500, width = 845, units = "mm")
       }
     )
 
@@ -429,26 +459,34 @@ reportGenerator <- function() {
       # Repeated events
       incidence_estimates <- incidence_estimates %>%
         filter(analysis_repeated_events == input$repeatedIncidenceSex)
-      # Lock data
-      if (input$lockDataIncidenceSex == TRUE) {
-        dataReport[[objectChoice]][["incidence_estimates"]] <- incidence_estimates
-        dataReport[[objectChoice]][["plotOption"]] <- input$facetIncidenceSex
-        dataReport[[objectChoice]][["caption"]] <- input$captionIncSex
-      } else {
-        dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
-        dataReport[[objectChoice]][["plotOption"]] <- NULL
-        dataReport[[objectChoice]][["caption"]] <- NULL
-      }
 
+      return(incidence_estimates)
+    })
+
+    previewFigure2 <- reactive({
+      objectChoice <- "Plot - Incidence rate per year by sex"
       expression <- getItemConfig(input = "title",
                                   output = "function",
                                   inputValue = objectChoice) %>%
         addPreviewItemTypeSex(input$facetIncidenceSex)
+      incidence_estimates <- incidenceFigure2Sex()
       eval(parse(text = expression))
-
     })
 
-    output$previewFigure2 <- renderPlot({incidenceFigure2Sex()})
+    output$previewFigure2 <- renderPlot({
+      req(previewFigure2())
+      previewFigure2()
+    })
+
+    # Lock data Figure 2
+    observeEvent(input$lockDataIncidenceSex, {
+      objectChoice <- "Plot - Incidence rate per year by sex"
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["incidence_estimates"]] <- incidenceFigure2Sex()
+      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- input$facetIncidenceSex
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionIncSex
+    })
 
     # Download Figure 2
 
@@ -457,7 +495,7 @@ reportGenerator <- function() {
         paste("Figure2IncSex", ".png", sep = "")
       },
       content = function(file) {
-        ggplot2::ggsave(file, plot = incidenceFigure2Sex(), device = "png", height = 500, width = 845, units = "mm")
+        ggplot2::ggsave(file, plot = previewFigure2(), device = "png", height = 500, width = 845, units = "mm")
       }
     )
 
@@ -510,34 +548,45 @@ reportGenerator <- function() {
       # Repeated events
       incidence_estimates <- incidence_estimates %>%
         filter(analysis_repeated_events == input$repeatedIncidenceAge)
-      # Lock data
-      if (input$lockDataIncidenceAge == TRUE) {
-        dataReport[[objectChoice]][["incidence_estimates"]] <- incidence_estimates
-        dataReport[[objectChoice]][["plotOption"]] <- input$facetIncidenceAge
-        dataReport[[objectChoice]][["caption"]] <- input$captionIncAge
-      } else {
-        dataReport[[objectChoice]][["incidence_estimates"]] <- NULL
-        dataReport[[objectChoice]][["plotOption"]] <- NULL
-        dataReport[[objectChoice]][["caption"]] <- NULL
-      }
+
+      return(incidence_estimates)
+
+
+    })
+
+    previewFigure3 <- reactive({
+      objectChoice <- "Plot - Incidence rate per year by age"
       expression <- getItemConfig(input = "title",
                                   output = "function",
                                   inputValue = objectChoice) %>%
         addPreviewItemTypeAge(input$facetIncidenceAge)
+      incidence_estimates <- incidenceFigure3Age()
       eval(parse(text = expression))
-
     })
 
-    output$previewFigure3 <- renderPlot({incidenceFigure3Age()})
+    output$previewFigure3 <- renderPlot({
+      req(previewFigure3())
+      previewFigure3()
+    })
 
-    # Download Figure 2
+    # Lock data Figure 3
+    observeEvent(input$lockDataIncidenceAge, {
+      objectChoice <- "Plot - Incidence rate per year by age"
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["incidence_estimates"]] <- incidenceFigure3Age()
+      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- input$facetIncidenceAge
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionIncAge
+    })
+
+    # Download Figure 3
 
     output$downloadFigure3IncAge <- downloadHandler(
       filename = function() {
         paste("Figure3IncAge", ".png", sep = "")
       },
       content = function(file) {
-        ggplot2::ggsave(file, plot = incidenceFigure3Age(), device = "png", height = 500, width = 845, units = "mm")
+        ggplot2::ggsave(file, plot = previewFigure3(), device = "png", height = 500, width = 845, units = "mm")
       }
     )
 
@@ -671,25 +720,35 @@ reportGenerator <- function() {
       # Repeated events
       prevalence_estimates <- prevalence_estimates %>%
         filter(analysis_type == input$typePrevalenceYear)
-      # Lock data
-      if (input$lockDataPrevalenceYear == TRUE) {
-        dataReport[[objectChoice]][["prevalence_estimates"]] <- prevalence_estimates
-        dataReport[[objectChoice]][["plotOption"]] <- input$facetPrevalenceYear
-        dataReport[[objectChoice]][["caption"]] <- input$captionPrevYear
-      } else {
-        dataReport[[objectChoice]][["prevalence_estimates"]] <- NULL
-        dataReport[[objectChoice]][["plotOption"]] <- NULL
-        dataReport[[objectChoice]][["caption"]] <- NULL
-      }
-      # Preview object
+
+      return(prevalence_estimates)
+
+    })
+
+    previewFigure4 <- reactive({
+      objectChoice <- "Plot - Prevalence rate per year"
       expression <- getItemConfig(input = "title",
                                   output = "function",
                                   inputValue = objectChoice) %>%
-        addPreviewItemType(input$facetIncidenceYear)
+        addPreviewItemType(input$facetPrevalenceYear)
+      prevalence_estimates <- prevalenceFigure4()
       eval(parse(text = expression))
     })
 
-    output$previewFigure4 <- renderPlot({prevalenceFigure4()})
+    output$previewFigure4 <- renderPlot({
+      req(previewFigure4())
+      previewFigure4()
+    })
+
+    # Lock data Figure 4
+    observeEvent(input$lockDataPrevalenceYear, {
+      objectChoice <- "Plot - Prevalence rate per year"
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["prevalence_estimates"]] <- prevalenceFigure4()
+      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- input$facetPrevalenceYear
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionPrevYear
+    })
 
     # Download Figure 4
 
@@ -698,7 +757,7 @@ reportGenerator <- function() {
         paste("Figure4Prev", ".png", sep = "")
       },
       content = function(file) {
-        ggplot2::ggsave(file, plot = prevalenceFigure4(), device = "png", height = 500, width = 845, units = "mm")
+        ggplot2::ggsave(file, plot = previewFigure4(), device = "png", height = 500, width = 845, units = "mm")
       }
     )
 
@@ -748,25 +807,35 @@ reportGenerator <- function() {
       # Repeated events
       prevalence_estimates <- prevalence_estimates %>%
         filter(analysis_type == input$typePrevalenceSex)
-      # Lock data
-      if (input$lockDataPrevalenceSex == TRUE) {
-        dataReport[[objectChoice]][["prevalence_estimates"]] <- prevalence_estimates
-        dataReport[[objectChoice]][["plotOption"]] <- input$facetPrevalenceSex
-        dataReport[[objectChoice]][["caption"]] <- input$captionPrevSex
-      } else {
-        dataReport[[objectChoice]][["prevalence_estimates"]] <- NULL
-        dataReport[[objectChoice]][["plotOption"]] <- NULL
-        dataReport[[objectChoice]][["caption"]] <- NULL
-      }
-      # Preview object
+
+      return(prevalence_estimates)
+
+    })
+
+    previewFigure5 <- reactive({
+      objectChoice <- "Plot - Prevalence rate per year by sex"
       expression <- getItemConfig(input = "title",
                                   output = "function",
                                   inputValue = objectChoice) %>%
         addPreviewItemTypeSex(input$facetPrevalenceSex)
+      prevalence_estimates <- prevalenceFigure5()
       eval(parse(text = expression))
     })
 
-    output$previewFigure5 <- renderPlot({prevalenceFigure5()})
+    output$previewFigure5 <- renderPlot({
+      req(previewFigure5())
+      previewFigure5()
+    })
+
+    # Lock data Figure 5
+    observeEvent(input$lockDataPrevalenceSex, {
+      objectChoice <- "Plot - Prevalence rate per year by sex"
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["prevalence_estimates"]] <- prevalenceFigure5()
+      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- input$facetPrevalenceSex
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionPrevSex
+    })
 
     # Download Figure 5
 
@@ -775,7 +844,7 @@ reportGenerator <- function() {
         paste("Figure5PrevSex", ".png", sep = "")
       },
       content = function(file) {
-        ggplot2::ggsave(file, plot = prevalenceFigure5(), device = "png", height = 500, width = 845, units = "mm")
+        ggplot2::ggsave(file, plot = previewFigure5(), device = "png", height = 500, width = 845, units = "mm")
       }
     )
 
@@ -825,25 +894,34 @@ reportGenerator <- function() {
       # Repeated events
       prevalence_estimates <- prevalence_estimates %>%
         filter(analysis_type == input$typePrevalenceAge)
-      # Lock data
-      if (input$lockDataPrevalenceAge == TRUE) {
-        dataReport[[objectChoice]][["prevalence_estimates"]] <- prevalence_estimates
-        dataReport[[objectChoice]][["plotOption"]] <- input$facetPrevalenceAge
-        dataReport[[objectChoice]][["caption"]] <- input$captionPrevAge
-      } else {
-        dataReport[[objectChoice]][["prevalence_estimates"]] <- NULL
-        dataReport[[objectChoice]][["plotOption"]] <- NULL
-        dataReport[[objectChoice]][["caption"]] <- NULL
-      }
-      # Preview object
+
+      return(prevalence_estimates)
+    })
+
+    previewFigure6 <- reactive({
+      objectChoice <- "Plot - Prevalence rate per year by age"
       expression <- getItemConfig(input = "title",
                                   output = "function",
                                   inputValue = objectChoice) %>%
         addPreviewItemTypeAge(input$facetPrevalenceAge)
+      prevalence_estimates <- prevalenceFigure6()
       eval(parse(text = expression))
     })
 
-    output$previewFigure6 <- renderPlot({prevalenceFigure6()})
+    output$previewFigure6 <- renderPlot({
+      req(previewFigure6())
+      previewFigure6()
+    })
+
+    # Lock data Figure 6
+    observeEvent(input$lockDataPrevalenceAge, {
+      objectChoice <- "Plot - Prevalence rate per year by age"
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["prevalence_estimates"]] <- prevalenceFigure6()
+      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- input$facetPrevalenceAge
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionPrevAge
+    })
 
     # Download Figure 6
 
@@ -852,7 +930,7 @@ reportGenerator <- function() {
         paste("Figure6PrevAge", ".png", sep = "")
       },
       content = function(file) {
-        ggplot2::ggsave(file, plot = prevalenceFigure6(), device = "png", height = 500, width = 845, units = "mm")
+        ggplot2::ggsave(file, plot = previewFigure6(), device = "png", height = 500, width = 845, units = "mm")
       }
     )
 
@@ -921,7 +999,6 @@ reportGenerator <- function() {
     )
 
     observeEvent(input$lockTreatmentSunburst, {
-      if (input$lockTreatmentSunburst == TRUE) {
         objectChoice <- "Sunburst Plot - TreatmentPatterns"
         sunburstHTML <- here::here("sunburstDiagram.html")
         createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
@@ -935,17 +1012,13 @@ reportGenerator <- function() {
           vheight = 10)
         sunburstPath <- normalizePath(sunburstPNG)
         message("Adding filename to dataReport")
-        dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSunburst()
-        dataReport[[objectChoice]][["outputFile"]] <- sunburstHTML
-        dataReport[[objectChoice]][["returnHTML"]] <- FALSE
-        dataReport[[objectChoice]][["fileImage"]] <- sunburstPath
-      } else {
-        objectChoice <- "Sunburst Plot - TreatmentPatterns"
-        dataReport[[objectChoice]][["treatmentPathways"]] <- NULL
-        dataReport[[objectChoice]][["outputFile"]] <- NULL
-        dataReport[[objectChoice]][["returnHTML"]] <- NULL
-        dataReport[[objectChoice]][["fileImage"]] <- NULL
-      }
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]][[objectChoice]][["treatmentPathways"]] <- treatmentDataSunburst()
+        dataReport[[randomId]][[objectChoice]][["outputFile"]] <- sunburstHTML
+        dataReport[[randomId]][[objectChoice]][["returnHTML"]] <- FALSE
+        dataReport[[randomId]][[objectChoice]][["fileImage"]] <- sunburstPNG
+        message("Filename added to dataReport")
     })
 
     # Sankey
@@ -988,30 +1061,26 @@ reportGenerator <- function() {
 
     observeEvent(input$lockTreatmentSankey, {
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
-      if (input$lockTreatmentSankey == TRUE) {
-        sankeyHTML <- here::here("sankeyDiagram.html")
-        TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
-                                               outputFile = sankeyHTML,
-                                               returnHTML = FALSE,
-                                               groupCombinations = FALSE,
-                                               minFreq = 1)
-        sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
-        webshot2::webshot(
-          url = sankeyHTML,
-          file = sankeytPNG,
-          vwidth = 1200,
-          vheight = 10)
-        sankeyPath <- normalizePath(sankeytPNG)
-        dataReport[[objectChoice]][["treatmentPathways"]] <- treatmentDataSankey()
-        dataReport[[objectChoice]][["outputFile"]] <- sankeyHTML
-        dataReport[[objectChoice]][["returnHTML"]] <- FALSE
-        dataReport[[objectChoice]][["fileImage"]] <- sankeytPNG
-      } else {
-        dataReport[[objectChoice]][["treatmentPathways"]] <- NULL
-        dataReport[[objectChoice]][["outputFile"]] <- NULL
-        dataReport[[objectChoice]][["returnHTML"]] <- NULL
-        dataReport[[objectChoice]][["fileImage"]] <- NULL
-      }
+      sankeyHTML <- here::here("sankeyDiagram.html")
+      TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
+                                             outputFile = sankeyHTML,
+                                             returnHTML = FALSE,
+                                             groupCombinations = FALSE,
+                                             minFreq = 1)
+      sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
+      webshot2::webshot(
+        url = sankeyHTML,
+        file = sankeytPNG,
+        vwidth = 1200,
+        vheight = 10)
+      sankeyPath <- normalizePath(sankeytPNG)
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["treatmentPathways"]] <- treatmentDataSankey()
+      dataReport[[randomId]][[objectChoice]][["outputFile"]] <- sankeyHTML
+      dataReport[[randomId]][[objectChoice]][["returnHTML"]] <- FALSE
+      dataReport[[randomId]][[objectChoice]][["fileImage"]] <- sankeytPNG
+      message("Filename added to dataReport")
     })
 
     # Update according to facet prevalence
@@ -1097,7 +1166,14 @@ reportGenerator <- function() {
     output$dataReportMenu <- renderPrint({
       dataReportList <- reactiveValuesToList(dataReport)
       for (i in seq(1:length(dataReportList))) {
-        print(names(dataReportList[[i]]))
+        # print(names(dataReportList[[i]]["caption"]))
+        # print(dataReportList[[i]][[1]][["plotOption"]])
+        # print(names(dataReportList[[i]]))
+        print(i)
+        # print(names(dataReportList[[i]]))
+        print(dataReportList[[i]][[1]])
+        # print(names(dataReportList[[i]]))
+        # print(dataReportList[[i]][[1]][["plotOption"]])
       }
     })
 
@@ -1133,15 +1209,15 @@ reportGenerator <- function() {
 
           # Additional parameter if there are options for the graphs
           if (!is.null(itemOptions)) {
-            if (grepl("by sex", i)) {
+            if (grepl("by sex", titleText)) {
               expression <- expression %>%
-                addPreviewItemTypeSex(dataReportList[[i]][["plotOption"]])
-            } else if (grepl("by age", i)) {
+                addPreviewItemTypeSex(dataReportList[[i]][[1]][["plotOption"]])
+            } else if (grepl("by age", titleText)) {
               expression <- expression %>%
-                addPreviewItemTypeAge(dataReportList[[i]][["plotOption"]])
+                addPreviewItemTypeAge(dataReportList[[i]][[1]][["plotOption"]])
             } else  {
               expression <- expression %>%
-                addPreviewItemType(dataReportList[[i]][["plotOption"]])
+                addPreviewItemType(dataReportList[[i]][[1]][["plotOption"]])
             }
           }
 
@@ -1186,7 +1262,7 @@ reportGenerator <- function() {
             body_end_section_portrait(incidencePrevalenceDocx)
           }
 
-          if (i == "Sunburst Plot - TreatmentPatterns") {
+          if (titleText == "Sunburst Plot - TreatmentPatterns") {
             body_add_img(x = incidencePrevalenceDocx,
                          src = dataReportList[[i]][[1]][["fileImage"]],
                          height = 5.5,
@@ -1195,7 +1271,7 @@ reportGenerator <- function() {
                      value = titleText,
                      style = "Heading 1 (Agency)")
 
-            }  else if (i == "Sankey Diagram - TreatmentPatterns") {
+            }  else if (titleText == "Sankey Diagram - TreatmentPatterns") {
               body_add_img(x = incidencePrevalenceDocx,
                            src = dataReportList[[i]][[1]][["fileImage"]],
                            height = 3,
