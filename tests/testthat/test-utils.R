@@ -43,6 +43,17 @@ test_that("getItemsList treatmentPatterns", {
                            "Sankey Diagram - TreatmentPatterns"))
 })
 
+test_that("getItemsList joining to apps", {
+  itemsList <- list(objects = NULL)
+  itemsIP <- c("incidence_attrition", "prevalence_attrition", "incidence_estimates", "prevalence_estimates")
+  itemsTP <- c("treatmentPathways")
+  menuListIP <- getItemsList(itemsIP)
+  menuListTP <- getItemsList(itemsTP)
+  itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], menuListIP)
+  itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], menuListTP)
+  expect_equal(length(itemsList$objects[["items"]]), 12)
+})
+
 test_that("getItemConfig for getting a function", {
   title <- c("Table - Number of participants")
   expression <- getItemConfig(input = "title",

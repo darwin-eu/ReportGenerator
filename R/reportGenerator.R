@@ -115,10 +115,11 @@ reportGenerator <- function() {
                    text = "Not a valid IncidencePrevalence file or check version")
       }
       # Get list of items to show in toggle menu
-      items <- names(uploadedFiles$dataIP)
+      itemsIP <- names(uploadedFiles$dataIP)
+      itemsIPList <- getItemsList(itemsIP)
       # Items list into reactive value to show in toggle menu
-      # itemsList$objects[["items"]] <- rbind(itemsList$objects[["items"]], getItemsList(items))
-      itemsList$objects[["items"]] <- getItemsList(items)
+      itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], itemsIPList)
+      # itemsList$objects[["items"]] <- getItemsList(items)
       unlink(csvLocation, recursive = TRUE)
     })
 
@@ -144,8 +145,10 @@ reportGenerator <- function() {
       }
       # Get list of items to show in toggle menu
       itemsTP <- names(uploadedFiles$dataTP)
+      itemsTPList <- getItemsList(itemsTP)
       # Items list into reactive value to show in toggle menu
-      itemsList$objects[["items"]] <- getItemsList(itemsTP)
+      itemsList$objects[["items"]] <-  c(itemsList$objects[["items"]], itemsTPList)
+      # itemsList$objects[["items"]] <- getItemsList(itemsTP)
       unlink(csvLocation, recursive = TRUE)
     })
 
@@ -204,7 +207,7 @@ reportGenerator <- function() {
                          group_name = "bucket_list_group",
                          orientation = "horizontal",
                          add_rank_list(text = "Drag from here",
-                                       labels = itemsList$objects$items,
+                                       labels = itemsList$objects[["items"]],
                                        input_id = "objectMenu"),
                          add_rank_list(text = "to here",
                                        labels = NULL,
