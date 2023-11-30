@@ -74,9 +74,10 @@ prevPlotByYearFilters <- function(uploadedFiles, objectChoice) {
     ),
     fluidRow(
       column(4,
-             checkboxInput(inputId = "lockDataPrevalenceYear",
-                           label = "Add data to report",
-                           value = FALSE)
+             actionButton("lockDataPrevalenceYear", "Add item to report")
+             # checkboxInput(inputId = "lockDataPrevalenceYear",
+             #               label = "Add data to report",
+             #               value = FALSE)
       ),
       column(4,
              downloadButton("downloadFigure4Prev", "Download Plot")
@@ -162,9 +163,10 @@ prevPlotSexFilters <- function(uploadedFiles, objectChoice) {
     ),
     fluidRow(
       column(4,
-             checkboxInput(inputId = "lockDataPrevalenceSex",
-                           label = "Add data to report",
-                           value = FALSE)
+             actionButton("lockDataPrevalenceSex", "Add item to report")
+             # checkboxInput(inputId = "lockDataPrevalenceSex",
+             #               label = "Add data to report",
+             #               value = FALSE)
       ),
       column(4,
              downloadButton("downloadFigure5Prev", "Download Plot")
@@ -250,9 +252,10 @@ prevPlotAgeFilters <- function(uploadedFiles, objectChoice) {
     ),
     fluidRow(
       column(4,
-             checkboxInput(inputId = "lockDataPrevalenceAge",
-                           label = "Add data to report",
-                           value = FALSE)
+             actionButton("lockDataPrevalenceAge", "Add item to report")
+             # checkboxInput(inputId = "lockDataPrevalenceAge",
+             #               label = "Add data to report",
+             #               value = FALSE)
       ),
       column(4,
              downloadButton("downloadFigure6Prev", "Download Plot")

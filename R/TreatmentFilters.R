@@ -32,9 +32,10 @@ sankeyDiagramFilters <- function(uploadedFiles, version) {
         ),
       fluidRow(
         column(4,
-               checkboxInput(inputId = "lockTreatmentSankey",
-                             label = "Add data to report",
-                             value = FALSE)
+               actionButton("lockTreatmentSankey", "Add item to report")
+               # checkboxInput(inputId = "lockTreatmentSankey",
+               #               label = "Add data to report",
+               #               value = FALSE)
                ),
         column(4,
                downloadButton("downloadSankey", "Download Plot")
@@ -75,9 +76,10 @@ sankeyDiagramFilters <- function(uploadedFiles, version) {
             ),
             fluidRow(
               column(4,
-                     checkboxInput(inputId = "lockTreatmentSankey",
-                                   label = "Add data to report",
-                                   value = FALSE)
+                     actionButton("lockTreatmentSankey", "Add item to report")
+                     # checkboxInput(inputId = "lockTreatmentSankey",
+                     #               label = "Add data to report",
+                     #               value = FALSE)
               ),
               column(4,
                      downloadButton("downloadSankey", "Download Plot")
@@ -123,9 +125,10 @@ sunburstDiagramFilters <- function(uploadedFiles, version) {
         ),
       fluidRow(
         column(4,
-               checkboxInput(inputId = "lockTreatmentSunburst",
-                             label = "Add data to report",
-                             value = FALSE)
+               actionButton("lockTreatmentSunburst", "Add item to report")
+               # checkboxInput(inputId = "lockTreatmentSunburst",
+               #               label = "Add data to report",
+               #               value = FALSE)
                ),
         column(4,
                downloadButton("downloadSunburst", "Download Plot")
@@ -166,9 +169,10 @@ sunburstDiagramFilters <- function(uploadedFiles, version) {
         ),
         fluidRow(
           column(4,
-                 checkboxInput(inputId = "lockTreatmentSunburst",
-                               label = "Add data to report",
-                               value = FALSE)
+                 actionButton("lockTreatmentSunburst", "Add item to report")
+                 # checkboxInput(inputId = "lockTreatmentSunburst",
+                 #               label = "Add data to report",
+                 #               value = FALSE)
           ),
           column(4,
                  downloadButton("downloadSunburst", "Download Plot")

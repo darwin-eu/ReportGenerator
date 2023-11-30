@@ -44,12 +44,56 @@ ReportGenerator::reportGenerator()
 
 Alternatively, you can access to an [online version here](https://data-dev.darwin-eu.org/content/46c367cd-6e29-4382-9d7d-aff8caaa582a/).
 
-Load your own results from [IncidencePrevalence](https://darwin-eu.github.io/IncidencePrevalence/) or [TreatmentPatterns](https://darwin-eu-dev.github.io/TreatmentPatterns/). ReportGenerator accepts data from the latest version of those DARWIN EU packages, but offers limited support for previous versions. To test the package, the user can generate some mock data with `ReportGenerator::generateMockData()`, which will create a "results" folder with IncidencePrevalence data in zip format. 
+Load your own results from the [IncidencePrevalence](https://darwin-eu.github.io/IncidencePrevalence/) or [TreatmentPatterns](https://darwin-eu-dev.github.io/TreatmentPatterns/) packages. ReportGenerator accepts data from the latest versions, but offers limited legacy support. 
+
+`ReportGenerator()` accepts files in ZIP format from multiple data partners, with the following directory structure, or CSV files to visualise individual results. 
+
+``` 
+# IncidencePrevalence ZIP Folders
+
+  C:
+  |--results_CHUBX.zip
+  |       |--incidence_attrition.csv
+  |       |--prevalence_attrition.csv
+  |       |--incidence_estimates.csv
+  |       |--prevalence_estimates.csv
+  |
+  |--results_CPRD.zip
+  |--results_IMASIS.zip
+  |--results_IPCI.zip
+
+# CSV files
+
+  C:
+  |
+  |--incidence_attrition.csv
+  |--prevalence_attrition.csv
+  |--incidence_estimates.csv
+  |--prevalence_estimates.csv
+
+```
+
+In the same way, the user can load results from TreatmentPatterns in ZIP format, including the metadata file to identify results from each data partner. 
+
+```
+# Directory TreatmentPatterns
+
+  C:
+  |--results_CPRD.zip
+  |       |--countsAge.csv
+  |       |--countsSex.csv
+  |       |--metadata.csv
+  |       |--summaryStatsTherapyDuraion.csv
+  |       |--treatmentPathways.csv
+  |
+  |--results_IMASIS.zip
+  |--results_IPCI.zip
+  |--results_SIDIAP.zip
+
+```
+
+To test the package, the user can generate some mock data with `ReportGenerator::generateMockData()`, which will create a "Results" folder with data in zip format. 
 
 ```{r}
 ReportGenerator::generateMockData()
 ```
-
-## Data Specifications
-
-To load data into `
