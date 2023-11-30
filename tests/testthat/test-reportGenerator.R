@@ -210,7 +210,7 @@ test_that("incidenceFigure1() FALSE", {
                       intervalIncidenceYear = "years",
                       repeatedIncidenceYear = FALSE,
                       facetIncidenceYear = "Facet by database")
-    testthat::expect_s3_class(incidenceFigure1(), "ggplot")
+    testthat::expect_s3_class(incidenceFigure1(), "data.frame")
   })
 })
 
@@ -230,7 +230,7 @@ test_that("incidenceFigure1() TRUE", {
                       intervalIncidenceYear = "years",
                       repeatedIncidenceYear = FALSE,
                       facetIncidenceYear = "Facet by outcome")
-    testthat::expect_s3_class(incidenceFigure1(), "ggplot")
+    testthat::expect_s3_class(incidenceFigure1(), "data.frame")
   })
 })
 
@@ -250,7 +250,7 @@ test_that("incidenceFigure2Sex() FALSE", {
                       intervalIncidenceSex = "Years",
                       repeatedIncidenceSex = FALSE,
                       facetIncidenceSex = "Facet by database")
-    testthat::expect_s3_class(incidenceFigure2Sex(), "ggplot")
+    testthat::expect_s3_class(incidenceFigure2Sex(), "data.frame")
   })
 })
 
@@ -270,7 +270,7 @@ test_that("incidenceFigure2Sex() TRUE", {
                       intervalIncidenceSex = "Years",
                       repeatedIncidenceSex = FALSE,
                       facetIncidenceSex = "Facet by outcome")
-    testthat::expect_s3_class(incidenceFigure2Sex(), "ggplot")
+    testthat::expect_s3_class(incidenceFigure2Sex(), "data.frame")
   })
 })
 
@@ -290,7 +290,7 @@ test_that("incidenceFigure3Age() FALSE", {
                       intervalIncidenceAge = "Years",
                       repeatedIncidenceAge = FALSE,
                       facetIncidenceAge = "Facet by database")
-    testthat::expect_s3_class(incidenceFigure3Age(), "ggplot")
+    testthat::expect_s3_class(incidenceFigure3Age(), "data.frame")
   })
 })
 
@@ -310,7 +310,7 @@ test_that("incidenceFigure3Age() TRUE", {
                       intervalIncidenceAge = "Years",
                       repeatedIncidenceAge = FALSE,
                       facetIncidenceAge = "Facet by outcome")
-    testthat::expect_s3_class(incidenceFigure3Age(), "ggplot")
+    testthat::expect_s3_class(incidenceFigure3Age(), "data.frame")
   })
 })
 
@@ -329,7 +329,7 @@ test_that("prevalenceFigure4() FALSE", {
                       intervalPrevalenceYear = "Years",
                       typePrevalenceYear = "period",
                       facetPrevalenceYear = "Facet by database")
-    testthat::expect_s3_class(prevalenceFigure4(), "ggplot")
+    testthat::expect_s3_class(prevalenceFigure4(), "data.frame")
   })
 })
 
@@ -347,7 +347,7 @@ test_that("prevalenceFigure4() TRUE", {
                       intervalPrevalenceYear = "Years",
                       typePrevalenceYear = "point",
                       facetPrevalenceYear = "Facet by outcome")
-    testthat::expect_s3_class(prevalenceFigure4(), "ggplot")
+    testthat::expect_s3_class(prevalenceFigure4(), "data.frame")
   })
 })
 
@@ -365,7 +365,7 @@ test_that("prevalenceFigure5() FALSE", {
                       intervalPrevalenceSex = "Years",
                       typePrevalenceSex = "period",
                       facetPrevalenceSex = "Facet by database")
-    testthat::expect_s3_class(prevalenceFigure5(), "ggplot")
+    testthat::expect_s3_class(prevalenceFigure5(), "data.frame")
   })
 })
 
@@ -383,7 +383,7 @@ test_that("prevalenceFigure5() TRUE", {
                       intervalPrevalenceSex = "Years",
                       typePrevalenceSex = "point",
                       facetPrevalenceSex = "Facet by outcome")
-    testthat::expect_s3_class(prevalenceFigure5(), "ggplot")
+    testthat::expect_s3_class(prevalenceFigure5(), "data.frame")
   })
 })
 
@@ -401,7 +401,7 @@ test_that("prevalenceFigure6() FALSE", {
                       intervalPrevalenceAge = "Years",
                       typePrevalenceAge = "period",
                       facetPrevalenceAge = "Facet by database")
-    testthat::expect_s3_class(prevalenceFigure6(), "ggplot")
+    testthat::expect_s3_class(prevalenceFigure6(), "data.frame")
   })
 })
 
@@ -419,7 +419,7 @@ test_that("prevalenceFigure6() TRUE", {
                       intervalPrevalenceAge = "Years",
                       typePrevalenceAge = "point",
                       facetPrevalenceAge = "Facet by outcome")
-    testthat::expect_s3_class(prevalenceFigure6(), "ggplot")
+    testthat::expect_s3_class(prevalenceFigure6(), "data.frame")
   })
 })
 

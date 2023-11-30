@@ -90,9 +90,10 @@ incPlotByYearFilters <- function(uploadedFiles, objectChoice) {
     ),
     fluidRow(
       column(4,
-             checkboxInput(inputId = "lockDataIncidenceYear",
-                           label = "Add data to report",
-                           value = FALSE)
+             actionButton("lockDataIncidenceYear", "Add item to report")
+             # checkboxInput(inputId = "lockDataIncidenceYear",
+             #               label = "Add data to report",
+             #               value = FALSE)
       ),
       column(4,
              downloadButton("downloadFigure1Inc", "Download Plot")
@@ -193,9 +194,10 @@ incPlotSexFilters <- function(uploadedFiles, objectChoice) {
     ),
     fluidRow(
       column(4,
-             checkboxInput(inputId = "lockDataIncidenceSex",
-                           label = "Add data to report",
-                           value = FALSE)
+             actionButton("lockDataIncidenceSex", "Add item to report")
+             # checkboxInput(inputId = "lockDataIncidenceSex",
+             #               label = "Add data to report",
+             #               value = FALSE)
       ),
       column(4,
              downloadButton("downloadFigure2IncSex", "Download Plot")
@@ -297,9 +299,10 @@ incPlotAgeFilters <- function(uploadedFiles, objectChoice) {
     ),
     fluidRow(
       column(4,
-             checkboxInput(inputId = "lockDataIncidenceAge",
-                           label = "Add data to report",
-                           value = FALSE)
+             actionButton("lockDataIncidenceAge", "Add item to report")
+             # checkboxInput(inputId = "lockDataIncidenceAge",
+             #               label = "Add data to report",
+             #               value = FALSE)
       ),
       column(4,
              downloadButton("downloadFigure3IncAge", "Download Plot")
