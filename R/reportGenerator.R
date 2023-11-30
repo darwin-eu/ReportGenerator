@@ -27,6 +27,7 @@
 #' @importFrom gto body_add_gt
 #' @importFrom here here
 #' @importFrom TreatmentPatterns createSankeyDiagram
+#' @importFrom DT renderDT DTOutput
 #' @export
 reportGenerator <- function() {
 
@@ -61,13 +62,17 @@ reportGenerator <- function() {
                  fluidRow(
                    column(width = 12,
                           fluidRow(
+                            h2("1. Choose objects"),
                             uiOutput("navPanelPreview")
                           )
                    )
                  ),
+                 tags$br(),
                  fluidRow(
                    column(width = 4,
-                            verbatimTextOutput("dataReportMenu"),
+                            h2("2. Objects to print"),
+                            # verbatimTextOutput("dataReportMenu"),
+                            DTOutput("dataReportMenu"),
                             downloadButton("generateReport", "Generate Report")
                           )
                  )
@@ -149,10 +154,9 @@ reportGenerator <- function() {
     # Reset and back to initial tab
     observeEvent(input$resetData, {
       # if (!is.null(uploadedFiles)) {
-      uploadedFiles$dataIP <- NULL
-      uploadedFiles$dataTP <- NULL
       itemsList$objects <- NULL
-      dataReport <- reactiveValues(NULL)
+      uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
+      dataReport <- reactiveValues()
       updateTabsetPanel(session, "mainPanel",
                         selected = "Item selection")
       datasetLoadServer("IncidencePrevalence")
@@ -975,7 +979,7 @@ reportGenerator <- function() {
     output$previewSunburstPlot <- renderUI({
       objectChoice <- "Sunburst Plot - TreatmentPatterns"
       treatmentPathways <- treatmentDataSunburst()
-      createSunburstPlot2(treatmentPathways, groupCombinations = FALSE)
+      TreatmentPatterns::createSunburstPlot2(treatmentPathways, groupCombinations = FALSE)
     })
 
     output$downloadSunburst <- downloadHandler(
@@ -1023,18 +1027,10 @@ reportGenerator <- function() {
 
     # Sankey
 
-    output$previewSankeyDiagram <- renderGvis({
+    output$previewSankeyDiagram <- renderUI({
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
-      outputDirSankey <- file.path(tempdir(), "outputDirSankey")
-      dir.create(outputDirSankey)
-      outputFile <- file.path(outputDirSankey, "sankeyDiagram.html")
-      uploadedFiles[["dataTP"]][["outputFile"]] <- outputFile
-      uploadedFiles[["dataTP"]][["returnHTML"]] <- TRUE
-      object <- eval(parse(text = getItemConfig(input = "title",
-                                                output = "function",
-                                                inputValue = objectChoice)),
-                     envir = uploadedFiles[["dataTP"]])
-      return(object)
+      treatmentPathways <- treatmentDataSankey()
+      TreatmentPatterns::createSankeyDiagram2(treatmentPathways, groupCombinations = TRUE)
     })
 
     output$downloadSankey <- downloadHandler(
@@ -1163,19 +1159,33 @@ reportGenerator <- function() {
       }
     })
 
-    output$dataReportMenu <- renderPrint({
+    objectsListPreview <- reactive({
       dataReportList <- reactiveValuesToList(dataReport)
-      for (i in seq(1:length(dataReportList))) {
-        # print(names(dataReportList[[i]]["caption"]))
-        # print(dataReportList[[i]][[1]][["plotOption"]])
-        # print(names(dataReportList[[i]]))
-        print(i)
-        # print(names(dataReportList[[i]]))
-        print(dataReportList[[i]][[1]])
-        # print(names(dataReportList[[i]]))
-        # print(dataReportList[[i]][[1]][["plotOption"]])
+      if (length(dataReportList) == 0) {
+        return("None")
+      } else {
+        objectList <- list()
+        for (i in seq(1:length(dataReportList))) {
+          objectList <- rbind(objectList, names(dataReportList[[i]]))
+        }
+        result <- unlist(objectList)
+        return(result)
       }
     })
+
+    output$dataReportMenu <- renderDT({
+      dataReportFrame <- data.frame(
+        Name = objectsListPreview()
+      )
+      DT::datatable(dataReportFrame, options = list(dom = 't'))
+    })
+
+    # output$dataReportMenu <- renderPrint({
+    #   # dataReport
+    #   dataReportList <- reactiveValuesToList(dataReport)
+    #   length(dataReportList) == 0
+    #   # objectsListPreview()
+    # })
 
     # Word report generator
     output$generateReport <- downloadHandler(
