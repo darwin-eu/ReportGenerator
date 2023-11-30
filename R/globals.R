@@ -92,4 +92,5 @@ utils::globalVariables(c("age_strata",
                          "sex",
                          "age",
                          "indexYear",
-                         "index_year"))
+                         "index_year",
+                         "denominator_days_prior_history"))
