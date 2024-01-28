@@ -209,7 +209,7 @@ columnCheck <- function(csvFiles,
 #'
 #' `variablesConfigYaml()` the user can load the column names to the variablesConfig.yaml so ReportGenerator can recognize its data.
 #'
-#' @param fileDataPath A list of zipped csv files.
+#' @param fileDataPath A zip folder with csv results from an analytical packages, e.g. IncidencePrevalence, PatientProfiles, TreatmentPatterns, etc.
 #' @param package A string to identify the name of the package, default IncidencePrevalence.
 #' @param version A string to identify which version of IncidencePrevalence is used to generate the results.
 #'

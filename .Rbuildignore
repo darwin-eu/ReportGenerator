@@ -43,3 +43,4 @@ app.R
 ^CRAN-SUBMISSION$
 ^sunburstDiagram\.html$
 ^sankeyDiagram\.html$
+^TASKS\.R$
