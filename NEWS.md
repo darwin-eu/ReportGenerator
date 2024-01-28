@@ -1,3 +1,5 @@
+# ReportGenerator 1.13.0
+
 # ReportGenerator 1.12.0
 
 * Improved tests.
