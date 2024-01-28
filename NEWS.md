@@ -1,5 +1,7 @@
 # ReportGenerator 1.13.0
 
+* Updated and tested IncidencePrevalence 0.6.0
+
 # ReportGenerator 1.12.0
 
 * Improved tests.
