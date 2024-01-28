@@ -6,7 +6,9 @@ datasetLoadUI <- function(id) {
 
 datasetLoadServer <- function(id) {
   moduleServer(id, function(input, output, session) {
-    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData <- yaml.load_file(system.file("config",
+                                             "variablesConfig.yaml",
+                                             package = "ReportGenerator"))
     if (id == "IncidencePrevalence") {
       datasetLoad <- "datasetLoad"
       inputId <- "dataVersion"
