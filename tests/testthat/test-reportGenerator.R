@@ -20,15 +20,35 @@ test_that("datasetLoad IncPrev", {
   })
 })
 
+test_that("datasetLoad IncPrev 0.6.0", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoad = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip"),
+                                               datapath = c(test_path("IncPrev", "0.6.0", "zip", "mock_data_ReportGenerator_CHUBX.zip"))),
+                      dataVersion = "0.6.0")
+
+    expect_equal(length(uploadedFiles$dataIP), 4)
+  })
+})
+
 test_that("datasetLoad IncPrev Wrong Data", {
   testServer(reportGenerator(), {
-    session$setInputs(datasetLoad = data.frame(name = c("CHUBX.zip",
-                                                        "CPRD.zip",
-                                                        "IQVIA.zip"),
+    session$setInputs(datasetLoad = data.frame(name = c("CHUBX.zip"),
                                                datapath = c(test_path("TrePat", "2.5.2", "zip", "CHUBX.zip"),
                                                             test_path("TrePat", "2.5.2", "zip", "CPRD.zip"),
                                                             test_path("TrePat", "2.5.2", "zip", "IQVIA.zip"))),
-                      dataVersion = "0.5.1")
+                      dataVersion = "0.6.0")
+
+    expect_equal(length(uploadedFiles$dataIP), 0)
+  })
+})
+
+test_that("datasetLoad IncPrev Wrong Data 0.6.0", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoad = data.frame(name = c("CHUBX.zip"),
+                                               datapath = c(test_path("TrePat", "2.5.2", "zip", "CHUBX.zip"),
+                                                            test_path("TrePat", "2.5.2", "zip", "CPRD.zip"),
+                                                            test_path("TrePat", "2.5.2", "zip", "IQVIA.zip"))),
+                      dataVersion = "0.6.0")
 
     expect_equal(length(uploadedFiles$dataIP), 0)
   })
@@ -48,6 +68,16 @@ test_that("datasetLoad TrePat", {
   })
 })
 
+test_that("datasetLoad TrePat Wrong Data 0.6.0", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoadTP = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip"),
+                                                 datapath = c(test_path("IncPrev", "0.6.0", "zip", "mock_data_ReportGenerator_CHUBX.zip"))),
+                      dataVersionTP = "2.5.2")
+
+    expect_equal(length(uploadedFiles$dataTP), 0)
+  })
+})
+
 test_that("datasetLoad TrePat Wrong Data", {
   testServer(reportGenerator(), {
     session$setInputs(datasetLoadTP = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip",
@@ -56,6 +86,17 @@ test_that("datasetLoad TrePat Wrong Data", {
                                                  datapath = c(test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_CHUBX.zip"),
                                                               test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_CPRD_GOLD.zip"),
                                                               test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_IMASIS.zip"))),
+                      dataVersionTP = "2.5.2")
+
+    expect_equal(length(uploadedFiles$dataTP), 0)
+  })
+})
+
+
+test_that("datasetLoad TrePat Wrong Data 0.6.0", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoadTP = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip"),
+                                                 datapath = c(test_path("IncPrev", "0.6.0", "zip", "mock_data_ReportGenerator_CHUBX.zip"))),
                       dataVersionTP = "2.5.2")
 
     expect_equal(length(uploadedFiles$dataTP), 0)
@@ -74,6 +115,7 @@ test_that("reset data", {
 })
 
 test_that("prevalenceAttritionCommon correct columns", {
+  # uploadedFiles <- list()
   testServer(reportGenerator(), {
     session$setInputs(analysisIdTable1 = 1)
     uploadedFiles$dataIP$prevalence_attrition <- prevalence_attrition_test
@@ -105,6 +147,7 @@ test_that("if incidenceAttritionCommon is NULL", {
 
 
 test_that("previewTable1() FALSE", {
+  # uploadedFiles <- list()
   testServer(reportGenerator(), {
     uploadedFiles$dataIP$prevalence_attrition <- prevalence_attrition_test
     uploadedFiles$dataIP$incidence_attrition <- incidence_attrition_test

@@ -16,6 +16,6 @@ test_that("Sankey created file", {
     treatmentPathways = data,
     outputFile = outputFile,
     groupCombinations = TRUE,
-    minFreq = 5)
+    minCellCount  = 5)
   expect_true(file.exists(outputFile))
 })

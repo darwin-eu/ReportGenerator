@@ -362,13 +362,14 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
 }
 
 #' `testData()` extracts data from zip results and saves it in .rda format
-#'
+#' @param testFilesDir testthat dir location of the test files with version number of folder (internal use).
 #'
 #' @importFrom usethis use_data
 #'
 #' @return sysdata.rda instruction
-testData <- function() {
-  uploadedFiles <- list.files(testthat::test_path("IncPrev", "0.5.1"),
+testData <- function(testFilesIP = testthat::test_path("IncPrev", "0.6.0", "zip")) {
+  checkmate::expect_directory_exists(testFilesIP)
+  uploadedFiles <- list.files(testFilesIP,
                               pattern = ".zip",
                               full.names = TRUE,
                               recursive = TRUE)
@@ -386,7 +387,7 @@ testData <- function() {
   # Extract
   testData <- joinDatabase(fileDataPath  = uploadedFiles,
                            package = "IncidencePrevalence",
-                           versionData = "0.5.1",
+                           versionData = "0.6.0",
                            csvLocation = csvLocation)
   testData[["treatmentPathways_test"]] <- treatmentPathways_test
   unlink(csvLocation, recursive = TRUE)

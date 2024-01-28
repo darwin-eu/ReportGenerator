@@ -1,3 +1,13 @@
+test_that("test basic", {
+
+  testData <- testData()
+  expect_equal(names(testData), c("incidence_attrition",
+                                  "incidence_estimates",
+                                  "prevalence_attrition",
+                                  "prevalence_estimates",
+                                  "treatmentPathways_test"))
+})
+
 test_that("VariablesConfig IncidencePrevalence", {
   fileDataPath <- list.files(testthat::test_path("IncPrev",
                                                  "0.5.1",
@@ -9,6 +19,22 @@ test_that("VariablesConfig IncidencePrevalence", {
                       version = "0.5.1")
   package <- "IncidencePrevalence"
   version <- "0.5.1"
+  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+  expect_equal(length(configData[[package]][[version]]), 4)
+  expect_type(configData[[package]][[version]], "list")
+})
+
+test_that("VariablesConfig IncidencePrevalence", {
+  fileDataPath <- list.files(testthat::test_path("IncPrev",
+                                                 "0.6.0",
+                                                 "zip"),
+                             pattern = "zip",
+                             full.names = TRUE)
+  variablesConfigYaml(fileDataPath = fileDataPath[1],
+                      package = "IncidencePrevalence",
+                      version = "0.6.0")
+  package <- "IncidencePrevalence"
+  version <- "0.6.0"
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
   expect_equal(length(configData[[package]][[version]]), 4)
   expect_type(configData[[package]][[version]], "list")

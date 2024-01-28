@@ -73,56 +73,44 @@ generateMockData <- function(databaseName = c("CHUBX",
       )
 
     # Denominator data
-    cdm <- generateDenominatorCohortSet(cdm = cdm,
-                                        name = "denominator",
-                                        cohortDateRange = c(as.Date("2008-01-01"), as.Date("2012-01-01")),
-                                        ageGroup  = list(c(18, 39),
-                                                         c(40, 59),
-                                                         c(18, 99)),
-                                        sex  = c("Female", "Male", "Both"),
-                                        daysPriorObservation = 365)
+    cdm <- IncidencePrevalence::generateDenominatorCohortSet(cdm = cdm,
+                                                             name = "denominator",
+                                                             cohortDateRange = c(as.Date("2008-01-01"),
+                                                                                 as.Date("2012-01-01")),
+                                                             ageGroup  = list(c(18, 39),
+                                                                              c(40, 59),
+                                                                              c(18, 99)),
+                                                             sex  = c("Female", "Male", "Both"),
+                                                             daysPriorObservation = 365)
 
     # %>% mutate(cdm_name = i)
 
     # Incidence data
-    incidence_estimates <- estimateIncidence(
-      cdm = cdm,
-      denominatorTable = "denominator",
-      outcomeTable = "outcome",
-      outcomeCohortId = NULL,
-      interval = c("years", "overall"),
-      completeDatabaseIntervals = TRUE,
-      outcomeWashout = 180,
-      repeatedEvents = FALSE,
-      minCellCount = 5,
-      temporary = TRUE,
-      returnParticipants = FALSE)
+    incidence_estimates <- IncidencePrevalence::estimateIncidence(cdm = cdm,
+                                                                  denominatorTable = "denominator",
+                                                                  outcomeTable = "outcome",
+                                                                  interval = c("years", "overall"),
+                                                                  completeDatabaseIntervals = TRUE,
+                                                                  outcomeWashout = 180,
+                                                                  repeatedEvents = FALSE,
+                                                                  minCellCount = 5,
+                                                                  temporary = TRUE,
+                                                                  returnParticipants = FALSE)
 
     incidence_attrition <- IncidencePrevalence::incidenceAttrition(incidence_estimates)
 
     # Prevalence data, both point and period
-    prevalencePoint <- estimatePointPrevalence(
-      cdm = cdm,
-      denominatorTable = "denominator",
-      outcomeTable = "outcome",
-      outcomeCohortId   = NULL,
-      outcomeLookbackDays = 0,
-      interval = "years",
-      timePoint = "start",
-      minCellCount = 5)
+    prevalencePoint <- IncidencePrevalence::estimatePointPrevalence(cdm = cdm,
+                                                                    denominatorTable = "denominator",
+                                                                    outcomeTable = "outcome",
+                                                                    interval = "years",
+                                                                    timePoint = "start")
 
     prevalence_point_attrition <- prevalenceAttrition(prevalencePoint)
 
-    prevalencePeriod <- estimatePeriodPrevalence(
-      cdm = cdm,
-      denominatorTable = "denominator",
-      outcomeTable = "outcome",
-      outcomeCohortId   = NULL,
-      outcomeLookbackDays = 0,
-      interval = "years",
-      completeDatabaseIntervals = TRUE,
-      fullContribution = FALSE,
-      minCellCount = 0)
+    prevalencePeriod <- IncidencePrevalence::estimatePeriodPrevalence(cdm = cdm,
+                                                                      denominatorTable = "denominator",
+                                                                      outcomeTable = "outcome")
 
     prevalence_period_attrition <- prevalenceAttrition(prevalencePeriod)
     prevalence_estimates <- rbind(prevalencePoint, prevalencePeriod)
@@ -149,19 +137,18 @@ generateMockData <- function(databaseName = c("CHUBX",
     # Results
     incPreVersion <- packageVersion("IncidencePrevalence")
     outputDirExp <- outputDir
-    outputDirExp <- file.path(outputDir,
-                              "results",
-                              incPreVersion)
+    outputDirExp <- file.path(outputDir, "results", incPreVersion)
     if (!dir.exists(outputDirExp)) {
       dir.create(outputDirExp, recursive = TRUE)
     }
 
-    exportIncidencePrevalenceResults(resultList = list("incidence_estimates" = incidence_estimates,
-                                                       "prevalence_estimates" = prevalence_estimates,
-                                                       "incidence_attrition" = incidence_attrition,
-                                                       "prevalence_attrition" = incidence_attrition),
-                                     zipName = paste0("mock_data_ReportGenerator_", i),
-                                     outputFolder = paste0(outputDirExp))
+    IncidencePrevalence::exportIncidencePrevalenceResults(resultList = list("incidence_estimates" = incidence_estimates,
+                                                                            "prevalence_estimates" = prevalence_estimates,
+                                                                            "incidence_attrition" = incidence_attrition,
+                                                                            "prevalence_attrition" = incidence_attrition),
+                                                                            zipName = paste0("mock_data_ReportGenerator_", i),
+                                                                            outputFolder = paste0(outputDirExp))
 
   }
+  duckdb::duckdb_shutdown(duckdb::duckdb())
 }

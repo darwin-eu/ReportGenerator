@@ -8,11 +8,9 @@
 [![R-CMD-check](https://github.com/darwin-eu-dev/ReportGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/ReportGenerator/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[![Codecov test
-coverage](https://codecov.io/github/darwin-eu-dev/ReportGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/github/darwin-eu-dev/ReportGenerator?branch=main)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ReportGenerator)](https://CRAN.R-project.org/package=ReportGenerator)
-
+[![codecov](https://codecov.io/gh/darwin-eu-dev/ReportGenerator/branch/main/graph/badge.svg)](https://codecov.io/gh/darwin-eu-dev/ReportGenerator)
 <!-- badges: end -->
 
 ## Overview
