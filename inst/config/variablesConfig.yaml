@@ -73,3 +73,86 @@ TreatmentPatterns:
   2.5.0:
     treatmentPathways:
       names: []
+PatientProfiles:
+  0.5.1:
+    Summary characteristics:
+      names:
+      - cdm_name
+      - result_type
+      - group_name
+      - group_level
+      - strata_name
+      - strata_level
+      - variable
+      - variable_level
+      - variable_type
+      - estimate_type
+      - estimate
+    Summarised Large Scale Characteristics:
+      names:
+      - result_type
+      - cdm_name
+      - group_name
+      - group_level
+      - strata_name
+      - strata_level
+      - table_name
+      - type
+      - analysis
+      - concept
+      - variable
+      - variable_level
+      - estimate_type
+      - estimate
+  0.6.0:
+    summarised_characteristics:
+      names:
+      - cdm_name
+      - result_type
+      - package_name
+      - package_version
+      - group_name
+      - group_level
+      - strata_name
+      - strata_level
+      - variable_name
+      - variable_level
+      - estimate_name
+      - estimate_type
+      - estimate_value
+      - additional_name
+      - additional_level
+    Summarised Large Scale Characteristics:
+      names:
+      - result_type
+      - cdm_name
+      - group_name
+      - group_level
+      - strata_name
+      - strata_level
+      - table_name
+      - type
+      - analysis
+      - concept
+      - variable
+      - variable_level
+      - estimate_type
+      - estimate
+CohortSurvival:
+  0.2.5:
+    Survival estimate:
+      names:
+      - cdm_name
+      - result_type
+      - group_name
+      - group_level
+      - strata_name
+      - strata_level
+      - variable
+      - variable_level
+      - variable_type
+      - estimate_type
+      - time
+      - analysis_type
+      - outcome
+      - estimate

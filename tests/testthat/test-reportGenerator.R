@@ -103,6 +103,52 @@ test_that("datasetLoad TrePat Wrong Data 0.6.0", {
   })
 })
 
+test_that("datasetLoad PP", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoadPP = data.frame(name = c("results_CPRD.zip",
+                                                        "results_EBB.zip",
+                                                        "results_IPCI.zip"),
+                                               datapath = c(test_path("PP", "0.5.1", "zip", "results_CPRD.zip"),
+                                                            test_path("PP", "0.5.1", "zip", "results_EBB.zip"),
+                                                            test_path("PP", "0.5.1", "zip", "results_IPCI.zip"))),
+                      dataVersionPP = "0.5.1")
+
+    expect_equal(length(uploadedFiles$dataPP), 2)
+  })
+})
+
+test_that("datasetLoad PP", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoadPP = data.frame(name = c("patientCharacteristics_hepatitisb.csv"),
+                                                 datapath = c(test_path("PP", "0.5.1", "csv", "patientCharacteristics_hepatitisb.csv"))),
+                      dataVersionPP = "0.5.1")
+    expect_equal(length(uploadedFiles$dataPP), 1)
+  })
+})
+
+
+test_that("datasetLoad PP 0.5.1", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoadPP = data.frame(name = c("results_CPRD.zip"),
+                                               datapath = c(test_path("PP", "0.5.1", "zip", "results_CPRD.zip"))),
+                      dataVersionPP = "0.5.1")
+
+    expect_equal(length(uploadedFiles$dataPP), 2)
+  })
+})
+
+test_that("datasetLoad PP Wrong Data", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoadPP = data.frame(name = c("CHUBX.zip"),
+                                               datapath = c(test_path("TrePat", "2.5.2", "zip", "CHUBX.zip"),
+                                                            test_path("TrePat", "2.5.2", "zip", "CPRD.zip"),
+                                                            test_path("TrePat", "2.5.2", "zip", "IQVIA.zip"))),
+                      dataVersionPP = "0.6.0")
+
+    expect_equal(length(uploadedFiles$dataIP), 0)
+  })
+})
+
 test_that("reset data", {
   testServer(reportGenerator(), {
     session$setInputs(resetData = TRUE)

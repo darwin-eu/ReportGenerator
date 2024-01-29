@@ -60,7 +60,7 @@ joinDatabase <- function(fileDataPath = NULL,
                                   recursive = TRUE)
       # Iterates every individual file
       for (file in filesLocation) {
-        # file <- filesLocation[4]
+        # file <- filesLocation[1]
         resultsData <- read_csv(file, show_col_types = FALSE)
         resultsColumns <- names(resultsData)
         if (grepl("metadata.csv", file)) {
@@ -70,7 +70,7 @@ joinDatabase <- function(fileDataPath = NULL,
         }
         # Checks the type of every individual file
         for (val in configDataTypes) {
-          # val <- "incidence_attrition"
+          # val <- "Summarised Large Scale Characteristics"
           if (val == "incidence_attrition" & grepl("incidence_attrition", file)) {
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)
@@ -112,6 +112,28 @@ joinDatabase <- function(fileDataPath = NULL,
               data[[val]] <- bind_rows(data[[val]], resultsData)
             }
           } else if (val == "treatmentPathways") {
+            configColumns <- configData[[val]]
+            configColumns <- unlist(configColumns$names)
+            if (all(configColumns %in% resultsColumns)) {
+              if (!('cdm_name' %in% resultsColumns)) {
+                resultsData <- mutate(resultsData,
+                                      cdm_name = databaseName)
+              }
+              message(paste0(val, ": match yes"))
+              data[[val]] <- bind_rows(data[[val]], resultsData)
+            }
+          } else if (val == "Summary characteristics") {
+            configColumns <- configData[[val]]
+            configColumns <- unlist(configColumns$names)
+            if (all(configColumns %in% resultsColumns)) {
+              if (!('cdm_name' %in% resultsColumns)) {
+                resultsData <- mutate(resultsData,
+                                      cdm_name = databaseName)
+              }
+              message(paste0(val, ": match yes"))
+              data[[val]] <- bind_rows(data[[val]], resultsData)
+            }
+          } else if (val == "Summarised Large Scale Characteristics") {
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)
             if (all(configColumns %in% resultsColumns)) {
@@ -199,6 +221,28 @@ columnCheck <- function(csvFiles,
           message(paste0(val, ": match yes"))
           data[[val]] <- bind_rows(data[[val]], resultsData)
         }
+      } else if (val == "Summary characteristics") {
+        configColumns <- configData[[val]]
+        configColumns <- unlist(configColumns$names)
+        if (all(configColumns %in% resultsColumns)) {
+          if (!('cdm_name' %in% resultsColumns)) {
+            resultsData <- mutate(resultsData,
+                                  cdm_name = databaseName)
+          }
+          message(paste0(val, ": match yes"))
+          data[[val]] <- bind_rows(data[[val]], resultsData)
+        }
+      } else if (val == "Summarised Large Scale Characteristics") {
+        configColumns <- configData[[val]]
+        configColumns <- unlist(configColumns$names)
+        if (all(configColumns %in% resultsColumns)) {
+          if (!('cdm_name' %in% resultsColumns)) {
+            resultsData <- mutate(resultsData,
+                                  cdm_name = databaseName)
+          }
+          message(paste0(val, ": match yes"))
+          data[[val]] <- bind_rows(data[[val]], resultsData)
+        }
       }
     }
   }
@@ -265,6 +309,7 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     unlink(csvLocation, recursive = TRUE)
 
   } else if (package == "TreatmentPatterns") {
+
     csvFiles <- fileDataPath
     treatmentPathwaysPath <- csvFiles[stringr::str_detect(csvFiles, "treatmentPathways")]
     treatmentPathways <- read_csv(treatmentPathwaysPath, show_col_types = FALSE)
@@ -272,8 +317,57 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
     configData[[package]][[version]][["treatmentPathways"]][["names"]] <- columnNamesTreatmentPathways
     write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  }
 
+  } else if (package == "PatientProfiles") {
+    # package <- "PatientProfiles"
+    # version <- NULL
+    if (is.null(version)) {
+      version <- as.character(packageVersion(package))
+    }
+    checkmate::expect_character(version)
+
+    cdm <- PatientProfiles::mockPatientProfiles(patient_size = 10)
+    summaryPP <- PatientProfiles::summariseCharacteristics(cohort = cdm$cohort1, cdm = cdm)
+    columnNamesCharacteristics <- names(summaryPP)
+    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData[[package]][[version]][[unique(summaryPP$result_type)]][["names"]] <- columnNamesCharacteristics
+    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+    cdm[["cohort1"]] <- cdm[["cohort1"]]%>%
+      PatientProfiles::addDemographics()
+
+    lscPP <- PatientProfiles::summariseLargeScaleCharacteristics(cohort = cdm[["cohort1"]],
+                                                                 strata = list("age",
+                                                                               "sex"),
+                                                                 window = list(c(-30, -1),
+                                                                               c(0, 0),
+                                                                               c(1, 30),
+                                                                               c(31, 365)),
+                                                                 eventInWindow = "condition_occurrence",
+                                                                 episodeInWindow = "condition_occurrence",
+                                                                 cdm = attr(cdm[["cohort1"]], "cdm_reference"))
+    # fileDataPath <- normalizePath("D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/PatientProfiles/ChronicHepatitis/results_CHUBX")
+    # lsc_csv <- file.path(fileDataPath, "patientLargeScaleConditions_hepatitisb.csv")
+    lscPP <- read.csv(lsc_csv)
+    columnNamesLSC <- names(lscPP)
+    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData[[package]][[version]][[unique(lscPP$result_type)]][["names"]] <- columnNamesLSC
+    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+  } else if (package == "CohortSurvival") {
+    if (is.null(version)) {
+      version <- as.character(packageVersion(package))
+    }
+    cdm <- CohortSurvival::mockMGUS2cdm()
+    MGUS_death <- CohortSurvival::estimateSingleEventSurvival(cdm,
+                                              targetCohortTable = "mgus_diagnosis",
+                                              outcomeCohortTable = "death_cohort"
+    )
+    columnSurvival <- names(MGUS_death)
+    configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+    configData[[package]][[version]][[unique(MGUS_death$result_type)]][["names"]] <- columnSurvival
+    write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+  }
 }
 
 dataCleanAttrition <- function(incidence_attrition = NULL,

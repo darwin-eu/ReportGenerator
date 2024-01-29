@@ -45,6 +45,14 @@ reportGenerator <- function() {
                  datasetLoadUI("TreatmentPatterns"),
                  tags$br()
         ),
+        menuItem("PatientProfiles",
+                 datasetLoadUI("PatientProfiles"),
+                 tags$br()
+        ),
+        menuItem("CohortSurival",
+                 datasetLoadUI("CohortSurvival"),
+                 tags$br()
+        ),
         tags$br(),
         actionButton('resetData', 'Reset data'),
         tags$br()
@@ -87,6 +95,10 @@ reportGenerator <- function() {
     datasetLoadServer("IncidencePrevalence")
     # TreatmentPatterns Module
     datasetLoadServer("TreatmentPatterns")
+    # PatientProfiles Module
+    datasetLoadServer("PatientProfiles")
+    # CohortSurvival Module
+    datasetLoadServer("CohortSurvival")
 
     # ReactiveValues
     uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
@@ -94,7 +106,6 @@ reportGenerator <- function() {
 
     # Check input data
     # IncidencePrevalence
-    # TODO Create modules for datasetLoad
     observeEvent(input$datasetLoad, {
       # Read  file paths
       inFile <- input$datasetLoad
@@ -152,6 +163,35 @@ reportGenerator <- function() {
       unlink(csvLocation, recursive = TRUE)
     })
 
+    # PatientProfiles
+    observeEvent(input$datasetLoadPP, {
+      # Read  file paths
+      inFile <- input$datasetLoadPP
+      fileDataPath <- inFile$datapath
+      fileName <- inFile$name
+      # Temp directory to unzip files
+      csvLocation <- file.path(tempdir(), "dataLocation")
+      dir.create(csvLocation)
+      # Joins one or several zips from different data partners into the reactive value
+      versionData <- input$dataVersionPP
+      uploadedFiles$dataPP <- joinDatabase(fileDataPath = fileDataPath,
+                                           fileName = fileName,
+                                           package = "PatientProfiles",
+                                           versionData = versionData,
+                                           csvLocation = csvLocation)
+      if (length(uploadedFiles$dataPP) == 0) {
+        show_alert(title = "Data mismatch",
+                   text = "Not a valid PatientProfiles file or check version")
+      }
+      # Get list of items to show in toggle menu
+      itemsPP <- names(uploadedFiles$dataPP)
+      itemsPPList <- getItemsList(itemsPP)
+      # Items list into reactive value to show in toggle menu
+      itemsList$objects[["items"]] <-  c(itemsList$objects[["items"]], itemsPPList)
+      # itemsList$objects[["items"]] <- getItemsList(itemsPP)
+      unlink(csvLocation, recursive = TRUE)
+    })
+
     # Reset and back to initial tab
     observeEvent(input$resetData, {
       # if (!is.null(uploadedFiles)) {
@@ -163,6 +203,10 @@ reportGenerator <- function() {
       datasetLoadServer("IncidencePrevalence")
       # TreatmentPatterns Module
       datasetLoadServer("TreatmentPatterns")
+      # PatientProfiles Module
+      datasetLoadServer("PatientProfiles")
+      # CohortSurvival Module
+      datasetLoadServer("CohortSurvival")
       # }
     })
 
@@ -238,6 +282,9 @@ reportGenerator <- function() {
                               version = input$dataVersionTP)
       do.call(navlistPanel, previewPanels)
     })
+
+    characteristicsServer("charac", uploadedFiles$dataPP$`Summary characteristics`)
+    characteristicsServer("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`)
 
     # Objects to be rendered in the UI
 
