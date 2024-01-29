@@ -117,7 +117,12 @@ characteristicsUI <- function(id, dataset) {
              #               value = FALSE)
              )
       ),
-    DT::dataTableOutput(ns("dt_summary"))
+    tags$br(),
+    fluidRow(
+      column(12,
+             DT::dataTableOutput(ns("dt_summary"))
+      )
+    )
   )
 }
 
