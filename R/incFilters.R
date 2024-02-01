@@ -300,9 +300,6 @@ incPlotAgeFilters <- function(uploadedFiles, objectChoice) {
     fluidRow(
       column(4,
              actionButton("lockDataIncidenceAge", "Add item to report")
-             # checkboxInput(inputId = "lockDataIncidenceAge",
-             #               label = "Add data to report",
-             #               value = FALSE)
       ),
       column(4,
              downloadButton("downloadFigure3IncAge", "Download Plot")
