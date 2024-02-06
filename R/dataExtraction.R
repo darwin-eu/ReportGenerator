@@ -60,7 +60,7 @@ joinDatabase <- function(fileDataPath = NULL,
                                   recursive = TRUE)
       # Iterates every individual file
       for (file in filesLocation) {
-        # file <- filesLocation[1]
+        # file <- filesLocation[3]
         resultsData <- read_csv(file, show_col_types = FALSE)
         resultsColumns <- names(resultsData)
         if (grepl("metadata.csv", file)) {
@@ -70,7 +70,7 @@ joinDatabase <- function(fileDataPath = NULL,
         }
         # Checks the type of every individual file
         for (val in configDataTypes) {
-          # val <- "Summarised Large Scale Characteristics"
+          # val <- "Summary Characteristics"
           if (val == "incidence_attrition" & grepl("incidence_attrition", file)) {
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)
@@ -122,7 +122,7 @@ joinDatabase <- function(fileDataPath = NULL,
               message(paste0(val, ": match yes"))
               data[[val]] <- bind_rows(data[[val]], resultsData)
             }
-          } else if (val == "Summary characteristics") {
+          } else if (val == "Summary Characteristics") {
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)
             if (all(configColumns %in% resultsColumns)) {

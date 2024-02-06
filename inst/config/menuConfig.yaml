@@ -75,7 +75,7 @@ summaryCharacteristics:
   title: "Summary Characteristics"
   function: gtCharacteristics(`Summary characteristics`)
   type:
-    - Summary characteristics
+    - Summary Characteristics
 Summarised Large Scale Characteristics:
   title: "Summarised Large Scale Characteristics"
   function: summarisedLSC(`Summarised Large Scale Characteristics`)
