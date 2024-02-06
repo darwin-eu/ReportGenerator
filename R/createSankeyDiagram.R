@@ -165,7 +165,7 @@
 #   return(grep(sprintf("^%s$",item), names) - 1)
 # }
 #
-# createSankeyDiagram2 <- function(treatmentPathways, groupCombinations = FALSE) {
+# createSankeyDiagram <- function(treatmentPathways, groupCombinations = FALSE) {
 #   treatmentPathways <- doGroupCombinations(
 #     treatmentPathways = treatmentPathways,
 #     groupCombinations = groupCombinations

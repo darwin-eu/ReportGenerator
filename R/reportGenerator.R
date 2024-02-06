@@ -1043,7 +1043,7 @@ reportGenerator <- function() {
     output$previewSankeyDiagram <- renderUI({
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
       treatmentPathways <- treatmentDataSankey()
-      TreatmentPatterns::createSankeyDiagram2(treatmentPathways, groupCombinations = TRUE)
+      TreatmentPatterns::createSankeyDiagram(treatmentPathways, groupCombinations = TRUE)
     })
 
     output$downloadSankey <- downloadHandler(
@@ -1051,9 +1051,7 @@ reportGenerator <- function() {
         paste("SankeyDiagram", ".png", sep = "")
       },
       content = function(file) {
-        sankeyHTML <- here::here("sankeyDiagram.html")
         TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
-                                               outputFile = sankeyHTML,
                                                returnHTML = FALSE,
                                                groupCombinations = FALSE,
                                                minFreq = 1)
@@ -1070,9 +1068,7 @@ reportGenerator <- function() {
 
     observeEvent(input$lockTreatmentSankey, {
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
-      sankeyHTML <- here::here("sankeyDiagram.html")
       TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
-                                             outputFile = sankeyHTML,
                                              returnHTML = FALSE,
                                              groupCombinations = FALSE,
                                              minFreq = 1)
