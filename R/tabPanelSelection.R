@@ -27,5 +27,7 @@ tabPanelSelection <- function(selection, uploadedFiles, version) {
     tabPanel(selection, characteristicsUI("charac", uploadedFiles$dataPP$`Summary characteristics`))
   } else if (selection == "Summarised Large Scale Characteristics") {
     tabPanel(selection, characteristicsUI("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
+  } else if (selection == "Survival plot") {
+    tabPanel(selection, cohortSurvivalUI("cs", uploadedFiles$dataCS$`Survival estimate`))
   }
 }

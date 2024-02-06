@@ -111,11 +111,7 @@ characteristicsUI <- function(id, dataset) {
     ),
     fluidRow(
       column(4,
-             actionButton("lockSummarisedCharacteristics", "Add item to report")
-             # checkboxInput(inputId = "lockDataIncidenceYear",
-             #               label = "Add data to report",
-             #               value = FALSE)
-             )
+             actionButton("lockSummarisedCharacteristics", "Add item to report"))
       ),
     tags$br(),
     fluidRow(
@@ -161,6 +157,43 @@ characteristicsServer <- function(id, dataset) {
                         mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
 
       )
+    })
+  })
+}
+
+# CohortSurivial
+cohortSurvivalUI <- function(id, dataset) {
+  ns <- NS(id)
+  tagList(
+    div(
+      style = "display: inline-block;vertical-align:top; width: 150px;",
+      pickerInput(
+        inputId = ns("cdm_name"),
+        label = "Database",
+        choices = unique(dataset$cdm_name),
+        selected = unique(dataset$cdm_name),
+        options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
+        multiple = TRUE
+      )
+    ),
+    fluidRow(
+      column(4,
+             actionButton("lockSurvivalPlot", "Add item to report")
+      )
+    ),
+    tags$br(),
+    fluidRow(
+      column(12,
+             DT::dataTableOutput(ns("cs_summary"))
+      )
+    )
+  )
+}
+
+cohortSurvivalServer <- function(id, dataset) {
+  moduleServer(id, function(input, output, session) {
+    output$cs_summary <- DT::renderDataTable(server = FALSE, {
+      createDataTable(dataset)
     })
   })
 }

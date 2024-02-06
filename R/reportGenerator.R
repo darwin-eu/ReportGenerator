@@ -77,7 +77,6 @@ reportGenerator <- function() {
                  fluidRow(
                    column(width = 4,
                           h2("2. Objects to print"),
-                          # verbatimTextOutput("dataReportMenu"),
                           DTOutput("dataReportMenu"),
                           downloadButton("generateReport", "Generate Report")
                           )
@@ -222,7 +221,6 @@ reportGenerator <- function() {
 
     # Reset and back to initial tab
     observeEvent(input$resetData, {
-      # if (!is.null(uploadedFiles)) {
       itemsList$objects <- NULL
       uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
       dataReport <- reactiveValues()
@@ -313,6 +311,7 @@ reportGenerator <- function() {
 
     characteristicsServer("charac", uploadedFiles$dataPP$`Summary characteristics`)
     characteristicsServer("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`)
+    cohortSurvivalServer("cs", uploadedFiles$dataCS$`Survival estimate`)
 
     # Objects to be rendered in the UI
 
@@ -336,12 +335,6 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["incidence_attrition"]] <- incidenceAttritionCommon()
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTable1
     })
-
-    # lockItemsServer(id = "lockTableNumPar",
-    #                 dataReport = dataReport,
-    #                 prevalenceAttrition = prevalenceAttritionCommon(),
-    #                 incidenceAttrition = incidenceAttritionCommon(),
-    #                 captionInput = input$captionTable1)
 
     output$previewTableAttInc <- renderTable({
       objectChoice <- "Table - Incidence Attrition"
