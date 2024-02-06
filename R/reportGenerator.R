@@ -311,7 +311,8 @@ reportGenerator <- function() {
 
     characteristicsServer("charac", uploadedFiles$dataPP$`Summary characteristics`)
     characteristicsServer("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`)
-    cohortSurvivalServer("cs", uploadedFiles$dataCS$`Survival estimate`)
+    cohortSurvivalTableServer("csTable", uploadedFiles$dataCS$`Survival estimate`)
+    cohortSurvivalPlotServer("csPlot", uploadedFiles$dataCS$`Survival estimate`)
 
     # Objects to be rendered in the UI
 

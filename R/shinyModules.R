@@ -162,7 +162,43 @@ characteristicsServer <- function(id, dataset) {
 }
 
 # CohortSurivial
-cohortSurvivalUI <- function(id, dataset) {
+cohortSurvivalTableUI <- function(id, dataset) {
+  ns <- NS(id)
+  tagList(
+    div(
+      style = "display: inline-block;vertical-align:top; width: 150px;",
+      pickerInput(
+        inputId = ns("cdm_name"),
+        label = "Database",
+        choices = unique(dataset$cdm_name),
+        selected = unique(dataset$cdm_name),
+        options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
+        multiple = TRUE
+      )
+    ),
+    fluidRow(
+      column(4,
+             actionButton("lockSurvivalTable", "Add item to report")
+      )
+    ),
+    tags$br(),
+    fluidRow(
+      column(12,
+             DT::dataTableOutput(ns("cs_data"))
+      )
+    )
+  )
+}
+
+cohortSurvivalTableServer <- function(id, dataset) {
+  moduleServer(id, function(input, output, session) {
+    output$cs_data <- DT::renderDataTable(server = FALSE, {
+      createDataTable(dataset)
+    })
+  })
+}
+
+cohortSurvivalPlotUI <- function(id, dataset) {
   ns <- NS(id)
   tagList(
     div(
@@ -184,70 +220,17 @@ cohortSurvivalUI <- function(id, dataset) {
     tags$br(),
     fluidRow(
       column(12,
-             DT::dataTableOutput(ns("cs_summary"))
+             plotOutput(ns("cs_plot"))
       )
     )
   )
 }
 
-cohortSurvivalServer <- function(id, dataset) {
+cohortSurvivalPlotServer <- function(id, dataset) {
   moduleServer(id, function(input, output, session) {
-    output$cs_summary <- DT::renderDataTable(server = FALSE, {
-      createDataTable(dataset)
+    output$cs_plot <- renderPlot({
+      CohortSurvival::plotSurvival(dataset, colour = "strata_level", facet= "strata_name")
     })
   })
 }
 
-# lockItemsUI <- function(id) {
-#
-#   actionButton(NS(id, "lockItem"), "Add item to report")
-#
-# }
-#
-# lockItemsServer <- function(id,
-#                             dataReport,
-#                             prevalenceAttrition,
-#                             incidenceAttrition,
-#                             incidenceEstimates,
-#                             captionInput) {
-#   moduleServer(id, function(input, output, session) {
-#     if (id == "lockTableNumPar") {
-#       observeEvent(input$lockItem, {
-#         objectChoice <- "Table - Number of participants"
-#         chars <- c(0:9, letters, LETTERS)
-#         randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-#         dataReport[[randomId]][[objectChoice]][["prevalence_attrition"]] <- prevalenceAttrition
-#         dataReport[[randomId]][[objectChoice]][["incidence_attrition"]] <- incidenceAttrition
-#         dataReport[[randomId]][[objectChoice]][["caption"]] <- captionInput
-#       })
-#     } else if (id == "lockTableIncAtt") {
-#       observeEvent(input$lockItem, {
-#         objectChoice <- "Table - Incidence Attrition"
-#         attritionDataType <- "incidence"
-#         chars <- c(0:9, letters, LETTERS)
-#         randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-#         dataReport[[randomId]][[objectChoice]][["incidence_attrition"]] <- incidenceAttrition
-#         dataReport[[randomId]][[objectChoice]][["attritionDataType"]] <- attritionDataType
-#         dataReport[[randomId]][[objectChoice]][["caption"]] <- captionInput
-#       })
-#     } else if (id == "lockTablePrevAtt") {
-#       observeEvent(input$lockItem, {
-#         objectChoice <- "Table - Prevalence Attrition"
-#         attritionDataType <- "prevalence"
-#         chars <- c(0:9, letters, LETTERS)
-#         randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-#         dataReport[[randomId]][[objectChoice]][["prevalence_attrition"]] <- prevalenceAttrition
-#         dataReport[[randomId]][[objectChoice]][["attritionDataType"]] <- attritionDataType
-#         dataReport[[randomId]][[objectChoice]][["caption"]] <- captionInput
-#         })
-#     } else if (id == "lockTableSex") {
-#       observeEvent(input$lockItem, {
-#         objectChoice <- "Table - Number of participants by sex and age group"
-#         chars <- c(0:9, letters, LETTERS)
-#         randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-#         dataReport[[randomId]][[objectChoice]][["incidence_estimates"]] <- incidenceEstimates
-#         dataReport[[randomId]][[objectChoice]][["caption"]] <- captionInput
-#       })
-#     }
-#     })
-# }

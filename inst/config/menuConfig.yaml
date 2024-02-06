@@ -81,8 +81,11 @@ Summarised Large Scale Characteristics:
   function: summarisedLSC(`Summarised Large Scale Characteristics`)
   type:
     - Summarised Large Scale Characteristics
+Survival table:
+  title: "Survival table"
+  type:
+    - Survival estimate
 Survival plot:
   title: "Survival plot"
-  function: plotSurvival(survivalData, colour = "strata_level", facet= "strata_name")
   type:
     - Survival estimate
