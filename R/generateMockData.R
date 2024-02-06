@@ -33,122 +33,121 @@ generateMockData <- function(databaseName = c("CHUBX",
                                               "IPCI",
                                               "SIDIAP"),
                              simulatePopulation = TRUE,
-                             outputDir = getwd()) {
+                             outputDir = file.path(getwd(), "results")) {
 
-  for (i in databaseName) {
-
-    if (simulatePopulation == TRUE) {
-
-        if (i == "CHUBX") {
-
-          sampleSize <- 2152385
-
-        } else if (i == "CPRD GOLD") {
-
-          sampleSize <- 15662217
-
-        } else if (i == "IMASIS") {
-
-          sampleSize <- 1014735
-
-        } else if (i == "IPCI") {
-
-          sampleSize <- 2674547
-
-        } else if (i == "SIDIAP") {
-
-          sampleSize <- 8265343
-
-        }
-
-      } else {
-
-        sampleSize <- 50000
-
-        }
-
-    cdm <- IncidencePrevalence::mockIncidencePrevalenceRef(
-      sampleSize = sampleSize,
-      outPre = 0.5
-      )
-
-    # Denominator data
-    cdm <- IncidencePrevalence::generateDenominatorCohortSet(cdm = cdm,
-                                                             name = "denominator",
-                                                             cohortDateRange = c(as.Date("2008-01-01"),
-                                                                                 as.Date("2012-01-01")),
-                                                             ageGroup  = list(c(18, 39),
-                                                                              c(40, 59),
-                                                                              c(18, 99)),
-                                                             sex  = c("Female", "Male", "Both"),
-                                                             daysPriorObservation = 365)
-
-    # %>% mutate(cdm_name = i)
-
-    # Incidence data
-    incidence_estimates <- IncidencePrevalence::estimateIncidence(cdm = cdm,
-                                                                  denominatorTable = "denominator",
-                                                                  outcomeTable = "outcome",
-                                                                  interval = c("years", "overall"),
-                                                                  completeDatabaseIntervals = TRUE,
-                                                                  outcomeWashout = 180,
-                                                                  repeatedEvents = FALSE,
-                                                                  minCellCount = 5,
-                                                                  temporary = TRUE,
-                                                                  returnParticipants = FALSE)
-
-    incidence_attrition <- IncidencePrevalence::incidenceAttrition(incidence_estimates)
-
-    # Prevalence data, both point and period
-    prevalencePoint <- IncidencePrevalence::estimatePointPrevalence(cdm = cdm,
-                                                                    denominatorTable = "denominator",
-                                                                    outcomeTable = "outcome",
-                                                                    interval = "years",
-                                                                    timePoint = "start")
-
-    prevalence_point_attrition <- prevalenceAttrition(prevalencePoint)
-
-    prevalencePeriod <- IncidencePrevalence::estimatePeriodPrevalence(cdm = cdm,
-                                                                      denominatorTable = "denominator",
-                                                                      outcomeTable = "outcome")
-
-    prevalence_period_attrition <- prevalenceAttrition(prevalencePeriod)
-    prevalence_estimates <- rbind(prevalencePoint, prevalencePeriod)
-    prevalence_attrition <- rbind(prevalence_point_attrition, prevalence_period_attrition)
-
-    # Add database label
-    incidence_estimates <- incidence_estimates %>% mutate(cdm_name = i)
-    incidence_attrition <- incidence_attrition %>% mutate(cdm_name = i)
-    prevalence_estimates <- prevalence_estimates %>% mutate(cdm_name = i)
-    prevalence_attrition <- prevalence_attrition %>% mutate(cdm_name = i)
-
-    class(incidence_attrition) <- c("IncidencePrevalenceResult",
-                                    "IncidenceResult",
-                                    "tbl_df",
-                                    "tbl",
-                                    "data.frame")
-
-    class(prevalence_attrition) <- c("IncidencePrevalenceResult",
-                                    "PrevalenceResult",
-                                    "tbl_df",
-                                    "tbl",
-                                    "data.frame")
-
-    # Results
-    incPreVersion <- packageVersion("IncidencePrevalence")
-    outputDirExp <- outputDir
-    outputDirExp <- file.path(outputDir, "results", incPreVersion)
-    if (!dir.exists(outputDirExp)) {
-      dir.create(outputDirExp, recursive = TRUE)
-    }
-
-    IncidencePrevalence::exportIncidencePrevalenceResults(resultList = list("incidence_estimates" = incidence_estimates,
-                                                                            "prevalence_estimates" = prevalence_estimates,
-                                                                            "incidence_attrition" = incidence_attrition,
-                                                                            "prevalence_attrition" = incidence_attrition),
-                                                                            zipName = paste0("mock_data_ReportGenerator_", i),
-                                                                            outputFolder = paste0(outputDirExp))
-
+  # for (dbName in databaseName) {
+  #   if (simulatePopulation == TRUE) {
+  #     if (dbName== "CHUBX") {
+  #       sampleSize <- 2152385
+  #     } else if (dbName== "CPRD GOLD") {
+  #       sampleSize <- 15662217
+  #     } else if (dbName== "IMASIS") {
+  #       sampleSize <- 1014735
+  #     } else if (dbName== "IPCI") {
+  #       sampleSize <- 2674547
+  #     } else if (dbName== "SIDIAP") {
+  #       sampleSize <- 8265343
+  #     }
+  #   } else {
+  #     sampleSize <- 50000
+  #   }
+  #
+  #   cdm <- IncidencePrevalence::mockIncidencePrevalenceRef(
+  #     sampleSize = sampleSize,
+  #     outPre = 0.5)
+  #
+  #   # Denominator data
+  #   cdm <- IncidencePrevalence::generateDenominatorCohortSet(cdm = cdm,
+  #                                                            name = "denominator",
+  #                                                            cohortDateRange = c(as.Date("2008-01-01"),
+  #                                                                                as.Date("2012-01-01")),
+  #                                                            ageGroup  = list(c(18, 39),
+  #                                                                             c(40, 59),
+  #                                                                             c(18, 99)),
+  #                                                            sex  = c("Female", "Male", "Both"),
+  #                                                            daysPriorObservation = 365)
+  #   # Incidence data
+  #   incidence_estimates <- IncidencePrevalence::estimateIncidence(cdm = cdm,
+  #                                                                 denominatorTable = "denominator",
+  #                                                                 outcomeTable = "outcome",
+  #                                                                 interval = c("years", "overall"),
+  #                                                                 completeDatabaseIntervals = TRUE,
+  #                                                                 outcomeWashout = 180,
+  #                                                                 repeatedEvents = FALSE,
+  #                                                                 minCellCount = 5,
+  #                                                                 temporary = TRUE,
+  #                                                                 returnParticipants = FALSE)
+  #
+  #   incidence_attrition <- IncidencePrevalence::incidenceAttrition(incidence_estimates)
+  #
+  #   # Prevalence data, both point and period
+  #   prevalencePoint <- IncidencePrevalence::estimatePointPrevalence(cdm = cdm,
+  #                                                                   denominatorTable = "denominator",
+  #                                                                   outcomeTable = "outcome",
+  #                                                                   interval = "years",
+  #                                                                   timePoint = "start")
+  #
+  #   prevalence_point_attrition <- prevalenceAttrition(prevalencePoint)
+  #
+  #   prevalencePeriod <- IncidencePrevalence::estimatePeriodPrevalence(cdm = cdm,
+  #                                                                     denominatorTable = "denominator",
+  #                                                                     outcomeTable = "outcome")
+  #
+  #   prevalence_period_attrition <- prevalenceAttrition(prevalencePeriod)
+  #   prevalence_estimates <- rbind(prevalencePoint, prevalencePeriod)
+  #   prevalence_attrition <- rbind(prevalence_point_attrition, prevalence_period_attrition)
+  #
+  #   # Add database label
+  #   incidence_estimates <- incidence_estimates %>% mutate(cdm_name = dbName)
+  #   incidence_attrition <- incidence_attrition %>% mutate(cdm_name = dbName)
+  #   prevalence_estimates <- prevalence_estimates %>% mutate(cdm_name = dbName)
+  #   prevalence_attrition <- prevalence_attrition %>% mutate(cdm_name = dbName)
+  #
+  #   class(incidence_attrition) <- c("IncidencePrevalenceResult",
+  #                                   "IncidenceResult",
+  #                                   "tbl_df",
+  #                                   "tbl",
+  #                                   "data.frame")
+  #
+  #   class(prevalence_attrition) <- c("IncidencePrevalenceResult",
+  #                                   "PrevalenceResult",
+  #                                   "tbl_df",
+  #                                   "tbl",
+  #                                   "data.frame")
+  #
+  #   # Results
+  #   incPreVersion <- packageVersion("IncidencePrevalence")
+  #   outputDirExp <- outputDir
+  #   outputDirExp <- file.path(outputDir, incPreVersion)
+  #   if (!dir.exists(outputDirExp)) {
+  #     dir.create(outputDirExp, recursive = TRUE)
+  #   }
+  #
+  #   IncidencePrevalence::exportIncidencePrevalenceResults(resultList = list("incidence_estimates" = incidence_estimates,
+  #                                                                           "prevalence_estimates" = prevalence_estimates,
+  #                                                                           "incidence_attrition" = incidence_attrition,
+  #                                                                           "prevalence_attrition" = incidence_attrition),
+  #                                                                           zipName = paste0("mock_data_ReportGenerator_", dbName),
+  #                                                                           outputFolder = paste0(outputDirExp))
+  #
+  # }
+  # CohortSurvival
+  cdmSurvival <- CohortSurvival::mockMGUS2cdm()
+  singleEvent <- CohortSurvival::estimateSingleEventSurvival(cdmSurvival,
+                                                             targetCohortTable = "mgus_diagnosis",
+                                                             targetCohortId = 1,
+                                                             outcomeCohortTable = "death_cohort",
+                                                             outcomeCohortId = 1)
+  competingRisk <- CohortSurvival::estimateCompetingRiskSurvival(cdmSurvival,
+                                                                 targetCohortTable = "mgus_diagnosis",
+                                                                 outcomeCohortTable = "progression",
+                                                                 competingOutcomeCohortTable = "death_cohort")
+  outputDirCS <- file.path(outputDir, "CohortSurvival", packageVersion("CohortSurvival"))
+  if (!dir.exists(outputDirCS)) {
+    dir.create(outputDirCS, recursive = TRUE)
   }
+  write.csv(x = singleEvent, file = file.path(outputDirCS, "singleEvent.csv"), row.names = FALSE)
+  write.csv(x = competingRisk, file = file.path(outputDirCS, "competingRisk.csv"), row.names = FALSE)
+
   duckdb::duckdb_shutdown(duckdb::duckdb())
 }
