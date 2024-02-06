@@ -44,7 +44,6 @@ joinDatabase <- function(fileDataPath = NULL,
     folderNumber <- 0
     # Unzips every zip and puts the files in a separate folder in the temp dir
     for (fileLocation in fileDataPath) {
-      # fileLocation <- fileLocation[1]
       folderNumber <- folderNumber + 1
       unzip(zipfile = fileLocation,
             exdir = file.path(csvLocation, paste0("database", as.character(folderNumber))))
@@ -53,14 +52,12 @@ joinDatabase <- function(fileDataPath = NULL,
     databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
     # Iterates through each database folder to list the files inside
     for (filesList in databaseFolders) {
-      # filesList <- databaseFolders[1]
       filesLocation <- list.files(filesList,
                                   pattern = ".csv",
                                   full.names = TRUE,
                                   recursive = TRUE)
       # Iterates every individual file
       for (file in filesLocation) {
-        # file <- filesLocation[3]
         resultsData <- read_csv(file, show_col_types = FALSE)
         resultsColumns <- names(resultsData)
         if (grepl("metadata.csv", file)) {
@@ -70,7 +67,6 @@ joinDatabase <- function(fileDataPath = NULL,
         }
         # Checks the type of every individual file
         for (val in configDataTypes) {
-          # val <- "Summary Characteristics"
           if (val == "incidence_attrition" & grepl("incidence_attrition", file)) {
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)
@@ -162,14 +158,10 @@ columnCheck <- function(csvFiles,
                         configData,
                         configDataTypes) {
   data <- list()
-  # print("File to the loop")
-  # print(csvFiles)
   for (i in seq(1:length(csvFiles))) {
-    # i <- 1
     resultsData <- read_csv(csvFiles[i], show_col_types = FALSE)
     resultsColumns <- names(resultsData)
     for (val in configDataTypes) {
-      # val <- "prevalence_attrition"
       if (val == "incidence_attrition" & grepl("incidence_attrition", fileName[i])) {
         configColumns <- configData[[val]]
         configColumns <- unlist(configColumns$names)
@@ -240,6 +232,13 @@ columnCheck <- function(csvFiles,
             resultsData <- mutate(resultsData,
                                   cdm_name = databaseName)
           }
+          message(paste0(val, ": match yes"))
+          data[[val]] <- bind_rows(data[[val]], resultsData)
+        }
+      } else if (val == "Survival estimate") {
+        configColumns <- configData[[val]]
+        configColumns <- unlist(configColumns$names)
+        if (all(configColumns %in% resultsColumns)) {
           message(paste0(val, ": match yes"))
           data[[val]] <- bind_rows(data[[val]], resultsData)
         }

@@ -192,6 +192,34 @@ reportGenerator <- function() {
       unlink(csvLocation, recursive = TRUE)
     })
 
+    # CohortSurvival
+    observeEvent(input$datasetLoadCS, {
+      # Read file paths
+      inFile <- input$datasetLoadCS
+      fileDataPath <- inFile$datapath
+      fileName <- inFile$name
+      # Temp directory to unzip files
+      csvLocation <- file.path(tempdir(), "dataLocation")
+      dir.create(csvLocation)
+      # Joins one or several zips from different data partners into the reactive value
+      versionData <- input$dataVersionCS
+      uploadedFiles$dataCS <- joinDatabase(fileDataPath = fileDataPath,
+                                           fileName = fileName,
+                                           package = "CohortSurvival",
+                                           versionData = versionData,
+                                           csvLocation = csvLocation)
+      if (length(uploadedFiles$dataCS) == 0) {
+        show_alert(title = "Data mismatch",
+                   text = "Not a valid CohortSurvival file or check version")
+      }
+      # Get list of items to show in toggle menu
+      itemsCS <- names(uploadedFiles$dataCS)
+      itemsCSList <- getItemsList(itemsCS)
+      # Items list into reactive value to show in toggle menu
+      itemsList$objects[["items"]] <-  c(itemsList$objects[["items"]], itemsCSList)
+      unlink(csvLocation, recursive = TRUE)
+    })
+
     # Reset and back to initial tab
     observeEvent(input$resetData, {
       # if (!is.null(uploadedFiles)) {
@@ -334,12 +362,6 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTableInc
     })
 
-
-    # lockItemsServer(id = "lockTableIncAtt",
-    #                 dataReport = dataReport,
-    #                 incidenceAttrition = incidenceAttritionCommon(),
-    #                 captionInput = input$captionTableInc)
-
     output$previewTableAttPrev <- renderTable({
       objectChoice <- "Table - Prevalence Attrition"
       attritionDataType <- "prevalence"
@@ -359,13 +381,6 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTablePrev
     })
 
-    # lockItemsServer(id = "lockTablePrevAtt",
-    #                 dataReport = dataReport,
-    #                 prevalenceAttrition = prevalenceAttritionCommon(),
-    #                 captionInput = input$captionTablePrev)
-
-    # Table Att Inc
-
     output$previewTableSex <- render_gt({
       objectChoice <- "Table - Number of participants by sex and age group"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
@@ -383,13 +398,7 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTableSexAge
     })
 
-    # lockItemsServer(id = "lockTableSex",
-    #                 dataReport = dataReport,
-    #                 incidenceEstimates = uploadedFiles$dataIP$incidence_estimates,
-    #                 captionInput = input$captionTableSexAge)
-
     # Figure 1
-
     incidenceFigure1 <- reactive({
 
       objectChoice <- "Plot - Incidence rate per year"
