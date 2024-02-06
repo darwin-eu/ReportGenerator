@@ -283,9 +283,6 @@ reportGenerator <- function() {
       do.call(navlistPanel, previewPanels)
     })
 
-    characteristicsServer("charac", uploadedFiles$dataPP$`Summary characteristics`)
-    characteristicsServer("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`)
-
     # Objects to be rendered in the UI
 
     # Table 1
@@ -1138,6 +1135,11 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["fileImage"]] <- sankeytPNG
       message("Filename added to dataReport")
     })
+
+    # PatientProfiles
+
+    characteristicsServer("charac", uploadedFiles$dataPP$`Summary Characteristics`, reactive(dataReport))
+    characteristicsServer("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`, reactive(dataReport))
 
     # Update according to facet prevalence
 

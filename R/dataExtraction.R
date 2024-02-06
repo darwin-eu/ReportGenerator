@@ -221,7 +221,7 @@ columnCheck <- function(csvFiles,
           message(paste0(val, ": match yes"))
           data[[val]] <- bind_rows(data[[val]], resultsData)
         }
-      } else if (val == "Summary characteristics") {
+      } else if (val == "Summary Characteristics") {
         configColumns <- configData[[val]]
         configColumns <- unlist(configColumns$names)
         if (all(configColumns %in% resultsColumns)) {

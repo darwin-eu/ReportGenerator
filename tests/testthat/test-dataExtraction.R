@@ -326,8 +326,8 @@ test_that("Loading 1 csv files PatientProfiles", {
                                              "csv"),
                          pattern = "csv")
   fileName <- tools::file_path_sans_ext(fileName)
-  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[2],
-                                fileName = fileName[2],
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
+                                fileName = fileName[1],
                                 package = "PatientProfiles",
                                 versionData = "0.5.1",
                                 csvLocation = csvLocation)
@@ -356,30 +356,6 @@ test_that("Loading 1 csv files PatientProfiles", {
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
 })
-
-# test_that("Loading 1 csv files extra column check PatientProfiles", {
-#   csvFiles <- list.files(testthat::test_path("IncPrev",
-#                                              "extras"),
-#                          pattern = "csv",
-#                          full.names = TRUE)
-#   csvFiles <- csvFiles[1]
-#   fileName <- list.files(testthat::test_path("IncPrev",
-#                                              "extras"),
-#                          pattern = "csv")
-#   fileName <- tools::file_path_sans_ext(fileName)
-#   fileName <- fileName[1]
-#   package <- "PatientProfiles"
-#   versionData <- "0.5.1"
-#   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-#   configData <- configData[[package]][[versionData]]
-#   configDataTypes <- names(configData)
-#   uploadedFiles <- columnCheck(csvFiles = csvFiles,
-#                                fileName = fileName,
-#                                configData = configData,
-#                                configDataTypes = configDataTypes)
-#   expect_equal(length(uploadedFiles), 1)
-#   expect_type(uploadedFiles, "list")
-# })
 
 test_that("Loading multiple csv files PatientProfiles", {
   csvLocation <- file.path(tempdir(), "dataLocation")
