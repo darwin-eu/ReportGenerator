@@ -308,7 +308,6 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     unlink(csvLocation, recursive = TRUE)
 
   } else if (package == "TreatmentPatterns") {
-
     csvFiles <- fileDataPath
     treatmentPathwaysPath <- csvFiles[stringr::str_detect(csvFiles, "treatmentPathways")]
     treatmentPathways <- read_csv(treatmentPathwaysPath, show_col_types = FALSE)
@@ -318,8 +317,6 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
   } else if (package == "PatientProfiles") {
-    # package <- "PatientProfiles"
-    # version <- NULL
     if (is.null(version)) {
       version <- as.character(packageVersion(package))
     }
@@ -345,8 +342,6 @@ variablesConfigYaml <- function(fileDataPath = NULL,
                                                                  eventInWindow = "condition_occurrence",
                                                                  episodeInWindow = "condition_occurrence",
                                                                  cdm = attr(cdm[["cohort1"]], "cdm_reference"))
-    # fileDataPath <- normalizePath("D:/Users/cbarboza/Documents/darwin-docs/darwinReport/ReportGenerator/results/PatientProfiles/ChronicHepatitis/results_CHUBX")
-    # lsc_csv <- file.path(fileDataPath, "patientLargeScaleConditions_hepatitisb.csv")
     lscPP <- read.csv(lsc_csv)
     columnNamesLSC <- names(lscPP)
     configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
@@ -485,12 +480,4 @@ testData <- function(testFilesIP = testthat::test_path("IncPrev", "0.6.0", "zip"
   testData[["treatmentPathways_test"]] <- treatmentPathways_test
   unlink(csvLocation, recursive = TRUE)
   return(testData)
-
-  # Assign in tests
-
-  # incidence_attrition_test <- testData$incidence_attrition
-  # incidence_estimates_test <- testData$incidence_estimates
-  # prevalence_attrition_test <- testData$prevalence_attrition
-  # prevalence_estimates_test <- testData$prevalence_estimates
-  # treatmentPathways_test <- treatmentPathways_test
 }
