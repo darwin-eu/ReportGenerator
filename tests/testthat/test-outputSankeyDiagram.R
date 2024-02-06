@@ -11,11 +11,8 @@ test_that("void", {
 })
 
 test_that("Sankey created file", {
-  outputFile <- tempfile(fileext = "html")
   outputSankey <- TreatmentPatterns::createSankeyDiagram(
     treatmentPathways = data,
-    outputFile = outputFile,
-    groupCombinations = TRUE,
-    minCellCount  = 5)
-  expect_true(file.exists(outputFile))
+    groupCombinations = TRUE)
+  expect_s3_class(outputSankey, "sankeyNetwork")
 })
