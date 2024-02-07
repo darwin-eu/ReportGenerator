@@ -1199,9 +1199,9 @@ reportGenerator <- function() {
       content = function(file) {
         # Load template and generate report
         reportDocx <- read_docx(path = system.file("templates",
-                                                                "word",
-                                                                "DARWIN_EU_Study_Report.docx",
-                                                                package = "ReportGenerator"))
+                                                   "word",
+                                                   "DARWIN_EU_Study_Report.docx",
+                                                   package = "ReportGenerator"))
         generateReport(reportDocx,
                        rev(reactiveValuesToList(dataReport)),
                        file)
