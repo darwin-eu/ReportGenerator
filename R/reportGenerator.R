@@ -994,7 +994,7 @@ reportGenerator <- function() {
     output$previewSunburstPlot <- renderUI({
       objectChoice <- "Sunburst Plot - TreatmentPatterns"
       treatmentPathways <- treatmentDataSunburst()
-      TreatmentPatterns::createSunburstPlot2(treatmentPathways, groupCombinations = FALSE)
+      TreatmentPatterns::createSunburstPlot(treatmentPathways, groupCombinations = FALSE)
     })
 
     output$downloadSunburst <- downloadHandler(
