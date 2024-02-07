@@ -186,10 +186,29 @@ cohortSurvivalUI <- function(id, dataset) {
         multiple = TRUE
       )
     ),
-    fluidRow(
-      column(4,
-             actionButton("lockSurvivalTable", "Add item to report")
+    div(
+      style = "display: inline-block;vertical-align:top; width: 150px;",
+      pickerInput(
+        inputId = ns("group_level"),
+        label = "Group Level",
+        choices = unique(dataset$group_level),
+        selected = unique(dataset$group_level)[1],
+        options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
+        multiple = TRUE
       )
+    ),
+    div(
+      style = "display: inline-block;vertical-align:top; width: 150px;",
+      pickerInput(
+        inputId = ns("strata_name"),
+        label = "Strata Name",
+        choices = unique(dataset$strata_name),
+        selected = unique(dataset$strata_name)[1],
+        options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
+        multiple = TRUE
+      )
+    ),
+    fluidRow(column(4, actionButton(paste0("lock", id), "Add item to report"))
     ),
     tags$br(),
     fluidRow(column(12, outResult))
@@ -199,25 +218,33 @@ cohortSurvivalUI <- function(id, dataset) {
 cohortSurvivalServer <- function(id, dataset) {
   moduleServer(id, function(input, output, session) {
 
+    getData <- reactive({ dataset %>%
+      filter(cdm_name %in% input$cdm_name,
+             group_level %in% input$group_level,
+             strata_name %in% input$strata_name)
+    })
+
     if (id == "survivalTable") {
       output$cs_data <- DT::renderDataTable(server = FALSE, {
-        createDataTable(dataset)
+        createDataTable(getData())
       })
     } else if (id == "survivalPlot") {
       output$cs_plot <- renderPlot({
-        CohortSurvival::plotSurvival(dataset,
+        CohortSurvival::plotSurvival(getData(),
                                      facet= "strata_name",
                                      colour = "strata_level")
       })
     } else if (id == "failureTable") {
       output$cu_inc_data <- DT::renderDataTable(server = FALSE, {
-        createDataTable(dataset)
+        createDataTable(getData())
       })
     } else if (id == "failurePlot") {
       output$cu_inc_plot <- renderPlot({
-        CohortSurvival::plotCumulativeIncidence(dataset %>% dplyr::filter(strata_name != "Overall"),
-                                                facet = "strata_level",
-                                                colour = "outcome")
+        if (nrow(getData()) > 0) {
+          CohortSurvival::plotCumulativeIncidence(getData(),
+                                                  facet = "strata_level",
+                                                  colour = "outcome")
+        }
       })
     }
   })

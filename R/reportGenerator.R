@@ -1142,6 +1142,23 @@ reportGenerator <- function() {
       message("Filename added to dataReport")
     })
 
+    # Cohort Survival report items
+    survivalEstimateData <- reactive({
+      if (!is.null(uploadedFiles$dataCS$`Survival estimate`)) {
+        commonData <- uploadedFiles$dataCS$`Survival estimate`
+        commonData
+      } else {
+        NULL
+      }
+    })
+
+    observeEvent(input$locksurvivalTable, {
+      objectChoice <- "Table - Survival Estimate"
+      randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimateData()
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- "Survival Estimate caption"
+    })
+
     # Update according to facet prevalence
 
     observeEvent(input$facetPrevalenceSex, {

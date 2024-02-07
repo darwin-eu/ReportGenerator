@@ -162,4 +162,68 @@ addPreviewItemTypeAge <- function(previewItemString, previewItemType) {
   return(result)
 }
 
+#' Export list of package results
+#'
+#' @param resultList Named list with results from a darwin package
+#' @param zipName name to give zip folder
+#' @param outputFolder directory to save zip folder containing results as a set
+#' of CSV files
+#'
+#' @return zip folder of results saved in the outputFolder
+#' @export
+#'
+#' @examples
+#' \donttest{
+#' exportResults(
+#'   resultList = list("mtcars" = mtcars),
+#'   zipName = "test",
+#'   outputFolder = tempdir()
+#' )
+#' }
+exportResults <- function(resultList,
+                          zipName,
+                          outputFolder) {
+  errorMessage <- checkmate::makeAssertCollection()
+  checkmate::assertList(resultList, add = errorMessage)
+  checkmate::assertNamed(resultList, add = errorMessage)
+  checkmate::assertCharacter(zipName, add = errorMessage)
+  checkmate::assertDirectoryExists(outputFolder, add = errorMessage)
+  checkmate::reportAssertions(collection = errorMessage)
 
+  tempDir <- zipName
+  tempDirCreated <- FALSE
+  if (!dir.exists(tempDir)) {
+    dir.create(tempDir)
+    tempDirCreated <- TRUE
+  }
+
+  # write results to disk
+  for (i in seq_along(resultList)) {
+    workingResult <- resultList[[i]]
+    workingName <- names(resultList)[[i]]
+    if (is.null(workingName)) {
+      workingName <- paste0("result_", i)
+    }
+    utils::write.csv(workingResult,
+                     file = file.path(
+                       tempDir,
+                       paste0(
+                         unique(workingResult$cdm_name), "_",
+                         workingName, "_",
+                         format(Sys.Date(), format = "%Y_%m_%d"),
+                         ".csv"
+                       )
+                     ),
+                     row.names = FALSE
+    )
+  }
+  zip::zip(
+    zipfile = file.path(outputFolder, paste0(zipName, ".zip")),
+    files = list.files(tempDir, full.names = TRUE)
+  )
+  if (tempDirCreated) {
+    unlink(tempDir, recursive = TRUE)
+  }
+
+  invisible(resultList)
+}

@@ -118,7 +118,7 @@ generateMockData <- function(databaseName = c("CHUBX",
     # Results
     incPreVersion <- packageVersion("IncidencePrevalence")
     outputDirExp <- outputDir
-    outputDirExp <- file.path(outputDir, incPreVersion)
+    outputDirExp <- file.path(outputDir, "IncidencePrevalence", incPreVersion)
     if (!dir.exists(outputDirExp)) {
       dir.create(outputDirExp, recursive = TRUE)
     }
@@ -130,28 +130,36 @@ generateMockData <- function(databaseName = c("CHUBX",
                                                                             zipName = paste0("mock_data_ReportGenerator_", dbName),
                                                                             outputFolder = paste0(outputDirExp))
 
+    # CohortSurvival
+    sampleSize <- 100
+    cdmSurvival <- CohortSurvival::mockMGUS2cdm()
+    singleEvent <- CohortSurvival::estimateSingleEventSurvival(cdmSurvival,
+                                                               targetCohortTable = "mgus_diagnosis",
+                                                               targetCohortId = 1,
+                                                               outcomeCohortTable = "death_cohort",
+                                                               outcomeCohortId = 1,
+                                                               strata = list(c("age_group"),
+                                                                             c("sex"),
+                                                                             c("age_group", "sex"))) %>%
+      sample_n(sampleSize, replace = TRUE) %>%
+      mutate(cdm_name = dbName)
+
+    competingRisk <- CohortSurvival::estimateCompetingRiskSurvival(cdmSurvival,
+                                                                   targetCohortTable = "mgus_diagnosis",
+                                                                   outcomeCohortTable = "progression",
+                                                                   competingOutcomeCohortTable = "death_cohort",
+                                                                   strata = list(c("sex"))) %>%
+      sample_n(sampleSize, replace = TRUE) %>%
+      mutate(cdm_name = dbName)
+    outputDirCS <- file.path(outputDir, "CohortSurvival", packageVersion("CohortSurvival"))
+    if (!dir.exists(outputDirCS)) {
+      dir.create(outputDirCS, recursive = TRUE)
+    }
+    exportResults(resultList = list("single_event" = singleEvent,
+                                    "competing_risk" = competingRisk),
+                  zipName = paste0("mock_data_", dbName),
+                  outputFolder = outputDirCS)
   }
-  # CohortSurvival
-  cdmSurvival <- CohortSurvival::mockMGUS2cdm()
-  singleEvent <- CohortSurvival::estimateSingleEventSurvival(cdmSurvival,
-                                                             targetCohortTable = "mgus_diagnosis",
-                                                             targetCohortId = 1,
-                                                             outcomeCohortTable = "death_cohort",
-                                                             outcomeCohortId = 1,
-                                                             strata = list(c("age_group"),
-                                                                           c("sex"),
-                                                                           c("age_group", "sex")))
-  competingRisk <- CohortSurvival::estimateCompetingRiskSurvival(cdmSurvival,
-                                                                 targetCohortTable = "mgus_diagnosis",
-                                                                 outcomeCohortTable = "progression",
-                                                                 competingOutcomeCohortTable = "death_cohort",
-                                                                 strata = list(c("sex")))
-  outputDirCS <- file.path(outputDir, "CohortSurvival", packageVersion("CohortSurvival"))
-  if (!dir.exists(outputDirCS)) {
-    dir.create(outputDirCS, recursive = TRUE)
-  }
-  write.csv(x = singleEvent, file = file.path(outputDirCS, "singleEvent.csv"), row.names = FALSE)
-  write.csv(x = competingRisk, file = file.path(outputDirCS, "competingRisk.csv"), row.names = FALSE)
 
   duckdb::duckdb_shutdown(duckdb::duckdb())
 }
