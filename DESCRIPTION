@@ -17,6 +17,7 @@ Depends:
 Imports:
     flextable,
     IncidencePrevalence (>= 0.6.0),
+    CDMConnector (== 1.2.1),
     officer,
     readr,
     scales,
