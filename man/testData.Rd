@@ -7,7 +7,7 @@
 testData(testFilesIP = testthat::test_path("IncPrev", "0.6.0", "zip"))
 }
 \arguments{
-\item{testFilesDir}{testthat dir location of the test files with version number of folder (internal use).}
+\item{testFilesIP}{testthat dir location of the test files with version number of folder (internal use).}
 }
 \value{
 sysdata.rda instruction

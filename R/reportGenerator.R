@@ -313,6 +313,7 @@ reportGenerator <- function() {
     characteristicsServer("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`)
     cohortSurvivalServer("survivalTable", uploadedFiles$dataCS$`Survival estimate`)
     cohortSurvivalServer("survivalPlot", uploadedFiles$dataCS$`Survival estimate`)
+    cohortSurvivalServer("failureTable", uploadedFiles$dataCS$`Survival cumulative incidence`)
     cohortSurvivalServer("failurePlot", uploadedFiles$dataCS$`Survival cumulative incidence`)
 
     # Objects to be rendered in the UI
@@ -1043,7 +1044,7 @@ reportGenerator <- function() {
     output$previewSunburstPlot <- renderUI({
       objectChoice <- "Sunburst Plot - TreatmentPatterns"
       treatmentPathways <- treatmentDataSunburst()
-      TreatmentPatterns::createSunburstPlot2(treatmentPathways, groupCombinations = FALSE)
+      TreatmentPatterns::createSunburstPlot(treatmentPathways, groupCombinations = FALSE)
     })
 
     output$downloadSunburst <- downloadHandler(
@@ -1094,7 +1095,7 @@ reportGenerator <- function() {
     output$previewSankeyDiagram <- renderUI({
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
       treatmentPathways <- treatmentDataSankey()
-      TreatmentPatterns::createSankeyDiagram2(treatmentPathways, groupCombinations = TRUE)
+      TreatmentPatterns::createSankeyDiagram(treatmentPathways, groupCombinations = TRUE)
     })
 
     output$downloadSankey <- downloadHandler(
@@ -1102,9 +1103,7 @@ reportGenerator <- function() {
         paste("SankeyDiagram", ".png", sep = "")
       },
       content = function(file) {
-        sankeyHTML <- here::here("sankeyDiagram.html")
         TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
-                                               outputFile = sankeyHTML,
                                                returnHTML = FALSE,
                                                groupCombinations = FALSE,
                                                minFreq = 1)
@@ -1121,9 +1120,7 @@ reportGenerator <- function() {
 
     observeEvent(input$lockTreatmentSankey, {
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
-      sankeyHTML <- here::here("sankeyDiagram.html")
       TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
-                                             outputFile = sankeyHTML,
                                              returnHTML = FALSE,
                                              groupCombinations = FALSE,
                                              minFreq = 1)

@@ -169,6 +169,8 @@ cohortSurvivalUI <- function(id, dataset) {
     outResult <- DT::dataTableOutput(ns("cs_data"))
   } else if (id == "survivalPlot") {
     outResult <- plotOutput(ns("cs_plot"))
+  } else if (id == "failureTable") {
+    outResult <- DT::dataTableOutput(ns("cu_inc_data"))
   } else if (id == "failurePlot") {
     outResult <- plotOutput(ns("cu_inc_plot"))
   }
@@ -206,6 +208,10 @@ cohortSurvivalServer <- function(id, dataset) {
         CohortSurvival::plotSurvival(dataset,
                                      facet= "strata_name",
                                      colour = "strata_level")
+      })
+    } else if (id == "failureTable") {
+      output$cu_inc_data <- DT::renderDataTable(server = FALSE, {
+        createDataTable(dataset)
       })
     } else if (id == "failurePlot") {
       output$cu_inc_plot <- renderPlot({

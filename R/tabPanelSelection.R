@@ -31,6 +31,8 @@ tabPanelSelection <- function(selection, uploadedFiles, version) {
     tabPanel(selection, cohortSurvivalUI("survivalTable", uploadedFiles$dataCS$`Survival estimate`))
   } else if (selection == "Survival plot") {
     tabPanel(selection, cohortSurvivalUI("survivalPlot", uploadedFiles$dataCS$`Survival estimate`))
+  } else if (selection == "Cumulative incidence table") {
+    tabPanel(selection, cohortSurvivalUI("failureTable", uploadedFiles$dataCS$`Survival cumulative incidence`))
   } else if (selection == "Cumulative incidence plot") {
     tabPanel(selection, cohortSurvivalUI("failurePlot", uploadedFiles$dataCS$`Survival cumulative incidence`))
   }

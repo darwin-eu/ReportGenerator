@@ -89,6 +89,10 @@ Survival plot:
   title: "Survival plot"
   type:
     - Survival estimate
+Cumulative incidence table:
+  title: "Cumulative incidence table"
+  type:
+    - Survival cumulative incidence
 Cumulative incidence plot:
   title: "Cumulative incidence plot"
   type:

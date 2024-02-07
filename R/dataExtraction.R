@@ -457,7 +457,7 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
 }
 
 #' `testData()` extracts data from zip results and saves it in .rda format
-#' @param testFilesDir testthat dir location of the test files with version number of folder (internal use).
+#' @param testFilesIP testthat dir location of the test files with version number of folder (internal use).
 #'
 #' @importFrom usethis use_data
 #'
