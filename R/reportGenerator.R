@@ -71,7 +71,9 @@ reportGenerator <- function() {
                           h2("2. Objects to print"),
                           # verbatimTextOutput("dataReportMenu"),
                           DTOutput("dataReportMenu"),
-                          downloadButton("generateReport", "Generate Report")
+                          tags$br(),
+                          downloadButton("generateReport", "Generate Report"),
+                          tags$br()
                           )
                  )
         )
