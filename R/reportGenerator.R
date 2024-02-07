@@ -1243,120 +1243,20 @@ reportGenerator <- function() {
       DT::datatable(dataReportFrame, options = list(dom = 't'))
     })
 
-    # output$dataReportMenu <- renderPrint({
-    #   # dataReport
-    #   dataReportList <- reactiveValuesToList(dataReport)
-    #   length(dataReportList) == 0
-    #   # objectsListPreview()
-    # })
-
     # Word report generator
     output$generateReport <- downloadHandler(
       filename = function() {
-        paste0("generatedReport.docx")
+        "generatedReport.docx"
       },
       content = function(file) {
-        # Load template
-        incidencePrevalenceDocx <- read_docx(path = system.file("templates",
-                                                                "word",
-                                                                "DARWIN_EU_Study_Report.docx",
-                                                                package = "ReportGenerator"))
-        # Reverse selection menu list
-        # reverseList <- rev(names(dataReport))
-
-        dataReportList <- reactiveValuesToList(dataReport)
-        dataReportList <- rev(dataReportList)
-
-        # Loop through ever object selected in the menu
-        for (i in seq(1:length(dataReportList))) {
-          # i <- "Table - Incidence Attrition"
-          # Get the function to generate and print in report
-          titleText <- names(dataReportList[[i]])
-          expression <- getItemConfig(input = "title",
-                                      output = "function",
-                                      inputValue = titleText)
-          # Get relevant options for the function
-          itemOptions <- getItemConfig(input = "title",
-                                       output = "options",
-                                       inputValue = titleText)
-
-          # Additional parameter if there are options for the graphs
-          if (!is.null(itemOptions)) {
-            if (grepl("by sex", titleText)) {
-              expression <- expression %>%
-                addPreviewItemTypeSex(dataReportList[[i]][[1]][["plotOption"]])
-            } else if (grepl("by age", titleText)) {
-              expression <- expression %>%
-                addPreviewItemTypeAge(dataReportList[[i]][[1]][["plotOption"]])
-            } else  {
-              expression <- expression %>%
-                addPreviewItemType(dataReportList[[i]][[1]][["plotOption"]])
-            }
-          }
-
-          # Evaluate function
-          object <- eval(parse(text = expression), envir = dataReportList[[i]][[1]])
-
-          # Check class of every function and add it to the word report accordingly
-          if ("gt_tbl" %in% class(object)) {
-            body_end_section_landscape(incidencePrevalenceDocx)
-            body_add_gt(incidencePrevalenceDocx, value = object)
-            body_add(incidencePrevalenceDocx,
-                     value = dataReportList[[i]][[1]][["caption"]])
-            body_add(incidencePrevalenceDocx,
-                     value = titleText,
-                     style = "heading 1")
-            body_end_section_portrait(incidencePrevalenceDocx)
-
-          } else if ("ggplot" %in% class(object)) {
-            body_end_section_landscape(incidencePrevalenceDocx)
-            body_add_gg(x = incidencePrevalenceDocx,
-                        value = object,
-                        style = "Normal")
-            body_add(incidencePrevalenceDocx,
-                     value = dataReportList[[i]][[1]][["caption"]])
-            body_add(incidencePrevalenceDocx,
-                     value = titleText,
-                     style = "heading 1")
-            body_end_section_portrait(incidencePrevalenceDocx)
-
-          } else if ("huxtable" %in% class(object)) {
-            body_end_section_landscape(incidencePrevalenceDocx)
-            body_add_table(incidencePrevalenceDocx,
-                           value = object,
-                           style = "Table Paragraph",
-                           header = FALSE)
-            body_add_par(incidencePrevalenceDocx, " ")
-            body_add(incidencePrevalenceDocx,
-                     value = dataReportList[[i]][[1]][["caption"]])
-            body_add(incidencePrevalenceDocx,
-                     value = titleText,
-                     style = "heading 1")
-            body_end_section_portrait(incidencePrevalenceDocx)
-          }
-
-          if (titleText == "Sunburst Plot - TreatmentPatterns") {
-            body_add_img(x = incidencePrevalenceDocx,
-                         src = dataReportList[[i]][[1]][["fileImage"]],
-                         height = 5.5,
-                         width = 7)
-            body_add(incidencePrevalenceDocx,
-                     value = titleText,
-                     style = "heading 1")
-
-            }  else if (titleText == "Sankey Diagram - TreatmentPatterns") {
-              body_add_img(x = incidencePrevalenceDocx,
-                           src = dataReportList[[i]][[1]][["fileImage"]],
-                           height = 3,
-                           width = 7)
-              body_add(incidencePrevalenceDocx,
-                       value = titleText,
-                       style = "heading 1")
-              }
-        }
-        body_add_toc(incidencePrevalenceDocx)
-        print(incidencePrevalenceDocx,
-              target = file)
+        # Load template and generate report
+        reportDocx <- read_docx(path = system.file("templates",
+                                                   "word",
+                                                   "DARWIN_EU_Study_Report.docx",
+                                                   package = "ReportGenerator"))
+        generateReport(reportDocx,
+                       rev(reactiveValuesToList(dataReport)),
+                       file)
       }
     )
   }
