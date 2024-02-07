@@ -7,7 +7,7 @@
 generateMockData(
   databaseName = c("CHUBX", "CPRD GOLD", "IMASIS", "IPCI", "SIDIAP"),
   simulatePopulation = TRUE,
-  outputDir = getwd()
+  outputDir = file.path(getwd(), "results")
 )
 }
 \arguments{
