@@ -28,8 +28,10 @@ tabPanelSelection <- function(selection, uploadedFiles, version) {
   } else if (selection == "Summarised Large Scale Characteristics") {
     tabPanel(selection, characteristicsUI("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
   } else if (selection == "Survival table") {
-    tabPanel(selection, cohortSurvivalTableUI("csTable", uploadedFiles$dataCS$`Survival estimate`))
+    tabPanel(selection, cohortSurvivalUI("survivalTable", uploadedFiles$dataCS$`Survival estimate`))
   } else if (selection == "Survival plot") {
-    tabPanel(selection, cohortSurvivalPlotUI("csPlot", uploadedFiles$dataCS$`Survival estimate`))
+    tabPanel(selection, cohortSurvivalUI("survivalPlot", uploadedFiles$dataCS$`Survival estimate`))
+  } else if (selection == "Cumulative incidence plot") {
+    tabPanel(selection, cohortSurvivalUI("failurePlot", uploadedFiles$dataCS$`Survival cumulative incidence`))
   }
 }

@@ -162,8 +162,16 @@ characteristicsServer <- function(id, dataset) {
 }
 
 # CohortSurivial
-cohortSurvivalTableUI <- function(id, dataset) {
+cohortSurvivalUI <- function(id, dataset) {
   ns <- NS(id)
+  outResult <- NULL
+  if (id == "survivalTable") {
+    outResult <- DT::dataTableOutput(ns("cs_data"))
+  } else if (id == "survivalPlot") {
+    outResult <- plotOutput(ns("cs_plot"))
+  } else if (id == "failurePlot") {
+    outResult <- plotOutput(ns("cu_inc_plot"))
+  }
   tagList(
     div(
       style = "display: inline-block;vertical-align:top; width: 150px;",
@@ -182,55 +190,29 @@ cohortSurvivalTableUI <- function(id, dataset) {
       )
     ),
     tags$br(),
-    fluidRow(
-      column(12,
-             DT::dataTableOutput(ns("cs_data"))
-      )
-    )
+    fluidRow(column(12, outResult))
   )
 }
 
-cohortSurvivalTableServer <- function(id, dataset) {
+cohortSurvivalServer <- function(id, dataset) {
   moduleServer(id, function(input, output, session) {
-    output$cs_data <- DT::renderDataTable(server = FALSE, {
-      createDataTable(dataset)
-    })
+
+    if (id == "survivalTable") {
+      output$cs_data <- DT::renderDataTable(server = FALSE, {
+        createDataTable(dataset)
+      })
+    } else if (id == "survivalPlot") {
+      output$cs_plot <- renderPlot({
+        CohortSurvival::plotSurvival(dataset,
+                                     facet= "strata_name",
+                                     colour = "strata_level")
+      })
+    } else if (id == "failurePlot") {
+      output$cu_inc_plot <- renderPlot({
+        CohortSurvival::plotCumulativeIncidence(dataset %>% dplyr::filter(strata_name != "Overall"),
+                                                facet = "strata_level",
+                                                colour = "outcome")
+      })
+    }
   })
 }
-
-cohortSurvivalPlotUI <- function(id, dataset) {
-  ns <- NS(id)
-  tagList(
-    div(
-      style = "display: inline-block;vertical-align:top; width: 150px;",
-      pickerInput(
-        inputId = ns("cdm_name"),
-        label = "Database",
-        choices = unique(dataset$cdm_name),
-        selected = unique(dataset$cdm_name),
-        options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-        multiple = TRUE
-      )
-    ),
-    fluidRow(
-      column(4,
-             actionButton("lockSurvivalPlot", "Add item to report")
-      )
-    ),
-    tags$br(),
-    fluidRow(
-      column(12,
-             plotOutput(ns("cs_plot"))
-      )
-    )
-  )
-}
-
-cohortSurvivalPlotServer <- function(id, dataset) {
-  moduleServer(id, function(input, output, session) {
-    output$cs_plot <- renderPlot({
-      CohortSurvival::plotSurvival(dataset, colour = "strata_level", facet= "strata_name")
-    })
-  })
-}
-

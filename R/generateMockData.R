@@ -137,11 +137,15 @@ generateMockData <- function(databaseName = c("CHUBX",
                                                              targetCohortTable = "mgus_diagnosis",
                                                              targetCohortId = 1,
                                                              outcomeCohortTable = "death_cohort",
-                                                             outcomeCohortId = 1)
+                                                             outcomeCohortId = 1,
+                                                             strata = list(c("age_group"),
+                                                                           c("sex"),
+                                                                           c("age_group", "sex")))
   competingRisk <- CohortSurvival::estimateCompetingRiskSurvival(cdmSurvival,
                                                                  targetCohortTable = "mgus_diagnosis",
                                                                  outcomeCohortTable = "progression",
-                                                                 competingOutcomeCohortTable = "death_cohort")
+                                                                 competingOutcomeCohortTable = "death_cohort",
+                                                                 strata = list(c("sex")))
   outputDirCS <- file.path(outputDir, "CohortSurvival", packageVersion("CohortSurvival"))
   if (!dir.exists(outputDirCS)) {
     dir.create(outputDirCS, recursive = TRUE)

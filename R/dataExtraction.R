@@ -235,7 +235,14 @@ columnCheck <- function(csvFiles,
           message(paste0(val, ": match yes"))
           data[[val]] <- bind_rows(data[[val]], resultsData)
         }
-      } else if (val == "Survival estimate") {
+      } else if (val == "Survival estimate" & !grepl("competing", fileName[i])) {
+        configColumns <- configData[[val]]
+        configColumns <- unlist(configColumns$names)
+        if (all(configColumns %in% resultsColumns)) {
+          message(paste0(val, ": match yes"))
+          data[[val]] <- bind_rows(data[[val]], resultsData)
+        }
+      } else if (val == "Survival cumulative incidence" & grepl("competing", fileName[i])) {
         configColumns <- configData[[val]]
         configColumns <- unlist(configColumns$names)
         if (all(configColumns %in% resultsColumns)) {

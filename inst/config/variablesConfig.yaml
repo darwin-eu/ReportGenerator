@@ -122,3 +122,19 @@ CohortSurvival:
       - analysis_type
       - outcome
       - estimate
+    Survival cumulative incidence:
+      names:
+      - cdm_name
+      - result_type
+      - group_name
+      - group_level
+      - strata_name
+      - strata_level
+      - variable
+      - variable_level
+      - variable_type
+      - estimate_type
+      - time
+      - analysis_type
+      - outcome
+      - estimate
