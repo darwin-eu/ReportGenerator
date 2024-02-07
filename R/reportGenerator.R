@@ -78,7 +78,9 @@ reportGenerator <- function() {
                    column(width = 4,
                           h2("2. Objects to print"),
                           DTOutput("dataReportMenu"),
-                          downloadButton("generateReport", "Generate Report")
+                          tags$br(),
+                          downloadButton("generateReport", "Generate Report"),
+                          tags$br()
                           )
                  )
         )
@@ -1257,7 +1259,7 @@ reportGenerator <- function() {
         # Load template
         incidencePrevalenceDocx <- read_docx(path = system.file("templates",
                                                                 "word",
-                                                                "darwinTemplate.docx",
+                                                                "DARWIN_EU_Study_Report.docx",
                                                                 package = "ReportGenerator"))
         # Reverse selection menu list
         # reverseList <- rev(names(dataReport))
@@ -1303,7 +1305,7 @@ reportGenerator <- function() {
                      value = dataReportList[[i]][[1]][["caption"]])
             body_add(incidencePrevalenceDocx,
                      value = titleText,
-                     style = "Heading 1 (Agency)")
+                     style = "heading 1")
             body_end_section_portrait(incidencePrevalenceDocx)
 
           } else if ("ggplot" %in% class(object)) {
@@ -1315,21 +1317,21 @@ reportGenerator <- function() {
                      value = dataReportList[[i]][[1]][["caption"]])
             body_add(incidencePrevalenceDocx,
                      value = titleText,
-                     style = "Heading 1 (Agency)")
+                     style = "heading 1")
             body_end_section_portrait(incidencePrevalenceDocx)
 
           } else if ("huxtable" %in% class(object)) {
             body_end_section_landscape(incidencePrevalenceDocx)
             body_add_table(incidencePrevalenceDocx,
                            value = object,
-                           style = "TableOverall",
+                           style = "Table Paragraph",
                            header = FALSE)
             body_add_par(incidencePrevalenceDocx, " ")
             body_add(incidencePrevalenceDocx,
                      value = dataReportList[[i]][[1]][["caption"]])
             body_add(incidencePrevalenceDocx,
                      value = titleText,
-                     style = "Heading 1 (Agency)")
+                     style = "heading 1")
             body_end_section_portrait(incidencePrevalenceDocx)
           }
 
@@ -1340,7 +1342,7 @@ reportGenerator <- function() {
                          width = 7)
             body_add(incidencePrevalenceDocx,
                      value = titleText,
-                     style = "Heading 1 (Agency)")
+                     style = "heading 1")
 
             }  else if (titleText == "Sankey Diagram - TreatmentPatterns") {
               body_add_img(x = incidencePrevalenceDocx,
@@ -1349,7 +1351,7 @@ reportGenerator <- function() {
                            width = 7)
               body_add(incidencePrevalenceDocx,
                        value = titleText,
-                       style = "Heading 1 (Agency)")
+                       style = "heading 1")
               }
         }
         body_add_toc(incidencePrevalenceDocx)
