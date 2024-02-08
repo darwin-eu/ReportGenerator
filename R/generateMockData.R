@@ -131,7 +131,6 @@ generateMockData <- function(databaseName = c("CHUBX",
                                                                             outputFolder = paste0(outputDirExp))
 
     # CohortSurvival
-    sampleSize <- 100
     cdmSurvival <- CohortSurvival::mockMGUS2cdm()
     singleEvent <- CohortSurvival::estimateSingleEventSurvival(cdmSurvival,
                                                                targetCohortTable = "mgus_diagnosis",
@@ -141,7 +140,6 @@ generateMockData <- function(databaseName = c("CHUBX",
                                                                strata = list(c("age_group"),
                                                                              c("sex"),
                                                                              c("age_group", "sex"))) %>%
-      sample_n(sampleSize, replace = TRUE) %>%
       mutate(cdm_name = dbName)
 
     competingRisk <- CohortSurvival::estimateCompetingRiskSurvival(cdmSurvival,
@@ -149,7 +147,6 @@ generateMockData <- function(databaseName = c("CHUBX",
                                                                    outcomeCohortTable = "progression",
                                                                    competingOutcomeCohortTable = "death_cohort",
                                                                    strata = list(c("sex"))) %>%
-      sample_n(sampleSize, replace = TRUE) %>%
       mutate(cdm_name = dbName)
     outputDirCS <- file.path(outputDir, "CohortSurvival", packageVersion("CohortSurvival"))
     if (!dir.exists(outputDirCS)) {
