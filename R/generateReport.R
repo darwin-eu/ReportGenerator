@@ -22,7 +22,11 @@
 #'
 #' @return NULL, the report is written to given file
 generateReport <- function(reportDocx, dataReportList, fileName) {
-  # TODO checks
+  errorMessage <- checkmate::makeAssertCollection()
+  checkmate::assertClass(reportDocx, "rdocx", add = errorMessage)
+  checkmate::assertList(dataReportList, add = errorMessage)
+  checkmate::assertPathForOutput(fileName, add = errorMessage)
+  checkmate::reportAssertions(collection = errorMessage)
 
   if (length(dataReportList) > 0) {
     # Loop through ever object selected in the menu

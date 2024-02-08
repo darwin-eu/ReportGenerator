@@ -1153,10 +1153,19 @@ reportGenerator <- function() {
     })
 
     observeEvent(input$locksurvivalTable, {
-      objectChoice <- "Table - Survival Estimate"
+      objectChoice <- "Survival table"
       randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
       dataReport[[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimateData()
       dataReport[[randomId]][[objectChoice]][["caption"]] <- "Survival Estimate caption"
+    })
+
+    observeEvent(input$locksurvivalPlot, {
+      objectChoice <- "Survival plot"
+      randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimateData()
+      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- "Survival Estimate caption"
+
     })
 
     # Update according to facet prevalence
@@ -1266,6 +1275,7 @@ reportGenerator <- function() {
         "generatedReport.docx"
       },
       content = function(file) {
+        shinyjs::disable("generateReport")
         # Load template and generate report
         reportDocx <- read_docx(path = system.file("templates",
                                                    "word",
@@ -1274,6 +1284,7 @@ reportGenerator <- function() {
         generateReport(reportDocx,
                        rev(reactiveValuesToList(dataReport)),
                        file)
+        shinyjs::enable("generateReport")
       }
     )
   }

@@ -231,8 +231,8 @@ cohortSurvivalServer <- function(id, dataset) {
     } else if (id == "survivalPlot") {
       output$cs_plot <- renderPlot({
         CohortSurvival::plotSurvival(getData(),
-                                     facet= "strata_name",
-                                     colour = "strata_level")
+                                     facet = "cdm_name",
+                                     colour = "strata_name")
       })
     } else if (id == "failureTable") {
       output$cu_inc_data <- DT::renderDataTable(server = FALSE, {

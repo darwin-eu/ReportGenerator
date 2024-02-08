@@ -87,8 +87,10 @@ Survival table:
     - Survival estimate
 Survival plot:
   title: "Survival plot"
+  function: CohortSurvival::plotSurvival(survivalEstimate, facet, colour)
   type:
     - Survival estimate
+  options: Facet by database, colour by strata_name
 Cumulative incidence table:
   title: "Cumulative incidence table"
   type:

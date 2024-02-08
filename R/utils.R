@@ -91,17 +91,15 @@ addPreviewItemType <- function(previewItemString, previewItemType) {
   if (previewItemType == "Facet by outcome") {
     facet <- "facet = 'outcome_cohort_name'"
     colour <- "colour = 'cdm_name'"
-    result <- gsub("colour", colour, previewItemString)
-    result <- gsub("facet", facet, result)
-
+  } else if (previewItemType == "Facet by database, colour by strata_name"){
+    facet <- "facet = 'cdm_name'"
+    colour <- "colour = 'strata_name'"
   } else if (previewItemType == "Facet by database"){
-
     facet <- "facet = 'cdm_name'"
     colour <- "colour = 'outcome_cohort_name'"
-    result <- gsub("colour", colour, previewItemString)
-    result <- gsub("facet", facet, result)
-
   }
+  result <- gsub("colour", colour, previewItemString)
+  result <- gsub("facet", facet, result)
   return(result)
 }
 
@@ -121,17 +119,12 @@ addPreviewItemTypeSex <- function(previewItemString, previewItemType) {
   if (previewItemType == "Facet by outcome") {
     facet <- "facet = 'outcome_cohort_name'"
     colour <- "colour = 'denominator_sex'"
-    result <- gsub("colour", colour, previewItemString)
-    result <- gsub("facet", facet, result)
-
   } else if (previewItemType == "Facet by database"){
-
     facet <- "facet = 'cdm_name'"
     colour <- "colour = 'denominator_sex'"
-    result <- gsub("colour", colour, previewItemString)
-    result <- gsub("facet", facet, result)
-
   }
+  result <- gsub("colour", colour, previewItemString)
+  result <- gsub("facet", facet, result)
   return(result)
 }
 
@@ -150,15 +143,12 @@ addPreviewItemTypeAge <- function(previewItemString, previewItemType) {
   if (previewItemType == "Facet by outcome") {
     facet <- "facet = 'outcome_cohort_name'"
     colour <- "colour = 'denominator_age_group'"
-    result <- gsub("colour", colour, previewItemString)
-    result <- gsub("facet", facet, result)
   } else if (previewItemType == "Facet by database"){
     facet <- "facet = 'cdm_name'"
     colour <- "colour = 'denominator_age_group'"
-    result <- gsub("colour", colour, previewItemString)
-    result <- gsub("facet", facet, result)
-
   }
+  result <- gsub("colour", colour, previewItemString)
+  result <- gsub("facet", facet, result)
   return(result)
 }
 
