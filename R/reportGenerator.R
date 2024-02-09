@@ -1165,7 +1165,6 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimateData()
       dataReport[[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
       dataReport[[randomId]][[objectChoice]][["caption"]] <- "Survival Estimate caption"
-
     })
 
     # Update according to facet prevalence

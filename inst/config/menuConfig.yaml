@@ -83,6 +83,7 @@ Summarised Large Scale Characteristics:
     - Summarised Large Scale Characteristics
 Survival table:
   title: "Survival table"
+  function: cohortSurvivalTable(survivalEstimate)
   type:
     - Survival estimate
 Survival plot:

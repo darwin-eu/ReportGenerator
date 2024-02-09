@@ -165,10 +165,20 @@ characteristicsServer <- function(id, dataset) {
 cohortSurvivalUI <- function(id, dataset) {
   ns <- NS(id)
   outResult <- NULL
+  captionUI <- NULL
   if (id == "survivalTable") {
     outResult <- DT::dataTableOutput(ns("cs_data"))
   } else if (id == "survivalPlot") {
     outResult <- plotOutput(ns("cs_plot"))
+    captionUI <- fluidRow(
+      column(8,
+             textAreaInput("captionSurvivalEstimate",
+                           "Caption",
+                           "Figure 1. Survival estimate plot",
+                           width = '100%',
+                           height = "130px")
+      ),
+    )
   } else if (id == "failureTable") {
     outResult <- DT::dataTableOutput(ns("cu_inc_data"))
   } else if (id == "failurePlot") {
@@ -208,6 +218,7 @@ cohortSurvivalUI <- function(id, dataset) {
         multiple = TRUE
       )
     ),
+    captionUI,
     fluidRow(column(4, actionButton(paste0("lock", id), "Add item to report"))
     ),
     tags$br(),

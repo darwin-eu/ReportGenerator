@@ -480,3 +480,10 @@ table5IncSex <- function (incidence_estimates) {
 
   return(tableIncidence)
 }
+
+cohortSurvivalTable <- function(data) {
+  # TODO filter
+  data <- data %>% dplyr::top_n(10)
+  as_hux(data,
+         add_colnames = getOption("huxtable.add_colnames", FALSE))
+}
