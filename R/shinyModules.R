@@ -172,7 +172,7 @@ cohortSurvivalUI <- function(id, dataset) {
     outResult <- plotOutput(ns("cs_plot"))
     captionUI <- fluidRow(
       column(8,
-             textAreaInput("captionSurvivalEstimate",
+             textAreaInput(ns("captionSurvivalEstimate"),
                            "Caption",
                            "Figure 1. Survival estimate plot",
                            width = '100%',
@@ -183,6 +183,15 @@ cohortSurvivalUI <- function(id, dataset) {
     outResult <- DT::dataTableOutput(ns("cu_inc_data"))
   } else if (id == "failurePlot") {
     outResult <- plotOutput(ns("cu_inc_plot"))
+    captionUI <- fluidRow(
+      column(8,
+             textAreaInput(ns("captionCumulativeIncidence"),
+                           "Caption",
+                           "Figure 1. Cumulative incidence plot",
+                           width = '100%',
+                           height = "130px")
+      ),
+    )
   }
   tagList(
     div(

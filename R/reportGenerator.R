@@ -1156,7 +1156,7 @@ reportGenerator <- function() {
       objectChoice <- "Survival table"
       randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
       dataReport[[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimateData()
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- "Survival Estimate caption"
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- ""
     })
 
     observeEvent(input$locksurvivalPlot, {
@@ -1164,7 +1164,7 @@ reportGenerator <- function() {
       randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
       dataReport[[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimateData()
       dataReport[[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- "Survival Estimate caption"
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'survivalPlot-captionSurvivalEstimate'
     })
 
     # Update according to facet prevalence
