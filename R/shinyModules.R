@@ -130,10 +130,10 @@ createDataTable <- function(data, tableName = "result") {
                 class = "display")
 }
 
-characteristicsServer <- function(id, dataset, dataReport) {
+characteristicsServer <- function(id, dataset) {
   moduleServer(id, function(input, output, session) {
     dataPP <- reactive({
-      dataset %>% filter(cdm_name %in% input$cdm_name,
+      dataset() %>% filter(cdm_name %in% input$cdm_name,
                          group_level %in% input$group_level,
                          strata_name %in% input$strata_name,
                          variable %in% input$variable,
@@ -145,12 +145,14 @@ characteristicsServer <- function(id, dataset, dataReport) {
       createDataTable(dataPP())
     })
 
+    addObject <- reactiveVal()
+
     observeEvent(input$lockSummary, {
-      objectChoice <- "Summary Characteristics"
-      chars <- c(0:9, letters, LETTERS)
-      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-      dataReport[[randomId]][[objectChoice]] <- dataPP()
+      addObject(
+        list(`Summary Characteristics` = dataPP())
+      )
     })
+    addObject
   })
 }
 

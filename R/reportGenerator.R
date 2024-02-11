@@ -101,7 +101,9 @@ reportGenerator <- function() {
     datasetLoadServer("CohortSurvival")
 
     # ReactiveValues
-    uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
+    uploadedFiles <- reactiveValues(dataIP = NULL,
+                                    dataTP = NULL,
+                                    dataPP = NULL)
     itemsList <- reactiveValues(objects = NULL)
 
     # Check input data
@@ -1138,8 +1140,23 @@ reportGenerator <- function() {
 
     # PatientProfiles
 
-    characteristicsServer("charac", uploadedFiles$dataPP$`Summary Characteristics`, reactive(dataReport))
-    characteristicsServer("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`, reactive(dataReport))
+    # characteristicsServer(id = "charac",
+    #                       data = uploadedFiles$dataPP$`Summary Characteristics`)
+    characteristicsServer(id = "lsc",
+                          data = uploadedFiles$dataPP$`Summarised Large Scale Characteristics`)
+
+
+    dataReportObject <- characteristicsServer(id = "charac",
+                                              dataset = reactive(uploadedFiles$dataPP$`Summary Characteristics`))
+
+    observe({
+      for (key in names(dataReportObject())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataReportObject()
+      }
+    }) %>%
+      bindEvent(dataReportObject())
 
     # Update according to facet prevalence
 
