@@ -113,11 +113,19 @@ characteristicsUI <- function(id, dataset) {
       ),
     tags$br(),
     fluidRow(
-      column(12,
-             DT::dataTableOutput(ns("summarisedTable"))
-      )
+    tabsetPanel(type = "tabs",
+                tabPanel("Table",
+                         br(),
+                         pickerInput(inputId = ns("pivotWide"),
+                                     label = "Arrange by",
+                                     choices = c("Group", "Strata"),
+                                     selected = c("Group", "Strata"),
+                                     multiple = TRUE),
+                         column(12, gt::gt_output(ns("summarisedTableGt")))),
+                tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
+                )
     )
-  )
+    )
 }
 
 createDataTable <- function(data, tableName = "result") {
@@ -169,6 +177,11 @@ characteristicsServer <- function(id, dataset) {
 
     output$summarisedTable <- DT::renderDataTable(server = FALSE, {
       createDataTable(dataPP())
+    })
+
+    output$summarisedTableGt <- gt::render_gt({
+      gtCharacteristics(summarisedCharacteristics = dataPP(),
+                        pivotWide = c("CDM Name", input$pivotWide))
     })
 
     addObject <- reactiveVal()
