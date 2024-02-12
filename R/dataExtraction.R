@@ -70,7 +70,7 @@ joinDatabase <- function(fileDataPath = NULL,
         }
         # Checks the type of every individual file
         for (val in configDataTypes) {
-          # val <- "Summary Characteristics"
+          # val <- "Summarised Characteristics"
           if (val == "incidence_attrition" & grepl("incidence_attrition", file)) {
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)
@@ -122,7 +122,7 @@ joinDatabase <- function(fileDataPath = NULL,
               message(paste0(val, ": match yes"))
               data[[val]] <- bind_rows(data[[val]], resultsData)
             }
-          } else if (val == "Summary Characteristics") {
+          } else if (val == "Summarised Characteristics") {
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)
             if (all(configColumns %in% resultsColumns)) {
@@ -221,7 +221,7 @@ columnCheck <- function(csvFiles,
           message(paste0(val, ": match yes"))
           data[[val]] <- bind_rows(data[[val]], resultsData)
         }
-      } else if (val == "Summary Characteristics") {
+      } else if (val == "Summarised Characteristics") {
         configColumns <- configData[[val]]
         configColumns <- unlist(configColumns$names)
         if (all(configColumns %in% resultsColumns)) {

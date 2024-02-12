@@ -1141,7 +1141,7 @@ reportGenerator <- function() {
     # PatientProfiles
 
     dataCharacteristics<- characteristicsServer(id = "summary",
-                                              dataset = reactive(uploadedFiles$dataPP$`Summary Characteristics`))
+                                              dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
 
     observe({
       for (key in names(dataCharacteristics())) {

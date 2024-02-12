@@ -23,8 +23,8 @@ tabPanelSelection <- function(selection, uploadedFiles, version) {
     tabPanel(selection, sankeyDiagramFilters(uploadedFiles, version), htmlOutput("previewSankeyDiagram"))
   } else if (selection == "Sunburst Plot - TreatmentPatterns") {
     tabPanel(selection, sunburstDiagramFilters(uploadedFiles, version), htmlOutput("previewSunburstPlot"))
-  } else if (selection == "Summary Characteristics") {
-    tabPanel(selection, characteristicsUI("summary", uploadedFiles$dataPP$`Summary Characteristics`))
+  } else if (selection == "Summarised Characteristics") {
+    tabPanel(selection, characteristicsUI("summary", uploadedFiles$dataPP$`Summarised Characteristics`))
   } else if (selection == "Summarised Large Scale Characteristics") {
     tabPanel(selection, characteristicsUI("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
   }

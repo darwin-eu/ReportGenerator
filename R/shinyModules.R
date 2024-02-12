@@ -164,13 +164,13 @@ characteristicsServer <- function(id, dataset) {
 
     observeEvent(input$lockSummary, {
       addObject(
-        list(`Summary Characteristics` = list(summaryResults = dataPP()))
+        list(`Summarised Characteristics` = list(summarisedCharacteristics = dataPP()))
       )
     })
 
     observeEvent(input$lockLSC, {
       addObject(
-        list(`Summarised Large Scale Characteristics` = list(summaryResults = dataPP()))
+        list(`Summarised Large Scale Characteristics` = list(summarisedCharacteristics = dataPP()))
       )
     })
 
