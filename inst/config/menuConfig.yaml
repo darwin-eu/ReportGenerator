@@ -98,5 +98,7 @@ Cumulative incidence table:
     - Survival cumulative incidence
 Cumulative incidence plot:
   title: "Cumulative incidence plot"
+  function: CohortSurvival::plotSurvival(survivalEstimate, facet, colour)
   type:
     - Survival cumulative incidence
+  options: Facet by database, colour by strata_name

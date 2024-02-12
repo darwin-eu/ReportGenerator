@@ -131,6 +131,7 @@ createDataTable <- function(data, tableName = "result") {
                                fixedColumns = TRUE,
                                autoWidth = TRUE,
                                ordering = TRUE,
+                               scrollX = TRUE,
                                dom = 'Bfrtip',
                                buttons =
                                  list(list(
@@ -165,34 +166,32 @@ characteristicsServer <- function(id, dataset) {
 cohortSurvivalUI <- function(id, dataset) {
   ns <- NS(id)
   outResult <- NULL
-  captionUI <- NULL
   if (id == "survivalTable") {
     outResult <- DT::dataTableOutput(ns("cs_data"))
+    captionText <- "Table 1. Survival estimate data"
+    captionId <-  "captionSurvivalEstimateData"
   } else if (id == "survivalPlot") {
     outResult <- plotOutput(ns("cs_plot"))
-    captionUI <- fluidRow(
-      column(8,
-             textAreaInput(ns("captionSurvivalEstimate"),
-                           "Caption",
-                           "Figure 1. Survival estimate plot",
-                           width = '100%',
-                           height = "130px")
-      ),
-    )
+    captionText <- "Figure 1. Survival estimate plot"
+    captionId <-  "captionSurvivalEstimate"
   } else if (id == "failureTable") {
     outResult <- DT::dataTableOutput(ns("cu_inc_data"))
+    captionText <- "Table 1. Cumulative incidence data"
+    captionId <-  "captionCumulativeIncidenceData"
   } else if (id == "failurePlot") {
     outResult <- plotOutput(ns("cu_inc_plot"))
-    captionUI <- fluidRow(
-      column(8,
-             textAreaInput(ns("captionCumulativeIncidence"),
-                           "Caption",
-                           "Figure 1. Cumulative incidence plot",
-                           width = '100%',
-                           height = "130px")
-      ),
-    )
+    captionText <- "Figure 1. Cumulative incidence plot"
+    captionId <-  "captionCumulativeIncidence"
   }
+  captionUI <- fluidRow(
+    column(8,
+           textAreaInput(ns(captionId),
+                         "Caption",
+                         captionText,
+                         width = '100%',
+                         height = "130px")
+    ),
+  )
   tagList(
     div(
       style = "display: inline-block;vertical-align:top; width: 150px;",
