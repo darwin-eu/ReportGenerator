@@ -11,7 +11,7 @@ variablesConfigYaml(
 )
 }
 \arguments{
-\item{fileDataPath}{A list of zipped csv files.}
+\item{fileDataPath}{A zip folder with csv results from an analytical packages, e.g. IncidencePrevalence, PatientProfiles, TreatmentPatterns, etc.}
 
 \item{package}{A string to identify the name of the package, default IncidencePrevalence.}
 

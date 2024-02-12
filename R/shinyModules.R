@@ -48,10 +48,10 @@ datasetLoadServer <- function(id) {
 
 characteristicsUI <- function(id, dataset) {
   ns <- NS(id)
-  if (id == "lsc") {
-    lockName <- "lockLSC"
-  } else {
+  if (id == "summary") {
     lockName <- "lockSummary"
+  } else {
+    lockName <- "lockLSC"
   }
   tagList(
     fluidRow(
@@ -103,7 +103,7 @@ characteristicsUI <- function(id, dataset) {
     tags$br(),
     fluidRow(
       column(12,
-             DT::dataTableOutput(ns("dt_summary"))
+             DT::dataTableOutput(ns("summaryTable"))
       )
     )
   )
@@ -132,16 +132,31 @@ createDataTable <- function(data, tableName = "result") {
 
 characteristicsServer <- function(id, dataset) {
   moduleServer(id, function(input, output, session) {
-    dataPP <- reactive({
-      dataset() %>% filter(cdm_name %in% input$cdm_name,
-                         group_level %in% input$group_level,
-                         strata_name %in% input$strata_name,
-                         variable %in% input$variable,
-                         estimate_type %in% input$estimate_type) %>%
-      select(cdm_name, group_level, strata_name, variable, variable_level , estimate_type, estimate) %>%
-      mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
+
+    if (id == "summary") {
+      dataPP <- reactive({
+        dataset() %>% filter(cdm_name %in% input$cdm_name,
+                           group_level %in% input$group_level,
+                           strata_name %in% input$strata_name,
+                           variable %in% input$variable,
+                           estimate_type %in% input$estimate_type) %>%
+        select(cdm_name, group_level, strata_name, variable, variable_level , estimate_type, estimate) %>%
+        mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
+        })
+    } else {
+      dataPP <- reactive({
+        dataset() %>% filter(cdm_name %in% input$cdm_name,
+                             group_level %in% input$group_level,
+                             strata_name %in% input$strata_name,
+                             variable %in% input$variable,
+                             estimate_type %in% input$estimate_type) %>%
+          select(cdm_name, group_level, strata_name, variable, variable_level, estimate_type, estimate) %>%
+          mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
       })
-    output$dt_summary <- DT::renderDataTable(server = FALSE, {
+    }
+
+
+    output$summaryTable <- DT::renderDataTable(server = FALSE, {
       createDataTable(dataPP())
     })
 
@@ -152,6 +167,13 @@ characteristicsServer <- function(id, dataset) {
         list(`Summary Characteristics` = dataPP())
       )
     })
+
+    observeEvent(input$lockLSC, {
+      addObject(
+        list(`Summarised Large Scale Characteristics` = dataPP())
+      )
+    })
+
     addObject
   })
 }
