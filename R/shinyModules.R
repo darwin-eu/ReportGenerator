@@ -140,7 +140,7 @@ characteristicsServer <- function(id, dataset) {
                            strata_name %in% input$strata_name,
                            variable %in% input$variable,
                            estimate_type %in% input$estimate_type) %>%
-        select(cdm_name, group_level, strata_name, variable, variable_level , estimate_type, estimate) %>%
+        # select(cdm_name, group_level, strata_name, variable, variable_level , estimate_type, estimate) %>%
         mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
         })
     } else {
@@ -150,7 +150,7 @@ characteristicsServer <- function(id, dataset) {
                              strata_name %in% input$strata_name,
                              variable %in% input$variable,
                              estimate_type %in% input$estimate_type) %>%
-          select(cdm_name, group_level, strata_name, variable, variable_level, estimate_type, estimate) %>%
+          # select(cdm_name, group_level, strata_name, variable, variable_level, estimate_type, estimate) %>%
           mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
       })
     }
@@ -164,13 +164,13 @@ characteristicsServer <- function(id, dataset) {
 
     observeEvent(input$lockSummary, {
       addObject(
-        list(`Summary Characteristics` = dataPP())
+        list(`Summary Characteristics` = list(summaryResults = dataPP()))
       )
     })
 
     observeEvent(input$lockLSC, {
       addObject(
-        list(`Summarised Large Scale Characteristics` = dataPP())
+        list(`Summarised Large Scale Characteristics` = list(summaryResults = dataPP()))
       )
     })
 

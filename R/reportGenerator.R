@@ -77,8 +77,8 @@ reportGenerator <- function() {
                  fluidRow(
                    column(width = 4,
                           h2("2. Objects to print"),
-                          # verbatimTextOutput("dataReportMenu"),
-                          DTOutput("dataReportMenu"),
+                          # DTOutput("dataReportMenu"),
+                          verbatimTextOutput("dataReportMenu"),
                           downloadButton("generateReport", "Generate Report")
                           )
                  )
@@ -1258,19 +1258,20 @@ reportGenerator <- function() {
       }
     })
 
-    output$dataReportMenu <- renderDT({
-      dataReportFrame <- data.frame(
-        Name = objectsListPreview()
-      )
-      DT::datatable(dataReportFrame, options = list(dom = 't'))
-    })
-
-    # output$dataReportMenu <- renderPrint({
-    #   # dataReport
-    #   dataReportList <- reactiveValuesToList(dataReport)
-    #   length(dataReportList) == 0
-    #   # objectsListPreview()
+    # output$dataReportMenu <- renderDT({
+    #   dataReportFrame <- data.frame(
+    #     Name = objectsListPreview()
+    #   )
+    #   DT::datatable(dataReportFrame, options = list(dom = 't'))
     # })
+
+    output$dataReportMenu <- renderPrint({
+      # dataReport
+      dataReportList <- reactiveValuesToList(dataReport)
+      dataReportList
+      # length(dataReportList) == 0
+      # objectsListPreview()
+    })
 
     # Word report generator
     output$generateReport <- downloadHandler(
