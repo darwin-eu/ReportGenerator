@@ -48,10 +48,12 @@ datasetLoadServer <- function(id) {
 
 characteristicsUI <- function(id, dataset) {
   ns <- NS(id)
-  if (id == "summary") {
+  if (id == "characteristics") {
     lockName <- "lockSummary"
+    captionText <- "Table 1. Baseline characteristics of drug user/s at the time of therapy initiation, including pre-specified indication/s. Number of participants per pre-specified strata will be included where necessary/applicable"
   } else {
     lockName <- "lockLSC"
+    captionText <- "Table 2. Baseline characteristics of new user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
   }
   tagList(
     fluidRow(
@@ -96,6 +98,15 @@ characteristicsUI <- function(id, dataset) {
              )
       ),
     fluidRow(
+      column(8,
+             textAreaInput(inputId = ns("captionCharacteristics"),
+                           label = "Caption",
+                           value = captionText,
+                           width = '100%',
+                           height = "130px")
+      ),
+    ),
+    fluidRow(
       column(4,
              actionButton(ns(lockName), "Add item to report")
              )
@@ -103,7 +114,7 @@ characteristicsUI <- function(id, dataset) {
     tags$br(),
     fluidRow(
       column(12,
-             DT::dataTableOutput(ns("summaryTable"))
+             DT::dataTableOutput(ns("summarisedTable"))
       )
     )
   )
@@ -133,7 +144,7 @@ createDataTable <- function(data, tableName = "result") {
 characteristicsServer <- function(id, dataset) {
   moduleServer(id, function(input, output, session) {
 
-    if (id == "summary") {
+    if (id == "characteristics") {
       dataPP <- reactive({
         dataset() %>% filter(cdm_name %in% input$cdm_name,
                            group_level %in% input$group_level,
@@ -156,7 +167,7 @@ characteristicsServer <- function(id, dataset) {
     }
 
 
-    output$summaryTable <- DT::renderDataTable(server = FALSE, {
+    output$summarisedTable <- DT::renderDataTable(server = FALSE, {
       createDataTable(dataPP())
     })
 
@@ -164,70 +175,17 @@ characteristicsServer <- function(id, dataset) {
 
     observeEvent(input$lockSummary, {
       addObject(
-        list(`Summarised Characteristics` = list(summarisedCharacteristics = dataPP()))
+        list(`Summarised Characteristics` = list(summarisedCharacteristics = dataPP(),
+                                                 caption = input$captionCharacteristics))
       )
     })
 
     observeEvent(input$lockLSC, {
       addObject(
-        list(`Summarised Large Scale Characteristics` = list(summarisedCharacteristics = dataPP()))
+        list(`Summarised Large Scale Characteristics` = list(summarisedCharacteristics = dataPP(),
+                                                             caption = input$captionCharacteristics))
       )
     })
-
     addObject
   })
 }
-
-# lockItemsUI <- function(id) {
-#
-#   actionButton(NS(id, "lockItem"), "Add item to report")
-#
-# }
-#
-# lockItemsServer <- function(id,
-#                             dataReport,
-#                             prevalenceAttrition,
-#                             incidenceAttrition,
-#                             incidenceEstimates,
-#                             captionInput) {
-#   moduleServer(id, function(input, output, session) {
-#     if (id == "lockTableNumPar") {
-#       observeEvent(input$lockItem, {
-#         objectChoice <- "Table - Number of participants"
-#         chars <- c(0:9, letters, LETTERS)
-#         randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-#         dataReport[[randomId]][[objectChoice]][["prevalence_attrition"]] <- prevalenceAttrition
-#         dataReport[[randomId]][[objectChoice]][["incidence_attrition"]] <- incidenceAttrition
-#         dataReport[[randomId]][[objectChoice]][["caption"]] <- captionInput
-#       })
-#     } else if (id == "lockTableIncAtt") {
-#       observeEvent(input$lockItem, {
-#         objectChoice <- "Table - Incidence Attrition"
-#         attritionDataType <- "incidence"
-#         chars <- c(0:9, letters, LETTERS)
-#         randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-#         dataReport[[randomId]][[objectChoice]][["incidence_attrition"]] <- incidenceAttrition
-#         dataReport[[randomId]][[objectChoice]][["attritionDataType"]] <- attritionDataType
-#         dataReport[[randomId]][[objectChoice]][["caption"]] <- captionInput
-#       })
-#     } else if (id == "lockTablePrevAtt") {
-#       observeEvent(input$lockItem, {
-#         objectChoice <- "Table - Prevalence Attrition"
-#         attritionDataType <- "prevalence"
-#         chars <- c(0:9, letters, LETTERS)
-#         randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-#         dataReport[[randomId]][[objectChoice]][["prevalence_attrition"]] <- prevalenceAttrition
-#         dataReport[[randomId]][[objectChoice]][["attritionDataType"]] <- attritionDataType
-#         dataReport[[randomId]][[objectChoice]][["caption"]] <- captionInput
-#         })
-#     } else if (id == "lockTableSex") {
-#       observeEvent(input$lockItem, {
-#         objectChoice <- "Table - Number of participants by sex and age group"
-#         chars <- c(0:9, letters, LETTERS)
-#         randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-#         dataReport[[randomId]][[objectChoice]][["incidence_estimates"]] <- incidenceEstimates
-#         dataReport[[randomId]][[objectChoice]][["caption"]] <- captionInput
-#       })
-#     }
-#     })
-# }

@@ -18,7 +18,7 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
-#' @import dplyr shiny shinydashboard shinyWidgets officer flextable waldo readr yaml googleVis TreatmentPatterns PatientProfiles
+#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml googleVis TreatmentPatterns PatientProfiles
 #' @importFrom sortable bucket_list add_rank_list
 #' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @importFrom utils read.csv tail unzip
@@ -1140,7 +1140,7 @@ reportGenerator <- function() {
 
     # PatientProfiles
 
-    dataCharacteristics<- characteristicsServer(id = "summary",
+    dataCharacteristics<- characteristicsServer(id = "characteristics",
                                               dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
 
     observe({
