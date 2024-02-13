@@ -15,5 +15,4 @@ test_that("Sankey created file", {
     treatmentPathways = data,
     groupCombinations = TRUE)
   expect_true(!is.null(outputSankey))
-
 })

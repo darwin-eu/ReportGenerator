@@ -485,3 +485,8 @@ table5IncSex <- function (incidence_estimates) {
 
   return(tableIncidence)
 }
+
+cohortSurvivalTable <- function(data) {
+  as_hux(data,
+         add_colnames = getOption("huxtable.add_colnames", FALSE))
+}

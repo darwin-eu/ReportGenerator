@@ -33,44 +33,28 @@ generateMockData <- function(databaseName = c("CHUBX",
                                               "IPCI",
                                               "SIDIAP"),
                              simulatePopulation = TRUE,
-                             outputDir = getwd()) {
+                             outputDir = file.path(getwd(), "results")) {
 
-  for (i in databaseName) {
-
+  for (dbName in databaseName) {
     if (simulatePopulation == TRUE) {
-
-        if (i == "CHUBX") {
-
-          sampleSize <- 2152385
-
-        } else if (i == "CPRD GOLD") {
-
-          sampleSize <- 15662217
-
-        } else if (i == "IMASIS") {
-
-          sampleSize <- 1014735
-
-        } else if (i == "IPCI") {
-
-          sampleSize <- 2674547
-
-        } else if (i == "SIDIAP") {
-
-          sampleSize <- 8265343
-
-        }
-
-      } else {
-
-        sampleSize <- 50000
-
-        }
+      if (dbName== "CHUBX") {
+        sampleSize <- 2152385
+      } else if (dbName== "CPRD GOLD") {
+        sampleSize <- 15662217
+      } else if (dbName== "IMASIS") {
+        sampleSize <- 1014735
+      } else if (dbName== "IPCI") {
+        sampleSize <- 2674547
+      } else if (dbName== "SIDIAP") {
+        sampleSize <- 8265343
+      }
+    } else {
+      sampleSize <- 50000
+    }
 
     cdm <- IncidencePrevalence::mockIncidencePrevalenceRef(
       sampleSize = sampleSize,
-      outPre = 0.5
-      )
+      outPre = 0.5)
 
     # Denominator data
     cdm <- IncidencePrevalence::generateDenominatorCohortSet(cdm = cdm,
@@ -82,9 +66,6 @@ generateMockData <- function(databaseName = c("CHUBX",
                                                                               c(18, 99)),
                                                              sex  = c("Female", "Male", "Both"),
                                                              daysPriorObservation = 365)
-
-    # %>% mutate(cdm_name = i)
-
     # Incidence data
     incidence_estimates <- IncidencePrevalence::estimateIncidence(cdm = cdm,
                                                                   denominatorTable = "denominator",
@@ -117,10 +98,10 @@ generateMockData <- function(databaseName = c("CHUBX",
     prevalence_attrition <- rbind(prevalence_point_attrition, prevalence_period_attrition)
 
     # Add database label
-    incidence_estimates <- incidence_estimates %>% mutate(cdm_name = i)
-    incidence_attrition <- incidence_attrition %>% mutate(cdm_name = i)
-    prevalence_estimates <- prevalence_estimates %>% mutate(cdm_name = i)
-    prevalence_attrition <- prevalence_attrition %>% mutate(cdm_name = i)
+    incidence_estimates <- incidence_estimates %>% mutate(cdm_name = dbName)
+    incidence_attrition <- incidence_attrition %>% mutate(cdm_name = dbName)
+    prevalence_estimates <- prevalence_estimates %>% mutate(cdm_name = dbName)
+    prevalence_attrition <- prevalence_attrition %>% mutate(cdm_name = dbName)
 
     class(incidence_attrition) <- c("IncidencePrevalenceResult",
                                     "IncidenceResult",
@@ -137,7 +118,7 @@ generateMockData <- function(databaseName = c("CHUBX",
     # Results
     incPreVersion <- packageVersion("IncidencePrevalence")
     outputDirExp <- outputDir
-    outputDirExp <- file.path(outputDir, "results", incPreVersion)
+    outputDirExp <- file.path(outputDir, "IncidencePrevalence", incPreVersion)
     if (!dir.exists(outputDirExp)) {
       dir.create(outputDirExp, recursive = TRUE)
     }
@@ -146,9 +127,36 @@ generateMockData <- function(databaseName = c("CHUBX",
                                                                             "prevalence_estimates" = prevalence_estimates,
                                                                             "incidence_attrition" = incidence_attrition,
                                                                             "prevalence_attrition" = incidence_attrition),
-                                                                            zipName = paste0("mock_data_ReportGenerator_", i),
+                                                                            zipName = paste0("mock_data_ReportGenerator_", dbName),
                                                                             outputFolder = paste0(outputDirExp))
 
+    # CohortSurvival
+    cdmSurvival <- CohortSurvival::mockMGUS2cdm()
+    singleEvent <- CohortSurvival::estimateSingleEventSurvival(cdmSurvival,
+                                                               targetCohortTable = "mgus_diagnosis",
+                                                               targetCohortId = 1,
+                                                               outcomeCohortTable = "death_cohort",
+                                                               outcomeCohortId = 1,
+                                                               strata = list(c("age_group"),
+                                                                             c("sex"),
+                                                                             c("age_group", "sex"))) %>%
+      mutate(cdm_name = dbName)
+
+    competingRisk <- CohortSurvival::estimateCompetingRiskSurvival(cdmSurvival,
+                                                                   targetCohortTable = "mgus_diagnosis",
+                                                                   outcomeCohortTable = "progression",
+                                                                   competingOutcomeCohortTable = "death_cohort",
+                                                                   strata = list(c("sex"))) %>%
+      mutate(cdm_name = dbName)
+    outputDirCS <- file.path(outputDir, "CohortSurvival", packageVersion("CohortSurvival"))
+    if (!dir.exists(outputDirCS)) {
+      dir.create(outputDirCS, recursive = TRUE)
+    }
+    exportResults(resultList = list("single_event" = singleEvent,
+                                    "competing_risk" = competingRisk),
+                  zipName = paste0("mock_data_", dbName),
+                  outputFolder = outputDirCS)
   }
+
   duckdb::duckdb_shutdown(duckdb::duckdb())
 }

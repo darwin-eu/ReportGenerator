@@ -4,6 +4,6 @@
 #   ReportGenerator::generateMockData(databaseName = c("CHUBX"),
 #                    simulatePopulation = FALSE,
 #                    outputDir = outputDir)
-#   expect_equal(list.files(file.path(outputDir, "results", "0.6.0")),"mock_data_ReportGenerator_CHUBX.zip")
+#   expect_equal(list.files(file.path(outputDir, "0.6.0")),"mock_data_ReportGenerator_CHUBX.zip")
 #   unlink(outputDir, recursive = TRUE)
 # })
