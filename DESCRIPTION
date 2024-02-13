@@ -16,7 +16,7 @@ Depends:
     dplyr
 Imports:
     flextable,
-    IncidencePrevalence,
+    IncidencePrevalence (>= 0.6.0),
     officer,
     readr,
     scales,
