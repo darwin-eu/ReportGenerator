@@ -86,8 +86,6 @@ reportGenerator <- function() {
     itemsList <- reactiveValues(objects = NULL)
 
     # Check input data
-    # IncidencePrevalence
-    # TODO Create modules for datasetLoad
     observeEvent(input$datasetLoad, {
       # Read  file paths
       inFile <- input$datasetLoad
@@ -115,7 +113,6 @@ reportGenerator <- function() {
 
     # Reset and back to initial tab
     observeEvent(input$resetData, {
-      # if (!is.null(uploadedFiles)) {
       itemsList$objects <- NULL
       uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
       dataReport <- reactiveValues()
