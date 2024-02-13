@@ -1,11 +1,12 @@
 test_that("test basic", {
-
   testData <- testData()
   expect_equal(names(testData), c("incidence_attrition",
                                   "incidence_estimates",
                                   "prevalence_attrition",
                                   "prevalence_estimates",
-                                  "treatmentPathways_test"))
+                                  "treatmentPathways_test",
+                                  "Summarised Large Scale Characteristics",
+                                  "Summarised Characteristics"))
 })
 
 test_that("VariablesConfig IncidencePrevalence", {

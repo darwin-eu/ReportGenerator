@@ -461,29 +461,40 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
 #' @importFrom usethis use_data
 #'
 #' @return sysdata.rda instruction
-testData <- function(testFilesIP = testthat::test_path("IncPrev", "0.6.0", "zip")) {
-  checkmate::expect_directory_exists(testFilesIP)
-  uploadedFiles <- list.files(testFilesIP,
-                              pattern = ".zip",
-                              full.names = TRUE,
-                              recursive = TRUE)
-  treatmentPathways_test <- read_csv(testthat::test_path("TrePat",
-                                               "2.5.2",
-                                               "csv",
-                                               "CHUBX",
-                                               "treatmentPathways.csv"),
+testData <- function(testFilesIP = testthat::test_path("IncPrev", "0.6.0", "zip"),
+                     testFilesTP = testthat::test_path("TrePat", "2.5.2", "csv", "CHUBX"),
+                     testFilesPP = testthat::test_path("PP", "0.5.1", "zip")) {
+  checkmate::assertDirectoryExists(testFilesIP)
+  checkmate::assertDirectoryExists(testFilesTP)
+  checkmate::assertDirectoryExists(testFilesPP)
+  uploadedFilesIP <- list.files(testFilesIP,
+                                pattern = ".zip",
+                                full.names = TRUE,
+                                recursive = TRUE)
+  treatmentPathways_test <- read_csv(file.path(testFilesTP, "treatmentPathways.csv"),
                                      show_col_types = FALSE)
-  checkmate::assertCharacter(uploadedFiles)
+  uploadedFilesPP <- list.files(testFilesPP,
+                                pattern = ".zip",
+                                full.names = TRUE,
+                                recursive = TRUE)
+  checkmate::assertFileExists(uploadedFilesIP)
+  checkmate::assertFileExists(uploadedFilesPP[1])
   checkmate::assertTibble(treatmentPathways_test)
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
 
   # Extract
-  testData <- joinDatabase(fileDataPath  = uploadedFiles,
-                           package = "IncidencePrevalence",
-                           versionData = "0.6.0",
-                           csvLocation = csvLocation)
+  testData <- joinDatabase(fileDataPath  = uploadedFilesIP,
+                             package = "IncidencePrevalence",
+                             versionData = "0.6.0",
+                             csvLocation = csvLocation)
   testData[["treatmentPathways_test"]] <- treatmentPathways_test
+  testDataPP <- joinDatabase(fileDataPath  = uploadedFilesPP[1],
+                             package = "PatientProfiles",
+                             versionData = "0.5.1",
+                             csvLocation = csvLocation)
+
+  testData <- c(testData, testDataPP)
   unlink(csvLocation, recursive = TRUE)
   return(testData)
 

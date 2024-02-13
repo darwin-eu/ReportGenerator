@@ -5,6 +5,8 @@ incidence_estimates_test <- testData$incidence_estimates
 prevalence_attrition_test <- testData$prevalence_attrition
 prevalence_estimates_test <- testData$prevalence_estimates
 treatmentPathways_test <- testData$treatmentPathways_test
+summarisedCharacteristics <- testData$`Summarised Characteristics`
+summarisedCharacteristicsLSC <- testData$`Summarised Large Scale Characteristics`
 
 test_that("datasetLoad IncPrev", {
   testServer(reportGenerator(), {
@@ -154,9 +156,11 @@ test_that("reset data", {
     session$setInputs(resetData = TRUE)
     expect_equal(uploadedFiles$dataIP, NULL)
     expect_equal(uploadedFiles$dataTP, NULL)
+    expect_equal(uploadedFiles$dataPP, NULL)
     expect_equal(itemsList$objects, NULL)
     expect_s3_class(datasetLoadServer("IncidencePrevalence"), "shiny.render.function")
     expect_s3_class(datasetLoadServer("TreatmentPatterns"), "shiny.render.function")
+    expect_s3_class(datasetLoadServer("PatientProfiles"), "shiny.render.function")
   })
 })
 
@@ -638,6 +642,19 @@ test_that("lockTreatmentSankey FALSE", {
                       dataVersionTP = "2.5.2",
                       lockTreatmentSankey = FALSE)
     testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
+  })
+})
+
+test_that("summarised Characteristics and LSC", {
+  testServer(reportGenerator(), {
+    expect_s3_class(characteristicsUI("characteristics",
+                                      dataset = summarisedCharacteristics), "shiny.tag.list")
+    expect_s3_class(characteristicsServer("characteristics",
+                                          dataset = summarisedCharacteristics), "reactiveVal")
+    expect_s3_class(characteristicsUI("lsc",
+                                      dataset = summarisedCharacteristicsLSC), "shiny.tag.list")
+    expect_s3_class(characteristicsServer("lsc",
+                                          dataset = summarisedCharacteristicsLSC), "reactiveVal")
   })
 })
 

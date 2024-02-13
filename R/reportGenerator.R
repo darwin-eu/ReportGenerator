@@ -200,7 +200,9 @@ reportGenerator <- function() {
     observeEvent(input$resetData, {
       # if (!is.null(uploadedFiles)) {
       itemsList$objects <- NULL
-      uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
+      uploadedFiles <- reactiveValues(dataIP = NULL,
+                                      dataTP = NULL,
+                                      dataPP = NULL)
       dataReport <- reactiveValues()
       updateTabsetPanel(session, "mainPanel",
                         selected = "Item selection")
@@ -1138,8 +1140,8 @@ reportGenerator <- function() {
 
     # PatientProfiles
 
-    dataCharacteristics<- characteristicsServer(id = "characteristics",
-                                              dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
+    dataCharacteristics <- characteristicsServer(id = "characteristics",
+                                                 dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
 
     observe({
       for (key in names(dataCharacteristics())) {
