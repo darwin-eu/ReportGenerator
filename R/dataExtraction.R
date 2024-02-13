@@ -137,14 +137,14 @@ loadFileData <- function(data, fileName, configData, configDataTypes, resultsDat
       configColumns <- configData[[val]]
       configColumns <- unlist(configColumns$names)
       if (all(configColumns %in% resultsColumns)) {
-        if (!('cdm_name' %in% colnames(resultsData))) {
+        if (!('cdm_name' %in% resultsColumns)) {
           resultsData <- mutate(resultsData,
-                                cdm_name = i)
+                                cdm_name = databaseName)
         }
         message(paste0(val, ": match yes"))
         data[[val]] <- bind_rows(data[[val]], resultsData)
       }
-    } else if (val == "Summary characteristics") {
+    } else if (val == "Summarised Characteristics") {
       configColumns <- configData[[val]]
       configColumns <- unlist(configColumns$names)
       if (all(configColumns %in% resultsColumns)) {
@@ -234,13 +234,6 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     configData[[package]][[version]][["incidence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
     configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
     write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-
-    # prevalenceAttritionPath <- csvFiles[stringr::str_detect(csvFiles, "prevalence_attrition")]
-    # prevalenceAttrition <- read_csv(prevalenceAttritionPath, show_col_types = FALSE)
-    # columnNamesPrevalenceAttrition <- setdiff(names(prevalenceAttrition), names(prevalenceEstimates))
-    # configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-    # configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
-    # write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
     unlink(csvLocation, recursive = TRUE)
 

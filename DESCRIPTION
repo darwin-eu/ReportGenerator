@@ -44,7 +44,8 @@ Imports:
     here,
     duckdb,
     DT,
-    TreatmentPatterns (>= 2.6.0)
+    TreatmentPatterns (>= 2.6.0),
+    PatientProfiles
 Suggests:
     testthat,
     rmarkdown,

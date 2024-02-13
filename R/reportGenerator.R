@@ -18,7 +18,7 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
-#' @import dplyr shiny shinydashboard shinyWidgets officer flextable waldo readr yaml googleVis TreatmentPatterns
+#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml googleVis TreatmentPatterns PatientProfiles
 #' @importFrom sortable bucket_list add_rank_list
 #' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @importFrom utils read.csv tail unzip
@@ -102,7 +102,10 @@ reportGenerator <- function() {
     datasetLoadServer("CohortSurvival")
 
     # ReactiveValues
-    uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
+    uploadedFiles <- reactiveValues(dataIP = NULL,
+                                    dataTP = NULL,
+                                    dataPP = NULL,
+                                    dataCS = NULL)
     itemsList <- reactiveValues(objects = NULL)
 
     # Check input data
@@ -1207,6 +1210,31 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'failurePlot-captionCumulativeIncidence'
     })
+
+    # PatientProfiles
+    dataCharacteristics<- characteristicsServer(id = "characteristics",
+                                              dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
+
+    observe({
+      for (key in names(dataCharacteristics())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataCharacteristics()
+      }
+    }) %>%
+      bindEvent(dataCharacteristics())
+
+    dataLSC <- characteristicsServer(id = "lsc",
+                                     dataset = reactive(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
+
+    observe({
+      for (key in names(dataLSC())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataLSC()
+      }
+    }) %>%
+      bindEvent(dataLSC())
 
     # Update according to facet prevalence
 

@@ -72,13 +72,13 @@ createSankeyDiagram:
     - treatmentPathways
   options: TRUE, FALSE
 summaryCharacteristics:
-  title: "Summary Characteristics"
-  function: gtCharacteristics(`Summary characteristics`)
+  title: "Summarised Characteristics"
+  function: gtCharacteristics(summarisedCharacteristics)
   type:
-    - Summary Characteristics
+    - Summarised Characteristics
 Summarised Large Scale Characteristics:
   title: "Summarised Large Scale Characteristics"
-  function: summarisedLSC(`Summarised Large Scale Characteristics`)
+  function: gtCharacteristics(summarisedCharacteristics)
   type:
     - Summarised Large Scale Characteristics
 Survival table:

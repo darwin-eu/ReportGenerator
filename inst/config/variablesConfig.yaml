@@ -75,7 +75,7 @@ TreatmentPatterns:
       names: []
 PatientProfiles:
   0.5.1:
-    Summary Characteristics:
+    Summarised Characteristics:
       names:
       - cdm_name
       - result_type
