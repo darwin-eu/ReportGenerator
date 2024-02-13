@@ -1,0 +1,1106 @@
+"cdm_name","result_type","group_name","group_level","strata_name","strata_level","variable","variable_level","variable_type","estimate_type","estimate"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Number subjects",NA,"numeric","count","166"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Number records",NA,NA,"count","166"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort start date",NA,"date","min","2012-01-02"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort start date",NA,"date","q05","2012-01-30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort start date",NA,"date","q25","2013-01-07"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort start date",NA,"date","median","2015-03-22"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort start date",NA,"date","q75","2017-08-19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort start date",NA,"date","q95","2020-09-02"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort start date",NA,"date","max","2022-04-13"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort end date",NA,"date","min","2012-09-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort end date",NA,"date","q05","2016-10-08"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort end date",NA,"date","q25","2019-03-08"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort end date",NA,"date","median","2022-08-30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort end date",NA,"date","q75","2023-11-22"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort end date",NA,"date","q95","2024-01-12"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Cohort end date",NA,"date","max","2024-01-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Sex","Female","categorical","count","37"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Sex","Female","categorical","percentage","22.289156626506"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Sex","Male","categorical","count","129"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Sex","Male","categorical","percentage","77.710843373494"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Age",NA,"numeric","min","24"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Age",NA,"numeric","q05","36"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Age",NA,"numeric","q25","48"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Age",NA,"numeric","median","53"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Age",NA,"numeric","q75","60"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Age",NA,"numeric","q95","70.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Age",NA,"numeric","max","89"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Age",NA,"numeric","mean","53.4518072289157"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Age",NA,"numeric","sd","10.4188391308889"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Prior observation",NA,"numeric","min","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Prior observation",NA,"numeric","q05","1"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Prior observation",NA,"numeric","q25","178.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Prior observation",NA,"numeric","median","1964.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Prior observation",NA,"numeric","q75","2843"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Prior observation",NA,"numeric","q95","4250.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Prior observation",NA,"numeric","max","5897"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Prior observation",NA,"numeric","mean","1801.93975903614"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Prior observation",NA,"numeric","sd","1515.53274840914"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Future observation",NA,"numeric","min","62"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Future observation",NA,"numeric","q05","224.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Future observation",NA,"numeric","q25","1111"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Future observation",NA,"numeric","median","2021"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Future observation",NA,"numeric","q75","3250.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Future observation",NA,"numeric","q95","4220.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Future observation",NA,"numeric","max","4388"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Future observation",NA,"numeric","mean","2148.0421686747"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Future observation",NA,"numeric","sd","1270.20710004271"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","51"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","30.7228915662651"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","63"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage","37.9518072289157"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Alcoholism","binary","count","35"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage","21.0843373493976"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Hypertension","binary","count","27"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Hypertension","binary","percentage","16.2650602409639"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Hiv","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Hiv","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage","3.6144578313253"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Diabetes","binary","count","14"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Diabetes","binary","percentage","8.43373493975904"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Fattyliver","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","Overall","Overall","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Number subjects",NA,"numeric","count","27"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Number records",NA,NA,"count","27"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort start date",NA,"date","min","2012-01-02"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort start date",NA,"date","q05","2012-02-21"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort start date",NA,"date","q25","2012-11-13"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort start date",NA,"date","median","2014-02-28"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort start date",NA,"date","q75","2015-11-26"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort start date",NA,"date","q95","2019-03-19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort start date",NA,"date","max","2022-03-02"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort end date",NA,"date","min","2013-02-19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort end date",NA,"date","q05","2018-04-24"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort end date",NA,"date","q25","2020-08-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort end date",NA,"date","median","2023-03-19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort end date",NA,"date","q75","2023-10-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort end date",NA,"date","q95","2024-01-13"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Cohort end date",NA,"date","max","2024-01-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Sex","Female","categorical","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Sex","Female","categorical","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Sex","Male","categorical","count","23"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Sex","Male","categorical","percentage","85.1851851851852"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Age",NA,"numeric","min","24"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Age",NA,"numeric","q05","29.6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Age",NA,"numeric","q25","34"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Age",NA,"numeric","median","38"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Age",NA,"numeric","q75","42"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Age",NA,"numeric","q95","43.7"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Age",NA,"numeric","max","44"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Age",NA,"numeric","mean","37.4814814814815"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Age",NA,"numeric","sd","5.05637731651343"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Prior observation",NA,"numeric","min","1"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Prior observation",NA,"numeric","q05","7.6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Prior observation",NA,"numeric","q25","319"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Prior observation",NA,"numeric","median","1516"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Prior observation",NA,"numeric","q75","2702"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Prior observation",NA,"numeric","q95","3431.3"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Prior observation",NA,"numeric","max","3699"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Prior observation",NA,"numeric","mean","1567.55555555556"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Prior observation",NA,"numeric","sd","1295.83805176814"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Future observation",NA,"numeric","min","113"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Future observation",NA,"numeric","q05","208.9"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Future observation",NA,"numeric","q25","1806"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Future observation",NA,"numeric","median","2717"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Future observation",NA,"numeric","q75","3797"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Future observation",NA,"numeric","q95","4177.3"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Future observation",NA,"numeric","max","4315"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Future observation",NA,"numeric","mean","2593"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Future observation",NA,"numeric","sd","1376.18181379329"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Alcoholism","binary","count","6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage","22.2222222222222"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Hypertension","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Hypertension","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Hiv","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Hiv","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Diabetes","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Diabetes","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Fattyliver","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","18 to 44","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Number subjects",NA,"numeric","count","118"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Number records",NA,NA,"count","118"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort start date",NA,"date","min","2012-01-03"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort start date",NA,"date","q05","2012-01-30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort start date",NA,"date","q25","2013-01-15"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort start date",NA,"date","median","2015-08-03"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort start date",NA,"date","q75","2017-08-19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort start date",NA,"date","q95","2020-02-26"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort start date",NA,"date","max","2022-04-13"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort end date",NA,"date","min","2012-09-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort end date",NA,"date","q05","2017-02-04"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort end date",NA,"date","q25","2018-12-30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort end date",NA,"date","median","2022-12-14"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort end date",NA,"date","q75","2023-12-08"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort end date",NA,"date","q95","2024-01-13"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Cohort end date",NA,"date","max","2024-01-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Sex","Female","categorical","count","26"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Sex","Female","categorical","percentage","22.0338983050847"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Sex","Male","categorical","count","92"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Sex","Male","categorical","percentage","77.9661016949153"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Age",NA,"numeric","min","45"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Age",NA,"numeric","q05","46"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Age",NA,"numeric","q25","50"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Age",NA,"numeric","median","53"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Age",NA,"numeric","q75","58"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Age",NA,"numeric","q95","63"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Age",NA,"numeric","max","64"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Age",NA,"numeric","mean","54"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Age",NA,"numeric","sd","5.12243264858761"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Prior observation",NA,"numeric","min","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Prior observation",NA,"numeric","q05","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Prior observation",NA,"numeric","q25","109.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Prior observation",NA,"numeric","median","1964.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Prior observation",NA,"numeric","q75","2843"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Prior observation",NA,"numeric","q95","4217.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Prior observation",NA,"numeric","max","5897"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Prior observation",NA,"numeric","mean","1781.30508474576"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Prior observation",NA,"numeric","sd","1552.67384211042"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Future observation",NA,"numeric","min","62"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Future observation",NA,"numeric","q05","251.8"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Future observation",NA,"numeric","q25","1111"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Future observation",NA,"numeric","median","1998.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Future observation",NA,"numeric","q75","2911.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Future observation",NA,"numeric","q95","4228.9"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Future observation",NA,"numeric","max","4388"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Future observation",NA,"numeric","mean","2104.60169491525"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Future observation",NA,"numeric","sd","1231.81945299765"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","42"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","35.5932203389831"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","48"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage","40.6779661016949"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Alcoholism","binary","count","27"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage","22.8813559322034"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Hypertension","binary","count","18"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Hypertension","binary","percentage","15.2542372881356"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Hiv","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Hiv","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Diabetes","binary","count","9"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Diabetes","binary","percentage","7.6271186440678"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Fattyliver","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","45 to 64","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Number subjects",NA,"numeric","count","21"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Number records",NA,NA,"count","21"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort start date",NA,"date","min","2012-01-09"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort start date",NA,"date","q05","2012-01-30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort start date",NA,"date","q25","2013-01-03"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort start date",NA,"date","median","2014-08-23"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort start date",NA,"date","q75","2018-05-29"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort start date",NA,"date","q95","2021-05-25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort start date",NA,"date","max","2022-04-06"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort end date",NA,"date","min","2015-08-17"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort end date",NA,"date","q05","2016-08-18"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort end date",NA,"date","q25","2018-08-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort end date",NA,"date","median","2021-04-24"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort end date",NA,"date","q75","2022-09-24"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort end date",NA,"date","q95","2023-07-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Cohort end date",NA,"date","max","2024-01-08"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Sex","Female","categorical","count","7"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Sex","Female","categorical","percentage","33.3333333333333"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Sex","Male","categorical","count","14"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Sex","Male","categorical","percentage","66.6666666666667"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Age",NA,"numeric","min","65"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Age",NA,"numeric","q05","65"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Age",NA,"numeric","q25","66"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Age",NA,"numeric","median","70"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Age",NA,"numeric","q75","73"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Age",NA,"numeric","q95","84"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Age",NA,"numeric","max","89"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Age",NA,"numeric","mean","70.9047619047619"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Age",NA,"numeric","sd","6.54908208762695"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Prior observation",NA,"numeric","min","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Prior observation",NA,"numeric","q05","1"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Prior observation",NA,"numeric","q25","1367"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Prior observation",NA,"numeric","median","2243"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Prior observation",NA,"numeric","q75","3109"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Prior observation",NA,"numeric","q95","4759"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Prior observation",NA,"numeric","max","4797"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Prior observation",NA,"numeric","mean","2219.2380952381"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Prior observation",NA,"numeric","sd","1550.25591128568"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Future observation",NA,"numeric","min","171"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Future observation",NA,"numeric","q05","174"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Future observation",NA,"numeric","q25","1006"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Future observation",NA,"numeric","median","1420"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Future observation",NA,"numeric","q75","2481"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Future observation",NA,"numeric","q95","3826"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Future observation",NA,"numeric","max","3849"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Future observation",NA,"numeric","mean","1820.04761904762"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Future observation",NA,"numeric","sd","1257.25154508517"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","7"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","33.3333333333333"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","12"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage","57.1428571428571"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Alcoholism","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Hypertension","binary","count","8"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Hypertension","binary","percentage","38.0952380952381"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Hiv","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Hiv","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Diabetes","binary","count","5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Diabetes","binary","percentage","23.8095238095238"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Fattyliver","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","age_group","65 to 150","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Number subjects",NA,"numeric","count","37"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Number records",NA,NA,"count","37"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort start date",NA,"date","min","2012-01-11"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort start date",NA,"date","q05","2012-02-02"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort start date",NA,"date","q25","2012-12-07"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort start date",NA,"date","median","2014-11-20"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort start date",NA,"date","q75","2018-02-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort start date",NA,"date","q95","2020-11-22"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort start date",NA,"date","max","2022-04-06"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort end date",NA,"date","min","2012-09-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort end date",NA,"date","q05","2018-08-26"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort end date",NA,"date","q25","2020-07-15"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort end date",NA,"date","median","2023-03-12"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort end date",NA,"date","q75","2023-12-30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort end date",NA,"date","q95","2024-01-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Cohort end date",NA,"date","max","2024-01-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Sex","Female","categorical","count","37"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Sex","Female","categorical","percentage","100"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Sex","Male","categorical","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Sex","Male","categorical","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Age",NA,"numeric","min","40"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Age",NA,"numeric","q05","43"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Age",NA,"numeric","q25","50"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Age",NA,"numeric","median","56"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Age",NA,"numeric","q75","63"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Age",NA,"numeric","q95","75.2"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Age",NA,"numeric","max","84"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Age",NA,"numeric","mean","57.5675675675676"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Age",NA,"numeric","sd","10.4124405841723"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Prior observation",NA,"numeric","min","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Prior observation",NA,"numeric","q05","3.2"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Prior observation",NA,"numeric","q25","588"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Prior observation",NA,"numeric","median","2569"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Prior observation",NA,"numeric","q75","3337"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Prior observation",NA,"numeric","q95","4549.4"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Prior observation",NA,"numeric","max","4797"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Prior observation",NA,"numeric","mean","2230.27027027027"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Prior observation",NA,"numeric","sd","1599.15181769463"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Future observation",NA,"numeric","min","62"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Future observation",NA,"numeric","q05","228.6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Future observation",NA,"numeric","q25","1232"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Future observation",NA,"numeric","median","2447"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Future observation",NA,"numeric","q75","3720"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Future observation",NA,"numeric","q95","4316.6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Future observation",NA,"numeric","max","4331"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Future observation",NA,"numeric","mean","2368.62162162162"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Future observation",NA,"numeric","sd","1390.76458490667"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","7"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","18.9189189189189"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","18"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage","48.6486486486486"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Alcoholism","binary","count","5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage","13.5135135135135"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Hypertension","binary","count","13"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Hypertension","binary","percentage","35.1351351351351"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Hiv","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Hiv","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Diabetes","binary","count","5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Diabetes","binary","percentage","13.5135135135135"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Fattyliver","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Female","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Number subjects",NA,"numeric","count","129"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Number records",NA,NA,"count","129"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort start date",NA,"date","min","2012-01-02"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort start date",NA,"date","q05","2012-01-24"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort start date",NA,"date","q25","2013-01-28"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort start date",NA,"date","median","2015-05-01"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort start date",NA,"date","q75","2017-07-07"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort start date",NA,"date","q95","2020-06-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort start date",NA,"date","max","2022-04-13"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort end date",NA,"date","min","2013-02-19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort end date",NA,"date","q05","2016-07-31"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort end date",NA,"date","q25","2018-09-29"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort end date",NA,"date","median","2022-03-15"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort end date",NA,"date","q75","2023-11-05"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort end date",NA,"date","q95","2024-01-04"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Cohort end date",NA,"date","max","2024-01-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Sex","Female","categorical","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Sex","Female","categorical","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Sex","Male","categorical","count","129"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Sex","Male","categorical","percentage","100"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Age",NA,"numeric","min","24"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Age",NA,"numeric","q05","34"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Age",NA,"numeric","q25","47"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Age",NA,"numeric","median","52"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Age",NA,"numeric","q75","58"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Age",NA,"numeric","q95","67.6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Age",NA,"numeric","max","89"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Age",NA,"numeric","mean","52.2713178294574"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Age",NA,"numeric","sd","10.155626471617"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Prior observation",NA,"numeric","min","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Prior observation",NA,"numeric","q05","1"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Prior observation",NA,"numeric","q25","130"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Prior observation",NA,"numeric","median","1743"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Prior observation",NA,"numeric","q75","2711"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Prior observation",NA,"numeric","q95","3997"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Prior observation",NA,"numeric","max","5897"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Prior observation",NA,"numeric","mean","1679.08527131783"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Prior observation",NA,"numeric","sd","1474.20767400984"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Future observation",NA,"numeric","min","97"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Future observation",NA,"numeric","q05","228.8"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Future observation",NA,"numeric","q25","1102"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Future observation",NA,"numeric","median","1990"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Future observation",NA,"numeric","q75","3040"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Future observation",NA,"numeric","q95","4166.4"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Future observation",NA,"numeric","max","4388"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Future observation",NA,"numeric","mean","2084.77519379845"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Future observation",NA,"numeric","sd","1231.95273879717"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","44"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","34.1085271317829"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","45"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage","34.8837209302326"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Alcoholism","binary","count","30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage","23.2558139534884"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Hypertension","binary","count","14"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Hypertension","binary","percentage","10.8527131782946"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Hiv","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Hiv","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Diabetes","binary","count","9"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Diabetes","binary","percentage","6.97674418604651"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Fattyliver","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","sex","Male","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Number subjects",NA,"numeric","count","40"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Number records",NA,NA,"count","40"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort start date",NA,"date","min","2012-01-02"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort start date",NA,"date","q05","2012-01-09"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort start date",NA,"date","q25","2012-02-01"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort start date",NA,"date","median","2012-04-28"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort start date",NA,"date","q75","2012-07-05"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort start date",NA,"date","q95","2012-11-19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort start date",NA,"date","max","2012-12-13"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort end date",NA,"date","min","2012-09-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort end date",NA,"date","q05","2015-02-25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort end date",NA,"date","q25","2018-06-29"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort end date",NA,"date","median","2021-06-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort end date",NA,"date","q75","2023-10-29"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort end date",NA,"date","q95","2024-01-15"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Cohort end date",NA,"date","max","2024-01-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Sex","Female","categorical","count","11"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Sex","Female","categorical","percentage","27.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Sex","Male","categorical","count","29"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Sex","Male","categorical","percentage","72.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Age",NA,"numeric","min","24"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Age",NA,"numeric","q05","38.85"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Age",NA,"numeric","q25","47.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Age",NA,"numeric","median","52.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Age",NA,"numeric","q75","58.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Age",NA,"numeric","q95","66.2"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Age",NA,"numeric","max","72"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Age",NA,"numeric","mean","52.45"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Age",NA,"numeric","sd","9.50020242699313"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Prior observation",NA,"numeric","min","4"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Prior observation",NA,"numeric","q05","33.65"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Prior observation",NA,"numeric","q25","741.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Prior observation",NA,"numeric","median","2351.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Prior observation",NA,"numeric","q75","2571"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Prior observation",NA,"numeric","q95","2708.2"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Prior observation",NA,"numeric","max","2738"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Prior observation",NA,"numeric","mean","1775.975"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Prior observation",NA,"numeric","sd","1005.65843942905"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Future observation",NA,"numeric","min","218"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Future observation",NA,"numeric","q05","928.9"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Future observation",NA,"numeric","q25","2270.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Future observation",NA,"numeric","median","3423.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Future observation",NA,"numeric","q75","4210.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Future observation",NA,"numeric","q95","4332.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Future observation",NA,"numeric","max","4388"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Future observation",NA,"numeric","mean","3080.825"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Future observation",NA,"numeric","sd","1228.64782643777"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","8"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","20"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","12"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage","30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Alcoholism","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Hypertension","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Hypertension","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Hiv","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Hiv","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Diabetes","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Diabetes","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Fattyliver","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2012","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Number subjects",NA,"numeric","count","18"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Number records",NA,NA,"count","18"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort start date",NA,"date","min","2013-01-03"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort start date",NA,"date","q05","2013-01-06"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort start date",NA,"date","q25","2013-01-17"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort start date",NA,"date","median","2013-04-11"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort start date",NA,"date","q75","2013-06-22"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort start date",NA,"date","q95","2013-11-24"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort start date",NA,"date","max","2013-11-28"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort end date",NA,"date","min","2016-06-14"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort end date",NA,"date","q05","2016-08-08"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort end date",NA,"date","q25","2019-04-20"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort end date",NA,"date","median","2023-08-09"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort end date",NA,"date","q75","2024-01-03"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort end date",NA,"date","q95","2024-01-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Cohort end date",NA,"date","max","2024-01-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Sex","Female","categorical","count","5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Sex","Female","categorical","percentage","27.7777777777778"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Sex","Male","categorical","count","13"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Sex","Male","categorical","percentage","72.2222222222222"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Age",NA,"numeric","min","37"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Age",NA,"numeric","q05","37"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Age",NA,"numeric","q25","45"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Age",NA,"numeric","median","49.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Age",NA,"numeric","q75","63.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Age",NA,"numeric","q95","70.6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Age",NA,"numeric","max","74"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Age",NA,"numeric","mean","52.6111111111111"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Age",NA,"numeric","sd","11.7229733675021"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Prior observation",NA,"numeric","min","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Prior observation",NA,"numeric","q05","32.3"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Prior observation",NA,"numeric","q25","2303.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Prior observation",NA,"numeric","median","2762.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Prior observation",NA,"numeric","q75","2924"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Prior observation",NA,"numeric","q95","3126.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Prior observation",NA,"numeric","max","3224"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Prior observation",NA,"numeric","mean","2311.88888888889"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Prior observation",NA,"numeric","sd","1046.34742227645"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Future observation",NA,"numeric","min","1207"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Future observation",NA,"numeric","q05","1240.15"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Future observation",NA,"numeric","q25","2294"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Future observation",NA,"numeric","median","3696.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Future observation",NA,"numeric","q75","3821.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Future observation",NA,"numeric","q95","3938.7"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Future observation",NA,"numeric","max","4005"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Future observation",NA,"numeric","mean","3140.22222222222"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Future observation",NA,"numeric","sd","1002.94405190012"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","33.3333333333333"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage","27.7777777777778"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Alcoholism","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Hypertension","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Hypertension","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Hiv","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Hiv","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Diabetes","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Diabetes","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Fattyliver","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2013","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Number subjects",NA,"numeric","count","20"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Number records",NA,NA,"count","20"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort start date",NA,"date","min","2014-02-02"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort start date",NA,"date","q05","2014-02-03"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort start date",NA,"date","q25","2014-03-26"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort start date",NA,"date","median","2014-06-26"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort start date",NA,"date","q75","2014-08-19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort start date",NA,"date","q95","2014-11-01"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort start date",NA,"date","max","2014-11-20"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort end date",NA,"date","min","2017-06-29"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort end date",NA,"date","q05","2017-12-28"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort end date",NA,"date","q25","2019-09-25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort end date",NA,"date","median","2021-10-02"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort end date",NA,"date","q75","2023-10-20"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort end date",NA,"date","q95","2023-12-29"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Cohort end date",NA,"date","max","2024-01-08"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Sex","Female","categorical","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Sex","Female","categorical","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Sex","Male","categorical","count","17"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Sex","Male","categorical","percentage","85"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Age",NA,"numeric","min","31"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Age",NA,"numeric","q05","32.9"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Age",NA,"numeric","q25","43"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Age",NA,"numeric","median","52.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Age",NA,"numeric","q75","60.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Age",NA,"numeric","q95","71.45"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Age",NA,"numeric","max","80"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Age",NA,"numeric","mean","52"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Age",NA,"numeric","sd","13.1188895550612"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Prior observation",NA,"numeric","min","1"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Prior observation",NA,"numeric","q05","3.85"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Prior observation",NA,"numeric","q25","253.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Prior observation",NA,"numeric","median","1734.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Prior observation",NA,"numeric","q75","3345"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Prior observation",NA,"numeric","q95","3413.6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Prior observation",NA,"numeric","max","3425"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Prior observation",NA,"numeric","mean","1720.7"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Prior observation",NA,"numeric","sd","1458.28977338453"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Future observation",NA,"numeric","min","1102"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Future observation",NA,"numeric","q05","1226.45"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Future observation",NA,"numeric","q25","1896.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Future observation",NA,"numeric","median","2639.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Future observation",NA,"numeric","q75","3419"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Future observation",NA,"numeric","q95","3560.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Future observation",NA,"numeric","max","3627"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Future observation",NA,"numeric","mean","2607.6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Future observation",NA,"numeric","sd","880.922745881003"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","7"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","35"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","8"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage","40"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Alcoholism","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Hypertension","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Hypertension","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Hiv","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Hiv","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Diabetes","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Diabetes","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Fattyliver","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2014","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Number subjects",NA,"numeric","count","19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Number records",NA,NA,"count","19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort start date",NA,"date","min","2015-01-07"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort start date",NA,"date","q05","2015-01-08"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort start date",NA,"date","q25","2015-03-22"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort start date",NA,"date","median","2015-05-06"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort start date",NA,"date","q75","2015-08-21"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort start date",NA,"date","q95","2015-11-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort start date",NA,"date","max","2015-12-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort end date",NA,"date","min","2015-05-30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort end date",NA,"date","q05","2016-06-07"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort end date",NA,"date","q25","2018-06-06"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort end date",NA,"date","median","2020-04-17"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort end date",NA,"date","q75","2022-05-26"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort end date",NA,"date","q95","2023-10-06"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Cohort end date",NA,"date","max","2024-01-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Sex","Female","categorical","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Sex","Female","categorical","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Sex","Male","categorical","count","16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Sex","Male","categorical","percentage","84.2105263157895"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Age",NA,"numeric","min","32"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Age",NA,"numeric","q05","32.9"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Age",NA,"numeric","q25","46.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Age",NA,"numeric","median","54"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Age",NA,"numeric","q75","58"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Age",NA,"numeric","q95","62.1"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Age",NA,"numeric","max","63"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Age",NA,"numeric","mean","51.2105263157895"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Age",NA,"numeric","sd","9.60658886950005"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Prior observation",NA,"numeric","min","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Prior observation",NA,"numeric","q05","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Prior observation",NA,"numeric","q25","22.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Prior observation",NA,"numeric","median","728"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Prior observation",NA,"numeric","q75","2393"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Prior observation",NA,"numeric","q95","3830.4"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Prior observation",NA,"numeric","max","3870"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Prior observation",NA,"numeric","mean","1338.21052631579"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Prior observation",NA,"numeric","sd","1402.30257390191"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Future observation",NA,"numeric","min","142"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Future observation",NA,"numeric","q05","414.7"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Future observation",NA,"numeric","q25","1002.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Future observation",NA,"numeric","median","1809"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Future observation",NA,"numeric","q75","2595"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Future observation",NA,"numeric","q95","3046.2"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Future observation",NA,"numeric","max","3102"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Future observation",NA,"numeric","mean","1806.94736842105"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Future observation",NA,"numeric","sd","924.805052951654"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","31.5789473684211"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","8"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage","42.1052631578947"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Alcoholism","binary","count","6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage","31.5789473684211"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Hypertension","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Hypertension","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Hiv","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Hiv","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Diabetes","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Diabetes","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Fattyliver","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2015","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Number subjects",NA,"numeric","count","16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Number records",NA,NA,"count","16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort start date",NA,"date","min","2016-01-11"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort start date",NA,"date","q05","2016-01-27"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort start date",NA,"date","q25","2016-03-06"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort start date",NA,"date","median","2016-07-02"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort start date",NA,"date","q75","2016-09-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort start date",NA,"date","q95","2016-12-02"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort start date",NA,"date","max","2016-12-05"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort end date",NA,"date","min","2017-03-11"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort end date",NA,"date","q05","2017-04-06"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort end date",NA,"date","q25","2018-06-26"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort end date",NA,"date","median","2023-05-09"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort end date",NA,"date","q75","2023-11-30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort end date",NA,"date","q95","2023-12-30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Cohort end date",NA,"date","max","2023-12-30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Sex","Female","categorical","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Sex","Female","categorical","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Sex","Male","categorical","count","14"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Sex","Male","categorical","percentage","87.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Age",NA,"numeric","min","47"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Age",NA,"numeric","q05","49.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Age",NA,"numeric","q25","52"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Age",NA,"numeric","median","56"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Age",NA,"numeric","q75","60.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Age",NA,"numeric","q95","62.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Age",NA,"numeric","max","63"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Age",NA,"numeric","mean","56.125"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Age",NA,"numeric","sd","4.8425200051213"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Prior observation",NA,"numeric","min","9"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Prior observation",NA,"numeric","q05","45"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Prior observation",NA,"numeric","q25","213.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Prior observation",NA,"numeric","median","1612.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Prior observation",NA,"numeric","q75","3557.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Prior observation",NA,"numeric","q95","4222.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Prior observation",NA,"numeric","max","4264"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Prior observation",NA,"numeric","mean","1880"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Prior observation",NA,"numeric","sd","1748.93910700173"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Future observation",NA,"numeric","min","339"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Future observation",NA,"numeric","q05","354.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Future observation",NA,"numeric","q25","721.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Future observation",NA,"numeric","median","2453.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Future observation",NA,"numeric","q75","2644.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Future observation",NA,"numeric","q95","2861.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Future observation",NA,"numeric","max","2871"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Future observation",NA,"numeric","mean","1770.9375"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Future observation",NA,"numeric","sd","1068.17142623894"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","31.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage","37.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Alcoholism","binary","count","5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage","31.25"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Hypertension","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Hypertension","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Hiv","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Hiv","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Diabetes","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Diabetes","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Fattyliver","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2016","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Number subjects",NA,"numeric","count","15"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Number records",NA,NA,"count","15"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort start date",NA,"date","min","2017-02-21"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort start date",NA,"date","q05","2017-02-23"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort start date",NA,"date","q25","2017-04-04"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort start date",NA,"date","median","2017-05-27"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort start date",NA,"date","q75","2017-08-17"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort start date",NA,"date","q95","2017-10-31"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort start date",NA,"date","max","2017-11-19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort end date",NA,"date","min","2017-11-03"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort end date",NA,"date","q05","2017-11-30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort end date",NA,"date","q25","2018-08-12"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort end date",NA,"date","median","2021-04-24"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort end date",NA,"date","q75","2023-12-01"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort end date",NA,"date","q95","2024-01-03"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Cohort end date",NA,"date","max","2024-01-05"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Sex","Female","categorical","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Sex","Female","categorical","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Sex","Male","categorical","count","12"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Sex","Male","categorical","percentage","80"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Age",NA,"numeric","min","45"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Age",NA,"numeric","q05","45.7"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Age",NA,"numeric","q25","49.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Age",NA,"numeric","median","54"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Age",NA,"numeric","q75","60"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Age",NA,"numeric","q95","67.8"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Age",NA,"numeric","max","72"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Age",NA,"numeric","mean","55.2666666666667"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Age",NA,"numeric","sd","7.73181430072867"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Prior observation",NA,"numeric","min","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Prior observation",NA,"numeric","q05","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Prior observation",NA,"numeric","q25","141"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Prior observation",NA,"numeric","median","3264"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Prior observation",NA,"numeric","q75","3930"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Prior observation",NA,"numeric","q95","4564.1"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Prior observation",NA,"numeric","max","4646"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Prior observation",NA,"numeric","mean","2238.46666666667"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Prior observation",NA,"numeric","sd","2016.15620379355"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Future observation",NA,"numeric","min","119"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Future observation",NA,"numeric","q05","207.2"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Future observation",NA,"numeric","q25","442.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Future observation",NA,"numeric","median","1420"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Future observation",NA,"numeric","q75","2265.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Future observation",NA,"numeric","q95","2463.3"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Future observation",NA,"numeric","max","2499"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Future observation",NA,"numeric","mean","1437.46666666667"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Future observation",NA,"numeric","sd","927.5392072319"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","40"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage","33.3333333333333"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Alcoholism","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Hypertension","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Hypertension","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Hiv","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Hiv","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Diabetes","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Diabetes","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Fattyliver","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2017","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Number subjects",NA,"numeric","count","19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Number records",NA,NA,"count","19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort start date",NA,"date","min","2018-02-06"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort start date",NA,"date","q05","2018-02-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort start date",NA,"date","q25","2018-06-03"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort start date",NA,"date","median","2018-08-21"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort start date",NA,"date","q75","2018-10-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort start date",NA,"date","q95","2018-12-05"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort start date",NA,"date","max","2018-12-18"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort end date",NA,"date","min","2018-08-28"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort end date",NA,"date","q05","2019-02-19"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort end date",NA,"date","q25","2020-11-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort end date",NA,"date","median","2023-05-06"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort end date",NA,"date","q75","2023-12-12"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort end date",NA,"date","q95","2023-12-31"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Cohort end date",NA,"date","max","2024-01-06"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Sex","Female","categorical","count","6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Sex","Female","categorical","percentage","31.5789473684211"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Sex","Male","categorical","count","13"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Sex","Male","categorical","percentage","68.4210526315789"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Age",NA,"numeric","min","36"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Age",NA,"numeric","q05","41.4"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Age",NA,"numeric","q25","49.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Age",NA,"numeric","median","53"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Age",NA,"numeric","q75","60"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Age",NA,"numeric","q95","67.8"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Age",NA,"numeric","max","84"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Age",NA,"numeric","mean","54.5263157894737"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Age",NA,"numeric","sd","10.71534943202"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Prior observation",NA,"numeric","min","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Prior observation",NA,"numeric","q05","6.3"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Prior observation",NA,"numeric","q25","45.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Prior observation",NA,"numeric","median","1733"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Prior observation",NA,"numeric","q75","3941.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Prior observation",NA,"numeric","q95","4762.8"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Prior observation",NA,"numeric","max","4797"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Prior observation",NA,"numeric","mean","2007.10526315789"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Prior observation",NA,"numeric","sd","1967.73764327172"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Future observation",NA,"numeric","min","62"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Future observation",NA,"numeric","q05","254.6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Future observation",NA,"numeric","q25","812"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Future observation",NA,"numeric","median","1727"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Future observation",NA,"numeric","q75","1886"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Future observation",NA,"numeric","q95","1947.2"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Future observation",NA,"numeric","max","2012"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Future observation",NA,"numeric","mean","1355.84210526316"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Future observation",NA,"numeric","sd","648.149868056754"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","7"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","36.8421052631579"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","8"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage","42.1052631578947"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Alcoholism","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Hypertension","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Hypertension","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Hiv","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Hiv","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Diabetes","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Diabetes","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Fattyliver","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2018","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Number subjects",NA,"numeric","count","8"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Number records",NA,NA,"count","8"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort start date",NA,"date","min","2019-02-05"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort start date",NA,"date","q05","2019-02-27"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort start date",NA,"date","q25","2019-04-27"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort start date",NA,"date","median","2019-05-26"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort start date",NA,"date","q75","2019-09-10"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort start date",NA,"date","q95","2019-11-07"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort start date",NA,"date","max","2019-11-16"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort end date",NA,"date","min","2019-08-24"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort end date",NA,"date","q05","2019-11-30"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort end date",NA,"date","q25","2020-08-07"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort end date",NA,"date","median","2023-08-11"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort end date",NA,"date","q75","2023-09-20"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort end date",NA,"date","q95","2023-12-07"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Cohort end date",NA,"date","max","2023-12-24"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Sex","Female","categorical","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Sex","Female","categorical","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Sex","Male","categorical","count","7"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Sex","Male","categorical","percentage","87.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Age",NA,"numeric","min","29"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Age",NA,"numeric","q05","35.3"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Age",NA,"numeric","q25","48.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Age",NA,"numeric","median","50.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Age",NA,"numeric","q75","53.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Age",NA,"numeric","q95","78.15"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Age",NA,"numeric","max","89"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Age",NA,"numeric","mean","53.125"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Age",NA,"numeric","sd","16.7454684701777"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Prior observation",NA,"numeric","min","1"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Prior observation",NA,"numeric","q05","34.6"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Prior observation",NA,"numeric","q25","121.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Prior observation",NA,"numeric","median","1040.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Prior observation",NA,"numeric","q75","3006.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Prior observation",NA,"numeric","q95","3884.4"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Prior observation",NA,"numeric","max","3904"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Prior observation",NA,"numeric","mean","1598.375"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Prior observation",NA,"numeric","sd","1720.91113222037"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Future observation",NA,"numeric","min","113"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Future observation",NA,"numeric","q05","170.4"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Future observation",NA,"numeric","q25","304.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Future observation",NA,"numeric","median","1461"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Future observation",NA,"numeric","q75","1573.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Future observation",NA,"numeric","q95","1744.15"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Future observation",NA,"numeric","max","1783"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Future observation",NA,"numeric","mean","1077.75"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Future observation",NA,"numeric","sd","709.606279163714"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Cirrhosis","binary","count","5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage","62.5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Alcoholism","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Stds","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Stds","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Hypertension","binary","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Hypertension","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Hiv","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Hiv","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Kidneydisease","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Diabetes","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Diabetes","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Fattyliver","binary","count","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2019","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage","0"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Number subjects",NA,"numeric","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Number records",NA,NA,"count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort start date",NA,"date","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort start date",NA,"date","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort start date",NA,"date","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort start date",NA,"date","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort start date",NA,"date","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort start date",NA,"date","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort start date",NA,"date","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort end date",NA,"date","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort end date",NA,"date","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort end date",NA,"date","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort end date",NA,"date","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort end date",NA,"date","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort end date",NA,"date","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Cohort end date",NA,"date","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Sex","Female","categorical","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Sex","Female","categorical","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Sex","Male","categorical","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Sex","Male","categorical","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Age",NA,"numeric","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Age",NA,"numeric","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Age",NA,"numeric","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Age",NA,"numeric","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Age",NA,"numeric","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Age",NA,"numeric","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Age",NA,"numeric","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Age",NA,"numeric","mean",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Age",NA,"numeric","sd",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Prior observation",NA,"numeric","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Prior observation",NA,"numeric","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Prior observation",NA,"numeric","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Prior observation",NA,"numeric","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Prior observation",NA,"numeric","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Prior observation",NA,"numeric","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Prior observation",NA,"numeric","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Prior observation",NA,"numeric","mean",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Prior observation",NA,"numeric","sd",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Future observation",NA,"numeric","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Future observation",NA,"numeric","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Future observation",NA,"numeric","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Future observation",NA,"numeric","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Future observation",NA,"numeric","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Future observation",NA,"numeric","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Future observation",NA,"numeric","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Future observation",NA,"numeric","mean",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Future observation",NA,"numeric","sd",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Cirrhosis","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Alcoholism","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Stds","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Stds","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Hypertension","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Hypertension","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Hiv","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Hiv","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Kidneydisease","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Diabetes","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Diabetes","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Fattyliver","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2020","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Number subjects",NA,"numeric","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Number records",NA,NA,"count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort start date",NA,"date","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort start date",NA,"date","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort start date",NA,"date","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort start date",NA,"date","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort start date",NA,"date","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort start date",NA,"date","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort start date",NA,"date","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort end date",NA,"date","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort end date",NA,"date","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort end date",NA,"date","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort end date",NA,"date","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort end date",NA,"date","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort end date",NA,"date","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Cohort end date",NA,"date","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Sex","Female","categorical","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Sex","Female","categorical","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Sex","Male","categorical","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Sex","Male","categorical","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Age",NA,"numeric","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Age",NA,"numeric","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Age",NA,"numeric","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Age",NA,"numeric","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Age",NA,"numeric","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Age",NA,"numeric","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Age",NA,"numeric","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Age",NA,"numeric","mean",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Age",NA,"numeric","sd",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Prior observation",NA,"numeric","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Prior observation",NA,"numeric","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Prior observation",NA,"numeric","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Prior observation",NA,"numeric","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Prior observation",NA,"numeric","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Prior observation",NA,"numeric","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Prior observation",NA,"numeric","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Prior observation",NA,"numeric","mean",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Prior observation",NA,"numeric","sd",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Future observation",NA,"numeric","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Future observation",NA,"numeric","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Future observation",NA,"numeric","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Future observation",NA,"numeric","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Future observation",NA,"numeric","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Future observation",NA,"numeric","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Future observation",NA,"numeric","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Future observation",NA,"numeric","mean",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Future observation",NA,"numeric","sd",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Cirrhosis","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Alcoholism","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Stds","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Stds","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Hypertension","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Hypertension","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Hiv","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Hiv","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Kidneydisease","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Diabetes","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Diabetes","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Fattyliver","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2021","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Number subjects",NA,"numeric","count","<5"
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Number records",NA,NA,"count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort start date",NA,"date","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort start date",NA,"date","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort start date",NA,"date","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort start date",NA,"date","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort start date",NA,"date","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort start date",NA,"date","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort start date",NA,"date","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort end date",NA,"date","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort end date",NA,"date","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort end date",NA,"date","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort end date",NA,"date","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort end date",NA,"date","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort end date",NA,"date","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Cohort end date",NA,"date","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Sex","Female","categorical","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Sex","Female","categorical","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Sex","Male","categorical","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Sex","Male","categorical","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Age",NA,"numeric","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Age",NA,"numeric","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Age",NA,"numeric","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Age",NA,"numeric","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Age",NA,"numeric","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Age",NA,"numeric","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Age",NA,"numeric","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Age",NA,"numeric","mean",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Age",NA,"numeric","sd",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Prior observation",NA,"numeric","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Prior observation",NA,"numeric","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Prior observation",NA,"numeric","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Prior observation",NA,"numeric","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Prior observation",NA,"numeric","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Prior observation",NA,"numeric","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Prior observation",NA,"numeric","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Prior observation",NA,"numeric","mean",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Prior observation",NA,"numeric","sd",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Future observation",NA,"numeric","min",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Future observation",NA,"numeric","q05",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Future observation",NA,"numeric","q25",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Future observation",NA,"numeric","median",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Future observation",NA,"numeric","q75",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Future observation",NA,"numeric","q95",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Future observation",NA,"numeric","max",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Future observation",NA,"numeric","mean",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Future observation",NA,"numeric","sd",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Cirrhosis","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Cirrhosis","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Cardiodisorder","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Cardiodisorder","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Alcoholism","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Alcoholism","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Stds","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Stds","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Hypertension","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Hypertension","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Hiv","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Hiv","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Kidneydisease","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Kidneydisease","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Diabetes","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Diabetes","binary","percentage",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Fattyliver","binary","count",NA
+"omop","Summary characteristics","cohort_name","Objective3 hepatitisc 2","calendarYear","2022","Comorbidities flag from -365 to 0","Fattyliver","binary","percentage",NA

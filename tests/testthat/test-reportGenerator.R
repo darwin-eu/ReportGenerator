@@ -5,6 +5,8 @@ incidence_estimates_test <- testData$incidence_estimates
 prevalence_attrition_test <- testData$prevalence_attrition
 prevalence_estimates_test <- testData$prevalence_estimates
 treatmentPathways_test <- testData$treatmentPathways_test
+summarisedCharacteristics <- testData$`Summarised Characteristics`
+summarisedCharacteristicsLSC <- testData$`Summarised Large Scale Characteristics`
 
 test_that("datasetLoad IncPrev", {
   testServer(reportGenerator(), {
@@ -103,14 +105,62 @@ test_that("datasetLoad TrePat Wrong Data 0.6.0", {
   })
 })
 
+test_that("datasetLoad PP", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoadPP = data.frame(name = c("results_CPRD.zip",
+                                                        "results_EBB.zip",
+                                                        "results_IPCI.zip"),
+                                               datapath = c(test_path("PP", "0.5.1", "zip", "results_CPRD.zip"),
+                                                            test_path("PP", "0.5.1", "zip", "results_EBB.zip"),
+                                                            test_path("PP", "0.5.1", "zip", "results_IPCI.zip"))),
+                      dataVersionPP = "0.5.1")
+
+    expect_equal(length(uploadedFiles$dataPP), 2)
+  })
+})
+
+test_that("datasetLoad PP", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoadPP = data.frame(name = c("patientCharacteristics_hepatitisb.csv"),
+                                                 datapath = c(test_path("PP", "0.5.1", "csv", "patientCharacteristics_hepatitisb.csv"))),
+                      dataVersionPP = "0.5.1")
+    expect_equal(length(uploadedFiles$dataPP), 1)
+  })
+})
+
+
+test_that("datasetLoad PP 0.5.1", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoadPP = data.frame(name = c("results_CPRD.zip"),
+                                               datapath = c(test_path("PP", "0.5.1", "zip", "results_CPRD.zip"))),
+                      dataVersionPP = "0.5.1")
+
+    expect_equal(length(uploadedFiles$dataPP), 2)
+  })
+})
+
+test_that("datasetLoad PP Wrong Data", {
+  testServer(reportGenerator(), {
+    session$setInputs(datasetLoadPP = data.frame(name = c("CHUBX.zip"),
+                                               datapath = c(test_path("TrePat", "2.5.2", "zip", "CHUBX.zip"),
+                                                            test_path("TrePat", "2.5.2", "zip", "CPRD.zip"),
+                                                            test_path("TrePat", "2.5.2", "zip", "IQVIA.zip"))),
+                      dataVersionPP = "0.6.0")
+
+    expect_equal(length(uploadedFiles$dataIP), 0)
+  })
+})
+
 test_that("reset data", {
   testServer(reportGenerator(), {
     session$setInputs(resetData = TRUE)
     expect_equal(uploadedFiles$dataIP, NULL)
     expect_equal(uploadedFiles$dataTP, NULL)
+    expect_equal(uploadedFiles$dataPP, NULL)
     expect_equal(itemsList$objects, NULL)
     expect_s3_class(datasetLoadServer("IncidencePrevalence"), "shiny.render.function")
     expect_s3_class(datasetLoadServer("TreatmentPatterns"), "shiny.render.function")
+    expect_s3_class(datasetLoadServer("PatientProfiles"), "shiny.render.function")
   })
 })
 
@@ -592,6 +642,19 @@ test_that("lockTreatmentSankey FALSE", {
                       dataVersionTP = "2.5.2",
                       lockTreatmentSankey = FALSE)
     testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
+  })
+})
+
+test_that("summarised Characteristics and LSC", {
+  testServer(reportGenerator(), {
+    expect_s3_class(characteristicsUI("characteristics",
+                                      dataset = summarisedCharacteristics), "shiny.tag.list")
+    expect_s3_class(characteristicsServer("characteristics",
+                                          dataset = summarisedCharacteristics), "reactiveVal")
+    expect_s3_class(characteristicsUI("lsc",
+                                      dataset = summarisedCharacteristicsLSC), "shiny.tag.list")
+    expect_s3_class(characteristicsServer("lsc",
+                                          dataset = summarisedCharacteristicsLSC), "reactiveVal")
   })
 })
 
