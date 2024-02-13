@@ -227,7 +227,9 @@ reportGenerator <- function() {
     # Reset and back to initial tab
     observeEvent(input$resetData, {
       itemsList$objects <- NULL
-      uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
+      uploadedFiles <- reactiveValues(dataIP = NULL,
+                                      dataTP = NULL,
+                                      dataPP = NULL)
       dataReport <- reactiveValues()
       updateTabsetPanel(session, "mainPanel",
                         selected = "Item selection")
@@ -1195,7 +1197,7 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'survivalPlot-captionSurvivalEstimate'
     })
-
+    
     observeEvent(input$lockfailureTable, {
       objectChoice <- "Cumulative incidence table"
       randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
@@ -1213,7 +1215,7 @@ reportGenerator <- function() {
 
     # PatientProfiles
     dataCharacteristics<- characteristicsServer(id = "characteristics",
-                                              dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
+                                                dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
 
     observe({
       for (key in names(dataCharacteristics())) {
