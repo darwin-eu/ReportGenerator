@@ -1,7 +1,7 @@
 Package: ReportGenerator
 Type: Package
 Title: Automatic Report Generator of Darwin EU Studies
-Version: 1.13.0
+Version: 1.14.0
 Authors@R: c(
     person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("cre", "aut"), comment = c(ORCID = "0009-0002-4453-3071")),
     person("Ger", "Inberg", , "g.inberg@darwin-eu.org", role = "aut")
@@ -16,7 +16,7 @@ Depends:
     dplyr
 Imports:
     flextable,
-    IncidencePrevalence (>= 0.6.0),
+    IncidencePrevalence,
     officer,
     readr,
     scales,

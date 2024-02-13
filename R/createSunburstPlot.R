@@ -177,42 +177,11 @@ createTreatmentPathways <- function(treatmentHistory) {
       .groups = "drop"
     )
 
-  # layers <- treatmentPathways %>%
-  #   dplyr::rowwise() %>%
-  #   dplyr::mutate(l = length(.data$pathway)) %>%
-  #   dplyr::select("l") %>%
-  #   max()
-
   treatmentPathways <- treatmentPathways %>%
     dplyr::group_by(.data$indexYear, .data$pathway) %>%
     dplyr::summarise(freq = length(.data$personId), .groups = "drop")
 
   return(treatmentPathways)
-}
-
-prepData <- function(treatmentHistory, year) {
-  treatmentPathways <- createTreatmentPathways(treatmentHistory)
-
-  dat <- treatmentPathways %>%
-    rowwise() %>%
-    mutate(path = paste(.data$pathway, collapse = "-")) %>%
-    select("indexYear", "path", "freq")
-
-  if (!is.na(year) || !is.null(year)) {
-    if (year == "all") {
-      dat <- dat %>%
-        group_by(.data$path) %>%
-        summarise(freq = sum(.data$freq))
-    } else {
-      dat <- dat %>%
-        filter(.data$indexYear == year)
-      if (nrow(dat) == 0) {
-        NULL
-        # message(sprintf("Not enough data for year: %s", year))
-      }
-    }
-  }
-  return(dat)
 }
 
 toList <- function(json) {
@@ -322,13 +291,4 @@ doGroupCombinations <- function(treatmentPathways, groupCombinations) {
       )
   }
   return(treatmentPathways)
-}
-
-createSunburstPlot2 <- function(treatmentPathways, groupCombinations = FALSE, ...) {
-  treatmentPathways <- doGroupCombinations(
-    treatmentPathways = treatmentPathways,
-    groupCombinations = groupCombinations
-  )
-
-  sunburstR::sunburst(data = treatmentPathways, ...)
 }

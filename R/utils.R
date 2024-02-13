@@ -84,10 +84,6 @@ getItemConfig <- function(input = NULL,
 #' @return the updated preview item string
 addPreviewItemType <- function(previewItemString, previewItemType) {
 
-  # previewItemString <- "plotIncidence(incidenceCommonData(), colour, facet)"
-  # previewItemType <- "Facet by database"
-  #
-  #
   result <- previewItemString
   if (is.null(previewItemType)) {
     previewItemType <- "Facet by outcome"
@@ -117,10 +113,6 @@ addPreviewItemType <- function(previewItemString, previewItemType) {
 #' @return the updated preview item string
 addPreviewItemTypeSex <- function(previewItemString, previewItemType) {
 
-  # previewItemString <- "plotIncidence(incidenceCommonData(), colour, facet)"
-  # previewItemType <- "Facet by database"
-  #
-  #
   result <- previewItemString
   if (is.null(previewItemType)) {
     previewItemType <- "Facet by outcome"
@@ -151,10 +143,6 @@ addPreviewItemTypeSex <- function(previewItemString, previewItemType) {
 #' @return the updated preview item string
 addPreviewItemTypeAge <- function(previewItemString, previewItemType) {
 
-  # previewItemString <- "plotIncidence(incidence_estimates, colour, facet)"
-  # previewItemType <- "Facet by database"
-  #
-  #
   result <- previewItemString
   if (is.null(previewItemType)) {
     previewItemType <- "Facet by outcome"
