@@ -166,8 +166,10 @@ characteristicsServer <- function(id, dataset) {
 cohortSurvivalUI <- function(id, dataset) {
   ns <- NS(id)
   outResult <- NULL
+  topN <- NULL
   if (id == "survivalTable") {
     outResult <- DT::dataTableOutput(ns("cs_data"))
+    topN <- numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100)
     captionText <- "Table 1. Survival estimate data"
     captionId <-  "captionSurvivalEstimateData"
   } else if (id == "survivalPlot") {
@@ -176,6 +178,7 @@ cohortSurvivalUI <- function(id, dataset) {
     captionId <-  "captionSurvivalEstimate"
   } else if (id == "failureTable") {
     outResult <- DT::dataTableOutput(ns("cu_inc_data"))
+    topN <- numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100)
     captionText <- "Table 1. Cumulative incidence data"
     captionId <-  "captionCumulativeIncidenceData"
   } else if (id == "failurePlot") {
@@ -227,8 +230,9 @@ cohortSurvivalUI <- function(id, dataset) {
       )
     ),
     captionUI,
-    fluidRow(column(4, actionButton(paste0("lock", id), "Add item to report"))
-    ),
+    fluidRow(column(2, tagList(shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
+                               shiny::br(), actionButton(paste0("lock", id), "Add item to report"))),
+             column(2, topN)),
     tags$br(),
     fluidRow(column(12, outResult))
   )
@@ -243,9 +247,16 @@ cohortSurvivalServer <- function(id, dataset) {
              strata_name %in% input$strata_name)
     })
 
+    getTableData <- reactive({
+      getData() %>%
+        dplyr::slice_head(n = input$top_n) %>%
+          select(c("cdm_name", "result_type", "group_level", "strata_name",
+                   "strata_level", "variable_type", "time", "estimate"))
+    })
+
     if (id == "survivalTable") {
       output$cs_data <- DT::renderDataTable(server = FALSE, {
-        createDataTable(getData())
+        createDataTable(getTableData())
       })
     } else if (id == "survivalPlot") {
       output$cs_plot <- renderPlot({
@@ -255,7 +266,7 @@ cohortSurvivalServer <- function(id, dataset) {
       })
     } else if (id == "failureTable") {
       output$cu_inc_data <- DT::renderDataTable(server = FALSE, {
-        createDataTable(getData())
+        createDataTable(getTableData())
       })
     } else if (id == "failurePlot") {
       output$cu_inc_plot <- renderPlot({
