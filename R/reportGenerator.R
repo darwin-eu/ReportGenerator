@@ -38,13 +38,8 @@ reportGenerator <- function() {
     dashboardHeader(title = "ReportGenerator"),
     dashboardSidebar(
       sidebarMenu(
-        menuItem("IncidencePrevalence",
-                 datasetLoadUI("IncidencePrevalence")
-        ),
-        menuItem("TreatmentPatterns",
-                 datasetLoadUI("TreatmentPatterns"),
-                 tags$br()
-        ),
+        menuItem("StudyPackage", datasetLoadUI("StudyPackage"),
+                 startExpanded = TRUE),
         tags$br(),
         actionButton('resetData', 'Reset data'),
         tags$br()
@@ -84,11 +79,7 @@ reportGenerator <- function() {
   server <- function(input, output, session) {
 
     # 1. Load data
-
-    # IncidencePrevalence Module
-    datasetLoadServer("IncidencePrevalence")
-    # TreatmentPatterns Module
-    datasetLoadServer("TreatmentPatterns")
+    datasetLoadServer("StudyPackage")
 
     # ReactiveValues
     uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
@@ -105,12 +96,9 @@ reportGenerator <- function() {
       # Temp directory to unzip files
       csvLocation <- file.path(tempdir(), "dataLocation")
       dir.create(csvLocation)
-      # Joins one or several zips from different data partners into the reactive value
-      dataVersion <- input$dataVersion
+      # Joins one or several zips into the reactive value
       uploadedFiles$dataIP <- joinDatabase(fileDataPath = fileDataPath,
                                            fileName = fileName,
-                                           package = "IncidencePrevalence",
-                                           versionData = dataVersion,
                                            csvLocation = csvLocation)
       if (length(uploadedFiles$dataIP) == 0) {
         show_alert(title = "Data mismatch",
@@ -125,35 +113,6 @@ reportGenerator <- function() {
       unlink(csvLocation, recursive = TRUE)
     })
 
-    # TreatmentPatterns
-    observeEvent(input$datasetLoadTP, {
-      # Read  file paths
-      inFile <- input$datasetLoadTP
-      fileDataPath <- inFile$datapath
-      fileName <- inFile$name
-      # Temp directory to unzip files
-      csvLocation <- file.path(tempdir(), "dataLocation")
-      dir.create(csvLocation)
-      # Joins one or several zips from different data partners into the reactive value
-      versionData <- input$dataVersionTP
-      uploadedFiles$dataTP <- joinDatabase(fileDataPath = fileDataPath,
-                                           fileName = fileName,
-                                           package = "TreatmentPatterns",
-                                           versionData = versionData,
-                                           csvLocation = csvLocation)
-      if (length(uploadedFiles$dataTP) == 0) {
-        show_alert(title = "Data mismatch",
-                   text = "Not a valid TreatmentPathways file or check version")
-      }
-      # Get list of items to show in toggle menu
-      itemsTP <- names(uploadedFiles$dataTP)
-      itemsTPList <- getItemsList(itemsTP)
-      # Items list into reactive value to show in toggle menu
-      itemsList$objects[["items"]] <-  c(itemsList$objects[["items"]], itemsTPList)
-      # itemsList$objects[["items"]] <- getItemsList(itemsTP)
-      unlink(csvLocation, recursive = TRUE)
-    })
-
     # Reset and back to initial tab
     observeEvent(input$resetData, {
       # if (!is.null(uploadedFiles)) {
@@ -162,10 +121,7 @@ reportGenerator <- function() {
       dataReport <- reactiveValues()
       updateTabsetPanel(session, "mainPanel",
                         selected = "Item selection")
-      datasetLoadServer("IncidencePrevalence")
-      # TreatmentPatterns Module
-      datasetLoadServer("TreatmentPatterns")
-      # }
+      datasetLoadServer("StudyPackage")
     })
 
     # 2.Assign Data

@@ -18,8 +18,6 @@
 #'
 #' @param fileDataPath File path(s) in character
 #' @param fileName Name of the file in character to process in case the input is only csv
-#' @param package Name of the packages that generated the results
-#' @param versionData Version of the package
 #' @param csvLocation Path folder location to uncompress the zip files
 #'
 #' @return A list of dataframes
@@ -28,14 +26,13 @@
 #' @export
 joinDatabase <- function(fileDataPath = NULL,
                          fileName = NULL,
-                         package = "IncidencePrevalence",
-                         versionData = "0.5.1",
                          csvLocation = NULL) {
 
   # Loading yml file
+  # TODO inspect each file
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  configData <- configData[[package]][[versionData]]
-  configDataTypes <- names(configData)
+  packagesNames <- names(configData)
+
   # Check zip
   if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
     # Empty list to allocate data
@@ -44,7 +41,6 @@ joinDatabase <- function(fileDataPath = NULL,
     folderNumber <- 0
     # Unzips every zip and puts the files in a separate folder in the temp dir
     for (fileLocation in fileDataPath) {
-      # fileLocation <- fileLocation[1]
       folderNumber <- folderNumber + 1
       unzip(zipfile = fileLocation,
             exdir = file.path(csvLocation, paste0("database", as.character(folderNumber))))
@@ -53,14 +49,12 @@ joinDatabase <- function(fileDataPath = NULL,
     databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
     # Iterates through each database folder to list the files inside
     for (filesList in databaseFolders) {
-      # filesList <- databaseFolders[1]
       filesLocation <- list.files(filesList,
                                   pattern = ".csv",
                                   full.names = TRUE,
                                   recursive = TRUE)
       # Iterates every individual file
       for (file in filesLocation) {
-        # file <- filesLocation[4]
         resultsData <- read_csv(file, show_col_types = FALSE)
         resultsColumns <- names(resultsData)
         if (grepl("metadata.csv", file)) {
@@ -69,8 +63,9 @@ joinDatabase <- function(fileDataPath = NULL,
           databaseName <- metadata$cdmSourceName
         }
         # Checks the type of every individual file
+        # based on file name -> select package
+        #packagesNames
         for (val in configDataTypes) {
-          # val <- "incidence_attrition"
           if (val == "incidence_attrition" & grepl("incidence_attrition", file)) {
             configColumns <- configData[[val]]
             configColumns <- unlist(configColumns$names)

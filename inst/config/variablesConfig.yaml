@@ -1,75 +1,39 @@
 IncidencePrevalence:
-  0.5.1:
-    incidence_estimates:
-      names:
-      - incidence_start_date
-      - incidence_end_date
-      - incidence_100000_pys
-      - incidence_100000_pys_95CI_lower
-      - incidence_100000_pys_95CI_upper
-    prevalence_estimates:
-      names:
-      - prevalence_start_date
-      - prevalence_end_date
-      - prevalence
-      - prevalence_95CI_lower
-      - prevalence_95CI_upper
-    incidence_attrition:
-      names:
-      - number_records
-      - number_subjects
-      - reason_id
-      - reason
-      - excluded_records
-      - excluded_subjects
-    prevalence_attrition:
-      names:
-      - number_records
-      - number_subjects
-      - reason_id
-      - reason
-      - excluded_records
-      - excluded_subjects
-  0.6.0:
-    incidence_estimates:
-      names:
-      - incidence_start_date
-      - incidence_end_date
-      - incidence_100000_pys
-      - incidence_100000_pys_95CI_lower
-      - incidence_100000_pys_95CI_upper
-    prevalence_estimates:
-      names:
-      - prevalence_start_date
-      - prevalence_end_date
-      - prevalence
-      - prevalence_95CI_lower
-      - prevalence_95CI_upper
-    incidence_attrition:
-      names:
-      - number_records
-      - number_subjects
-      - reason_id
-      - reason
-      - excluded_records
-      - excluded_subjects
-    prevalence_attrition:
-      names:
-      - number_records
-      - number_subjects
-      - reason_id
-      - reason
-      - excluded_records
-      - excluded_subjects
+  incidence_estimates:
+    names:
+    - incidence_start_date
+    - incidence_end_date
+    - incidence_100000_pys
+    - incidence_100000_pys_95CI_lower
+    - incidence_100000_pys_95CI_upper
+  prevalence_estimates:
+    names:
+    - prevalence_start_date
+    - prevalence_end_date
+    - prevalence
+    - prevalence_95CI_lower
+    - prevalence_95CI_upper
+  incidence_attrition:
+    names:
+    - number_records
+    - number_subjects
+    - reason_id
+    - reason
+    - excluded_records
+    - excluded_subjects
+  prevalence_attrition:
+    names:
+    - number_records
+    - number_subjects
+    - reason_id
+    - reason
+    - excluded_records
+    - excluded_subjects
 TreatmentPatterns:
-  2.5.2:
-    treatmentPathways:
-      names:
-      - path
-      - freq
-      - sex
-      - age
-      - indexYear
-  2.5.0:
-    treatmentPathways:
-      names: []
+  treatmentPathways:
+    names:
+    - path
+    - freq
+    - sex
+    - age
+    - indexYear
