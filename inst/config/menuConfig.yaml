@@ -71,3 +71,35 @@ createSankeyDiagram:
   type:
     - treatmentPathways
   options: TRUE, FALSE
+summaryCharacteristics:
+  title: "Summarised Characteristics"
+  function: gtCharacteristics(summarisedCharacteristics)
+  type:
+    - Summarised Characteristics
+Summarised Large Scale Characteristics:
+  title: "Summarised Large Scale Characteristics"
+  function: gtCharacteristics(summarisedCharacteristics)
+  type:
+    - Summarised Large Scale Characteristics
+Survival table:
+  title: "Survival table"
+  function: cohortSurvivalTable(survivalEstimate)
+  type:
+    - Survival estimate
+Survival plot:
+  title: "Survival plot"
+  function: CohortSurvival::plotSurvival(survivalEstimate, facet, colour)
+  type:
+    - Survival estimate
+  options: Facet by database, colour by strata_name
+Cumulative incidence table:
+  title: "Cumulative incidence table"
+  function: cohortSurvivalTable(cumulativeSurvivalEstimate)
+  type:
+    - Survival cumulative incidence
+Cumulative incidence plot:
+  title: "Cumulative incidence plot"
+  function: CohortSurvival::plotCumulativeIncidence(cumulativeSurvivalEstimate, facet, colour)
+  type:
+    - Survival cumulative incidence
+  options: Facet by database, colour by strata_name

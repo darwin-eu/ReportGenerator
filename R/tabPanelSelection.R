@@ -23,5 +23,17 @@ tabPanelSelection <- function(selection, uploadedFiles, version) {
     tabPanel(selection, sankeyDiagramFilters(uploadedFiles, version), htmlOutput("previewSankeyDiagram"))
   } else if (selection == "Sunburst Plot - TreatmentPatterns") {
     tabPanel(selection, sunburstDiagramFilters(uploadedFiles, version), htmlOutput("previewSunburstPlot"))
+  } else if (selection == "Summarised Characteristics") {
+    tabPanel(selection, characteristicsUI("characteristics", uploadedFiles$dataPP$`Summarised Characteristics`))
+  } else if (selection == "Summarised Large Scale Characteristics") {
+    tabPanel(selection, characteristicsUI("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
+  } else if (selection == "Survival table") {
+    tabPanel(selection, cohortSurvivalUI("survivalTable", uploadedFiles$dataCS$`Survival estimate`))
+  } else if (selection == "Survival plot") {
+    tabPanel(selection, cohortSurvivalUI("survivalPlot", uploadedFiles$dataCS$`Survival estimate`))
+  } else if (selection == "Cumulative incidence table") {
+    tabPanel(selection, cohortSurvivalUI("failureTable", uploadedFiles$dataCS$`Survival cumulative incidence`))
+  } else if (selection == "Cumulative incidence plot") {
+    tabPanel(selection, cohortSurvivalUI("failurePlot", uploadedFiles$dataCS$`Survival cumulative incidence`))
   }
 }

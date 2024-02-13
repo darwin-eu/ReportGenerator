@@ -18,7 +18,7 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
-#' @import dplyr shiny shinydashboard shinyWidgets officer flextable waldo readr yaml googleVis TreatmentPatterns
+#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml googleVis TreatmentPatterns PatientProfiles
 #' @importFrom sortable bucket_list add_rank_list
 #' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @importFrom utils read.csv tail unzip
@@ -45,6 +45,14 @@ reportGenerator <- function() {
                  datasetLoadUI("TreatmentPatterns"),
                  tags$br()
         ),
+        menuItem("PatientProfiles",
+                 datasetLoadUI("PatientProfiles"),
+                 tags$br()
+        ),
+        menuItem("CohortSurival",
+                 datasetLoadUI("CohortSurvival"),
+                 tags$br()
+        ),
         tags$br(),
         actionButton('resetData', 'Reset data'),
         tags$br()
@@ -69,7 +77,6 @@ reportGenerator <- function() {
                  fluidRow(
                    column(width = 4,
                           h2("2. Objects to print"),
-                          # verbatimTextOutput("dataReportMenu"),
                           DTOutput("dataReportMenu"),
                           tags$br(),
                           downloadButton("generateReport", "Generate Report"),
@@ -89,14 +96,20 @@ reportGenerator <- function() {
     datasetLoadServer("IncidencePrevalence")
     # TreatmentPatterns Module
     datasetLoadServer("TreatmentPatterns")
+    # PatientProfiles Module
+    datasetLoadServer("PatientProfiles")
+    # CohortSurvival Module
+    datasetLoadServer("CohortSurvival")
 
     # ReactiveValues
-    uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
+    uploadedFiles <- reactiveValues(dataIP = NULL,
+                                    dataTP = NULL,
+                                    dataPP = NULL,
+                                    dataCS = NULL)
     itemsList <- reactiveValues(objects = NULL)
 
     # Check input data
     # IncidencePrevalence
-    # TODO Create modules for datasetLoad
     observeEvent(input$datasetLoad, {
       # Read  file paths
       inFile <- input$datasetLoad
@@ -154,17 +167,79 @@ reportGenerator <- function() {
       unlink(csvLocation, recursive = TRUE)
     })
 
+    # PatientProfiles
+    observeEvent(input$datasetLoadPP, {
+      # Read  file paths
+      inFile <- input$datasetLoadPP
+      fileDataPath <- inFile$datapath
+      fileName <- inFile$name
+      # Temp directory to unzip files
+      csvLocation <- file.path(tempdir(), "dataLocation")
+      dir.create(csvLocation)
+      # Joins one or several zips from different data partners into the reactive value
+      versionData <- input$dataVersionPP
+      uploadedFiles$dataPP <- joinDatabase(fileDataPath = fileDataPath,
+                                           fileName = fileName,
+                                           package = "PatientProfiles",
+                                           versionData = versionData,
+                                           csvLocation = csvLocation)
+      if (length(uploadedFiles$dataPP) == 0) {
+        show_alert(title = "Data mismatch",
+                   text = "Not a valid PatientProfiles file or check version")
+      }
+      # Get list of items to show in toggle menu
+      itemsPP <- names(uploadedFiles$dataPP)
+      itemsPPList <- getItemsList(itemsPP)
+      # Items list into reactive value to show in toggle menu
+      itemsList$objects[["items"]] <-  c(itemsList$objects[["items"]], itemsPPList)
+      # itemsList$objects[["items"]] <- getItemsList(itemsPP)
+      unlink(csvLocation, recursive = TRUE)
+    })
+
+    # CohortSurvival
+    observeEvent(input$datasetLoadCS, {
+      # Read file paths
+      inFile <- input$datasetLoadCS
+      fileDataPath <- inFile$datapath
+      fileName <- inFile$name
+      # Temp directory to unzip files
+      csvLocation <- file.path(tempdir(), "dataLocation")
+      dir.create(csvLocation)
+      # Joins one or several zips from different data partners into the reactive value
+      versionData <- input$dataVersionCS
+      uploadedFiles$dataCS <- joinDatabase(fileDataPath = fileDataPath,
+                                           fileName = fileName,
+                                           package = "CohortSurvival",
+                                           versionData = versionData,
+                                           csvLocation = csvLocation)
+      if (length(uploadedFiles$dataCS) == 0) {
+        show_alert(title = "Data mismatch",
+                   text = "Not a valid CohortSurvival file or check version")
+      }
+      # Get list of items to show in toggle menu
+      itemsCS <- names(uploadedFiles$dataCS)
+      itemsCSList <- getItemsList(itemsCS)
+      # Items list into reactive value to show in toggle menu
+      itemsList$objects[["items"]] <-  c(itemsList$objects[["items"]], itemsCSList)
+      unlink(csvLocation, recursive = TRUE)
+    })
+
     # Reset and back to initial tab
     observeEvent(input$resetData, {
-      # if (!is.null(uploadedFiles)) {
       itemsList$objects <- NULL
-      uploadedFiles <- reactiveValues(dataIP = NULL, dataTP = NULL)
+      uploadedFiles <- reactiveValues(dataIP = NULL,
+                                      dataTP = NULL,
+                                      dataPP = NULL)
       dataReport <- reactiveValues()
       updateTabsetPanel(session, "mainPanel",
                         selected = "Item selection")
       datasetLoadServer("IncidencePrevalence")
       # TreatmentPatterns Module
       datasetLoadServer("TreatmentPatterns")
+      # PatientProfiles Module
+      datasetLoadServer("PatientProfiles")
+      # CohortSurvival Module
+      datasetLoadServer("CohortSurvival")
       # }
     })
 
@@ -241,6 +316,13 @@ reportGenerator <- function() {
       do.call(navlistPanel, previewPanels)
     })
 
+    characteristicsServer("charac", uploadedFiles$dataPP$`Summary characteristics`)
+    characteristicsServer("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`)
+    cohortSurvivalServer("survivalTable", uploadedFiles$dataCS$`Survival estimate`)
+    cohortSurvivalServer("survivalPlot", uploadedFiles$dataCS$`Survival estimate`)
+    cohortSurvivalServer("failureTable", uploadedFiles$dataCS$`Survival cumulative incidence`)
+    cohortSurvivalServer("failurePlot", uploadedFiles$dataCS$`Survival cumulative incidence`)
+
     # Objects to be rendered in the UI
 
     # Table 1
@@ -264,12 +346,6 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTable1
     })
 
-    # lockItemsServer(id = "lockTableNumPar",
-    #                 dataReport = dataReport,
-    #                 prevalenceAttrition = prevalenceAttritionCommon(),
-    #                 incidenceAttrition = incidenceAttritionCommon(),
-    #                 captionInput = input$captionTable1)
-
     output$previewTableAttInc <- renderTable({
       objectChoice <- "Table - Incidence Attrition"
       incidence_attrition <- incidenceAttritionCommon()
@@ -288,12 +364,6 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["attritionDataType"]] <- attritionDataType
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTableInc
     })
-
-
-    # lockItemsServer(id = "lockTableIncAtt",
-    #                 dataReport = dataReport,
-    #                 incidenceAttrition = incidenceAttritionCommon(),
-    #                 captionInput = input$captionTableInc)
 
     output$previewTableAttPrev <- renderTable({
       objectChoice <- "Table - Prevalence Attrition"
@@ -314,13 +384,6 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTablePrev
     })
 
-    # lockItemsServer(id = "lockTablePrevAtt",
-    #                 dataReport = dataReport,
-    #                 prevalenceAttrition = prevalenceAttritionCommon(),
-    #                 captionInput = input$captionTablePrev)
-
-    # Table Att Inc
-
     output$previewTableSex <- render_gt({
       objectChoice <- "Table - Number of participants by sex and age group"
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
@@ -338,13 +401,7 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTableSexAge
     })
 
-    # lockItemsServer(id = "lockTableSex",
-    #                 dataReport = dataReport,
-    #                 incidenceEstimates = uploadedFiles$dataIP$incidence_estimates,
-    #                 captionInput = input$captionTableSexAge)
-
     # Figure 1
-
     incidenceFigure1 <- reactive({
 
       objectChoice <- "Plot - Incidence rate per year"
@@ -1090,6 +1147,97 @@ reportGenerator <- function() {
       message("Filename added to dataReport")
     })
 
+    # Cohort Survival report items
+    survivalEstimateData <- reactive({
+      if (!is.null(uploadedFiles$dataCS$`Survival estimate`)) {
+        uploadedFiles$dataCS$`Survival estimate` %>%
+          dplyr::filter(cdm_name %in% input$`survivalTable-cdm_name`) %>%
+          dplyr::filter(strata_name %in% input$`survivalTable-strata_name`) %>%
+          dplyr::slice_head(n = input$`survivalTable-top_n`) %>%
+          select(c("cdm_name", "result_type", "group_level", "strata_name",
+                   "strata_level", "variable_type", "time", "estimate"))
+      }
+    })
+    survivalEstimatePlotData <- reactive({
+      if (!is.null(uploadedFiles$dataCS$`Survival estimate`)) {
+        uploadedFiles$dataCS$`Survival estimate` %>%
+          dplyr::filter(cdm_name %in% input$`survivalPlot-cdm_name`) %>%
+          dplyr::filter(strata_name %in% input$`survivalPlot-strata_name`)
+      }
+    })
+    cumulativeSurvivalData <- reactive({
+      if (!is.null(uploadedFiles$dataCS$`Survival cumulative incidence`)) {
+        uploadedFiles$dataCS$`Survival cumulative incidence` %>%
+          dplyr::filter(cdm_name %in% input$`failureTable-cdm_name`) %>%
+          dplyr::filter(strata_name %in% input$`failureTable-strata_name`) %>%
+          dplyr::slice_head(n = input$`failureTable-top_n`) %>%
+          select(c("cdm_name", "result_type", "group_level", "strata_name",
+                   "strata_level", "variable_type", "time", "estimate"))
+      }
+    })
+    cumulativeSurvivalPlotData <- reactive({
+      if (!is.null(uploadedFiles$dataCS$`Survival cumulative incidence`)) {
+        uploadedFiles$dataCS$`Survival cumulative incidence` %>%
+          dplyr::filter(cdm_name %in% input$`failurePlot-cdm_name`) %>%
+          dplyr::filter(strata_name %in% input$`failurePlot-strata_name`)
+      }
+    })
+
+    observeEvent(input$locksurvivalTable, {
+      objectChoice <- "Survival table"
+      randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimateData()
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'survivalTable-captionSurvivalEstimateData'
+    })
+
+    observeEvent(input$locksurvivalPlot, {
+      objectChoice <- "Survival plot"
+      randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimatePlotData()
+      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'survivalPlot-captionSurvivalEstimate'
+    })
+    
+    observeEvent(input$lockfailureTable, {
+      objectChoice <- "Cumulative incidence table"
+      randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["cumulativeSurvivalEstimate"]] <- cumulativeSurvivalData()
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'failureTable-captionCumulativeIncidenceData'
+    })
+
+    observeEvent(input$lockfailurePlot, {
+      objectChoice <- "Cumulative incidence plot"
+      randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["cumulativeSurvivalEstimate"]] <- cumulativeSurvivalPlotData()
+      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'failurePlot-captionCumulativeIncidence'
+    })
+
+    # PatientProfiles
+    dataCharacteristics<- characteristicsServer(id = "characteristics",
+                                                dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
+
+    observe({
+      for (key in names(dataCharacteristics())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataCharacteristics()
+      }
+    }) %>%
+      bindEvent(dataCharacteristics())
+
+    dataLSC <- characteristicsServer(id = "lsc",
+                                     dataset = reactive(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
+
+    observe({
+      for (key in names(dataLSC())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataLSC()
+      }
+    }) %>%
+      bindEvent(dataLSC())
+
     # Update according to facet prevalence
 
     observeEvent(input$facetPrevalenceSex, {
@@ -1191,12 +1339,21 @@ reportGenerator <- function() {
       DT::datatable(dataReportFrame, options = list(dom = 't'))
     })
 
+    # output$dataReportMenu <- renderPrint({
+    #   # dataReport
+    #   dataReportList <- reactiveValuesToList(dataReport)
+    #   dataReportList
+    #   # length(dataReportList) == 0
+    #   # objectsListPreview()
+    # })
+
     # Word report generator
     output$generateReport <- downloadHandler(
       filename = function() {
         "generatedReport.docx"
       },
       content = function(file) {
+        shinyjs::disable("generateReport")
         # Load template and generate report
         reportDocx <- read_docx(path = system.file("templates",
                                                    "word",
@@ -1205,6 +1362,7 @@ reportGenerator <- function() {
         generateReport(reportDocx,
                        rev(reactiveValuesToList(dataReport)),
                        file)
+        shinyjs::enable("generateReport")
       }
     )
   }

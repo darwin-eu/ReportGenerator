@@ -384,7 +384,12 @@ table1Inc <- function(incidence_estimates) {
       tab_spanner(
         label = "Age Group",
         columns = c(unique(incidence_estimates$denominator_age_group))
-      )
+      ) %>%
+      opt_interactive(active = FALSE,
+                      use_pagination = FALSE,
+                      use_pagination_info = FALSE,
+                      use_sorting = FALSE,
+                      use_compact_mode = FALSE)
     table1Inc
   }
 
@@ -479,4 +484,9 @@ table5IncSex <- function (incidence_estimates) {
                            add_colnames = getOption("huxtable.add_colnames", FALSE))
 
   return(tableIncidence)
+}
+
+cohortSurvivalTable <- function(data) {
+  as_hux(data,
+         add_colnames = getOption("huxtable.add_colnames", FALSE))
 }
