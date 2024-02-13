@@ -82,7 +82,8 @@ prevPlotByYearFilters <- function(uploadedFiles, objectChoice) {
       column(4,
              downloadButton("downloadFigure4Prev", "Download Plot")
       ),
-    )
+    ),
+    tags$br()
   )
 }
 
@@ -171,7 +172,8 @@ prevPlotSexFilters <- function(uploadedFiles, objectChoice) {
       column(4,
              downloadButton("downloadFigure5Prev", "Download Plot")
       ),
-    )
+    ),
+    tags$br()
   )
 }
 
@@ -260,6 +262,7 @@ prevPlotAgeFilters <- function(uploadedFiles, objectChoice) {
       column(4,
              downloadButton("downloadFigure6Prev", "Download Plot")
       ),
-    )
+    ),
+    tags$br()
   )
 }
