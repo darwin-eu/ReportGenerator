@@ -255,9 +255,6 @@ prevPlotAgeFilters <- function(uploadedFiles, objectChoice) {
     fluidRow(
       column(4,
              actionButton("lockDataPrevalenceAge", "Add item to report")
-             # checkboxInput(inputId = "lockDataPrevalenceAge",
-             #               label = "Add data to report",
-             #               value = FALSE)
       ),
       column(4,
              downloadButton("downloadFigure6Prev", "Download Plot")

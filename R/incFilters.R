@@ -91,9 +91,6 @@ incPlotByYearFilters <- function(uploadedFiles, objectChoice) {
     fluidRow(
       column(4,
              actionButton("lockDataIncidenceYear", "Add item to report")
-             # checkboxInput(inputId = "lockDataIncidenceYear",
-             #               label = "Add data to report",
-             #               value = FALSE)
       ),
       column(4,
              downloadButton("downloadFigure1Inc", "Download Plot")

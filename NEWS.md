@@ -1,3 +1,9 @@
+# ReportGenerator 1.14.0
+
+* User can drop zip folder with results from multiple analytical packages.
+
+* PatientProfiles and CohortSurvival added to main menu. 
+
 # ReportGenerator 1.13.0
 
 * Updated and tested IncidencePrevalence 0.6.0
