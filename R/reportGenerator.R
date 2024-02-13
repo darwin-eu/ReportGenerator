@@ -1148,7 +1148,9 @@ reportGenerator <- function() {
         uploadedFiles$dataCS$`Survival estimate` %>%
           dplyr::filter(cdm_name %in% input$`survivalTable-cdm_name`) %>%
           dplyr::filter(strata_name %in% input$`survivalTable-strata_name`) %>%
-          dplyr::slice_head(n = input$`survivalTable-top_n`)
+          dplyr::slice_head(n = input$`survivalTable-top_n`) %>%
+          select(c("cdm_name", "result_type", "group_level", "strata_name",
+                   "strata_level", "variable_type", "time", "estimate"))
       }
     })
     survivalEstimatePlotData <- reactive({
@@ -1159,11 +1161,13 @@ reportGenerator <- function() {
       }
     })
     cumulativeSurvivalData <- reactive({
-      if (!is.null(uploadedFiles$dataCS$`Survival estimate`)) {
+      if (!is.null(uploadedFiles$dataCS$`Survival cumulative incidence`)) {
         uploadedFiles$dataCS$`Survival cumulative incidence` %>%
           dplyr::filter(cdm_name %in% input$`failureTable-cdm_name`) %>%
           dplyr::filter(strata_name %in% input$`failureTable-strata_name`) %>%
-          dplyr::slice_head(n = input$`failureTable-top_n`)
+          dplyr::slice_head(n = input$`failureTable-top_n`) %>%
+          select(c("cdm_name", "result_type", "group_level", "strata_name",
+                   "strata_level", "variable_type", "time", "estimate"))
       }
     })
     cumulativeSurvivalPlotData <- reactive({
@@ -1193,7 +1197,7 @@ reportGenerator <- function() {
       objectChoice <- "Cumulative incidence table"
       randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
       dataReport[[randomId]][[objectChoice]][["cumulativeSurvivalEstimate"]] <- cumulativeSurvivalData()
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'failureTable-captionSurvivalEstimateData'
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'failureTable-captionCumulativeIncidenceData'
     })
 
     observeEvent(input$lockfailurePlot, {
@@ -1201,7 +1205,7 @@ reportGenerator <- function() {
       randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
       dataReport[[randomId]][[objectChoice]][["cumulativeSurvivalEstimate"]] <- cumulativeSurvivalPlotData()
       dataReport[[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'failurePlot-captionSurvivalEstimate'
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'failurePlot-captionCumulativeIncidence'
     })
 
     # Update according to facet prevalence

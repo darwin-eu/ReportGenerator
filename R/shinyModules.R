@@ -272,8 +272,8 @@ cohortSurvivalServer <- function(id, dataset) {
       output$cu_inc_plot <- renderPlot({
         if (nrow(getData()) > 0) {
           CohortSurvival::plotCumulativeIncidence(getData(),
-                                                  facet = "strata_level",
-                                                  colour = "outcome")
+                                                  facet = "cdm_name",
+                                                  colour = "strata_name")
         }
       })
     }
