@@ -63,7 +63,7 @@ joinDatabase <- function(fileDataPath = NULL,
           databaseName <- metadata$cdmSourceName
         }
         # Checks the type of every individual file
-        data <- loadFileData(data, file, configData, configDataTypes, resultsData, resultsColumns)
+        data <- loadFileData(data, file, configData, configDataTypes, resultsData, resultsColumns, databaseName)
       }
     }
   } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
@@ -83,12 +83,12 @@ columnCheck <- function(csvFiles,
   for (i in seq(1:length(csvFiles))) {
     resultsData <- read_csv(csvFiles[i], show_col_types = FALSE)
     resultsColumns <- names(resultsData)
-    data <- loadFileData(data, fileName[i], configData, configDataTypes, resultsData, resultsColumns)
+    data <- loadFileData(data, fileName[i], configData, configDataTypes, resultsData, resultsColumns, databaseName = NULL)
   }
   return(data)
 }
 
-loadFileData <- function(data, fileName, configData, configDataTypes, resultsData, resultsColumns) {
+loadFileData <- function(data, fileName, configData, configDataTypes, resultsData, resultsColumns, databaseName) {
   for (val in configDataTypes) {
     if (val == "incidence_attrition" & grepl("incidence_attrition", fileName)) {
       configColumns <- configData[[val]]
