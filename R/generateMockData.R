@@ -36,6 +36,7 @@ generateMockData <- function(databaseName = c("CHUBX",
                              outputDir = file.path(getwd(), "results")) {
 
   for (dbName in databaseName) {
+    print(paste("DB:", dbName))
     if (simulatePopulation == TRUE) {
       if (dbName== "CHUBX") {
         sampleSize <- 2152385
@@ -52,11 +53,13 @@ generateMockData <- function(databaseName = c("CHUBX",
       sampleSize <- 50000
     }
 
+    print("IP mock")
     cdm <- IncidencePrevalence::mockIncidencePrevalenceRef(
       sampleSize = sampleSize,
       outPre = 0.5)
 
     # Denominator data
+    print("denom")
     cdm <- IncidencePrevalence::generateDenominatorCohortSet(cdm = cdm,
                                                              name = "denominator",
                                                              cohortDateRange = c(as.Date("2008-01-01"),

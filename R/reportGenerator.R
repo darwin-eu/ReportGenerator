@@ -97,19 +97,33 @@ reportGenerator <- function() {
       csvLocation <- file.path(tempdir(), "dataLocation")
       dir.create(csvLocation)
       # Joins one or several zips into the reactive value
-      uploadedFiles$dataIP <- joinDatabase(fileDataPath = fileDataPath,
+      uploadedFileDataList <- joinDatabase(fileDataPath = fileDataPath,
                                            fileName = fileName,
                                            csvLocation = csvLocation)
-      if (length(uploadedFiles$dataIP) == 0) {
+      if (length(uploadedFileDataList) == 0) {
         show_alert(title = "Data mismatch",
-                   text = "Not a valid IncidencePrevalence file or check version")
+                   text = "No valid package files found")
       }
+      pkgNames <- names(uploadedFileDataList)
+      if ("IncidencePrevalence" %in% pkgNames) {
+        uploadedFiles$dataIP <- uploadedFileDataList[["IncidencePrevalence"]]
+      }
+      if ("TreatmentPatterns" %in% pkgNames) {
+        uploadedFiles$dataTP <- uploadedFileDataList[["TreatmentPatterns"]]
+      }
+      if ("PatientProfiles" %in% pkgNames) {
+        uploadedFiles$dataPP <- uploadedFileDataList[["PatientProfiles"]]
+      }
+      if ("CohortSurvival" %in% pkgNames) {
+        uploadedFiles$dataCS <- uploadedFileDataList[["CohortSurvival"]]
+      }
+
       # Get list of items to show in toggle menu
-      itemsIP <- names(uploadedFiles$dataIP)
-      itemsIPList <- getItemsList(itemsIP)
-      # Items list into reactive value to show in toggle menu
-      itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], itemsIPList)
-      # itemsList$objects[["items"]] <- getItemsList(items)
+      for (pkgName in pkgNames) {
+        pkgDataList <- uploadedFileDataList[[pkgName]]
+        items <- names(pkgDataList)
+        itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], getItemsList(items))
+      }
       unlink(csvLocation, recursive = TRUE)
     })
 
