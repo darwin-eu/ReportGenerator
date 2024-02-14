@@ -89,80 +89,72 @@ joinDatabase <- function(fileDataPath = NULL,
 #'
 #' @return the list with data
 loadFileData <- function(data, fileName, configData, resultsData, resultsColumns, databaseName) {
-  print(paste("LoadfileData-File:", basename(fileName)))
+  print(paste("Loading file:", basename(fileName)))
+  resultType <- NULL
+  if ("result_type" %in% resultsColumns) {
+    resultType <- unique(resultsData$result_type)
+  }
   for (pkg in names(configData)) {
     pkgConfigData <- configData[[pkg]]
-    for (val in names(pkgConfigData)) {
-      configColumns <- pkgConfigData[[val]]
-      configColumns <- unlist(configColumns$names)
-      if (val == "incidence_attrition" & grepl("incidence_attrition", fileName)) {
+
+    if (!is.null(resultType)) {
+      if (resultType %in% names(pkgConfigData)) {
+        configColumns <- pkgConfigData[[resultType]]
+        configColumns <- unlist(configColumns$names)
         if (all(configColumns %in% resultsColumns)) {
-          message(paste0(val, ": match yes"))
-          data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+          message(paste0(resultType, ": match (using resultType)"))
+          data[[pkg]][[resultType]] <- bind_rows(data[[pkg]][[resultType]], resultsData)
         }
-      } else if (val == "prevalence_attrition" & grepl("prevalence_attrition", fileName)) {
-        if (all(configColumns %in% resultsColumns)) {
-          message(paste0(val, ": match yes"))
-          data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-        }
-      } else if (val == "incidence_estimates" & grepl("incidence_", fileName)) {
-        if (all(configColumns %in% resultsColumns)) {
-          if (!('denominator_days_prior_observation' %in% resultsColumns)) {
-            resultsData <- mutate(resultsData,
-                                  denominator_days_prior_observation = denominator_days_prior_history)
+      }
+    } else {
+      for (val in names(pkgConfigData)) {
+        configColumns <- pkgConfigData[[val]]
+        configColumns <- unlist(configColumns$names)
+        if (val == "incidence_attrition" & grepl("incidence_attrition", fileName)) {
+          if (all(configColumns %in% resultsColumns)) {
+            message(paste0(val, ": match"))
+            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
           }
-          if (!('analysis_outcome_washout' %in% resultsColumns)) {
-            resultsData <- mutate(resultsData,
-                                  analysis_outcome_washout = 0)
+        } else if (val == "prevalence_attrition" & grepl("prevalence_attrition", fileName)) {
+          if (all(configColumns %in% resultsColumns)) {
+            message(paste0(val, ": match"))
+            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
           }
-          message(paste0(val, ": match yes"))
-          data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-        }
-      } else if (val == "prevalence_estimates" & grepl("prevalence_", fileName)) {
-        if (all(configColumns %in% resultsColumns)) {
-          if (!('denominator_days_prior_observation' %in% resultsColumns)) {
-            resultsData <- mutate(resultsData,
-                                  denominator_days_prior_observation = denominator_days_prior_history)
+        } else if (val == "incidence_estimates" & grepl("incidence_", fileName)) {
+          if (all(configColumns %in% resultsColumns)) {
+            message(paste0(val, ": match"))
+            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
           }
-          message(paste0(val, ": match yes"))
-          data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-        }
-      } else if (val == "treatmentPathways" & grepl("treatment", fileName)) {
-        if (all(configColumns %in% resultsColumns)) {
-          if (!('cdm_name' %in% resultsColumns)) {
-            resultsData <- mutate(resultsData,
-                                  cdm_name = databaseName)
+        } else if (val == "prevalence_estimates" & grepl("prevalence_", fileName)) {
+          if (all(configColumns %in% resultsColumns)) {
+            message(paste0(val, ": match"))
+            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
           }
-          message(paste0(val, ": match yes"))
-          data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-        }
-      } else if (val == "Summarised Characteristics" & grepl("patient", fileName)) {
-        if (all(configColumns %in% resultsColumns)) {
-          if (!('cdm_name' %in% resultsColumns)) {
-            resultsData <- mutate(resultsData,
-                                  cdm_name = databaseName)
+        } else if (val == "treatmentPathways" & grepl("treatment", fileName)) {
+          if (all(configColumns %in% resultsColumns)) {
+            message(paste0(val, ": match"))
+            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
           }
-          message(paste0(val, ": match yes"))
-          data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-        }
-      } else if (val == "Summarised Large Scale Characteristics" & grepl("patient", fileName)) {
-        if (all(configColumns %in% resultsColumns)) {
-          if (!('cdm_name' %in% resultsColumns)) {
-            resultsData <- mutate(resultsData,
-                                  cdm_name = databaseName)
+        } else if (val == "Summarised Characteristics" & grepl("patient", fileName)) {
+          if (all(configColumns %in% resultsColumns)) {
+            message(paste0(val, ": match"))
+            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
           }
-          message(paste0(val, ": match yes"))
-          data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-        }
-      } else if (val == "Survival estimate" & grepl("single_event", fileName)) {
-        if (all(configColumns %in% resultsColumns)) {
-          message(paste0(val, ": match yes"))
-          data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-        }
-      } else if (val == "Survival cumulative incidence" & grepl("competing_risk", fileName)) {
-        if (all(configColumns %in% resultsColumns)) {
-          message(paste0(val, ": match yes"))
-          data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+        } else if (val == "Summarised Large Scale Characteristics" & grepl("patient", fileName)) {
+          if (all(configColumns %in% resultsColumns)) {
+            message(paste0(val, ": match"))
+            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+          }
+        } else if (val == "Survival estimate" & grepl("single_event", fileName)) {
+          if (all(configColumns %in% resultsColumns)) {
+            message(paste0(val, ": match"))
+            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+          }
+        } else if (val == "Survival cumulative incidence" & grepl("competing_risk", fileName)) {
+          if (all(configColumns %in% resultsColumns)) {
+            message(paste0(val, ": match"))
+            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+          }
         }
       }
     }
