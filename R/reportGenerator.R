@@ -209,7 +209,7 @@ reportGenerator <- function() {
                               tabPanelSelection,
                               uploadedFiles = uploadedFiles,
                               version = input$dataVersionTP)
-      do.call(navlistPanel, previewPanels)
+      do.call(navlistPanel, c(previewPanels, list(widths = c(4, 8))))
     })
 
     characteristicsServer("charac", uploadedFiles$dataPP$`Summary characteristics`)
