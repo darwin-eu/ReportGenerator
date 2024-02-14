@@ -94,9 +94,11 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
   if ("result_type" %in% resultsColumns) {
     resultType <- unique(resultsData$result_type)
   }
+
   for (pkg in names(configData)) {
     pkgConfigData <- configData[[pkg]]
 
+    # if possible use resultType
     if (!is.null(resultType)) {
       if (resultType %in% names(pkgConfigData)) {
         configColumns <- pkgConfigData[[resultType]]

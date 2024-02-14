@@ -38,7 +38,7 @@ TreatmentPatterns:
     - age
     - indexYear
 PatientProfiles:
-  Summarised Characteristics:
+  summarised_characteristics:
     names:
     - cdm_name
     - result_type

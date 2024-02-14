@@ -24,7 +24,7 @@ tabPanelSelection <- function(selection, uploadedFiles, version) {
   } else if (selection == "Sunburst Plot - TreatmentPatterns") {
     tabPanel(selection, sunburstDiagramFilters(uploadedFiles, version), htmlOutput("previewSunburstPlot"))
   } else if (selection == "Summarised Characteristics") {
-    tabPanel(selection, characteristicsUI("characteristics", uploadedFiles$dataPP$`Summarised Characteristics`))
+    tabPanel(selection, characteristicsUI("characteristics", uploadedFiles$dataPP$`summarised_characteristics`))
   } else if (selection == "Summarised Large Scale Characteristics") {
     tabPanel(selection, characteristicsUI("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
   } else if (selection == "Survival table") {

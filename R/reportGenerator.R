@@ -212,7 +212,7 @@ reportGenerator <- function() {
       do.call(navlistPanel, c(previewPanels, list(widths = c(4, 8))))
     })
 
-    characteristicsServer("charac", uploadedFiles$dataPP$`Summary characteristics`)
+    characteristicsServer("charac", uploadedFiles$dataPP$`summarised_characteristics`)
     characteristicsServer("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`)
     cohortSurvivalServer("survivalTable", uploadedFiles$dataCS$`Survival estimate`)
     cohortSurvivalServer("survivalPlot", uploadedFiles$dataCS$`Survival estimate`)
@@ -1111,7 +1111,7 @@ reportGenerator <- function() {
 
     # PatientProfiles
     dataCharacteristics<- characteristicsServer(id = "characteristics",
-                                                dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
+                                                dataset = reactive(uploadedFiles$dataPP$`summarised_characteristics`))
 
     observe({
       for (key in names(dataCharacteristics())) {
