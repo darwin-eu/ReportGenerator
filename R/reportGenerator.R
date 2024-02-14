@@ -59,16 +59,17 @@ reportGenerator <- function() {
                           h2("1. Choose objects"),
                           uiOutput("navPanelPreview")
                    )
-                 ),
-                 tags$br(),
+                 )
+        ),
+        tabPanel("Generate report",
                  fluidRow(
                    column(width = 4,
-                          h2("2. Objects to print"),
+                          h2("Report items"),
                           DTOutput("dataReportMenu"),
                           tags$br(),
                           downloadButton("generateReport", "Generate Report"),
                           tags$br()
-                          )
+                   )
                  )
         )
       )
