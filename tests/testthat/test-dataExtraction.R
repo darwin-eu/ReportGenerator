@@ -6,7 +6,9 @@ test_that("test basic", {
                                   "prevalence_estimates",
                                   "treatmentPathways_test",
                                   "Summarised Large Scale Characteristics",
-                                  "Summarised Characteristics"))
+                                  "Summarised Characteristics",
+                                  "Survival cumulative incidence",
+                                  "Survival estimate"))
 })
 
 test_that("VariablesConfig IncidencePrevalence", {
