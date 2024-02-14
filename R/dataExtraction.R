@@ -89,12 +89,10 @@ joinDatabase <- function(fileDataPath = NULL,
 #'
 #' @return the list with data
 loadFileData <- function(data, fileName, configData, resultsData, resultsColumns, databaseName) {
-  print(paste("LoadfileData-File:", fileName))
+  print(paste("LoadfileData-File:", basename(fileName)))
   for (pkg in names(configData)) {
-    print(paste("LoadfileData:", pkg))
     pkgConfigData <- configData[[pkg]]
     for (val in names(pkgConfigData)) {
-      print(paste("LoadfileData-val:", val))
       configColumns <- pkgConfigData[[val]]
       configColumns <- unlist(configColumns$names)
       if (val == "incidence_attrition" & grepl("incidence_attrition", fileName)) {
