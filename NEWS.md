@@ -1,6 +1,6 @@
 # ReportGenerator 1.14.0
 
-* User can drop zip folder with results from multiple analytical packages.
+* User can drop zip folder with results from multiple analytic packages.
 
 * PatientProfiles and CohortSurvival added to main menu. 
 
