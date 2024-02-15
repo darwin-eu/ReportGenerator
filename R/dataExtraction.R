@@ -366,10 +366,12 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
 #' @return sysdata.rda instruction
 testData <- function(testFilesIP = testthat::test_path("IncPrev", "0.6.0", "zip"),
                      testFilesTP = testthat::test_path("TrePat", "2.5.2", "csv", "CHUBX"),
-                     testFilesPP = testthat::test_path("PP", "0.5.1", "zip")) {
+                     testFilesPP = testthat::test_path("PP", "0.5.1", "zip"),
+                     testFilesCS = testthat::test_path("CS", "0.2.5", "zip")) {
   checkmate::assertDirectoryExists(testFilesIP)
   checkmate::assertDirectoryExists(testFilesTP)
   checkmate::assertDirectoryExists(testFilesPP)
+  checkmate::assertDirectoryExists(testFilesCS)
   uploadedFilesIP <- list.files(testFilesIP,
                                 pattern = ".zip",
                                 full.names = TRUE,
@@ -380,8 +382,13 @@ testData <- function(testFilesIP = testthat::test_path("IncPrev", "0.6.0", "zip"
                                 pattern = ".zip",
                                 full.names = TRUE,
                                 recursive = TRUE)
+  uploadedFilesCS <- list.files(testFilesCS,
+                                pattern = ".zip",
+                                full.names = TRUE,
+                                recursive = TRUE)
   checkmate::assertFileExists(uploadedFilesIP)
   checkmate::assertFileExists(uploadedFilesPP[1])
+  checkmate::assertFileExists(uploadedFilesCS[1])
   checkmate::assertTibble(treatmentPathways_test)
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
@@ -392,12 +399,16 @@ testData <- function(testFilesIP = testthat::test_path("IncPrev", "0.6.0", "zip"
                              versionData = "0.6.0",
                              csvLocation = csvLocation)
   testData[["treatmentPathways_test"]] <- treatmentPathways_test
-  testDataPP <- joinDatabase(fileDataPath  = uploadedFilesPP[1],
+  testDataPP <- joinDatabase(fileDataPath  = uploadedFilesPP,
                              package = "PatientProfiles",
                              versionData = "0.5.1",
                              csvLocation = csvLocation)
+  testDataCS <- joinDatabase(fileDataPath  = uploadedFilesCS,
+                             package = "CohortSurvival",
+                             versionData = "0.2.5",
+                             csvLocation = csvLocation)
 
-  testData <- c(testData, testDataPP)
+  testData <- c(testData, testDataPP, testDataCS)
   unlink(csvLocation, recursive = TRUE)
   return(testData)
 }
