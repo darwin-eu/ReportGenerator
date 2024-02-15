@@ -32,7 +32,7 @@
 reportGenerator <- function() {
 
   # set max file upload size
-  options(shiny.maxRequestSize = 30*1024^2)
+  options(shiny.maxRequestSize = 1000*1024^2)
 
   ui <- dashboardPage(
     dashboardHeader(title = "ReportGenerator"),
