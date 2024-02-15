@@ -51,77 +51,180 @@ characteristicsUI <- function(id, dataset) {
   if (id == "characteristics") {
     lockName <- "lockSummary"
     captionText <- "Table 1. Baseline characteristics of drug user/s at the time of therapy initiation, including pre-specified indication/s. Number of participants per pre-specified strata will be included where necessary/applicable"
+    tagList(
+      fluidRow(
+        column(4,
+               pickerInput(inputId = ns("cdm_name"),
+                           label = "Database",
+                           choices = unique(dataset$cdm_name),
+                           selected = unique(dataset$cdm_name),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("group_level"),
+                           label = "Group Level",
+                           choices = unique(dataset$group_level),
+                           selected = unique(dataset$group_level),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        )
+      ),
+      fluidRow(
+        column(4,
+               pickerInput(inputId = ns("strata_name"),
+                           label = "Strata Name",
+                           choices = unique(dataset$strata_name),
+                           selected = unique(dataset$strata_name),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("variable"),
+                           label = "Variable",
+                           choices = sort(unique(dataset$variable)),
+                           selected = unique(dataset$variable),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        )
+      ),
+      fluidRow(
+        column(4,
+               pickerInput(inputId = ns("variable_level"),
+                           label = "Variable Level",
+                           choices = sort(unique(dataset$variable_level)),
+                           selected = unique(dataset$variable_level),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("estimate_type"),
+                           label = "Estimate Type",
+                           choices = sort(unique(dataset$estimate_type)),
+                           selected = sort(unique(dataset$estimate_type)),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        )
+      ),
+      fluidRow(
+        column(8,
+               textAreaInput(inputId = ns("captionCharacteristics"),
+                             label = "Caption",
+                             value = captionText,
+                             width = '100%',
+                             height = "130px")
+        ),
+      ),
+      fluidRow(column(4, actionButton(ns(lockName), "Add item to report"))),
+      tags$br(),
+      fluidRow(
+        tabsetPanel(type = "tabs",
+                    tabPanel("Table",
+                             br(),
+                             pickerInput(inputId = ns("pivotWide"),
+                                         label = "Arrange by",
+                                         choices = c("Group", "Strata"),
+                                         selected = c("Group", "Strata"),
+                                         multiple = TRUE),
+                             column(12, gt::gt_output(ns("summarisedTableGt")))),
+                    tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
+        )
+      )
+    )
   } else {
     lockName <- "lockLSC"
     captionText <- "Table 2. Baseline characteristics of new user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
+    tagList(
+      fluidRow(
+        column(4,
+               pickerInput(inputId = ns("cdm_name"),
+                           label = "Database",
+                           choices = unique(dataset$cdm_name),
+                           selected = unique(dataset$cdm_name),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("group_level"),
+                           label = "Group Level",
+                           choices = unique(dataset$group_level),
+                           selected = unique(dataset$group_level),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        )
+      ),
+      fluidRow(
+        column(4,
+               pickerInput(inputId = ns("strata_name"),
+                           label = "Strata Name",
+                           choices = unique(dataset$strata_name),
+                           selected = unique(dataset$strata_name),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("table_name"),
+                           label = "Table Name",
+                           choices = sort(unique(dataset$table_name)),
+                           selected = unique(dataset$table_name),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        )
+      ),
+      fluidRow(
+        column(4,
+               pickerInput(inputId = ns("variable"),
+                           label = "Variable",
+                           choices = sort(unique(dataset$variable)),
+                           selected = unique(dataset$variable),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("variable_level"),
+                           label = "Variable Level",
+                           choices = sort(unique(dataset$variable_level)),
+                           selected = unique(dataset$variable_level),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        )
+      ),
+      fluidRow(
+        column(4,
+               pickerInput(inputId = ns("estimate_type"),
+                           label = "Estimate Type",
+                           choices = sort(unique(dataset$estimate_type)),
+                           selected = sort(unique(dataset$estimate_type)),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        )
+      ),
+      fluidRow(
+        column(8,
+               textAreaInput(inputId = ns("captionCharacteristics"),
+                             label = "Caption",
+                             value = captionText,
+                             width = '100%',
+                             height = "130px")
+        ),
+      ),
+      fluidRow(column(4, actionButton(ns(lockName), "Add item to report"))),
+      tags$br(),
+      fluidRow(
+        tabsetPanel(type = "tabs",
+                    tabPanel("Table",
+                             br(),
+                             pickerInput(inputId = ns("pivotWide"),
+                                         label = "Arrange by",
+                                         choices = c("Group", "Strata"),
+                                         selected = c("Group", "Strata"),
+                                         multiple = TRUE),
+                             column(12, gt::gt_output(ns("summarisedTableGt")))),
+                    tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
+        )
+      )
+    )
   }
-  tagList(
-    fluidRow(
-      column(4,
-             pickerInput(inputId = ns("cdm_name"),
-                         label = "Database",
-                         choices = unique(dataset$cdm_name),
-                         selected = unique(dataset$cdm_name),
-                         multiple = TRUE)
-              ),
-      column(4,
-             pickerInput(inputId = ns("group_level"),
-                         label = "Group Level",
-                         choices = unique(dataset$group_level),
-                         selected = unique(dataset$group_level),
-                         multiple = TRUE)
-             )
-      ),
-    fluidRow(
-      column(4,
-             pickerInput(inputId = ns("strata_name"),
-                         label = "Strata Name",
-                         choices = unique(dataset$strata_name),
-                         selected = unique(dataset$strata_name),
-                         multiple = TRUE)
-             ),
-      column(4,
-             pickerInput(inputId = ns("variable"),
-                         label = "Variable",
-                         choices = sort(unique(dataset$variable)),
-                         selected = unique(dataset$variable),
-                         multiple = TRUE)
-             )
-      ),
-    fluidRow(
-      column(4,
-             pickerInput(inputId = ns("estimate_type"),
-                         label = "Estimate Type",
-                         choices = sort(unique(dataset$estimate_type)),
-                         selected = sort(unique(dataset$estimate_type)),
-                         multiple = TRUE)
-             )
-      ),
-    fluidRow(
-      column(8,
-             textAreaInput(inputId = ns("captionCharacteristics"),
-                           label = "Caption",
-                           value = captionText,
-                           width = '100%',
-                           height = "130px")
-      ),
-    ),
-    fluidRow(column(4, actionButton(ns(lockName), "Add item to report"))),
-    tags$br(),
-    fluidRow(
-    tabsetPanel(type = "tabs",
-                tabPanel("Table",
-                         br(),
-                         pickerInput(inputId = ns("pivotWide"),
-                                     label = "Arrange by",
-                                     choices = c("Group", "Strata"),
-                                     selected = c("Group", "Strata"),
-                                     multiple = TRUE),
-                         column(12, gt::gt_output(ns("summarisedTableGt")))),
-                tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
-                )
-    )
-    )
 }
 
 createDataTable <- function(data, tableName = "result") {
@@ -155,6 +258,7 @@ characteristicsServer <- function(id, dataset) {
                            group_level %in% input$group_level,
                            strata_name %in% input$strata_name,
                            variable %in% input$variable,
+                           variable_level %in% input$variable_level,
                            estimate_type %in% input$estimate_type) %>%
         # select(cdm_name, group_level, strata_name, variable, variable_level , estimate_type, estimate) %>%
         mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
@@ -165,12 +269,13 @@ characteristicsServer <- function(id, dataset) {
                              group_level %in% input$group_level,
                              strata_name %in% input$strata_name,
                              variable %in% input$variable,
+                             variable_level %in% input$variable_level,
+                             table_name %in% input$table_name,
                              estimate_type %in% input$estimate_type) %>%
           # select(cdm_name, group_level, strata_name, variable, variable_level, estimate_type, estimate) %>%
           mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
       })
     }
-
 
     output$summarisedTable <- DT::renderDataTable(server = FALSE, {
       createDataTable(dataPP())
