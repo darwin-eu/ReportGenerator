@@ -1,7 +1,7 @@
 test_that("tableNumParfilter returns correct class", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.5.1",
                                                  "zip"),
                              pattern = "zip",
@@ -19,7 +19,7 @@ test_that("tableNumParfilter returns correct class", {
 test_that("tableAttInc returns correct class", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.5.1",
                                                  "zip"),
                              pattern = "zip",
@@ -37,7 +37,7 @@ test_that("tableAttInc returns correct class", {
 test_that("tableAttPrev returns correct class", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.5.1",
                                                  "zip"),
                              pattern = "zip",
@@ -55,7 +55,7 @@ test_that("tableAttPrev returns correct class", {
 test_that("tableSexFilters returns correct class", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.5.1",
                                                  "zip"),
                              pattern = "zip",

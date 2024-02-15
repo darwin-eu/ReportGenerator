@@ -12,7 +12,7 @@ test_that("test basic", {
 })
 
 test_that("VariablesConfig IncidencePrevalence", {
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.5.1",
                                                  "zip"),
                              pattern = "zip",
@@ -28,7 +28,7 @@ test_that("VariablesConfig IncidencePrevalence", {
 })
 
 test_that("VariablesConfig IncidencePrevalence", {
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.6.0",
                                                  "zip"),
                              pattern = "zip",
@@ -44,7 +44,7 @@ test_that("VariablesConfig IncidencePrevalence", {
 })
 
 test_that("VariablesConfig TreatmentPatterns", {
-  fileDataPath <- list.files(testthat::test_path("TrePat", "csv"),
+  fileDataPath <- list.files(testthat::test_path("TP", "csv"),
                              pattern = "csv",
                              full.names = TRUE)
   variablesConfigYaml(fileDataPath = fileDataPath,
@@ -60,7 +60,7 @@ test_that("VariablesConfig TreatmentPatterns", {
 test_that("Loading 1 zip files IncidencePrevalence", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.5.1",
                                                  "zip"),
                              pattern = "zip",
@@ -77,7 +77,7 @@ test_that("Loading 1 zip files IncidencePrevalence", {
 test_that("Loading multiple zip files IncidencePrevalence", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.5.1",
                                                  "zip"),
                              pattern = "zip",
@@ -94,12 +94,12 @@ test_that("Loading multiple zip files IncidencePrevalence", {
 test_that("Loading 1 csv files IncidencePrevalence", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.5.1",
                                                  "csv"),
                              pattern = "csv",
                              full.names = TRUE)
-  fileName <- list.files(testthat::test_path("IncPrev",
+  fileName <- list.files(testthat::test_path("IP",
                                              "0.5.1",
                                              "csv"),
                          pattern = "csv")
@@ -115,12 +115,12 @@ test_that("Loading 1 csv files IncidencePrevalence", {
 })
 
 # test_that("Loading 1 csv files extra column check IncidencePrevalence", {
-#   csvFiles <- list.files(testthat::test_path("IncPrev",
+#   csvFiles <- list.files(testthat::test_path("IP",
 #                                              "extras"),
 #                          pattern = "csv",
 #                          full.names = TRUE)
 #   csvFiles <- csvFiles[1]
-#   fileName <- list.files(testthat::test_path("IncPrev",
+#   fileName <- list.files(testthat::test_path("IP",
 #                                              "extras"),
 #                          pattern = "csv")
 #   fileName <- tools::file_path_sans_ext(fileName)
@@ -141,12 +141,12 @@ test_that("Loading 1 csv files IncidencePrevalence", {
 test_that("Loading multiple csv files IncidencePrevalence", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.5.1",
                                                  "csv"),
                              pattern = "csv",
                              full.names = TRUE)
-  fileName <- list.files(testthat::test_path("IncPrev",
+  fileName <- list.files(testthat::test_path("IP",
                                              "0.5.1",
                                              "csv"),
                          pattern = "csv")
@@ -164,7 +164,7 @@ test_that("Loading multiple csv files IncidencePrevalence", {
 test_that("Loading 1 csv files TreatmentPatterns", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("TrePat",
+  fileDataPath <- list.files(testthat::test_path("TP",
                                                  "2.5.2",
                                                  "csv",
                                                  "CHUBX"),
@@ -188,7 +188,7 @@ test_that("Loading 1 csv files TreatmentPatterns", {
 test_that("Loading multiple csv files TreatmentPatterns", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("TrePat",
+  fileDataPath <- list.files(testthat::test_path("TP",
                                                  "2.5.2",
                                                  "csv"),
                              pattern = "treatmentPathways.csv",
@@ -196,7 +196,7 @@ test_that("Loading multiple csv files TreatmentPatterns", {
                              recursive = TRUE)
   package <- "TreatmentPatterns"
   versionData <- "2.5.2"
-  fileName <- list.files(testthat::test_path("TrePat",
+  fileName <- list.files(testthat::test_path("TP",
                                              "2.5.2",
                                              "csv"),
                          pattern = "treatmentPathways.csv",
@@ -216,7 +216,7 @@ test_that("Loading multiple csv files TreatmentPatterns", {
 test_that("Loading 1 zip files TreatmentPatterns", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("TrePat",
+  fileDataPath <- list.files(testthat::test_path("TP",
                                                  "2.5.2",
                                                  "zip"),
                              pattern = "zip",
@@ -236,7 +236,7 @@ test_that("Loading 1 zip files TreatmentPatterns", {
 test_that("Loading multiple zip files TreatmentPatterns", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("TrePat",
+  fileDataPath <- list.files(testthat::test_path("TP",
                                                  "2.5.2",
                                                  "zip"),
                              pattern = "zip",

@@ -15,9 +15,9 @@ test_that("datasetLoad IncPrev", {
     session$setInputs(datasetLoad = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip",
                                                         "mock_data_ReportGenerator_CHUBX.zip",
                                                         "mock_data_ReportGenerator_IMASIS.zip"),
-                                               datapath = c(test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_CHUBX.zip"),
-                                                            test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_CPRD_GOLD.zip"),
-                                                            test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_IMASIS.zip"))),
+                                               datapath = c(test_path("IP", "0.5.1", "zip", "mock_data_ReportGenerator_CHUBX.zip"),
+                                                            test_path("IP", "0.5.1", "zip", "mock_data_ReportGenerator_CPRD_GOLD.zip"),
+                                                            test_path("IP", "0.5.1", "zip", "mock_data_ReportGenerator_IMASIS.zip"))),
                       dataVersion = "0.5.1")
 
     expect_equal(length(uploadedFiles$dataIP), 4)
@@ -27,7 +27,7 @@ test_that("datasetLoad IncPrev", {
 test_that("datasetLoad IncPrev 0.6.0", {
   testServer(reportGenerator(), {
     session$setInputs(datasetLoad = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip"),
-                                               datapath = c(test_path("IncPrev", "0.6.0", "zip", "mock_data_ReportGenerator_CHUBX.zip"))),
+                                               datapath = c(test_path("IP", "0.6.0", "zip", "mock_data_ReportGenerator_CHUBX.zip"))),
                       dataVersion = "0.6.0")
 
     expect_equal(length(uploadedFiles$dataIP), 4)
@@ -75,7 +75,7 @@ test_that("datasetLoad TrePat", {
 test_that("datasetLoad TrePat Wrong Data 0.6.0", {
   testServer(reportGenerator(), {
     session$setInputs(datasetLoadTP = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip"),
-                                                 datapath = c(test_path("IncPrev", "0.6.0", "zip", "mock_data_ReportGenerator_CHUBX.zip"))),
+                                                 datapath = c(test_path("IP", "0.6.0", "zip", "mock_data_ReportGenerator_CHUBX.zip"))),
                       dataVersionTP = "2.5.2")
 
     expect_equal(length(uploadedFiles$dataTP), 0)
@@ -87,9 +87,9 @@ test_that("datasetLoad TrePat Wrong Data", {
     session$setInputs(datasetLoadTP = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip",
                                                           "mock_data_ReportGenerator_CHUBX.zip",
                                                           "mock_data_ReportGenerator_IMASIS.zip"),
-                                                 datapath = c(test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_CHUBX.zip"),
-                                                              test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_CPRD_GOLD.zip"),
-                                                              test_path("IncPrev", "0.5.1", "zip", "mock_data_ReportGenerator_IMASIS.zip"))),
+                                                 datapath = c(test_path("IP", "0.5.1", "zip", "mock_data_ReportGenerator_CHUBX.zip"),
+                                                              test_path("IP", "0.5.1", "zip", "mock_data_ReportGenerator_CPRD_GOLD.zip"),
+                                                              test_path("IP", "0.5.1", "zip", "mock_data_ReportGenerator_IMASIS.zip"))),
                       dataVersionTP = "2.5.2")
 
     expect_equal(length(uploadedFiles$dataTP), 0)
@@ -100,7 +100,7 @@ test_that("datasetLoad TrePat Wrong Data", {
 test_that("datasetLoad TrePat Wrong Data 0.6.0", {
   testServer(reportGenerator(), {
     session$setInputs(datasetLoadTP = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip"),
-                                                 datapath = c(test_path("IncPrev", "0.6.0", "zip", "mock_data_ReportGenerator_CHUBX.zip"))),
+                                                 datapath = c(test_path("IP", "0.6.0", "zip", "mock_data_ReportGenerator_CHUBX.zip"))),
                       dataVersionTP = "2.5.2")
 
     expect_equal(length(uploadedFiles$dataTP), 0)

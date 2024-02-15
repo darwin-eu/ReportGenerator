@@ -385,8 +385,8 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
 #' @importFrom usethis use_data
 #'
 #' @return sysdata.rda instruction
-testData <- function(testFilesIP = testthat::test_path("IncPrev", "0.6.0", "zip"),
-                     testFilesTP = testthat::test_path("TrePat", "2.5.2", "csv", "CHUBX"),
+testData <- function(testFilesIP = testthat::test_path("IP", "0.6.0", "zip"),
+                     testFilesTP = testthat::test_path("TP", "2.5.2", "csv", "CHUBX"),
                      testFilesPP = testthat::test_path("PP", "0.5.1", "zip"),
                      testFilesCS = testthat::test_path("CS", "0.2.5", "zip")) {
   checkmate::assertDirectoryExists(testFilesIP)

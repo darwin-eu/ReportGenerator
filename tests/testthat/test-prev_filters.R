@@ -1,7 +1,7 @@
 test_that("PrevYear filter returns correct class", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.5.1",
                                                  "zip"),
                              pattern = "zip",
@@ -20,7 +20,7 @@ test_that("PrevYear filter returns correct class", {
 test_that("PrevSex filter returns correct class", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.5.1",
                                                  "zip"),
                              pattern = "zip",
@@ -39,7 +39,7 @@ test_that("PrevSex filter returns correct class", {
 test_that("PrevAge filter returns correct class", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("IncPrev",
+  fileDataPath <- list.files(testthat::test_path("IP",
                                                  "0.5.1",
                                                  "zip"),
                              pattern = "zip",

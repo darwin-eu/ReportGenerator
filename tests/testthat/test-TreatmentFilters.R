@@ -1,7 +1,7 @@
 test_that("SankeyDiagram filter returns correct class 2.5.2", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("TrePat",
+  fileDataPath <- list.files(testthat::test_path("TP",
                                                  "2.5.2",
                                                  "csv",
                                                  "CHUBX"),
@@ -26,7 +26,7 @@ test_that("SankeyDiagram filter returns correct class 2.5.2", {
 test_that("SankeyDiagram filter returns correct class 2.5.0", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("TrePat",
+  fileDataPath <- list.files(testthat::test_path("TP",
                                                  "2.5.2",
                                                  "csv",
                                                  "CHUBX"),
@@ -53,7 +53,7 @@ test_that("SankeyDiagram filter returns correct class 2.5.0", {
 test_that("sunburstDiagram filter returns correct class 2.5.2", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("TrePat",
+  fileDataPath <- list.files(testthat::test_path("TP",
                                                  "2.5.2",
                                                  "csv",
                                                  "CHUBX"),
@@ -78,7 +78,7 @@ test_that("sunburstDiagram filter returns correct class 2.5.2", {
 test_that("sunburstDiagram filter returns correct class 2.5.0", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("TrePat",
+  fileDataPath <- list.files(testthat::test_path("TP",
                                                  "2.5.2",
                                                  "csv",
                                                  "CHUBX"),
