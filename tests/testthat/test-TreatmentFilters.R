@@ -8,17 +8,12 @@ test_that("SankeyDiagram filter returns correct class 2.5.2", {
                              pattern = "csv",
                              full.names = TRUE)
   fileDataPath <- fileDataPath[stringr::str_detect(fileDataPath, "treatmentPathways")]
-  package <- "TreatmentPatterns"
-  version <- "2.5.2"
   fileName <- "treatmentPathways"
   uploadedFiles <- list()
   uploadedFiles$dataTP <- joinDatabase(fileDataPath = fileDataPath,
                                        fileName = fileName,
-                                       package = package,
-                                       versionData = version,
-                                       csvLocation = csvLocation)
-  responseHTML <- sankeyDiagramFilters(uploadedFiles = uploadedFiles,
-                                       version = version)
+                                       csvLocation = csvLocation)$TreatmentPatterns
+  responseHTML <- sankeyDiagramFilters(uploadedFiles = uploadedFiles)
   expect_s3_class(responseHTML, "shiny.tag.list")
   unlink(csvLocation, recursive = TRUE)
 })
@@ -33,19 +28,15 @@ test_that("SankeyDiagram filter returns correct class 2.5.0", {
                              pattern = "csv",
                              full.names = TRUE)
   fileDataPath <- fileDataPath[stringr::str_detect(fileDataPath, "treatmentPathways")]
-  package <- "TreatmentPatterns"
-  version <- "2.5.0"
   fileName <- "treatmentPathways"
   uploadedFiles <- list()
   uploadedFiles$dataTP <- joinDatabase(fileDataPath = fileDataPath,
                                        fileName = fileName,
-                                       package = package,
-                                       versionData = version,
-                                       csvLocation = csvLocation)
+                                       csvLocation = csvLocation)$TreatmentPatterns
   uploadedFiles <- uploadedFiles$dataTP
   uploadedFiles$treatmentPathways <- mutate(uploadedFiles$treatmentPathway, index_year = indexYear)
   responseHTML <- sankeyDiagramFilters(uploadedFiles = uploadedFiles,
-                                       version = version)
+                                       version = "2.5.0")
   expect_s3_class(responseHTML, "shiny.tag.list")
   unlink(csvLocation, recursive = TRUE)
 })
@@ -60,17 +51,12 @@ test_that("sunburstDiagram filter returns correct class 2.5.2", {
                              pattern = "csv",
                              full.names = TRUE)
   fileDataPath <- fileDataPath[stringr::str_detect(fileDataPath, "treatmentPathways")]
-  package <- "TreatmentPatterns"
-  version <- "2.5.2"
   fileName <- "treatmentPathways"
   uploadedFiles <- list()
   uploadedFiles$dataTP <- joinDatabase(fileDataPath = fileDataPath,
                                        fileName = fileName,
-                                       package = package,
-                                       versionData = version,
-                                       csvLocation = csvLocation)
-  responseHTML <- sunburstDiagramFilters(uploadedFiles = uploadedFiles,
-                                       version = version)
+                                       csvLocation = csvLocation)$TreatmentPatterns
+  responseHTML <- sunburstDiagramFilters(uploadedFiles = uploadedFiles)
   expect_s3_class(responseHTML, "shiny.tag.list")
   unlink(csvLocation, recursive = TRUE)
 })
@@ -85,19 +71,14 @@ test_that("sunburstDiagram filter returns correct class 2.5.0", {
                              pattern = "csv",
                              full.names = TRUE)
   fileDataPath <- fileDataPath[stringr::str_detect(fileDataPath, "treatmentPathways")]
-  package <- "TreatmentPatterns"
-  version <- "2.5.0"
   fileName <- "treatmentPathways"
   uploadedFiles <- list()
   uploadedFiles$dataTP <- joinDatabase(fileDataPath = fileDataPath,
                                        fileName = fileName,
-                                       package = package,
-                                       versionData = version,
-                                       csvLocation = csvLocation)
+                                       csvLocation = csvLocation)$TreatmentPatterns
   uploadedFiles <- uploadedFiles$dataTP
   uploadedFiles$treatmentPathways <- mutate(uploadedFiles$treatmentPathway, index_year = indexYear)
-  responseHTML <- sunburstDiagramFilters(uploadedFiles = uploadedFiles,
-                                       version = version)
+  responseHTML <- sunburstDiagramFilters(uploadedFiles = uploadedFiles)
   expect_s3_class(responseHTML, "shiny.tag.list")
   unlink(csvLocation, recursive = TRUE)
 })

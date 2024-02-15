@@ -29,7 +29,6 @@ joinDatabase <- function(fileDataPath = NULL,
                          csvLocation = NULL) {
 
   # Loading yml file
-  # TODO inspect each file
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
   packagesNames <- names(configData)
 
@@ -89,7 +88,6 @@ joinDatabase <- function(fileDataPath = NULL,
 #'
 #' @return the list with data
 loadFileData <- function(data, fileName, configData, resultsData, resultsColumns, databaseName) {
-  print(paste("Loading file:", basename(fileName)))
   resultType <- NULL
   if ("result_type" %in% resultsColumns) {
     resultType <- unique(resultsData$result_type)
@@ -100,6 +98,12 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
 
     # if possible use resultType
     if (!is.null(resultType)) {
+      if (resultType == "Survival estimate") {
+         analysis_type <- unique(resultsData$analysis_type)
+         if (analysis_type == "Competing risk") {
+          resultType <- "Survival cumulative incidence"
+         }
+      }
       if (resultType %in% names(pkgConfigData)) {
         configColumns <- pkgConfigData[[resultType]]
         configColumns <- unlist(configColumns$names)
@@ -134,6 +138,10 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
           }
         } else if (val == "treatmentPathways" & grepl("treatment", fileName)) {
           if (all(configColumns %in% resultsColumns)) {
+            if (!('cdm_name' %in% resultsColumns)) {
+              resultsData <- mutate(resultsData,
+                                    cdm_name = databaseName)
+            }
             message(paste0(val, ": match"))
             data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
           }
@@ -395,18 +403,12 @@ testData <- function(testFilesIP = testthat::test_path("IncPrev", "0.6.0", "zip"
 
   # Extract
   testData <- joinDatabase(fileDataPath  = uploadedFilesIP,
-                             package = "IncidencePrevalence",
-                             versionData = "0.6.0",
-                             csvLocation = csvLocation)
+                             csvLocation = csvLocation)$IncidencePrevalence
   testData[["treatmentPathways_test"]] <- treatmentPathways_test
   testDataPP <- joinDatabase(fileDataPath  = uploadedFilesPP,
-                             package = "PatientProfiles",
-                             versionData = "0.5.1",
-                             csvLocation = csvLocation)
+                             csvLocation = csvLocation)$PatientProfiles
   testDataCS <- joinDatabase(fileDataPath  = uploadedFilesCS,
-                             package = "CohortSurvival",
-                             versionData = "0.2.5",
-                             csvLocation = csvLocation)
+                             csvLocation = csvLocation)$CohortSurvival
 
   testData <- c(testData, testDataPP, testDataCS)
   unlink(csvLocation, recursive = TRUE)
