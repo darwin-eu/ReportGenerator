@@ -1220,29 +1220,19 @@ reportGenerator <- function() {
       if (length(dataReportList) == 0) {
         return("None")
       } else {
-        objectList <- list()
+        result <- data.frame(name = character(0), caption = character(0))
         for (i in seq(1:length(dataReportList))) {
-          objectList <- rbind(objectList, names(dataReportList[[i]]))
+          name <- names(dataReportList[[i]])
+          result <- rbind(result, data.frame(name = name, caption = dataReportList[[i]][[name]]$caption))
         }
-        result <- unlist(objectList)
         return(result)
       }
     })
 
     output$dataReportMenu <- renderDT({
-      dataReportFrame <- data.frame(
-        Name = objectsListPreview()
-      )
+      dataReportFrame <- objectsListPreview()
       DT::datatable(dataReportFrame, options = list(dom = 't'))
     })
-
-    # output$dataReportMenu <- renderPrint({
-    #   # dataReport
-    #   dataReportList <- reactiveValuesToList(dataReport)
-    #   dataReportList
-    #   # length(dataReportList) == 0
-    #   # objectsListPreview()
-    # })
 
     # Word report generator
     output$generateReport <- downloadHandler(
