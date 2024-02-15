@@ -208,8 +208,7 @@ reportGenerator <- function() {
     output$navPanelPreview <- renderUI({
       previewPanels <- lapply(input$objectSelection,
                               tabPanelSelection,
-                              uploadedFiles = uploadedFiles,
-                              version = input$dataVersionTP)
+                              uploadedFiles = uploadedFiles)
       do.call(navlistPanel, c(previewPanels, list(widths = c(4, 8))))
     })
 
@@ -910,39 +909,21 @@ reportGenerator <- function() {
     # SunburstPlot
 
     treatmentDataSunburst <- reactive({
-      if (input$dataVersionTP == "2.5.2") {
-        treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
-        treatmentPathways %>%
-          filter(sex == input$sexSunburst,
-                 age == input$ageSunburst,
-                 indexYear == input$indexSunburst,
-                 cdm_name == input$cdmSunburst)
-      } else if (input$dataVersionTP == "2.5.0") {
-        treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
-        treatmentPathways %>%
-          filter(sex == input$sexSunburst,
-                 age == input$ageSunburst,
-                 index_year == input$indexSunburst,
-                 cdm_name == input$cdmSunburst)
-      }
+      treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+      treatmentPathways %>%
+        filter(sex == input$sexSunburst,
+               age == input$ageSunburst,
+               indexYear == input$indexSunburst,
+               cdm_name == input$cdmSunburst)
     })
 
     treatmentDataSankey <- reactive({
-      if (input$dataVersionTP == "2.5.2") {
-        treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
-        treatmentPathways %>%
-          filter(sex == input$sexSankey,
-                 age == input$ageSankey,
-                 indexYear == input$indexSankey,
-                 cdm_name == input$cdmSankey)
-      } else if (input$dataVersionTP == "2.5.0") {
-        treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
-        treatmentPathways %>%
-          filter(sex == input$sexSankey,
-                 age == input$ageSankey,
-                 index_year == input$indexSankey,
-                 cdm_name == input$cdmSankey)
-      }
+      treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
+      treatmentPathways %>%
+        filter(sex == input$sexSankey,
+               age == input$ageSankey,
+               indexYear == input$indexSankey,
+               cdm_name == input$cdmSankey)
     })
 
     output$previewSunburstPlot <- renderUI({
@@ -958,8 +939,8 @@ reportGenerator <- function() {
       content = function(file) {
         sunburstHTML <- here::here("sunburstDiagram.html")
         createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
-                                              outputFile = sunburstHTML,
-                                              returnHTML = FALSE)
+                           outputFile = sunburstHTML,
+                           returnHTML = FALSE)
         sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
         webshot2::webshot(
           url = sunburstHTML,
@@ -974,9 +955,9 @@ reportGenerator <- function() {
     observeEvent(input$lockTreatmentSunburst, {
         objectChoice <- "Sunburst Plot - TreatmentPatterns"
         sunburstHTML <- here::here("sunburstDiagram.html")
-        createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
-                                              outputFile = sunburstHTML,
-                                              returnHTML = FALSE)
+        sunburstPlot <- createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
+                                           groupCombinations = TRUE,
+                                           outputFile = sunburstHTML)
         sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
         webshot2::webshot(
           url = sunburstHTML,
@@ -1007,10 +988,10 @@ reportGenerator <- function() {
         paste("SankeyDiagram", ".png", sep = "")
       },
       content = function(file) {
-        TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
-                                               returnHTML = FALSE,
-                                               groupCombinations = FALSE,
-                                               minFreq = 1)
+        sankeyHTML <- tempfile(pattern = "sankeyPlot", fileext = ".html")
+        sankeyPlot <- TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
+                                                             groupCombinations = FALSE)
+        htmlwidgets::saveWidget(sankeyPlot, file = sankeyHTML)
         sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
         webshot2::webshot(
           url = sankeyHTML,
@@ -1024,10 +1005,10 @@ reportGenerator <- function() {
 
     observeEvent(input$lockTreatmentSankey, {
       objectChoice <- "Sankey Diagram - TreatmentPatterns"
-      TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
-                                             returnHTML = FALSE,
-                                             groupCombinations = FALSE,
-                                             minFreq = 1)
+      sankeyHTML <- tempfile(pattern = "sankeyPlot", fileext = ".html")
+      sankeyPlot <- TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
+                                                           groupCombinations = FALSE)
+      htmlwidgets::saveWidget(sankeyPlot, file = sankeyHTML)
       sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
       webshot2::webshot(
         url = sankeyHTML,
@@ -1223,7 +1204,12 @@ reportGenerator <- function() {
         result <- data.frame(name = character(0), caption = character(0))
         for (i in seq(1:length(dataReportList))) {
           name <- names(dataReportList[[i]])
-          result <- rbind(result, data.frame(name = name, caption = dataReportList[[i]][[name]]$caption))
+          reportItem <- dataReportList[[i]][[name]]
+          caption <- ""
+          if ("caption" %in% names(reportItem)) {
+            caption <- reportItem$caption
+          }
+          result <- rbind(result, data.frame(name = name, caption = caption))
         }
         return(result)
       }

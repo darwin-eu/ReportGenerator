@@ -67,10 +67,9 @@ createSunburstPlot:
   options: TRUE, FALSE
 createSankeyDiagram:
   title: "Sankey Diagram - TreatmentPatterns"
-  function: createSankeyDiagram(treatmentPathways, outputFile, returnHTML)
+  function: createSankeyDiagram(treatmentPathways)
   type:
     - treatmentPathways
-  options: TRUE, FALSE
 summaryCharacteristics:
   title: "Summarised Characteristics"
   function: gtCharacteristics(summarisedCharacteristics)
