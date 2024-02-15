@@ -45,7 +45,8 @@ Imports:
     duckdb,
     DT,
     TreatmentPatterns (>= 2.6.0),
-    PatientProfiles
+    PatientProfiles,
+    shinycssloaders
 Suggests:
     testthat,
     rmarkdown,
