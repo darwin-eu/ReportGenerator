@@ -1197,7 +1197,7 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'survivalPlot-captionSurvivalEstimate'
     })
-    
+
     observeEvent(input$lockfailureTable, {
       objectChoice <- "Cumulative incidence table"
       randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
