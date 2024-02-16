@@ -95,13 +95,13 @@ incidenceUI <- function(id, dataset) {
                actionButton(ns("lockDataIncidenceYear"), "Add item to report")
         ),
         column(4,
-               downloadButton(ns("downloadFigure1Inc"), "Download Plot")
+               downloadButton(ns("downloadFigure"), "Download Plot")
         ),
       ),
       tags$br(),
       fluidRow(
         column(8,
-          plotOutput(ns("previewFigure1"))
+          plotOutput(ns("previewFigure"))
         )
       )
     )
@@ -112,9 +112,7 @@ incidenceServer <- function(id, dataset) {
   moduleServer(id, function(input, output, session) {
 
     # Figure 1
-    incidenceFigure1 <- reactive({
-
-      objectChoice <- "Plot - Incidence rate per year"
+    incidenceCommonData <- reactive({
       incidence_estimates <- dataset()
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
@@ -159,26 +157,34 @@ incidenceServer <- function(id, dataset) {
       return(incidence_estimates)
     })
 
-  previewFigure1 <- reactive({
-    objectChoice <- "Plot - Incidence rate per year"
+  previewFigure <- reactive({
     expression <- getItemConfig(input = "title",
                                 output = "function",
-                                inputValue = objectChoice) %>%
+                                inputValue = id) %>%
       addPreviewItemType(input$facetIncidenceYear)
-    incidence_estimates <- incidenceFigure1()
+    incidence_estimates <- incidenceCommonData()
     eval(parse(text = expression))
   })
 
-  output$previewFigure1 <- renderPlot({
-    req(previewFigure1())
-    previewFigure1()
+  output$previewFigure <- renderPlot({
+    req(previewFigure())
+    previewFigure()
   })
+
+  output$downloadFigure <- downloadHandler(
+    filename = function() {
+      paste(id, ".png", sep = "")
+    },
+    content = function(file) {
+      ggplot2::ggsave(file, plot = previewFigure(), device = "png", height = 500, width = 845, units = "mm")
+    }
+  )
 
   addObject <- reactiveVal()
 
   observeEvent(input$lockDataIncidenceYear, {
     addObject(
-      list(`Plot - Incidence rate per year` = list(incidence_estimates = incidenceFigure1(),
+      list(`Plot - Incidence rate per year` = list(incidence_estimates = incidenceCommonData(),
                                                    plotOption = input$facetIncidenceYear,
                                                    caption = input$captionIncYear))
     )
