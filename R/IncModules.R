@@ -1,5 +1,4 @@
 incidenceUI <- function(id, dataset) {
-  ns <- NS(id)
   if (id == "Plot - Incidence rate per year") {
 
     databaseChoices <- c("All", unique(dataset$cdm_name))
@@ -59,7 +58,7 @@ incidenceUI <- function(id, dataset) {
     tagList(
       fluidRow(
         column(4,
-               pickerInput(inputId = ns("facetIncidence"),
+               pickerInput(inputId = NS(id, "facetIncidence"),
                            label = "Select plot type",
                            choices = c("Facet by outcome", "Facet by database"),
                            selected = "Facet by outcome")
@@ -67,14 +66,14 @@ incidenceUI <- function(id, dataset) {
       ),
       fluidRow(
         column(4,
-               pickerInput(inputId = ns("washoutIncidence"),
+               pickerInput(inputId = NS(id, "washoutIncidence"),
                            label = "Washout",
                            choices = unique(dataset$analysis_outcome_washout),
                            selected = unique(dataset$analysis_outcome_washout)[1],
                            multiple = FALSE)
         ),
         column(4,
-               pickerInput(inputId = ns("daysPriorIncidence"),
+               pickerInput(inputId = NS(id, "daysPriorIncidence"),
                            label = "Days Prior History",
                            choices = unique(dataset$denominator_days_prior_observation),
                            selected = unique(dataset$denominator_days_prior_observation)[1],
@@ -83,7 +82,7 @@ incidenceUI <- function(id, dataset) {
       ),
       fluidRow(
         column(4,
-               pickerInput(inputId = ns("databaseIncidence"),
+               pickerInput(inputId = NS(id, "databaseIncidence"),
                            label = "Database",
                            choices = databaseChoices,
                            selected = databaseSelected,
@@ -91,7 +90,7 @@ incidenceUI <- function(id, dataset) {
                            options = databaseOptions)
         ),
         column(4,
-               pickerInput(inputId = ns("outcomeIncidence"),
+               pickerInput(inputId = NS(id, "outcomeIncidence"),
                            label = "Outcome",
                            choices = c("All", unique(dataset$outcome_cohort_name)),
                            selected = "All",
@@ -100,14 +99,14 @@ incidenceUI <- function(id, dataset) {
       ),
       fluidRow(
         column(4,
-               pickerInput(inputId = ns("sexIncidence"),
+               pickerInput(inputId = NS(id, "sexIncidence"),
                            label = "Sex",
                            choices = sexChoices,
                            selected = sexSelected,
                            multiple = sexMultiple)
         ),
         column(4,
-               pickerInput(inputId = ns("ageIncidence"),
+               pickerInput(inputId = NS(id, "ageIncidence"),
                            label = "Age",
                            choices = ageChoices,
                            selected = ageSelected,
@@ -116,25 +115,25 @@ incidenceUI <- function(id, dataset) {
       ),
       fluidRow(
         column(4,
-               pickerInput(inputId = ns("intervalIncidence"),
+               pickerInput(inputId = NS(id, "intervalIncidence"),
                            label = "Interval",
                            choices = unique(dataset$analysis_interval)),
         ),
         column(4,
-               pickerInput(inputId = ns("repeatedIncidence"),
+               pickerInput(inputId = NS(id, "repeatedIncidence"),
                            label = "Repeated Events",
                            choices = unique(dataset$analysis_repeated_events)),
         )
       ),
       fluidRow(
         column(4,
-               pickerInput(inputId = ns("timeFromIncidence"),
+               pickerInput(inputId = NS(id, "timeFromIncidence"),
                            label = "From",
                            choices = unique(dataset$incidence_start_date),
                            selected = min(unique(dataset$incidence_start_date)))
         ),
         column(4,
-               pickerInput(inputId = ns("timeToIncidence"),
+               pickerInput(inputId = NS(id, "timeToIncidence"),
                            label = "To",
                            choices = unique(dataset$incidence_start_date),
                            selected = max(unique(dataset$incidence_start_date)))
@@ -142,7 +141,7 @@ incidenceUI <- function(id, dataset) {
       ),
       fluidRow(
         column(8,
-               textAreaInput(inputId = ns("captionInc"),
+               textAreaInput(inputId = NS(id, "captionInc"),
                              label = "Caption",
                              value = captionValue,
                              width = '100%',
@@ -151,16 +150,16 @@ incidenceUI <- function(id, dataset) {
       ),
       fluidRow(
         column(4,
-               actionButton(ns(lockVariable), "Add item to report")
+               actionButton(NS(id, lockVariable), "Add item to report")
         ),
         column(4,
-               downloadButton(ns("downloadFigure"), "Download Plot")
+               downloadButton(NS(id, "downloadFigure"), "Download Plot")
         ),
       ),
       tags$br(),
       fluidRow(
         column(8,
-          plotOutput(ns("previewFigure"))
+          plotOutput(NS(id, "previewFigure"))
         )
       )
     )
@@ -169,7 +168,6 @@ incidenceUI <- function(id, dataset) {
 
 incidenceServer <- function(id, dataset) {
   moduleServer(id, function(input, output, session) {
-
     # Figure 1
     incidenceCommonData <- reactive({
       incidence_estimates <- dataset()
@@ -235,6 +233,7 @@ incidenceServer <- function(id, dataset) {
         incidence_estimates <- incidenceCommonData()
         eval(parse(text = expression))
       })
+
     } else if (id == "Plot - Incidence rate per year by age") {
       previewFigure <- reactive({
         expression <- getItemConfig(input = "title",

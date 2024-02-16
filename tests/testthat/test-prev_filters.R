@@ -12,7 +12,7 @@ test_that("PrevYear filter returns correct class", {
                                        versionData = "0.5.1",
                                        csvLocation = csvLocation)
   responseHTML <- prevPlotByYearFilters(uploadedFiles = uploadedFiles,
-                                       objectChoice = "Plot - Prevalence rate per year by sex")
+                                       objectChoice = "Plot - Prevalence per year by sex")
   expect_s3_class(responseHTML, "shiny.tag.list")
   unlink(csvLocation, recursive = TRUE)
 })
@@ -50,7 +50,7 @@ test_that("PrevAge filter returns correct class", {
                                        versionData = "0.5.1",
                                        csvLocation = csvLocation)
   responseHTML <- prevPlotAgeFilters(uploadedFiles = uploadedFiles,
-                                    objectChoice = "Plot - Prevalence rate per year by sex")
+                                    objectChoice = "Plot - Prevalence per year by sex")
   expect_s3_class(responseHTML, "shiny.tag.list")
   unlink(csvLocation, recursive = TRUE)
 })

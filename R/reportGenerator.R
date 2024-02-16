@@ -243,6 +243,35 @@ reportGenerator <- function() {
       # }
     })
 
+    # 1. Interactive menu
+
+    output$itemSelectionMenu <- renderUI({
+      column(tags$b("Item selection"),
+             width = 12,
+             bucket_list(header = "Select the figures you want in the report",
+                         group_name = "bucket_list_group",
+                         orientation = "horizontal",
+                         add_rank_list(text = "Drag from here",
+                                       labels = itemsList$objects[["items"]],
+                                       input_id = "objectMenu"),
+                         add_rank_list(text = "to here",
+                                       labels = NULL,
+                                       input_id = "objectSelection")
+             )
+      )
+    })
+
+    # Item preview
+
+    # Renders the objectSelection into the main dashboard space
+    output$navPanelPreview <- renderUI({
+      previewPanels <- lapply(input$objectSelection,
+                              tabPanelSelection,
+                              uploadedFiles = uploadedFiles,
+                              version = input$dataVersionTP)
+      do.call(navlistPanel, previewPanels)
+    })
+
     # 2.Assign Data
 
     dataReport <- reactiveValues()
@@ -287,41 +316,6 @@ reportGenerator <- function() {
       }
     })
 
-    # 3. Interactive menu
-
-    output$itemSelectionMenu <- renderUI({
-      column(tags$b("Item selection"),
-             width = 12,
-             bucket_list(header = "Select the figures you want in the report",
-                         group_name = "bucket_list_group",
-                         orientation = "horizontal",
-                         add_rank_list(text = "Drag from here",
-                                       labels = itemsList$objects[["items"]],
-                                       input_id = "objectMenu"),
-                         add_rank_list(text = "to here",
-                                       labels = NULL,
-                                       input_id = "objectSelection")
-             )
-      )
-    })
-
-    # Item preview
-
-    # Renders the objectSelection into the main dashboard space
-    output$navPanelPreview <- renderUI({
-      previewPanels <- lapply(input$objectSelection,
-                              tabPanelSelection,
-                              uploadedFiles = uploadedFiles,
-                              version = input$dataVersionTP)
-      do.call(navlistPanel, previewPanels)
-    })
-
-    characteristicsServer("charac", uploadedFiles$dataPP$`Summary characteristics`)
-    characteristicsServer("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`)
-    cohortSurvivalServer("survivalTable", uploadedFiles$dataCS$`Survival estimate`)
-    cohortSurvivalServer("survivalPlot", uploadedFiles$dataCS$`Survival estimate`)
-    cohortSurvivalServer("failureTable", uploadedFiles$dataCS$`Survival cumulative incidence`)
-    cohortSurvivalServer("failurePlot", uploadedFiles$dataCS$`Survival cumulative incidence`)
 
     # Objects to be rendered in the UI
 
@@ -401,350 +395,83 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTableSexAge
     })
 
+    # Incidence Modules
 
-    # Update according to facet incidence
+    dataIncidenceYear <- incidenceServer(id = "Plot - Incidence rate per year",
+                                     dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
 
-    observeEvent(input$facetIncidenceSex, {
-      if  (input$facetIncidenceSex == "Facet by database") {
-        updatePickerInput(session,
-                          inputId = "databaseIncidenceSex",
-                          label = "Database",
-                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)),
-                          selected = "All",
-                          options = list(
-                            maxOptions = (length(unique(uploadedFiles$dataIP$incidence_estimates$cdm_name))+1)
-                          ))
-
-        updatePickerInput(session,
-                          inputId = "outcomeIncidenceSex",
-                          label = "Outcome",
-                          choices = unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name),
-                          selected = uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name[1],
-                          options = list(
-                            maxOptions = 1
-                          ))
-
-      } else {
-        updatePickerInput(session,
-                          inputId = "databaseIncidenceSex",
-                          label = "Database",
-                          choices = unique(uploadedFiles$dataIP$incidence_estimates$cdm_name),
-                          selected = uploadedFiles$dataIP$incidence_estimates$cdm_name[1],
-                          options = list(
-                            maxOptions = 1
-                          )
-        )
-        updatePickerInput(session,
-                          inputId = "outcomeIncidenceSex",
-                          label = "Outcome",
-                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)),
-                          selected = "All")
-
+    observe({
+      for (key in names(dataIncidenceYear())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataIncidenceYear()
       }
-    })
+    }) %>%
+      bindEvent(dataIncidenceYear())
 
-    observeEvent(input$facetIncidenceAge, {
-      if  (input$facetIncidenceAge == "Facet by database") {
-        updatePickerInput(session,
-                          inputId = "databaseIncidenceAge",
-                          label = "Database",
-                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)),
-                          selected = "All",
-                          options = list(
-                            maxOptions = (length(unique(uploadedFiles$dataIP$incidence_estimates$cdm_name))+1)
-                          ))
+    dataIncidenceSex <- incidenceServer(id = "Plot - Incidence rate per year by sex",
+                                         dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
 
-        updatePickerInput(session,
-                          inputId = "outcomeIncidenceAge",
-                          label = "Outcome",
-                          choices = unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name),
-                          selected = uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name[1],
-                          options = list(
-                            maxOptions = 1
-                          ))
-      } else {
-
-        updatePickerInput(session,
-                          inputId = "databaseIncidenceAge",
-                          label = "Database",
-                          choices = unique(uploadedFiles$dataIP$incidence_estimates$cdm_name),
-                          selected = uploadedFiles$dataIP$incidence_estimates$cdm_name[1],
-                          options = list(
-                            maxOptions = 1
-                          )
-        )
-        updatePickerInput(session,
-                          inputId = "outcomeIncidenceAge",
-                          label = "Outcome",
-                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)),
-                          selected = "All")
-
+    observe({
+      for (key in names(dataIncidenceSex())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataIncidenceSex()
       }
-    })
+    }) %>%
+      bindEvent(dataIncidenceSex())
 
-    # Figure 4: Prevalence rate per year
+    dataIncidenceAge <- incidenceServer(id = "Plot - Incidence rate per year by age",
+                                        dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
 
-    prevalenceFigure4 <- reactive({
-      objectChoice <- "Plot - Prevalence rate per year"
-      prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
-      class(prevalence_estimates) <- c("IncidencePrevalenceResult",
-                                       "PrevalenceResult",
-                                       "tbl_df",
-                                       "tbl",
-                                       "data.frame")
-      prevalence_estimates[is.na(prevalence_estimates)] = 0
-
-      # Database
-      if (length(input$databasePrevalenceYear) != 1 || input$databasePrevalenceYear != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(cdm_name %in% c(input$databasePrevalenceYear))
+    observe({
+      for (key in names(dataIncidenceAge())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataIncidenceAge()
       }
+    }) %>%
+      bindEvent(dataIncidenceAge())
 
-      # Outcome
-      if (length(input$outcomePrevalenceYear) != 1 || input$outcomePrevalenceYear != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(outcome_cohort_name %in% input$outcomePrevalenceYear)
+    # Prevalence Modules
+
+    dataPrevalenceYear <- prevalenceServer(id = "Plot - Prevalence per year",
+                                         dataset = reactive(uploadedFiles$dataIP$prevalence_estimates))
+
+    observe({
+      for (key in names(dataPrevalenceYear())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataPrevalenceYear()
       }
-      # Sex
+    }) %>%
+      bindEvent(dataPrevalenceYear())
 
-      if (length(input$sexPrevalenceYear) != 1 || input$sexPrevalenceYear != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(denominator_sex %in% input$sexPrevalenceYear)
+    dataPrevalenceSex <- prevalenceServer(id = "Plot - Prevalence per year by sex",
+                                        dataset = reactive(uploadedFiles$dataIP$prevalence_estimates))
+
+    observe({
+      for (key in names(dataPrevalenceSex())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataPrevalenceSex()
       }
+    }) %>%
+      bindEvent(dataPrevalenceSex())
 
-      # Age group
+    dataPrevalenceAge <- prevalenceServer(id = "Plot - Prevalence per year by age",
+                                        dataset = reactive(uploadedFiles$dataIP$prevalence_estimates))
 
-      if (length(input$agePrevalenceYear) != 1 || input$agePrevalenceYear != "All")  {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(denominator_age_group %in% input$agePrevalenceYear)
+    observe({
+      for (key in names(dataPrevalenceAge())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataPrevalenceAge()
       }
+    }) %>%
+      bindEvent(dataPrevalenceAge())
 
-      # Start Time
-      prevalence_estimates <- prevalence_estimates %>%
-        filter(between(prevalence_start_date,
-                       as.Date(input$timeFromPrevalenceYear),
-                       as.Date(input$timeToPrevalenceYear)))
-
-      # Interval
-      prevalence_estimates <- prevalence_estimates %>%
-        filter(analysis_interval == input$intervalPrevalenceYear)
-
-      # Repeated events
-      prevalence_estimates <- prevalence_estimates %>%
-        filter(analysis_type == input$typePrevalenceYear)
-
-      return(prevalence_estimates)
-
-    })
-
-    previewFigure4 <- reactive({
-      objectChoice <- "Plot - Prevalence rate per year"
-      expression <- getItemConfig(input = "title",
-                                  output = "function",
-                                  inputValue = objectChoice) %>%
-        addPreviewItemType(input$facetPrevalenceYear)
-      prevalence_estimates <- prevalenceFigure4()
-      eval(parse(text = expression))
-    })
-
-    output$previewFigure4 <- renderPlot({
-      req(previewFigure4())
-      previewFigure4()
-    })
-
-    # Lock data Figure 4
-    observeEvent(input$lockDataPrevalenceYear, {
-      objectChoice <- "Plot - Prevalence rate per year"
-      chars <- c(0:9, letters, LETTERS)
-      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-      dataReport[[randomId]][[objectChoice]][["prevalence_estimates"]] <- prevalenceFigure4()
-      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- input$facetPrevalenceYear
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionPrevYear
-    })
-
-    # Download Figure 4
-
-    output$downloadFigure4Prev <- downloadHandler(
-      filename = function() {
-        paste("Figure4Prev", ".png", sep = "")
-      },
-      content = function(file) {
-        ggplot2::ggsave(file, plot = previewFigure4(), device = "png", height = 500, width = 845, units = "mm")
-      }
-    )
-
-    # Figure 5: Prevalence rate per year by sex
-
-    prevalenceFigure5 <- reactive({
-      objectChoice <- "Plot - Prevalence rate per year by sex"
-      prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
-      class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
-      prevalence_estimates[is.na(prevalence_estimates)] = 0
-
-      # Database
-      if (length(input$databasePrevalenceSex) != 1 || input$databasePrevalenceSex != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(cdm_name %in% c(input$databasePrevalenceSex))
-      }
-
-      # Outcome
-      if (length(input$outcomePrevalenceSex) != 1 || input$outcomePrevalenceSex != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(outcome_cohort_name %in% input$outcomePrevalenceSex)
-      }
-      # Sex
-
-      if (length(input$sexPrevalenceSex) != 1 || input$sexPrevalenceSex != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(denominator_sex %in% input$sexPrevalenceSex)
-      }
-
-      # Age group
-
-      if (length(input$agePrevalenceSex) != 1 || input$agePrevalenceSex != "All")  {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(denominator_age_group %in% input$agePrevalenceSex)
-      }
-
-      # Start Time
-      prevalence_estimates <- prevalence_estimates %>%
-        filter(between(prevalence_start_date,
-                       as.Date(input$timeFromPrevalenceSex),
-                       as.Date(input$timeToPrevalenceSex)))
-
-      # Interval
-      prevalence_estimates <- prevalence_estimates %>%
-        filter(analysis_interval == input$intervalPrevalenceSex)
-
-      # Repeated events
-      prevalence_estimates <- prevalence_estimates %>%
-        filter(analysis_type == input$typePrevalenceSex)
-
-      return(prevalence_estimates)
-
-    })
-
-    previewFigure5 <- reactive({
-      objectChoice <- "Plot - Prevalence rate per year by sex"
-      expression <- getItemConfig(input = "title",
-                                  output = "function",
-                                  inputValue = objectChoice) %>%
-        addPreviewItemTypeSex(input$facetPrevalenceSex)
-      prevalence_estimates <- prevalenceFigure5()
-      eval(parse(text = expression))
-    })
-
-    output$previewFigure5 <- renderPlot({
-      req(previewFigure5())
-      previewFigure5()
-    })
-
-    # Lock data Figure 5
-    observeEvent(input$lockDataPrevalenceSex, {
-      objectChoice <- "Plot - Prevalence rate per year by sex"
-      chars <- c(0:9, letters, LETTERS)
-      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-      dataReport[[randomId]][[objectChoice]][["prevalence_estimates"]] <- prevalenceFigure5()
-      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- input$facetPrevalenceSex
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionPrevSex
-    })
-
-    # Download Figure 5
-
-    output$downloadFigure5Prev <- downloadHandler(
-      filename = function() {
-        paste("Figure5PrevSex", ".png", sep = "")
-      },
-      content = function(file) {
-        ggplot2::ggsave(file, plot = previewFigure5(), device = "png", height = 500, width = 845, units = "mm")
-      }
-    )
-
-    # Figure 6: Prevalence rate per year by age
-
-    prevalenceFigure6 <- reactive({
-      objectChoice <- "Plot - Prevalence rate per year by age"
-      prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
-      class(prevalence_estimates) <- c("IncidencePrevalenceResult", "PrevalenceResult", "tbl_df", "tbl", "data.frame")
-      prevalence_estimates[is.na(prevalence_estimates)] = 0
-
-      # Database
-      if (length(input$databasePrevalenceAge) != 1 || input$databasePrevalenceAge != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(cdm_name %in% c(input$databasePrevalenceAge))
-      }
-
-      # Outcome
-      if (length(input$outcomePrevalenceAge) != 1 || input$outcomePrevalenceAge != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(outcome_cohort_name %in% input$outcomePrevalenceAge)
-      }
-      # Sex
-
-      if (length(input$sexPrevalenceAge) != 1 || input$sexPrevalenceAge != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(denominator_sex %in% input$sexPrevalenceAge)
-      }
-
-      # Age group
-
-      if (length(input$agePrevalenceAge) != 1 || input$agePrevalenceAge != "All")  {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(denominator_age_group %in% input$agePrevalenceAge)
-      }
-
-      # Start Time
-      prevalence_estimates <- prevalence_estimates %>%
-        filter(between(prevalence_start_date,
-                       as.Date(input$timeFromPrevalenceAge),
-                       as.Date(input$timeToPrevalenceAge)))
-
-      # Interval
-      prevalence_estimates <- prevalence_estimates %>%
-        filter(analysis_interval == input$intervalPrevalenceAge)
-
-      # Repeated events
-      prevalence_estimates <- prevalence_estimates %>%
-        filter(analysis_type == input$typePrevalenceAge)
-
-      return(prevalence_estimates)
-    })
-
-    previewFigure6 <- reactive({
-      objectChoice <- "Plot - Prevalence rate per year by age"
-      expression <- getItemConfig(input = "title",
-                                  output = "function",
-                                  inputValue = objectChoice) %>%
-        addPreviewItemTypeAge(input$facetPrevalenceAge)
-      prevalence_estimates <- prevalenceFigure6()
-      eval(parse(text = expression))
-    })
-
-    output$previewFigure6 <- renderPlot({
-      req(previewFigure6())
-      previewFigure6()
-    })
-
-    # Lock data Figure 6
-    observeEvent(input$lockDataPrevalenceAge, {
-      objectChoice <- "Plot - Prevalence rate per year by age"
-      chars <- c(0:9, letters, LETTERS)
-      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-      dataReport[[randomId]][[objectChoice]][["prevalence_estimates"]] <- prevalenceFigure6()
-      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- input$facetPrevalenceAge
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionPrevAge
-    })
-
-    # Download Figure 6
-
-    output$downloadFigure6Prev <- downloadHandler(
-      filename = function() {
-        paste("Figure6PrevAge", ".png", sep = "")
-      },
-      content = function(file) {
-        ggplot2::ggsave(file, plot = previewFigure6(), device = "png", height = 500, width = 845, units = "mm")
-      }
-    )
+    # Treatment Patterns
 
     # SunburstPlot
 
@@ -797,8 +524,8 @@ reportGenerator <- function() {
       content = function(file) {
         sunburstHTML <- here::here("sunburstDiagram.html")
         createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
-                                              outputFile = sunburstHTML,
-                                              returnHTML = FALSE)
+                           outputFile = sunburstHTML,
+                           returnHTML = FALSE)
         sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
         webshot2::webshot(
           url = sunburstHTML,
@@ -811,26 +538,26 @@ reportGenerator <- function() {
     )
 
     observeEvent(input$lockTreatmentSunburst, {
-        objectChoice <- "Sunburst Plot - TreatmentPatterns"
-        sunburstHTML <- here::here("sunburstDiagram.html")
-        createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
-                                              outputFile = sunburstHTML,
-                                              returnHTML = FALSE)
-        sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
-        webshot2::webshot(
-          url = sunburstHTML,
-          file = sunburstPNG,
-          vwidth = 1200,
-          vheight = 10)
-        sunburstPath <- normalizePath(sunburstPNG)
-        message("Adding filename to dataReport")
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-        dataReport[[randomId]][[objectChoice]][["treatmentPathways"]] <- treatmentDataSunburst()
-        dataReport[[randomId]][[objectChoice]][["outputFile"]] <- sunburstHTML
-        dataReport[[randomId]][[objectChoice]][["returnHTML"]] <- FALSE
-        dataReport[[randomId]][[objectChoice]][["fileImage"]] <- sunburstPNG
-        message("Filename added to dataReport")
+      objectChoice <- "Sunburst Plot - TreatmentPatterns"
+      sunburstHTML <- here::here("sunburstDiagram.html")
+      createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
+                         outputFile = sunburstHTML,
+                         returnHTML = FALSE)
+      sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
+      webshot2::webshot(
+        url = sunburstHTML,
+        file = sunburstPNG,
+        vwidth = 1200,
+        vheight = 10)
+      sunburstPath <- normalizePath(sunburstPNG)
+      message("Adding filename to dataReport")
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["treatmentPathways"]] <- treatmentDataSunburst()
+      dataReport[[randomId]][[objectChoice]][["outputFile"]] <- sunburstHTML
+      dataReport[[randomId]][[objectChoice]][["returnHTML"]] <- FALSE
+      dataReport[[randomId]][[objectChoice]][["fileImage"]] <- sunburstPNG
+      message("Filename added to dataReport")
     })
 
     # Sankey
@@ -883,7 +610,40 @@ reportGenerator <- function() {
       message("Filename added to dataReport")
     })
 
+    # PatientProfiles Modules
+    dataCharacteristics <- characteristicsServer(id = "characteristics",
+                                                dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
+
+    observe({
+      for (key in names(dataCharacteristics())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataCharacteristics()
+      }
+    }) %>%
+      bindEvent(dataCharacteristics())
+
+    dataLSC <- characteristicsServer(id = "lsc",
+                                     dataset = reactive(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
+
+    observe({
+      for (key in names(dataLSC())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataLSC()
+      }
+    }) %>%
+      bindEvent(dataLSC())
+
+    # Cohort Survival Modules
+
+    cohortSurvivalServer("survivalTable", uploadedFiles$dataCS$`Survival estimate`)
+    cohortSurvivalServer("survivalPlot", uploadedFiles$dataCS$`Survival estimate`)
+    cohortSurvivalServer("failureTable", uploadedFiles$dataCS$`Survival cumulative incidence`)
+    cohortSurvivalServer("failurePlot", uploadedFiles$dataCS$`Survival cumulative incidence`)
+
     # Cohort Survival report items
+
     survivalEstimateData <- reactive({
       if (!is.null(uploadedFiles$dataCS$`Survival estimate`)) {
         uploadedFiles$dataCS$`Survival estimate` %>%
@@ -949,148 +709,7 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'failurePlot-captionCumulativeIncidence'
     })
 
-    # Incidence Modules
-
-    dataIncidenceYear <- incidenceServer(id = "Plot - Incidence rate per year",
-                                     dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
-
-    observe({
-      for (key in names(dataIncidenceYear())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-        dataReport[[randomId]] <- dataIncidenceYear()
-      }
-    }) %>%
-      bindEvent(dataIncidenceYear())
-
-    dataIncidenceSex <- incidenceServer(id = "Plot - Incidence rate per year by sex",
-                                         dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
-
-    observe({
-      for (key in names(dataIncidenceSex())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-        dataReport[[randomId]] <- dataIncidenceSex()
-      }
-    }) %>%
-      bindEvent(dataIncidenceSex())
-
-    dataIncidenceAge <- incidenceServer(id = "Plot - Incidence rate per year by age",
-                                        dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
-
-    observe({
-      for (key in names(dataIncidenceAge())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-        dataReport[[randomId]] <- dataIncidenceAge()
-      }
-    }) %>%
-      bindEvent(dataIncidenceAge())
-
-    # PatientProfiles
-    dataCharacteristics <- characteristicsServer(id = "characteristics",
-                                                dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
-
-    observe({
-      for (key in names(dataCharacteristics())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-        dataReport[[randomId]] <- dataCharacteristics()
-      }
-    }) %>%
-      bindEvent(dataCharacteristics())
-
-    dataLSC <- characteristicsServer(id = "lsc",
-                                     dataset = reactive(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
-
-    observe({
-      for (key in names(dataLSC())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-        dataReport[[randomId]] <- dataLSC()
-      }
-    }) %>%
-      bindEvent(dataLSC())
-
-    # Update according to facet prevalence
-
-    observeEvent(input$facetPrevalenceSex, {
-      if  (input$facetPrevalenceSex == "Facet by database") {
-        updatePickerInput(session,
-                          inputId = "databasePrevalenceSex",
-                          label = "Database",
-                          choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)),
-                          selected = "All",
-                          options = list(
-                            maxOptions = (length(unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name))+1)
-                          ))
-
-        updatePickerInput(session,
-                          inputId = "outcomePrevalenceSex",
-                          label = "Outcome",
-                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name),
-                          selected = uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name[1],
-                          options = list(
-                            maxOptions = 1
-                          ))
-
-      } else {
-        updatePickerInput(session,
-                          inputId = "databasePrevalenceSex",
-                          label = "Database",
-                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name),
-                          selected = uploadedFiles$dataIP$prevalence_estimates$cdm_name[1],
-                          options = list(
-                            maxOptions = 1
-                          )
-        )
-        updatePickerInput(session,
-                          inputId = "outcomePrevalenceSex",
-                          label = "Outcome",
-                          choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)),
-                          selected = "All")
-
-      }
-    })
-
-    observeEvent(input$facetPrevalenceAge, {
-      if  (input$facetPrevalenceAge == "Facet by database") {
-        updatePickerInput(session,
-                          inputId = "databasePrevalenceAge",
-                          label = "Database",
-                          choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)),
-                          selected = "All",
-                          options = list(
-                            maxOptions = (length(unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name))+1)
-                          ))
-
-        updatePickerInput(session,
-                          inputId = "outcomePrevalenceAge",
-                          label = "Outcome",
-                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name),
-                          selected = uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name[1],
-                          options = list(
-                            maxOptions = 1
-                          ))
-      } else {
-
-        updatePickerInput(session,
-                          inputId = "databasePrevalenceAge",
-                          label = "Database",
-                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name),
-                          selected = uploadedFiles$dataIP$prevalence_estimates$cdm_name[1],
-                          options = list(
-                            maxOptions = 1
-                          )
-        )
-        updatePickerInput(session,
-                          inputId = "outcomePrevalenceAge",
-                          label = "Outcome",
-                          choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)),
-                          selected = "All")
-
-      }
-    })
+    # Data Report Preview
 
     objectsListPreview <- reactive({
       dataReportList <- reactiveValuesToList(dataReport)

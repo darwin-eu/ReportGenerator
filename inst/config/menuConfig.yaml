@@ -42,19 +42,19 @@ plotIncidenceAge:
     - incidence_estimates
   options: Facet by outcome, Facet by database
 plotPrevalenceYear:
-  title: "Plot - Prevalence rate per year"
+  title: "Plot - Prevalence per year"
   function: plotPrevalence(prevalence_estimates, colour, facet)
   type:
     - prevalence_estimates
   options: Facet by outcome, Facet by database
 plotPrevalenceSex:
-  title: "Plot - Prevalence rate per year by sex"
+  title: "Plot - Prevalence per year by sex"
   function: plotPrevalence(prevalence_estimates, colour, facet)
   type:
     - prevalence_estimates
   options: Facet by outcome, Facet by database
 plotPrevalenceAge:
-  title: "Plot - Prevalence rate per year by age"
+  title: "Plot - Prevalence per year by age"
   function: plotPrevalence(prevalence_estimates, colour, facet)
   type:
     - prevalence_estimates
