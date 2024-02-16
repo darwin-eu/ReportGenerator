@@ -1,104 +1,104 @@
-incPlotByYearFilters <- function(uploadedFiles, objectChoice) {
-  tagList(
-    fluidRow(
-      column(4,
-             selectInput("facetIncidenceYear",
-                         "Select plot type",
-                         choices = c("Facet by outcome",
-                                     "Facet by database"),
-                         selected = "Facet by outcome")
-      )
-    ),
-    fluidRow(
-      column(4,
-             pickerInput(inputId = "washoutIncidenceYear",
-                         label = "Washout",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout),
-                         selected = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)[1],
-                         multiple = FALSE)
-      ),
-      column(4,
-             pickerInput(inputId = "daysPriorIncidenceYear",
-                         label = "Days Prior History",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation),
-                         selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)[1],
-                         multiple = FALSE)
-      )
-    ),
-    fluidRow(
-      column(4,
-             pickerInput(inputId = "databaseIncidenceYear",
-                         label = "Database",
-                         choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)),
-                         selected = "All",
-                         multiple = TRUE)
-      ),
-      column(4,
-             pickerInput(inputId = "outcomeIncidenceYear",
-                         label = "Outcome",
-                         choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)),
-                         selected = "All",
-                         multiple = TRUE)
-      )
-    ),
-    fluidRow(
-      column(4,
-             selectInput(inputId = "sexIncidenceYear",
-                         label = "Sex",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex))
-      ),
-      column(4,
-             selectInput(inputId = "ageIncidenceYear",
-                         label = "Age",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group))
-      ),
-    ),
-    fluidRow(
-      column(4,
-             selectInput(inputId = "intervalIncidenceYear",
-                         label = "Interval",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval)),
-      ),
-      column(4,
-             selectInput(inputId = "repeatedIncidenceYear",
-                         label = "Repeated Events",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_repeated_events)),
-      )
-    ),
-    fluidRow(
-      column(4,
-             selectInput(inputId = "timeFromIncidenceYear",
-                         label = "From",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
-                         selected = min(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
-      ),
-      column(4,
-             selectInput(inputId = "timeToIncidenceYear",
-                         label = "To",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
-                         selected = max(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
-      )
-    ),
-    fluidRow(
-      column(8,
-             textAreaInput("captionIncYear",
-                           "Caption",
-                           "Figure 1. Incidence rate/s of drug/s use over calendar time (per year) overall by database [Add months if relevant]",
-                           width = '100%',
-                           height = "130px")
-      ),
-    ),
-    fluidRow(
-      column(4,
-             actionButton("lockDataIncidenceYear", "Add item to report")
-      ),
-      column(4,
-             downloadButton("downloadFigure1Inc", "Download Plot")
-      ),
-    ),
-    tags$br()
-  )
-}
+# incPlotByYearFilters <- function(uploadedFiles, objectChoice) {
+#   tagList(
+#     fluidRow(
+#       column(4,
+#              selectInput("facetIncidenceYear",
+#                          "Select plot type",
+#                          choices = c("Facet by outcome",
+#                                      "Facet by database"),
+#                          selected = "Facet by outcome")
+#       )
+#     ),
+#     fluidRow(
+#       column(4,
+#              pickerInput(inputId = "washoutIncidenceYear",
+#                          label = "Washout",
+#                          choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout),
+#                          selected = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)[1],
+#                          multiple = FALSE)
+#       ),
+#       column(4,
+#              pickerInput(inputId = "daysPriorIncidenceYear",
+#                          label = "Days Prior History",
+#                          choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation),
+#                          selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)[1],
+#                          multiple = FALSE)
+#       )
+#     ),
+#     fluidRow(
+#       column(4,
+#              pickerInput(inputId = "databaseIncidenceYear",
+#                          label = "Database",
+#                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)),
+#                          selected = "All",
+#                          multiple = TRUE)
+#       ),
+#       column(4,
+#              pickerInput(inputId = "outcomeIncidenceYear",
+#                          label = "Outcome",
+#                          choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)),
+#                          selected = "All",
+#                          multiple = TRUE)
+#       )
+#     ),
+#     fluidRow(
+#       column(4,
+#              selectInput(inputId = "sexIncidenceYear",
+#                          label = "Sex",
+#                          choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex))
+#       ),
+#       column(4,
+#              selectInput(inputId = "ageIncidenceYear",
+#                          label = "Age",
+#                          choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group))
+#       ),
+#     ),
+#     fluidRow(
+#       column(4,
+#              selectInput(inputId = "intervalIncidenceYear",
+#                          label = "Interval",
+#                          choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval)),
+#       ),
+#       column(4,
+#              selectInput(inputId = "repeatedIncidenceYear",
+#                          label = "Repeated Events",
+#                          choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_repeated_events)),
+#       )
+#     ),
+#     fluidRow(
+#       column(4,
+#              selectInput(inputId = "timeFromIncidenceYear",
+#                          label = "From",
+#                          choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
+#                          selected = min(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
+#       ),
+#       column(4,
+#              selectInput(inputId = "timeToIncidenceYear",
+#                          label = "To",
+#                          choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
+#                          selected = max(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
+#       )
+#     ),
+#     fluidRow(
+#       column(8,
+#              textAreaInput("captionIncYear",
+#                            "Caption",
+#                            "Figure 1. Incidence rate/s of drug/s use over calendar time (per year) overall by database [Add months if relevant]",
+#                            width = '100%',
+#                            height = "130px")
+#       ),
+#     ),
+#     fluidRow(
+#       column(4,
+#              actionButton("lockDataIncidenceYear", "Add item to report")
+#       ),
+#       column(4,
+#              downloadButton("downloadFigure1Inc", "Download Plot")
+#       ),
+#     ),
+#     tags$br()
+#   )
+# }
 incPlotSexFilters <- function(uploadedFiles, objectChoice) {
   tagList(
     fluidRow(

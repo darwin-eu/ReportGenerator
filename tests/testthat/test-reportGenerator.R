@@ -37,9 +37,9 @@ test_that("datasetLoad IncPrev 0.6.0", {
 test_that("datasetLoad IncPrev Wrong Data", {
   testServer(reportGenerator(), {
     session$setInputs(datasetLoad = data.frame(name = c("CHUBX.zip"),
-                                               datapath = c(test_path("TrePat", "2.5.2", "zip", "CHUBX.zip"),
-                                                            test_path("TrePat", "2.5.2", "zip", "CPRD.zip"),
-                                                            test_path("TrePat", "2.5.2", "zip", "IQVIA.zip"))),
+                                               datapath = c(test_path("TP", "2.5.2", "zip", "CHUBX.zip"),
+                                                            test_path("TP", "2.5.2", "zip", "CPRD.zip"),
+                                                            test_path("TP", "2.5.2", "zip", "IQVIA.zip"))),
                       dataVersion = "0.6.0")
 
     expect_equal(length(uploadedFiles$dataIP), 0)
@@ -49,9 +49,9 @@ test_that("datasetLoad IncPrev Wrong Data", {
 test_that("datasetLoad IncPrev Wrong Data 0.6.0", {
   testServer(reportGenerator(), {
     session$setInputs(datasetLoad = data.frame(name = c("CHUBX.zip"),
-                                               datapath = c(test_path("TrePat", "2.5.2", "zip", "CHUBX.zip"),
-                                                            test_path("TrePat", "2.5.2", "zip", "CPRD.zip"),
-                                                            test_path("TrePat", "2.5.2", "zip", "IQVIA.zip"))),
+                                               datapath = c(test_path("TP", "2.5.2", "zip", "CHUBX.zip"),
+                                                            test_path("TP", "2.5.2", "zip", "CPRD.zip"),
+                                                            test_path("TP", "2.5.2", "zip", "IQVIA.zip"))),
                       dataVersion = "0.6.0")
 
     expect_equal(length(uploadedFiles$dataIP), 0)
@@ -63,9 +63,9 @@ test_that("datasetLoad TrePat", {
     session$setInputs(datasetLoadTP = data.frame(name = c("CHUBX.zip",
                                                           "CPRD.zip",
                                                           "IQVIA.zip"),
-                                                 datapath = c(test_path("TrePat", "2.5.2", "zip", "CHUBX.zip"),
-                                                              test_path("TrePat", "2.5.2", "zip", "CPRD.zip"),
-                                                              test_path("TrePat", "2.5.2", "zip", "IQVIA.zip"))),
+                                                 datapath = c(test_path("TP", "2.5.2", "zip", "CHUBX.zip"),
+                                                              test_path("TP", "2.5.2", "zip", "CPRD.zip"),
+                                                              test_path("TP", "2.5.2", "zip", "IQVIA.zip"))),
                       dataVersionTP = "2.5.2")
 
     expect_equal(length(uploadedFiles$dataTP), 1)
@@ -144,9 +144,9 @@ test_that("datasetLoad PP 0.5.1", {
 test_that("datasetLoad PP Wrong Data", {
   testServer(reportGenerator(), {
     session$setInputs(datasetLoadPP = data.frame(name = c("CHUBX.zip"),
-                                               datapath = c(test_path("TrePat", "2.5.2", "zip", "CHUBX.zip"),
-                                                            test_path("TrePat", "2.5.2", "zip", "CPRD.zip"),
-                                                            test_path("TrePat", "2.5.2", "zip", "IQVIA.zip"))),
+                                               datapath = c(test_path("TP", "2.5.2", "zip", "CHUBX.zip"),
+                                                            test_path("TP", "2.5.2", "zip", "CPRD.zip"),
+                                                            test_path("TP", "2.5.2", "zip", "IQVIA.zip"))),
                       dataVersionPP = "0.6.0")
 
     expect_equal(length(uploadedFiles$dataIP), 0)

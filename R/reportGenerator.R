@@ -401,78 +401,78 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTableSexAge
     })
 
-    # Figure 1
-    incidenceFigure1 <- reactive({
-
-      objectChoice <- "Plot - Incidence rate per year"
-      incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
-      class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
-      incidence_estimates[is.na(incidence_estimates)] = 0
-      # Washout
-      incidence_estimates <- incidence_estimates %>%
-        filter(analysis_outcome_washout %in% c(input$washoutIncidenceYear))
-      # Days Prior
-      incidence_estimates <- incidence_estimates %>%
-        filter(denominator_days_prior_observation %in% c(input$daysPriorIncidenceYear))
-      # Database
-      if (length(input$databaseIncidenceYear) != 1 || input$databaseIncidenceYear != "All") {
-        incidence_estimates <- incidence_estimates %>%
-          filter(cdm_name %in% c(input$databaseIncidenceYear))
-      }
-      # Outcome
-      if (length(input$outcomeIncidenceYear) != 1 || input$outcomeIncidenceYear != "All") {
-        incidence_estimates <- incidence_estimates %>%
-          filter(outcome_cohort_name == input$outcomeIncidenceYear)
-      }
-      # Sex
-      if (length(input$sexIncidenceYear) != 1 || input$sexIncidenceYear != "All") {
-        incidence_estimates <- incidence_estimates %>%
-          filter(denominator_sex %in% input$sexIncidenceYear)
-      }
-      # Age group
-      if (length(input$ageIncidenceYear) != 1 || input$ageIncidenceYear != "All") {
-        incidence_estimates <- incidence_estimates %>%
-          filter(denominator_age_group %in% input$ageIncidenceYear)
-      }
-      # Start Time
-      incidence_estimates <- incidence_estimates %>%
-        filter(between(incidence_start_date,
-                       as.Date(input$timeFromIncidenceYear),
-                       as.Date(input$timeToIncidenceYear)))
-      # Interval
-      incidence_estimates <- incidence_estimates %>%
-        filter(analysis_interval == input$intervalIncidenceYear)
-      # Repeated events
-      incidence_estimates <- incidence_estimates %>%
-        filter(analysis_repeated_events == input$repeatedIncidenceYear)
-
-      return(incidence_estimates)
-    })
-
-    previewFigure1 <- reactive({
-      objectChoice <- "Plot - Incidence rate per year"
-      expression <- getItemConfig(input = "title",
-                                  output = "function",
-                                  inputValue = objectChoice) %>%
-        addPreviewItemType(input$facetIncidenceYear)
-      incidence_estimates <- incidenceFigure1()
-      eval(parse(text = expression))
-    })
-
-    output$previewFigure1 <- renderPlot({
-      req(previewFigure1())
-      previewFigure1()
-    })
-
-    # Lock data Figure 1
-    observeEvent(input$lockDataIncidenceYear, {
-      objectChoice <- "Plot - Incidence rate per year"
-      chars <- c(0:9, letters, LETTERS)
-      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-      dataReport[[randomId]][[objectChoice]][["incidence_estimates"]] <- incidenceFigure1()
-      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- input$facetIncidenceYear
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionIncYear
-    })
+    # # Figure 1
+    # incidenceFigure1 <- reactive({
+    #
+    #   objectChoice <- "Plot - Incidence rate per year"
+    #   incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
+    #   class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
+    #   incidence_estimates[is.na(incidence_estimates)] = 0
+    #   # Washout
+    #   incidence_estimates <- incidence_estimates %>%
+    #     filter(analysis_outcome_washout %in% c(input$washoutIncidenceYear))
+    #   # Days Prior
+    #   incidence_estimates <- incidence_estimates %>%
+    #     filter(denominator_days_prior_observation %in% c(input$daysPriorIncidenceYear))
+    #   # Database
+    #   if (length(input$databaseIncidenceYear) != 1 || input$databaseIncidenceYear != "All") {
+    #     incidence_estimates <- incidence_estimates %>%
+    #       filter(cdm_name %in% c(input$databaseIncidenceYear))
+    #   }
+    #   # Outcome
+    #   if (length(input$outcomeIncidenceYear) != 1 || input$outcomeIncidenceYear != "All") {
+    #     incidence_estimates <- incidence_estimates %>%
+    #       filter(outcome_cohort_name == input$outcomeIncidenceYear)
+    #   }
+    #   # Sex
+    #   if (length(input$sexIncidenceYear) != 1 || input$sexIncidenceYear != "All") {
+    #     incidence_estimates <- incidence_estimates %>%
+    #       filter(denominator_sex %in% input$sexIncidenceYear)
+    #   }
+    #   # Age group
+    #   if (length(input$ageIncidenceYear) != 1 || input$ageIncidenceYear != "All") {
+    #     incidence_estimates <- incidence_estimates %>%
+    #       filter(denominator_age_group %in% input$ageIncidenceYear)
+    #   }
+    #   # Start Time
+    #   incidence_estimates <- incidence_estimates %>%
+    #     filter(between(incidence_start_date,
+    #                    as.Date(input$timeFromIncidenceYear),
+    #                    as.Date(input$timeToIncidenceYear)))
+    #   # Interval
+    #   incidence_estimates <- incidence_estimates %>%
+    #     filter(analysis_interval == input$intervalIncidenceYear)
+    #   # Repeated events
+    #   incidence_estimates <- incidence_estimates %>%
+    #     filter(analysis_repeated_events == input$repeatedIncidenceYear)
+    #
+    #   return(incidence_estimates)
+    # })
+    #
+    # previewFigure1 <- reactive({
+    #   objectChoice <- "Plot - Incidence rate per year"
+    #   expression <- getItemConfig(input = "title",
+    #                               output = "function",
+    #                               inputValue = objectChoice) %>%
+    #     addPreviewItemType(input$facetIncidenceYear)
+    #   incidence_estimates <- incidenceFigure1()
+    #   eval(parse(text = expression))
+    # })
+    #
+    # output$previewFigure1 <- renderPlot({
+    #   req(previewFigure1())
+    #   previewFigure1()
+    # })
+    #
+    # # Lock data Figure 1
+    # observeEvent(input$lockDataIncidenceYear, {
+    #   objectChoice <- "Plot - Incidence rate per year"
+    #   chars <- c(0:9, letters, LETTERS)
+    #   randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+    #   dataReport[[randomId]][[objectChoice]][["incidence_estimates"]] <- incidenceFigure1()
+    #   dataReport[[randomId]][[objectChoice]][["plotOption"]] <- input$facetIncidenceYear
+    #   dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionIncYear
+    # })
 
     # Download Figure 1
 
@@ -1213,8 +1213,23 @@ reportGenerator <- function() {
       dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'failurePlot-captionCumulativeIncidence'
     })
 
+    # Incidence
+
     # PatientProfiles
-    dataCharacteristics<- characteristicsServer(id = "characteristics",
+    dataIncidence <- incidenceServer(id = "Plot - Incidence rate per year",
+                                     dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
+
+    observe({
+      for (key in names(dataIncidence())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataIncidence()
+      }
+    }) %>%
+      bindEvent(dataIncidence())
+
+    # PatientProfiles
+    dataCharacteristics <- characteristicsServer(id = "characteristics",
                                                 dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
 
     observe({
