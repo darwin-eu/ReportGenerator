@@ -4,7 +4,12 @@
 \alias{testData}
 \title{`testData()` extracts data from zip results and saves it in .rda format}
 \usage{
-testData(testFilesIP = testthat::test_path("IP", "0.6.0", "zip"))
+testData(
+  testFilesIP = testthat::test_path("IP", "0.6.0", "zip"),
+  testFilesTP = testthat::test_path("TP", "2.5.2", "csv", "CHUBX"),
+  testFilesPP = testthat::test_path("PP", "0.5.1", "zip"),
+  testFilesCS = testthat::test_path("CS", "0.2.5", "zip")
+)
 }
 \arguments{
 \item{testFilesIP}{testthat dir location of the test files with version number of folder (internal use).}
