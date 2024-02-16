@@ -397,6 +397,8 @@ reportGenerator <- function() {
 
     # Incidence Modules
 
+      # Year
+
     dataIncidenceYear <- incidenceServer(id = "Plot - Incidence rate per year",
                                      dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
 
@@ -412,6 +414,8 @@ reportGenerator <- function() {
     dataIncidenceSex <- incidenceServer(id = "Plot - Incidence rate per year by sex",
                                          dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
 
+      # Sex
+
     observe({
       for (key in names(dataIncidenceSex())) {
         chars <- c(0:9, letters, LETTERS)
@@ -420,6 +424,8 @@ reportGenerator <- function() {
       }
     }) %>%
       bindEvent(dataIncidenceSex())
+
+      # Age
 
     dataIncidenceAge <- incidenceServer(id = "Plot - Incidence rate per year by age",
                                         dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
@@ -435,6 +441,8 @@ reportGenerator <- function() {
 
     # Prevalence Modules
 
+      # Year
+
     dataPrevalenceYear <- prevalenceServer(id = "Plot - Prevalence per year",
                                          dataset = reactive(uploadedFiles$dataIP$prevalence_estimates))
 
@@ -446,6 +454,8 @@ reportGenerator <- function() {
       }
     }) %>%
       bindEvent(dataPrevalenceYear())
+
+      # Sex
 
     dataPrevalenceSex <- prevalenceServer(id = "Plot - Prevalence per year by sex",
                                         dataset = reactive(uploadedFiles$dataIP$prevalence_estimates))
@@ -459,8 +469,10 @@ reportGenerator <- function() {
     }) %>%
       bindEvent(dataPrevalenceSex())
 
+      # Age
+
     dataPrevalenceAge <- prevalenceServer(id = "Plot - Prevalence per year by age",
-                                        dataset = reactive(uploadedFiles$dataIP$prevalence_estimates))
+                                          dataset = reactive(uploadedFiles$dataIP$prevalence_estimates))
 
     observe({
       for (key in names(dataPrevalenceAge())) {
@@ -731,6 +743,8 @@ reportGenerator <- function() {
       )
       DT::datatable(dataReportFrame, options = list(dom = 't'))
     })
+
+    # To check data in report:
 
     # output$dataReportMenu <- renderPrint({
     #   # dataReport
