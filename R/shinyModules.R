@@ -1,5 +1,4 @@
 datasetLoadUI <- function(id) {
-
   uiOutput(NS(id, "datasetLoad"))
 }
 
@@ -9,38 +8,13 @@ datasetLoadServer <- function(id) {
     configData <- yaml.load_file(system.file("config",
                                              "variablesConfig.yaml",
                                              package = "ReportGenerator"))
-    if (id == "IncidencePrevalence") {
-      datasetLoad <- "datasetLoad"
-      inputId <- "dataVersion"
-      accept <- c(".zip", ".csv")
-      placeholder <- "ZIP or CSV"
-    } else if (id == "TreatmentPatterns") {
-      datasetLoad <- "datasetLoadTP"
-      inputId <- "dataVersionTP"
-      accept <- c(".zip", ".csv")
-      placeholder <- "ZIP or CSV"
-    } else if (id == "PatientProfiles") {
-      datasetLoad <- "datasetLoadPP"
-      inputId <- "dataVersionPP"
-      accept <- c(".zip", ".csv")
-      placeholder <- "ZIP or CSV"
-    } else if (id == "CohortSurvival") {
-      datasetLoad <- "datasetLoadCS"
-      inputId <- "dataVersionCS"
-      accept <- c(".zip", ".csv")
-      placeholder <- "ZIP or CSV"
-    }
     output$datasetLoad <- renderUI({
       tagList(tags$div(tags$h4("Load results"), class = "form-group shiny-input-container"),
-              selectInput(inputId = inputId,
-                          label = "Select version",
-                          choices = gtools::mixedsort(names(configData[[id]]), decreasing = TRUE),
-                          selected = gtools::mixedsort(names(configData[[id]]), decreasing = TRUE)[1]),
-              fileInput(datasetLoad,
+              fileInput("datasetLoad",
                         "Upload your files",
-                        accept = accept,
+                        accept = c(".zip", ".csv"),
                         multiple = TRUE,
-                        placeholder = placeholder)
+                        placeholder = "ZIP or CSV")
       )
     })
   })

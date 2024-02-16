@@ -6,11 +6,10 @@ test_that("PrevYear filter returns correct class", {
                                                  "zip"),
                              pattern = "zip",
                              full.names = TRUE)
-  uploadedFiles <- list()
-  uploadedFiles$dataIP <- joinDatabase(fileDataPath = fileDataPath[1],
-                                       package = "IncidencePrevalence",
-                                       versionData = "0.5.1",
-                                       csvLocation = csvLocation)
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
+                                csvLocation = csvLocation)
+  uploadedFiles$dataIP <- uploadedFiles$IncidencePrevalence
+
   responseHTML <- prevPlotByYearFilters(uploadedFiles = uploadedFiles,
                                        objectChoice = "Plot - Prevalence rate per year by sex")
   expect_s3_class(responseHTML, "shiny.tag.list")
@@ -25,11 +24,9 @@ test_that("PrevSex filter returns correct class", {
                                                  "zip"),
                              pattern = "zip",
                              full.names = TRUE)
-  uploadedFiles <- list()
-  uploadedFiles$dataIP <- joinDatabase(fileDataPath = fileDataPath[1],
-                                       package = "IncidencePrevalence",
-                                       versionData = "0.5.1",
-                                       csvLocation = csvLocation)
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
+                                csvLocation = csvLocation)
+  uploadedFiles$dataIP <- uploadedFiles$IncidencePrevalence
   responseHTML <- prevPlotSexFilters(uploadedFiles = uploadedFiles,
                                     objectChoice = "Plot - Incidence rate per year by sex")
   expect_s3_class(responseHTML, "shiny.tag.list")
@@ -44,11 +41,9 @@ test_that("PrevAge filter returns correct class", {
                                                  "zip"),
                              pattern = "zip",
                              full.names = TRUE)
-  uploadedFiles <- list()
-  uploadedFiles$dataIP <- joinDatabase(fileDataPath = fileDataPath[1],
-                                       package = "IncidencePrevalence",
-                                       versionData = "0.5.1",
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
                                        csvLocation = csvLocation)
+  uploadedFiles$dataIP <- uploadedFiles$IncidencePrevalence
   responseHTML <- prevPlotAgeFilters(uploadedFiles = uploadedFiles,
                                     objectChoice = "Plot - Prevalence rate per year by sex")
   expect_s3_class(responseHTML, "shiny.tag.list")

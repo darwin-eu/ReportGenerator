@@ -6,11 +6,9 @@ test_that("tableNumParfilter returns correct class", {
                                                  "zip"),
                              pattern = "zip",
                              full.names = TRUE)
-  uploadedFiles <- list()
-  uploadedFiles$dataIP <- joinDatabase(fileDataPath = fileDataPath[1],
-                                       package = "IncidencePrevalence",
-                                       versionData = "0.5.1",
-                                       csvLocation = csvLocation)
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
+                                csvLocation = csvLocation)
+  uploadedFiles$dataIP <- uploadedFiles$IncidencePrevalence
   responseHTML <- tableNumParFilters(uploadedFiles = uploadedFiles)
   expect_s3_class(responseHTML, "shiny.tag.list")
   unlink(csvLocation, recursive = TRUE)
@@ -24,12 +22,10 @@ test_that("tableAttInc returns correct class", {
                                                  "zip"),
                              pattern = "zip",
                              full.names = TRUE)
-  uploadedFiles <- list()
-  uploadedFiles$dataIP <- joinDatabase(fileDataPath = fileDataPath[1],
-                                       package = "IncidencePrevalence",
-                                       versionData = "0.5.1",
-                                       csvLocation = csvLocation)
-  responseHTML <- tableAttIncFilters(uploadedFiles = uploadedFiles)
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
+                                csvLocation = csvLocation)
+  uploadedFiles$dataIP <- uploadedFiles$IncidencePrevalence
+  responseHTML <- ReportGenerator:::tableAttIncFilters(uploadedFiles = uploadedFiles)
   expect_s3_class(responseHTML, "shiny.tag.list")
   unlink(csvLocation, recursive = TRUE)
 })
@@ -42,11 +38,9 @@ test_that("tableAttPrev returns correct class", {
                                                  "zip"),
                              pattern = "zip",
                              full.names = TRUE)
-  uploadedFiles <- list()
-  uploadedFiles$dataIP <- joinDatabase(fileDataPath = fileDataPath[1],
-                                       package = "IncidencePrevalence",
-                                       versionData = "0.5.1",
-                                       csvLocation = csvLocation)
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
+                                csvLocation = csvLocation)
+  uploadedFiles$dataIP <- uploadedFiles$IncidencePrevalence
   responseHTML <- tableAttPrevFilters(uploadedFiles = uploadedFiles)
   expect_s3_class(responseHTML, "shiny.tag.list")
   unlink(csvLocation, recursive = TRUE)
@@ -60,11 +54,9 @@ test_that("tableSexFilters returns correct class", {
                                                  "zip"),
                              pattern = "zip",
                              full.names = TRUE)
-  uploadedFiles <- list()
-  uploadedFiles$dataIP <- joinDatabase(fileDataPath = fileDataPath[1],
-                                       package = "IncidencePrevalence",
-                                       versionData = "0.5.1",
-                                       csvLocation = csvLocation)
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
+                                csvLocation = csvLocation)
+  uploadedFiles$dataIP <- uploadedFiles$IncidencePrevalence
   responseHTML <- tableSexFilters(uploadedFiles = uploadedFiles)
   expect_s3_class(responseHTML, "shiny.tag.list")
   unlink(csvLocation, recursive = TRUE)

@@ -1,4 +1,4 @@
-sankeyDiagramFilters <- function(uploadedFiles, version) {
+sankeyDiagramFilters <- function(uploadedFiles, version = "2.5.2") {
   if (version == "2.5.2") {
     tagList(
       fluidRow(
@@ -91,7 +91,7 @@ sankeyDiagramFilters <- function(uploadedFiles, version) {
     }
 
 
-sunburstDiagramFilters <- function(uploadedFiles, version) {
+sunburstDiagramFilters <- function(uploadedFiles, version = "2.5.2") {
   if (version == "2.5.2") {
     tagList(
       fluidRow(
