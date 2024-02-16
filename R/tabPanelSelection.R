@@ -8,11 +8,11 @@ tabPanelSelection <- function(selection, uploadedFiles, version) {
   } else if (selection == "Table - Number of participants by sex and age group") {
     tabPanel(selection, tableSexFilters(uploadedFiles), gt_output("previewTableSex"))
   } else if (selection == "Plot - Incidence rate per year") {
-    tabPanel(selection, incidenceUI(selection, uploadedFiles$dataIP$incidence_estimates))
+    tabPanel(selection, incidenceUI("Plot - Incidence rate per year", uploadedFiles$dataIP$incidence_estimates))
   } else if (selection == "Plot - Incidence rate per year by sex") {
-    tabPanel(selection, incPlotSexFilters(uploadedFiles, selection), plotOutput("previewFigure2"))
+    tabPanel(selection, incidenceUI("Plot - Incidence rate per year by sex", uploadedFiles$dataIP$incidence_estimates))
   } else if (selection == "Plot - Incidence rate per year by age") {
-    tabPanel(selection, incPlotAgeFilters(uploadedFiles, selection), plotOutput("previewFigure3"))
+    tabPanel(selection, incidenceUI("Plot - Incidence rate per year by age", uploadedFiles$dataIP$incidence_estimates))
   } else if (selection == "Plot - Prevalence rate per year") {
     tabPanel(selection, prevPlotByYearFilters(uploadedFiles, selection), plotOutput("previewFigure4"))
   } else if (selection == "Plot - Prevalence rate per year by sex") {
