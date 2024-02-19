@@ -1,0 +1,163 @@
+attritionUI <- function(id, uploadedFiles) {
+  ns <- NS(id)
+  if (id == "Table - Number of participants") {
+    tagList(
+      fluidRow(
+        column(4,
+               selectInput(inputId = ns("analysisIdTable1"),
+                           label = "Analysis ID",
+                           choices = unique(uploadedFiles$dataIP$incidence_attrition$analysis_id))
+        ),
+        column(8,
+               textAreaInput(ns("captionTable1"),
+                             "Caption",
+                             table1aAutText(uploadedFiles$dataIP$incidence_attrition,
+                                            uploadedFiles$dataIP$prevalence_attrition),
+                             width = '100%',
+                             height = "130px")
+        )
+      ),
+      fluidRow(
+        column(4,
+               actionButton("lockTableNumPar", "Add item to report")
+               # lockItemsUI("lockTableNumPar")
+        )
+      ),
+      tags$br(),
+      fluidRow(
+        column(12,
+               tableOutput(ns("previewTable1"))
+               )
+        )
+      )
+  }
+
+  # tableAttIncFilters <- function(uploadedFiles) {
+  #   tagList(
+  #     fluidRow(
+  #       column(4,
+  #              selectInput(inputId = "analysisIdTable1",
+  #                          label = "Analysis ID",
+  #                          choices = unique(uploadedFiles$dataIP$incidence_attrition$analysis_id))
+  #       ),
+  #       column(8,
+  #              textAreaInput("captionTableInc",
+  #                            "Caption",
+  #                            tableAttrition(uploadedFiles$dataIP$incidence_attrition),
+  #                            width = '100%',
+  #                            height = "130px")
+  #       )
+  #     ),
+  #     fluidRow(
+  #       column(4,
+  #              actionButton("lockTableIncAtt", "Add item to report")
+  #              # lockItemsUI("lockTableIncAtt")
+  #       )
+  #     )
+  #   )
+  # }
+  #
+  # tableAttPrevFilters <- function(uploadedFiles) {
+  #   tagList(
+  #     fluidRow(
+  #       column(4,
+  #              selectInput(inputId = "analysisIdTable1",
+  #                          label = "Analysis ID",
+  #                          choices = unique(uploadedFiles$dataIP$prevalence_attrition$analysis_id))
+  #       ),
+  #       column(8,
+  #              textAreaInput("captionTablePrev",
+  #                            "Caption",
+  #                            tableAttrition(uploadedFiles$dataIP$prevalence_attrition),
+  #                            width = '100%',
+  #                            height = "130px")
+  #       )
+  #     ),
+  #     fluidRow(
+  #       column(4,
+  #              actionButton("lockTablePrevAtt", "Add item to report")
+  #              # lockItemsUI("lockTablePrevAtt")
+  #       )
+  #     )
+  #   )
+  # }
+  #
+  # tableSexFilters <- function(uploadedFiles) {
+  #   tagList(
+  #     fluidRow(
+  #       column(8,
+  #              textAreaInput("captionTableSexAge",
+  #                            "Caption",
+  #                            "Table 1. Displays the total number of drug users, for each of the databases, during the study period. Total number of drug A users ranged from XXX to XXX across databases. Total number of drug B users ranged from XXX to XXX across databases. [continue for each drug]. When stratified by sex, number of male drug A users ranged from XXX to XXX  across databases, whereas number of female drug A users ranged from XXX to XXX across databases. [continue for each drug]. When stratified by age, number of drug A users in age group 1 ranged from XXX to XXX across databases, whereas number of drug A users in age group 2 ranged from XXX to XXX across databases. [continue for each age group and each drug ]. In summary, there were more users of [insert drug with highest count]; and least users of [insert drug with lowest count]. [Describe other observed patterns in the data].",
+  #                            width = '100%',
+  #                            height = "130px")
+  #       )
+  #     ),
+  #     fluidRow(
+  #       column(4,
+  #              actionButton("lockTableSex", "Add item to report")
+  #              # lockItemsUI("lockTableSex")
+  #       ),
+  #     )
+  #   )
+  # }
+
+}
+
+attritionServer <- function(id, uploadedFiles) {
+  moduleServer(id, function(input, output, session) {
+
+      # prevalence_attrition
+
+      prevalenceAttritionCommon <- reactive({
+        if (!is.null(uploadedFiles$dataIP$prevalence_attrition)) {
+          commonData <- uploadedFiles$dataIP$prevalence_attrition
+          if (class(commonData$excluded_records) == "character") {
+            commonData$excluded_records <- as.numeric(commonData$excluded_records)
+          }
+          if (class(commonData$excluded_subjects) == "character") {
+            commonData$excluded_subjects <- as.numeric(commonData$excluded_subjects)
+          }
+          commonData[is.na(commonData)] = 0
+          commonData <- commonData %>%
+            filter(analysis_id %in% c(input$analysisIdTable1))
+          commonData
+        } else {
+          NULL
+        }
+      })
+
+      # incidence_attrition
+
+      incidenceAttritionCommon <- reactive({
+        if (!is.null(uploadedFiles$dataIP$incidence_attrition)) {
+          commonData <- uploadedFiles$dataIP$incidence_attrition
+          if (class(commonData$excluded_records) == "character") {
+            commonData$excluded_records <- as.numeric(commonData$excluded_records)
+          }
+          if (class(commonData$excluded_subjects) == "character") {
+            commonData$excluded_subjects <- as.numeric(commonData$excluded_subjects)
+          }
+          commonData[is.na(commonData)] = 0
+          commonData <- commonData %>%
+            filter(analysis_id %in% c(input$analysisIdTable1))
+          commonData
+        } else {
+          NULL
+        }
+      })
+
+      if (id == "Table - Number of participants") {
+
+      output$previewTable1 <- renderTable({
+        prevalence_attrition <- prevalenceAttritionCommon()
+        incidence_attrition <- incidenceAttritionCommon()
+        eval(parse(text = getItemConfig(input = "title",
+                                        output = "function",
+                                        inputValue = id)))
+      }, colnames = FALSE)
+
+    }
+
+  })
+  }

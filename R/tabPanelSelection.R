@@ -1,6 +1,6 @@
 tabPanelSelection <- function(selection, uploadedFiles, version) {
   if (selection == "Table - Number of participants") {
-    tabPanel(selection, tableNumParFilters(uploadedFiles), tableOutput("previewTable1"))
+    tabPanel(selection, attritionUI("Table - Number of participants", uploadedFiles))
   } else if (selection == "Table - Incidence Attrition") {
     tabPanel(selection, tableAttIncFilters(uploadedFiles), tableOutput("previewTableAttInc"))
   } else if (selection == "Table - Prevalence Attrition") {
