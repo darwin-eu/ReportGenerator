@@ -276,126 +276,70 @@ reportGenerator <- function() {
 
     dataReport <- reactiveValues()
 
-    # prevalence_attrition
 
-    # prevalenceAttritionCommon <- reactive({
-    #   if (!is.null(uploadedFiles$dataIP$prevalence_attrition)) {
-    #     commonData <- uploadedFiles$dataIP$prevalence_attrition
-    #     if (class(commonData$excluded_records) == "character") {
-    #       commonData$excluded_records <- as.numeric(commonData$excluded_records)
-    #     }
-    #     if (class(commonData$excluded_subjects) == "character") {
-    #       commonData$excluded_subjects <- as.numeric(commonData$excluded_subjects)
-    #     }
-    #     commonData[is.na(commonData)] = 0
-    #     commonData <- commonData %>%
-    #       filter(analysis_id %in% c(input$analysisIdTable1))
-    #     commonData
-    #   } else {
-    #     NULL
-    #   }
-    # })
-    #
-    # # incidence_attrition
-    #
-    # incidenceAttritionCommon <- reactive({
-    #   if (!is.null(uploadedFiles$dataIP$incidence_attrition)) {
-    #     commonData <- uploadedFiles$dataIP$incidence_attrition
-    #     if (class(commonData$excluded_records) == "character") {
-    #       commonData$excluded_records <- as.numeric(commonData$excluded_records)
-    #     }
-    #     if (class(commonData$excluded_subjects) == "character") {
-    #       commonData$excluded_subjects <- as.numeric(commonData$excluded_subjects)
-    #     }
-    #     commonData[is.na(commonData)] = 0
-    #     commonData <- commonData %>%
-    #       filter(analysis_id %in% c(input$analysisIdTable1))
-    #     commonData
-    #   } else {
-    #     NULL
-    #   }
-    # })
-    #
-    #
-    # # Objects to be rendered in the UI
-    #
-    # # Table 1
-    #
-    # output$previewTable1 <- renderTable({
-    #   # objectChoice <- "Table - Number of participants"
-    #   objectChoice <- "Table - Number of participants"
-    #   prevalence_attrition <- prevalenceAttritionCommon()
-    #   incidence_attrition <- incidenceAttritionCommon()
-    #   eval(parse(text = getItemConfig(input = "title",
-    #                                   output = "function",
-    #                                   inputValue = objectChoice)))
-    # }, colnames = FALSE)
+    # Inc/Prev Attrition Modules
 
-    attritionServer(id = "Table - Number of participants", uploadedFiles)
+      # Table with data from Inc/Prev
 
-    # observeEvent(input$lockTableNumPar, {
-    #   objectChoice <- "Table - Number of participants"
-    #   chars <- c(0:9, letters, LETTERS)
-    #   randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-    #   dataReport[[randomId]][[objectChoice]][["prevalence_attrition"]] <- prevalenceAttritionCommon()
-    #   dataReport[[randomId]][[objectChoice]][["incidence_attrition"]] <- incidenceAttritionCommon()
-    #   dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTable1
-    # })
-    #
-    # output$previewTableAttInc <- renderTable({
-    #   objectChoice <- "Table - Incidence Attrition"
-    #   incidence_attrition <- incidenceAttritionCommon()
-    #   attritionDataType <- "incidence"
-    #   eval(parse(text = getItemConfig(input = "title",
-    #                                   output = "function",
-    #                                   inputValue = objectChoice)))
-    # }, colnames = FALSE)
-    #
-    # observeEvent(input$lockTableIncAtt, {
-    #   objectChoice <- "Table - Incidence Attrition"
-    #   attritionDataType <- "incidence"
-    #   chars <- c(0:9, letters, LETTERS)
-    #   randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-    #   dataReport[[randomId]][[objectChoice]][["incidence_attrition"]] <- incidenceAttritionCommon()
-    #   dataReport[[randomId]][[objectChoice]][["attritionDataType"]] <- attritionDataType
-    #   dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTableInc
-    # })
-    #
-    # output$previewTableAttPrev <- renderTable({
-    #   objectChoice <- "Table - Prevalence Attrition"
-    #   attritionDataType <- "prevalence"
-    #   prevalence_attrition <- prevalenceAttritionCommon()
-    #   eval(parse(text = getItemConfig(input = "title",
-    #                                   output = "function",
-    #                                   inputValue = objectChoice)))
-    # }, colnames = FALSE)
-    #
-    # observeEvent(input$lockTablePrevAtt, {
-    #   objectChoice <- "Table - Prevalence Attrition"
-    #   attritionDataType <- "prevalence"
-    #   chars <- c(0:9, letters, LETTERS)
-    #   randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-    #   dataReport[[randomId]][[objectChoice]][["prevalence_attrition"]] <- prevalenceAttritionCommon()
-    #   dataReport[[randomId]][[objectChoice]][["attritionDataType"]] <- attritionDataType
-    #   dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTablePrev
-    # })
-    #
-    # output$previewTableSex <- render_gt({
-    #   objectChoice <- "Table - Number of participants by sex and age group"
-    #   incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
-    #   # Preview object
-    #   eval(parse(text = getItemConfig(input = "title",
-    #                                   output = "function",
-    #                                   inputValue = objectChoice)))
-    # })
-    #
-    # observeEvent(input$lockTableSex, {
-    #   objectChoice <- "Table - Number of participants by sex and age group"
-    #   chars <- c(0:9, letters, LETTERS)
-    #   randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-    #   dataReport[[randomId]][[objectChoice]][["incidence_estimates"]] <- uploadedFiles$dataIP$incidence_estimates
-    #   dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTableSexAge
-    # })
+    tableNumPar <- attritionServer(id = "Table - Number of participants",
+                                   uploadedFiles = reactive(uploadedFiles))
+
+    observe({
+      for (key in names(tableNumPar())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- tableNumPar()
+      }
+    }) %>%
+      bindEvent(tableNumPar())
+
+    # From Incidence only
+
+    tableAttInc <- attritionServer(id = "Table - Incidence Attrition",
+                                   uploadedFiles = reactive(uploadedFiles))
+
+    observe({
+      for (key in names(tableAttInc())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- tableAttInc()
+      }
+    }) %>%
+      bindEvent(tableAttInc())
+
+    # From Prevelence only
+
+    tableAttPrev <- attritionServer(id = "Table - Prevalence Attrition",
+                                    uploadedFiles = reactive(uploadedFiles))
+
+    observe({
+      for (key in names(tableAttPrev())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- tableAttPrev()
+      }
+    }) %>%
+      bindEvent(tableAttPrev())
+
+
+    # Table Sex/Age
+
+    output$previewTableSex <- render_gt({
+      objectChoice <- "Table - Number of participants by sex and age group"
+      incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
+      # Preview object
+      eval(parse(text = getItemConfig(input = "title",
+                                      output = "function",
+                                      inputValue = objectChoice)))
+    })
+
+    observeEvent(input$lockTableSex, {
+      objectChoice <- "Table - Number of participants by sex and age group"
+      chars <- c(0:9, letters, LETTERS)
+      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+      dataReport[[randomId]][[objectChoice]][["incidence_estimates"]] <- uploadedFiles$dataIP$incidence_estimates
+      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTableSexAge
+    })
 
     # Incidence Modules
 
@@ -413,10 +357,10 @@ reportGenerator <- function() {
     }) %>%
       bindEvent(dataIncidenceYear())
 
+    # Sex
+
     dataIncidenceSex <- incidenceServer(id = "Plot - Incidence rate per year by sex",
                                          dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
-
-      # Sex
 
     observe({
       for (key in names(dataIncidenceSex())) {

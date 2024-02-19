@@ -15,7 +15,7 @@ incidenceUI <- function(id, dataset) {
 
     captionValue <-"Figure 1. Incidence rate/s of drug/s use over calendar time (per year) overall by database [Add months if relevant]"
 
-    lockVariable <- "lockDataIncidenceYear"
+    lockName <- "lockDataIncidenceYear"
 
   } else if (id == "Plot - Incidence rate per year by sex") {
 
@@ -33,7 +33,7 @@ incidenceUI <- function(id, dataset) {
 
     captionValue <- "Figure 2. Incidence rate/s of drug/s use over calendar time (per year) stratified by sex and database [Add months if relevant]"
 
-    lockVariable <- "lockDataIncidenceSex"
+    lockName <- "lockDataIncidenceSex"
 
   } else if (id == "Plot - Incidence rate per year by age") {
 
@@ -51,7 +51,7 @@ incidenceUI <- function(id, dataset) {
 
     captionValue <- "Figure 3. Incidence rate/s of drug/s use over calendar time (per year) overall stratified by age and database [Add months if relevant]"
 
-    lockVariable <- "lockDataIncidenceAge"
+    lockName <- "lockDataIncidenceAge"
 
   }
 
@@ -150,7 +150,7 @@ incidenceUI <- function(id, dataset) {
       ),
       fluidRow(
         column(4,
-               actionButton(NS(id, lockVariable), "Add item to report")
+               actionButton(NS(id, lockName), "Add item to report")
         ),
         column(4,
                downloadButton(NS(id, "downloadFigure"), "Download Plot")

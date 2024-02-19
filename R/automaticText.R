@@ -107,7 +107,7 @@ tableAttrition <- function(attritionData) {
     filter(reason == "Not observed during the complete database interval") %>%
     group_by(cdm_name,
              reason) %>%
-    summarise(excluded = sum(excluded_subjects)) %>%
+    summarise(excluded = sum(as.numeric(excluded_subjects))) %>%
     arrange(desc(excluded))
 
   totalParticipants <- sum(tableAttTotal$current_n)
