@@ -1,16 +1,16 @@
-incidenceUI <- function(id, dataset) {
+incidenceUI <- function(id, uploadedFiles) {
   if (id == "Plot - Incidence rate per year") {
 
-    databaseChoices <- c("All", unique(dataset$cdm_name))
+    databaseChoices <- c("All", unique(uploadedFiles$dataIP$incidence_estimates$cdm_name))
     databaseSelected <- ("All")
     databaseOptions <- list()
 
-    sexChoices <- unique(dataset$denominator_sex)
-    sexSelected <-  unique(dataset$denominator_sex)[1]
+    sexChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)
+    sexSelected <-  unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)[1]
     sexMultiple <- FALSE
 
-    ageChoices <- unique(dataset$denominator_age_group)
-    ageSelected <- unique(dataset$denominator_age_group)[1]
+    ageChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)
+    ageSelected <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)[1]
     ageMultiple <- FALSE
 
     captionValue <-"Figure 1. Incidence rate/s of drug/s use over calendar time (per year) overall by database [Add months if relevant]"
@@ -19,16 +19,16 @@ incidenceUI <- function(id, dataset) {
 
   } else if (id == "Plot - Incidence rate per year by sex") {
 
-    databaseChoices <- unique(dataset$cdm_name)
-    databaseSelected <- dataset$cdm_name[1]
+    databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
+    databaseSelected <- uploadedFiles$dataIP$incidence_estimates$cdm_name[1]
     databaseOptions <- list(maxOptions = 1)
 
     sexChoices <- c("Male", "Female")
     sexSelected <- c("Male", "Female")
     sexMultiple <- TRUE
 
-    ageChoices <- unique(dataset$denominator_age_group)
-    ageSelected <- unique(dataset$denominator_age_group)[1]
+    ageChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)
+    ageSelected <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)[1]
     ageMultiple <- FALSE
 
     captionValue <- "Figure 2. Incidence rate/s of drug/s use over calendar time (per year) stratified by sex and database [Add months if relevant]"
@@ -37,15 +37,15 @@ incidenceUI <- function(id, dataset) {
 
   } else if (id == "Plot - Incidence rate per year by age") {
 
-    databaseChoices <- unique(dataset$cdm_name)
-    databaseSelected <- dataset$cdm_name[1]
+    databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
+    databaseSelected <- uploadedFiles$dataIP$incidence_estimates$cdm_name[1]
     databaseOptions <- list(maxOptions = 1)
 
-    sexChoices <- unique(dataset$denominator_sex)
-    sexSelected <-  unique(dataset$denominator_sex)[1]
+    sexChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)
+    sexSelected <-  unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)[1]
     sexMultiple <- FALSE
 
-    ageChoices <- c("All", unique(dataset$denominator_age_group))
+    ageChoices <- c("All", unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group))
     ageSelected <- "All"
     ageMultiple <- TRUE
 
@@ -68,15 +68,15 @@ incidenceUI <- function(id, dataset) {
         column(4,
                pickerInput(inputId = NS(id, "washoutIncidence"),
                            label = "Washout",
-                           choices = unique(dataset$analysis_outcome_washout),
-                           selected = unique(dataset$analysis_outcome_washout)[1],
+                           choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout),
+                           selected = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)[1],
                            multiple = FALSE)
         ),
         column(4,
                pickerInput(inputId = NS(id, "daysPriorIncidence"),
                            label = "Days Prior History",
-                           choices = unique(dataset$denominator_days_prior_observation),
-                           selected = unique(dataset$denominator_days_prior_observation)[1],
+                           choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation),
+                           selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)[1],
                            multiple = FALSE)
         )
       ),
@@ -92,7 +92,7 @@ incidenceUI <- function(id, dataset) {
         column(4,
                pickerInput(inputId = NS(id, "outcomeIncidence"),
                            label = "Outcome",
-                           choices = c("All", unique(dataset$outcome_cohort_name)),
+                           choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)),
                            selected = "All",
                            multiple = TRUE)
         )
@@ -117,26 +117,26 @@ incidenceUI <- function(id, dataset) {
         column(4,
                pickerInput(inputId = NS(id, "intervalIncidence"),
                            label = "Interval",
-                           choices = unique(dataset$analysis_interval)),
+                           choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval)),
         ),
         column(4,
                pickerInput(inputId = NS(id, "repeatedIncidence"),
                            label = "Repeated Events",
-                           choices = unique(dataset$analysis_repeated_events)),
+                           choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_repeated_events)),
         )
       ),
       fluidRow(
         column(4,
                pickerInput(inputId = NS(id, "timeFromIncidence"),
                            label = "From",
-                           choices = unique(dataset$incidence_start_date),
-                           selected = min(unique(dataset$incidence_start_date)))
+                           choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
+                           selected = min(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
         ),
         column(4,
                pickerInput(inputId = NS(id, "timeToIncidence"),
                            label = "To",
-                           choices = unique(dataset$incidence_start_date),
-                           selected = max(unique(dataset$incidence_start_date)))
+                           choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
+                           selected = max(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
         )
       ),
       fluidRow(
@@ -166,11 +166,11 @@ incidenceUI <- function(id, dataset) {
 
 }
 
-incidenceServer <- function(id, dataset) {
+incidenceServer <- function(id, uploadedFiles) {
   moduleServer(id, function(input, output, session) {
     # Figure 1
     incidenceCommonData <- reactive({
-      incidence_estimates <- dataset()
+      incidence_estimates <- uploadedFiles()
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
       # Washout

@@ -77,7 +77,8 @@ reportGenerator <- function() {
                  fluidRow(
                    column(width = 4,
                           h2("2. Objects to print"),
-                          DTOutput("dataReportMenu"),
+                          # DTOutput("dataReportMenu"),
+                          verbatimTextOutput("dataReportMenu"),
                           tags$br(),
                           downloadButton("generateReport", "Generate Report"),
                           tags$br()
@@ -339,7 +340,7 @@ reportGenerator <- function() {
       # Year
 
     dataIncidenceYear <- incidenceServer(id = "Plot - Incidence rate per year",
-                                     dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
+                                         reactive(uploadedFiles$dataIP$incidence_estimates))
 
     observe({
       for (key in names(dataIncidenceYear())) {
@@ -353,7 +354,7 @@ reportGenerator <- function() {
     # Sex
 
     dataIncidenceSex <- incidenceServer(id = "Plot - Incidence rate per year by sex",
-                                         dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
+                                        reactive(uploadedFiles$dataIP$incidence_estimates))
 
     observe({
       for (key in names(dataIncidenceSex())) {
@@ -367,7 +368,7 @@ reportGenerator <- function() {
       # Age
 
     dataIncidenceAge <- incidenceServer(id = "Plot - Incidence rate per year by age",
-                                        dataset = reactive(uploadedFiles$dataIP$incidence_estimates))
+                                        reactive(uploadedFiles$dataIP$incidence_estimates))
 
     observe({
       for (key in names(dataIncidenceAge())) {
@@ -383,7 +384,7 @@ reportGenerator <- function() {
       # Year
 
     dataPrevalenceYear <- prevalenceServer(id = "Plot - Prevalence per year",
-                                         dataset = reactive(uploadedFiles$dataIP$prevalence_estimates))
+                                           reactive(uploadedFiles$dataIP$prevalence_estimates))
 
     observe({
       for (key in names(dataPrevalenceYear())) {
@@ -397,7 +398,7 @@ reportGenerator <- function() {
       # Sex
 
     dataPrevalenceSex <- prevalenceServer(id = "Plot - Prevalence per year by sex",
-                                        dataset = reactive(uploadedFiles$dataIP$prevalence_estimates))
+                                          reactive(uploadedFiles$dataIP$prevalence_estimates))
 
     observe({
       for (key in names(dataPrevalenceSex())) {
@@ -411,7 +412,7 @@ reportGenerator <- function() {
       # Age
 
     dataPrevalenceAge <- prevalenceServer(id = "Plot - Prevalence per year by age",
-                                          dataset = reactive(uploadedFiles$dataIP$prevalence_estimates))
+                                          reactive(uploadedFiles$dataIP$prevalence_estimates))
 
     observe({
       for (key in names(dataPrevalenceAge())) {
@@ -563,7 +564,7 @@ reportGenerator <- function() {
 
     # PatientProfiles Modules
     dataCharacteristics <- characteristicsServer(id = "characteristics",
-                                                dataset = reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
+                                                 reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
 
     observe({
       for (key in names(dataCharacteristics())) {
@@ -575,7 +576,7 @@ reportGenerator <- function() {
       bindEvent(dataCharacteristics())
 
     dataLSC <- characteristicsServer(id = "lsc",
-                                     dataset = reactive(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
+                                     reactive(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
 
     observe({
       for (key in names(dataLSC())) {
@@ -676,22 +677,22 @@ reportGenerator <- function() {
       }
     })
 
-    output$dataReportMenu <- renderDT({
-      dataReportFrame <- data.frame(
-        Name = objectsListPreview()
-      )
-      DT::datatable(dataReportFrame, options = list(dom = 't'))
-    })
+    # output$dataReportMenu <- renderDT({
+    #   dataReportFrame <- data.frame(
+    #     Name = objectsListPreview()
+    #   )
+    #   DT::datatable(dataReportFrame, options = list(dom = 't'))
+    # })
 
     # To check data in report:
 
-    # output$dataReportMenu <- renderPrint({
-    #   # dataReport
-    #   dataReportList <- reactiveValuesToList(dataReport)
-    #   dataReportList
-    #   # length(dataReportList) == 0
-    #   # objectsListPreview()
-    # })
+    output$dataReportMenu <- renderPrint({
+      # dataReport
+      dataReportList <- reactiveValuesToList(dataReport)
+      dataReportList
+      # length(dataReportList) == 0
+      # objectsListPreview()
+    })
 
     # Word report generator
     output$generateReport <- downloadHandler(

@@ -1,19 +1,19 @@
-prevalenceUI <- function(id, dataset) {
+prevalenceUI <- function(id, uploadedFiles) {
   if (id == "Plot - Prevalence per year") {
 
     # Database
-    databaseChoices <- c("All", unique(dataset$cdm_name))
+    databaseChoices <- c("All", unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name))
     databaseSelected <- ("All")
     databaseOptions <- list()
 
     # Sex
-    sexChoices <- unique(dataset$denominator_sex)
-    sexSelected <-  unique(dataset$denominator_sex)[1]
+    sexChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_sex)
+    sexSelected <-  unique(uploadedFiles$dataIP$prevalence_estimates$denominator_sex)[1]
     sexMultiple <- FALSE
 
     # Age
-    ageChoices <- unique(dataset$denominator_age_group)
-    ageSelected <- unique(dataset$denominator_age_group)[1]
+    ageChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)
+    ageSelected <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)[1]
     ageMultiple <- FALSE
 
     # Caption
@@ -25,8 +25,8 @@ prevalenceUI <- function(id, dataset) {
   } else if (id == "Plot - Prevalence per year by sex") {
 
     # Database
-    databaseChoices <- unique(dataset$cdm_name)
-    databaseSelected <- dataset$cdm_name[1]
+    databaseChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)
+    databaseSelected <- uploadedFiles$dataIP$prevalence_estimates$cdm_name[1]
     databaseOptions <- list(maxOptions = 1)
 
     # Sex
@@ -35,8 +35,8 @@ prevalenceUI <- function(id, dataset) {
     sexMultiple <- TRUE
 
     # Age
-    ageChoices <- unique(dataset$denominator_age_group)
-    ageSelected <- unique(dataset$denominator_age_group)[1]
+    ageChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)
+    ageSelected <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)[1]
     ageMultiple <- FALSE
 
     # Caption
@@ -48,17 +48,17 @@ prevalenceUI <- function(id, dataset) {
   } else if (id == "Plot - Prevalence per year by age") {
 
     # Database
-    databaseChoices <- unique(dataset$cdm_name)
-    databaseSelected <- dataset$cdm_name[1]
+    databaseChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)
+    databaseSelected <- uploadedFiles$dataIP$prevalence_estimates$cdm_name[1]
     databaseOptions <- list(maxOptions = 1)
 
     # Sex
-    sexChoices <- unique(dataset$denominator_sex)
-    sexSelected <-  unique(dataset$denominator_sex)[1]
+    sexChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_sex)
+    sexSelected <-  unique(uploadedFiles$dataIP$prevalence_estimates$denominator_sex)[1]
     sexMultiple <- FALSE
 
     # Age
-    ageChoices <- c("All", unique(dataset$denominator_age_group))
+    ageChoices <- c("All", unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group))
     ageSelected <- "All"
     ageMultiple <- TRUE
 
@@ -91,7 +91,7 @@ prevalenceUI <- function(id, dataset) {
       column(4,
              pickerInput(inputId = NS(id, "outcomePrevalence"),
                          label = "Outcome",
-                         choices = c("All", unique(dataset$outcome_cohort_name)),
+                         choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)),
                          selected = "All",
                          multiple = TRUE)
       )
@@ -116,26 +116,26 @@ prevalenceUI <- function(id, dataset) {
       column(4,
              pickerInput(inputId = NS(id, "intervalPrevalence"),
                          label = "Interval",
-                         choices = unique(dataset$analysis_interval)),
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_interval)),
       ),
       column(4,
              pickerInput(inputId = NS(id, "typePrevalence"),
                          label = "Type",
-                         choices = unique(dataset$analysis_type)),
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_type)),
       )
     ),
     fluidRow(
       column(4,
              pickerInput(inputId = NS(id, "timeFromPrevalence"),
                          label = "From",
-                         choices = unique(dataset$prevalence_start_date),
-                         selected = min(unique(dataset$prevalence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date),
+                         selected = min(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date)))
       ),
       column(4,
              pickerInput(inputId = NS(id, "timeToPrevalence"),
                          label = "To",
-                         choices = unique(dataset$prevalence_start_date),
-                         selected = max(unique(dataset$prevalence_start_date)))
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date),
+                         selected = max(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date)))
       )
     ),
     fluidRow(

@@ -8,25 +8,25 @@ tabPanelSelection <- function(selection, uploadedFiles, version) {
   } else if (selection == "Table - Number of participants by sex and age group") {
     tabPanel(selection, tableUI(selection, uploadedFiles))
   } else if (selection == "Plot - Incidence rate per year") {
-    tabPanel(selection, incidenceUI("Plot - Incidence rate per year", uploadedFiles$dataIP$incidence_estimates))
+    tabPanel(selection, incidenceUI(selection, uploadedFiles))
   } else if (selection == "Plot - Incidence rate per year by sex") {
-    tabPanel(selection, incidenceUI("Plot - Incidence rate per year by sex", uploadedFiles$dataIP$incidence_estimates))
+    tabPanel(selection, incidenceUI(selection, uploadedFiles))
   } else if (selection == "Plot - Incidence rate per year by age") {
-    tabPanel(selection, incidenceUI("Plot - Incidence rate per year by age", uploadedFiles$dataIP$incidence_estimates))
+    tabPanel(selection, incidenceUI(selection, uploadedFiles))
   } else if (selection == "Plot - Prevalence per year") {
-    tabPanel(selection, prevalenceUI("Plot - Prevalence per year", uploadedFiles$dataIP$prevalence_estimates))
+    tabPanel(selection, prevalenceUI(selection, uploadedFiles))
   } else if (selection == "Plot - Prevalence per year by sex") {
-    tabPanel(selection, prevalenceUI("Plot - Prevalence per year by sex", uploadedFiles$dataIP$prevalence_estimates))
+    tabPanel(selection, prevalenceUI(selection, uploadedFiles))
   } else if (selection == "Plot - Prevalence per year by age") {
-    tabPanel(selection, prevalenceUI("Plot - Prevalence per year by age", uploadedFiles$dataIP$prevalence_estimates))
+    tabPanel(selection, prevalenceUI(selection, uploadedFiles))
   } else if (selection == "Sankey Diagram - TreatmentPatterns") {
     tabPanel(selection, sankeyDiagramFilters(uploadedFiles, version), htmlOutput("previewSankeyDiagram"))
   } else if (selection == "Sunburst Plot - TreatmentPatterns") {
     tabPanel(selection, sunburstDiagramFilters(uploadedFiles, version), htmlOutput("previewSunburstPlot"))
   } else if (selection == "Summarised Characteristics") {
-    tabPanel(selection, characteristicsUI("characteristics", uploadedFiles$dataPP$`Summarised Characteristics`))
+    tabPanel(selection, characteristicsUI("characteristics", uploadedFiles))
   } else if (selection == "Summarised Large Scale Characteristics") {
-    tabPanel(selection, characteristicsUI("lsc", uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
+    tabPanel(selection, characteristicsUI("lsc", uploadedFiles))
   } else if (selection == "Survival table") {
     tabPanel(selection, cohortSurvivalUI("survivalTable", uploadedFiles$dataCS$`Survival estimate`))
   } else if (selection == "Survival plot") {
