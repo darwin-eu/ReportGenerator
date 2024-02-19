@@ -42,7 +42,9 @@ reportGenerator <- function() {
                  startExpanded = TRUE),
         tags$br(),
         actionButton('resetData', 'Reset data'),
-        tags$br()
+        tags$br(), tags$br(),
+        tags$head(tags$style(".dlStudyDataBtn{ margin-left:15px;margin-right:15px; color:black !important; }")),
+        downloadButton("downloadStudyData", "Sample data", class = "dlStudyDataBtn")
       )
     ),
     dashboardBody(
@@ -1237,6 +1239,14 @@ reportGenerator <- function() {
                        file)
         shinyjs::enable("generateReport")
       }
+    )
+
+    output$downloadStudyData <- downloadHandler(
+      filename = function() { "StudyResults.zip" },
+      content = function(file) {
+        file.copy(system.file("extdata/examples/StudyResults.zip", package = "ReportGenerator"), file)
+      },
+      contentType = "application/zip"
     )
   }
   shinyApp(ui, server)
