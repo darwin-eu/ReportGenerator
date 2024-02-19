@@ -276,10 +276,9 @@ reportGenerator <- function() {
 
     dataReport <- reactiveValues()
 
+    # Inc/Prev Table Modules
 
-    # Inc/Prev Attrition Modules
-
-      # Table with data from Inc/Prev
+      # Table w/ attrition data from Inc/Prev
 
     tableNumPar <- attritionServer(id = "Table - Number of participants",
                                    uploadedFiles = reactive(uploadedFiles))
@@ -293,7 +292,7 @@ reportGenerator <- function() {
     }) %>%
       bindEvent(tableNumPar())
 
-    # From Incidence only
+    # Attrition Incidence only
 
     tableAttInc <- attritionServer(id = "Table - Incidence Attrition",
                                    uploadedFiles = reactive(uploadedFiles))
@@ -307,7 +306,7 @@ reportGenerator <- function() {
     }) %>%
       bindEvent(tableAttInc())
 
-    # From Prevelence only
+    # Attrition Prevelence only
 
     tableAttPrev <- attritionServer(id = "Table - Prevalence Attrition",
                                     uploadedFiles = reactive(uploadedFiles))

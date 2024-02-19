@@ -1,94 +1,55 @@
 attritionUI <- function(id, uploadedFiles) {
   ns <- NS(id)
   if (id == "Table - Number of participants") {
+
     lockName <- "lockTableNumPar"
-    tagList(
-      fluidRow(
-        column(4,
-               selectInput(inputId = ns("analysisIdTable1"),
-                           label = "Analysis ID",
-                           choices = unique(uploadedFiles$dataIP$incidence_attrition$analysis_id))
-        ),
-        column(8,
-               textAreaInput(ns("captionTableAtt"),
-                             "Caption",
-                             table1aAutText(uploadedFiles$dataIP$incidence_attrition,
-                                            uploadedFiles$dataIP$prevalence_attrition),
-                             width = '100%',
-                             height = "130px")
-        )
-      ),
-      fluidRow(
-        column(4,
-               actionButton(ns(lockName), "Add item to report")
-        )
-      ),
-      tags$br(),
-      fluidRow(
-        column(12,
-               tableOutput(ns("previewTableAtt"))
-               )
-        )
-      )
+    analysisChoices <- unique(uploadedFiles$dataIP$incidence_attrition$analysis_id)
+    captionText <- table1aAutText(uploadedFiles$dataIP$incidence_attrition, uploadedFiles$dataIP$prevalence_attrition)
+    outputTableName <- "previewTableAtt"
+
   } else if (id == "Table - Incidence Attrition") {
+
     lockName <- "lockTableIncAtt"
-      tagList(
-        fluidRow(
-          column(4,
-                 selectInput(inputId = ns("analysisIdTable1"),
-                             label = "Analysis ID",
-                             choices = unique(uploadedFiles$dataIP$incidence_attrition$analysis_id))
-          ),
-          column(8,
-                 textAreaInput(ns("captionTableInc"),
-                               "Caption",
-                               tableAttrition(uploadedFiles$dataIP$incidence_attrition),
-                               width = '100%',
-                               height = "130px")
-          )
-        ),
-        fluidRow(
-          column(4,
-                 actionButton(ns(lockName), "Add item to report")
-          )
-        ),
-        tags$br(),
-        fluidRow(
-          column(12,
-                 tableOutput(ns("previewTableAttInc"))
-          )
-        )
-      )
+    analysisChoices <- unique(uploadedFiles$dataIP$incidence_attrition$analysis_id)
+    captionText <- tableAttrition(uploadedFiles$dataIP$incidence_attrition)
+    outputTableName <- "previewTableAttInc"
+
     } else if (id == "Table - Prevalence Attrition") {
-    lockName <- "lockTablePrevAtt"
-      tagList(
-        fluidRow(
-          column(4,
-                 selectInput(inputId = ns("analysisIdTable1"),
-                             label = "Analysis ID",
-                             choices = unique(uploadedFiles$dataIP$prevalence_attrition$analysis_id))
-          ),
-          column(8,
-                 textAreaInput(ns("captionTablePrev"),
-                               "Caption",
-                               tableAttrition(uploadedFiles$dataIP$prevalence_attrition),
-                               width = '100%',
-                               height = "130px")
-          )
-        ),
-        fluidRow(
-          column(4,
-                 actionButton(ns(lockName), "Add item to report")
-          )
-        ),
-        tags$br(),
-        fluidRow(
-          column(12,
-                 tableOutput(ns("previewTableAttPrev"))
-          )
-        )
-      )
+
+      lockName <- "lockTablePrevAtt"
+      analysisChoices <- unique(uploadedFiles$dataIP$prevalence_attrition$analysis_id)
+      captionText <- tableAttrition(uploadedFiles$dataIP$prevalence_attrition)
+      outputTableName <- "previewTableAttPrev"
+
     }
+
+  tagList(
+    fluidRow(
+      column(4,
+             selectInput(inputId = ns("analysisIdTable1"),
+                         label = "Analysis ID",
+                         choices = analysisChoices)
+      ),
+      column(8,
+             textAreaInput(ns("captionTableAtt"),
+                           "Caption",
+                           captionText,
+                           width = '100%',
+                           height = "130px")
+      )
+    ),
+    fluidRow(
+      column(4,
+             actionButton(ns(lockName), "Add item to report")
+      )
+    ),
+    tags$br(),
+    fluidRow(
+      column(12,
+             tableOutput(ns(outputTableName))
+      )
+    )
+  )
 }
 
   #
