@@ -320,25 +320,19 @@ reportGenerator <- function() {
     }) %>%
       bindEvent(tableAttPrev())
 
-
     # Table Sex/Age
 
-    output$previewTableSex <- render_gt({
-      objectChoice <- "Table - Number of participants by sex and age group"
-      incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
-      # Preview object
-      eval(parse(text = getItemConfig(input = "title",
-                                      output = "function",
-                                      inputValue = objectChoice)))
-    })
+    tableSexAge <- tableServer(id = "Table - Number of participants by sex and age group", uploadedFiles)
 
-    observeEvent(input$lockTableSex, {
-      objectChoice <- "Table - Number of participants by sex and age group"
-      chars <- c(0:9, letters, LETTERS)
-      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-      dataReport[[randomId]][[objectChoice]][["incidence_estimates"]] <- uploadedFiles$dataIP$incidence_estimates
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$captionTableSexAge
-    })
+    observe({
+      for (key in names(tableSexAge())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- tableSexAge()
+      }
+    }) %>%
+      bindEvent(tableSexAge())
+
 
     # Incidence Modules
 
