@@ -166,145 +166,16 @@ test_that("reset data", {
   })
 })
 
-test_that("Sunburst data 2.5.2", {
-  testServer(reportGenerator(), {
-    treatmentPathways_test <- mutate(treatmentPathways_test,
-                                     cdm_name = "1")
-    uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
-    session$setInputs(sexSunburst = "all",
-                      ageSunburst = "all",
-                      indexSunburst = "all",
-                      cdmSunburst = "1",
-                      dataVersionTP = "2.5.2")
-    testthat::expect_s3_class(treatmentDataSunburst(), "data.frame")
-    testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
-  })
-})
-
-test_that("Sunburst data 2.5.0", {
-  testServer(reportGenerator(), {
-    treatmentPathways_test <- mutate(treatmentPathways_test,
-                                     cdm_name = "1",
-                                     index_year = indexYear)
-    uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
-    session$setInputs(sexSunburst = "all",
-                      ageSunburst = "all",
-                      indexSunburst = "all",
-                      cdmSunburst = "1",
-                      dataVersionTP = "2.5.0")
-    testthat::expect_s3_class(treatmentDataSunburst(), "data.frame")
-    testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
-  })
-})
-
-test_that("lockTreatmentSunburst TRUE", {
-  testServer(reportGenerator(), {
-    treatmentPathways_test <- mutate(treatmentPathways_test,
-                                     cdm_name = "1")
-    uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
-    dataReport <- list()
-    session$setInputs(sexSunburst = "all",
-                      ageSunburst = "all",
-                      indexSunburst = "all",
-                      cdmSunburst = "1",
-                      dataVersionTP = "2.5.2",
-                      lockTreatmentSunburst = TRUE)
-    testthat::expect_s3_class(treatmentDataSunburst(), "data.frame")
-  })
-})
-
-test_that("lockTreatmentSunburst FALSE", {
-  testServer(reportGenerator(), {
-    treatmentPathways_test <- mutate(treatmentPathways_test,
-                                     cdm_name = "1",
-                                     index_year = indexYear)
-    uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
-    dataReport <- list()
-    session$setInputs(sexSunburst = "all",
-                      ageSunburst = "all",
-                      indexSunburst = "all",
-                      cdmSunburst = "1",
-                      dataVersionTP = "2.5.2",
-                      lockTreatmentSunburst = FALSE)
-    testthat::expect_s3_class(treatmentDataSunburst(), "data.frame")
-  })
-})
-
-test_that("Sankey data 2.5.2", {
-  testServer(reportGenerator(), {
-    treatmentPathways_test <- mutate(treatmentPathways_test,
-                                     cdm_name = "1")
-    uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
-    session$setInputs(sexSankey = "all",
-                      ageSankey = "all",
-                      indexSankey = "all",
-                      cdmSankey = "1",
-                      dataVersionTP = "2.5.2")
-    testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
-    testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
-  })
-})
-
-test_that("Sankey data 2.5.0", {
-  testServer(reportGenerator(), {
-    treatmentPathways_test <- mutate(treatmentPathways_test,
-                                     cdm_name = "1",
-                                     index_year = indexYear)
-    uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
-    session$setInputs(sexSankey = "all",
-                      ageSankey = "all",
-                      indexSankey = "all",
-                      cdmSankey = "1",
-                      dataVersionTP = "2.5.0")
-    testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
-    testthat::expect_s3_class(uploadedFiles$dataTP$treatmentPathways, "data.frame")
-  })
-})
-
-test_that("lockTreatmentSankey TRUE", {
-  testServer(reportGenerator(), {
-    treatmentPathways_test <- mutate(treatmentPathways_test,
-                                     cdm_name = "1",
-                                     index_year = indexYear)
-    uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
-    dataReport <- list()
-    session$setInputs(sexSankey = "all",
-                      ageSankey = "all",
-                      indexSankey = "all",
-                      cdmSankey = "1",
-                      dataVersionTP = "2.5.2",
-                      lockTreatmentSankey = TRUE)
-    testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
-  })
-})
-
-test_that("lockTreatmentSankey FALSE", {
-  testServer(reportGenerator(), {
-    treatmentPathways_test <- mutate(treatmentPathways_test,
-                                     cdm_name = "1",
-                                     index_year = indexYear)
-    uploadedFiles$dataTP$treatmentPathways <- treatmentPathways_test
-    dataReport <- list()
-    session$setInputs(sexSankey = "all",
-                      ageSankey = "all",
-                      indexSankey = "all",
-                      cdmSankey = "1",
-                      dataVersionTP = "2.5.2",
-                      lockTreatmentSankey = FALSE)
-    testthat::expect_s3_class(treatmentDataSankey(), "data.frame")
-  })
-})
-
 test_that("summarised Characteristics and LSC", {
   testServer(reportGenerator(), {
     expect_s3_class(characteristicsUI("characteristics",
-                                      dataset = summarisedCharacteristics), "shiny.tag.list")
+                                      summarisedCharacteristics), "shiny.tag.list")
     expect_s3_class(characteristicsServer("characteristics",
-                                          dataset = summarisedCharacteristics), "reactiveVal")
+                                          summarisedCharacteristics), "reactiveVal")
     expect_s3_class(characteristicsUI("lsc",
-                                      dataset = summarisedCharacteristicsLSC), "shiny.tag.list")
+                                      summarisedCharacteristicsLSC), "shiny.tag.list")
     expect_s3_class(characteristicsServer("lsc",
-                                          dataset = summarisedCharacteristicsLSC), "reactiveVal")
+                                          summarisedCharacteristicsLSC), "reactiveVal")
   })
 })
 
