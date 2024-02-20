@@ -28,6 +28,7 @@ tableServer <- function(id, uploadedFiles) {
   moduleServer(id, function(input, output, session) {
 
     output$previewTable <- render_gt({
+      uploadedFiles <- uploadedFiles()
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       eval(parse(text = getItemConfig(input = "title",
                                       output = "function",

@@ -323,7 +323,8 @@ reportGenerator <- function() {
 
     # Table Sex/Age
 
-    tableSexAge <- tableServer(id = "Table - Number of participants by sex and age group", uploadedFiles)
+    tableSexAge <- tableServer(id = "Table - Number of participants by sex and age group",
+                               reactive(uploadedFiles))
 
     observe({
       for (key in names(tableSexAge())) {
@@ -425,7 +426,8 @@ reportGenerator <- function() {
 
     # Treatment Patterns Interactive Plots
 
-    dataPatterns <- patternsServer("Treatment Pathways Interactive Plots", reactive(uploadedFiles))
+    dataPatterns <- patternsServer("Treatment Pathways Interactive Plots",
+                                   reactive(uploadedFiles))
 
     observe({
       for (key in names(dataPatterns())) {
