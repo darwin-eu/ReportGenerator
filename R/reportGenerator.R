@@ -77,8 +77,8 @@ reportGenerator <- function() {
                  fluidRow(
                    column(width = 4,
                           h2("2. Objects to print"),
-                          # DTOutput("dataReportMenu"),
-                          verbatimTextOutput("dataReportMenu"),
+                          DTOutput("dataReportMenu"),
+                          # verbatimTextOutput("dataReportMenu"),
                           tags$br(),
                           downloadButton("generateReport", "Generate Report"),
                           tags$br()
@@ -423,147 +423,22 @@ reportGenerator <- function() {
     }) %>%
       bindEvent(dataPrevalenceAge())
 
-    # Treatment Patterns
+    # Treatment Patterns Interactive Plots
 
-    # SunburstPlot
+    dataPatterns <- patternsServer("Treatment Pathways Interactive Plots", reactive(uploadedFiles))
 
-    treatmentDataSunburst <- reactive({
-      if (input$dataVersionTP == "2.5.2") {
-        treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
-        treatmentPathways %>%
-          filter(sex == input$sexSunburst,
-                 age == input$ageSunburst,
-                 indexYear == input$indexSunburst,
-                 cdm_name == input$cdmSunburst)
-      } else if (input$dataVersionTP == "2.5.0") {
-        treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
-        treatmentPathways %>%
-          filter(sex == input$sexSunburst,
-                 age == input$ageSunburst,
-                 index_year == input$indexSunburst,
-                 cdm_name == input$cdmSunburst)
+    observe({
+      for (key in names(dataPatterns())) {
+        chars <- c(0:9, letters, LETTERS)
+        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        dataReport[[randomId]] <- dataPatterns()
       }
-    })
+    }) %>%
+      bindEvent(dataPatterns())
 
-    treatmentDataSankey <- reactive({
-      if (input$dataVersionTP == "2.5.2") {
-        treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
-        treatmentPathways %>%
-          filter(sex == input$sexSankey,
-                 age == input$ageSankey,
-                 indexYear == input$indexSankey,
-                 cdm_name == input$cdmSankey)
-      } else if (input$dataVersionTP == "2.5.0") {
-        treatmentPathways <- uploadedFiles[["dataTP"]][["treatmentPathways"]]
-        treatmentPathways %>%
-          filter(sex == input$sexSankey,
-                 age == input$ageSankey,
-                 index_year == input$indexSankey,
-                 cdm_name == input$cdmSankey)
-      }
-    })
-
-    output$previewSunburstPlot <- renderUI({
-      objectChoice <- "Sunburst Plot - TreatmentPatterns"
-      treatmentPathways <- treatmentDataSunburst()
-      TreatmentPatterns::createSunburstPlot(treatmentPathways, groupCombinations = FALSE)
-    })
-
-    output$downloadSunburst <- downloadHandler(
-      filename = function() {
-        paste("SunburstDiagram", ".png", sep = "")
-      },
-      content = function(file) {
-        sunburstHTML <- here::here("sunburstDiagram.html")
-        createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
-                           outputFile = sunburstHTML,
-                           returnHTML = FALSE)
-        sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
-        webshot2::webshot(
-          url = sunburstHTML,
-          file = sunburstPNG,
-          vwidth = 1200,
-          vheight = 10)
-        sunburstPath <- normalizePath(sunburstPNG)
-        file.copy(sunburstPath, file)
-      }
-    )
-
-    observeEvent(input$lockTreatmentSunburst, {
-      objectChoice <- "Sunburst Plot - TreatmentPatterns"
-      sunburstHTML <- here::here("sunburstDiagram.html")
-      createSunburstPlot(treatmentPathways = treatmentDataSunburst(),
-                         outputFile = sunburstHTML,
-                         returnHTML = FALSE)
-      sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
-      webshot2::webshot(
-        url = sunburstHTML,
-        file = sunburstPNG,
-        vwidth = 1200,
-        vheight = 10)
-      sunburstPath <- normalizePath(sunburstPNG)
-      message("Adding filename to dataReport")
-      chars <- c(0:9, letters, LETTERS)
-      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-      dataReport[[randomId]][[objectChoice]][["treatmentPathways"]] <- treatmentDataSunburst()
-      dataReport[[randomId]][[objectChoice]][["outputFile"]] <- sunburstHTML
-      dataReport[[randomId]][[objectChoice]][["returnHTML"]] <- FALSE
-      dataReport[[randomId]][[objectChoice]][["fileImage"]] <- sunburstPNG
-      message("Filename added to dataReport")
-    })
-
-    # Sankey
-
-    output$previewSankeyDiagram <- renderUI({
-      objectChoice <- "Sankey Diagram - TreatmentPatterns"
-      treatmentPathways <- treatmentDataSankey()
-      TreatmentPatterns::createSankeyDiagram(treatmentPathways, groupCombinations = TRUE)
-    })
-
-    output$downloadSankey <- downloadHandler(
-      filename = function() {
-        paste("SankeyDiagram", ".png", sep = "")
-      },
-      content = function(file) {
-        TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
-                                               returnHTML = FALSE,
-                                               groupCombinations = FALSE,
-                                               minFreq = 1)
-        sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
-        webshot2::webshot(
-          url = sankeyHTML,
-          file = sankeytPNG,
-          vwidth = 1200,
-          vheight = 10)
-        sankeyPath <- normalizePath(sankeytPNG)
-        file.copy(sankeyPath, file)
-      }
-    )
-
-    observeEvent(input$lockTreatmentSankey, {
-      objectChoice <- "Sankey Diagram - TreatmentPatterns"
-      TreatmentPatterns::createSankeyDiagram(treatmentPathways = treatmentDataSankey(),
-                                             returnHTML = FALSE,
-                                             groupCombinations = FALSE,
-                                             minFreq = 1)
-      sankeytPNG <- tempfile(pattern = "sankeyPlot", fileext = ".png")
-      webshot2::webshot(
-        url = sankeyHTML,
-        file = sankeytPNG,
-        vwidth = 1200,
-        vheight = 10)
-      sankeyPath <- normalizePath(sankeytPNG)
-      chars <- c(0:9, letters, LETTERS)
-      randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
-      dataReport[[randomId]][[objectChoice]][["treatmentPathways"]] <- treatmentDataSankey()
-      dataReport[[randomId]][[objectChoice]][["outputFile"]] <- sankeyHTML
-      dataReport[[randomId]][[objectChoice]][["returnHTML"]] <- FALSE
-      dataReport[[randomId]][[objectChoice]][["fileImage"]] <- sankeytPNG
-      message("Filename added to dataReport")
-    })
 
     # PatientProfiles Modules
-    dataCharacteristics <- characteristicsServer(id = "characteristics",
+    dataCharacteristics <- characteristicsServer("characteristics",
                                                  reactive(uploadedFiles$dataPP$`Summarised Characteristics`))
 
     observe({
@@ -677,22 +552,22 @@ reportGenerator <- function() {
       }
     })
 
-    # output$dataReportMenu <- renderDT({
-    #   dataReportFrame <- data.frame(
-    #     Name = objectsListPreview()
-    #   )
-    #   DT::datatable(dataReportFrame, options = list(dom = 't'))
-    # })
+    output$dataReportMenu <- renderDT({
+      dataReportFrame <- data.frame(
+        Name = objectsListPreview()
+      )
+      DT::datatable(dataReportFrame, options = list(dom = 't'))
+    })
 
     # To check data in report:
 
-    output$dataReportMenu <- renderPrint({
-      # dataReport
-      dataReportList <- reactiveValuesToList(dataReport)
-      dataReportList
-      # length(dataReportList) == 0
-      # objectsListPreview()
-    })
+    # output$dataReportMenu <- renderPrint({
+    #   # dataReport
+    #   dataReportList <- reactiveValuesToList(dataReport)
+    #   dataReportList
+    #   # length(dataReportList) == 0
+    #   # objectsListPreview()
+    # })
 
     # Word report generator
     output$generateReport <- downloadHandler(

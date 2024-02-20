@@ -19,10 +19,8 @@ tabPanelSelection <- function(selection, uploadedFiles, version) {
     tabPanel(selection, prevalenceUI(selection, uploadedFiles))
   } else if (selection == "Plot - Prevalence per year by age") {
     tabPanel(selection, prevalenceUI(selection, uploadedFiles))
-  } else if (selection == "Sankey Diagram - TreatmentPatterns") {
-    tabPanel(selection, sankeyDiagramFilters(uploadedFiles, version), htmlOutput("previewSankeyDiagram"))
-  } else if (selection == "Sunburst Plot - TreatmentPatterns") {
-    tabPanel(selection, sunburstDiagramFilters(uploadedFiles, version), htmlOutput("previewSunburstPlot"))
+  } else if (selection == "Treatment Pathways Interactive Plots") {
+    tabPanel(selection, patternsUI(selection, uploadedFiles))
   } else if (selection == "Summarised Characteristics") {
     tabPanel(selection, characteristicsUI("characteristics", uploadedFiles))
   } else if (selection == "Summarised Large Scale Characteristics") {

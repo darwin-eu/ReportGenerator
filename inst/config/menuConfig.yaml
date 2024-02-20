@@ -59,18 +59,23 @@ plotPrevalenceAge:
   type:
     - prevalence_estimates
   options: Facet by outcome, Facet by database
+treatmentPathways:
+  title: "Treatment Pathways Interactive Plots"
+  type:
+    - treatmentPathways
 createSunburstPlot:
   title: "Sunburst Plot - TreatmentPatterns"
-  function: createSunburstPlot(treatmentPathways, outputFile, returnHTML)
-  type:
-    - treatmentPathways
+  function: createSunburstPlot(treatmentPathways, groupCombinations)
   options: TRUE, FALSE
+  type:
+    - plot
 createSankeyDiagram:
   title: "Sankey Diagram - TreatmentPatterns"
-  function: createSankeyDiagram(treatmentPathways, outputFile, returnHTML)
-  type:
-    - treatmentPathways
+  function: createSankeyDiagram(treatmentPathways, groupCombinations)
   options: TRUE, FALSE
+  type:
+    - diagram
+
 summaryCharacteristics:
   title: "Summarised Characteristics"
   function: gtCharacteristics(summarisedCharacteristics)

@@ -91,7 +91,13 @@ columnCheck <- function(csvFiles,
   return(data)
 }
 
-loadFileData <- function(data, fileName, configData, configDataTypes, resultsData, resultsColumns, databaseName) {
+loadFileData <- function(data,
+                         fileName,
+                         configData,
+                         configDataTypes,
+                         resultsData,
+                         resultsColumns,
+                         databaseName) {
   for (val in configDataTypes) {
     if (val == "incidence_attrition" & grepl("incidence_attrition", fileName)) {
       configColumns <- configData[[val]]
