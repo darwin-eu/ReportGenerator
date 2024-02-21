@@ -6,10 +6,10 @@ test_that("getItemsList all", {
              "incidence_estimates",
              "prevalence_estimates",
              "treatmentPathways",
-             "summarised_characteristics",
+             "Summarised Characteristics",
              "Summarised Large Scale Characteristics")
   menuList <- getItemsList(items)
-  expect_equal(length(menuList), 14)
+  expect_equal(length(menuList), 13)
 })
 
 test_that("getItemsList attrition both", {
@@ -49,8 +49,7 @@ test_that("getItemsList only prevalence", {
 test_that("getItemsList treatmentPatterns", {
   items <- c("treatmentPathways")
   menuList <- getItemsList(items)
-  expect_equal(menuList, c("Sunburst Plot - TreatmentPatterns",
-                           "Sankey Diagram - TreatmentPatterns"))
+  expect_equal(menuList, c("Treatment Pathways Interactive Plots"))
 })
 
 test_that("getItemsList joining to apps", {
@@ -61,7 +60,7 @@ test_that("getItemsList joining to apps", {
   menuListTP <- getItemsList(itemsTP)
   itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], menuListIP)
   itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], menuListTP)
-  expect_equal(length(itemsList$objects[["items"]]), 12)
+  expect_equal(length(itemsList$objects[["items"]]), 11)
 })
 
 test_that("getItemConfig for getting a function", {
@@ -120,13 +119,13 @@ test_that("addPreviewItemType edge cases", {
 # PatientProfiles
 
 test_that("PatientProfiles Both Summaries", {
-  items <- c("summarised_characteristics", "Summarised Large Scale Characteristics")
+  items <- c("Summarised Characteristics", "Summarised Large Scale Characteristics")
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 2)
 })
 
 test_that("PatientProfiles Summary", {
-  items <- c("summarised_characteristics")
+  items <- c("Summarised Characteristics")
   menuList <- getItemsList(items)
   expect_equal(menuList, "Summarised Characteristics")
 })

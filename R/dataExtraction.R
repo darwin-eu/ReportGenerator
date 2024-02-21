@@ -18,6 +18,8 @@
 #'
 #' @param fileDataPath File path(s) in character
 #' @param fileName Name of the file in character to process in case the input is only csv
+#' @param package Name of the packages that generated the results
+#' @param versionData Version of the package
 #' @param csvLocation Path folder location to uncompress the zip files
 #'
 #' @return A list of dataframes
@@ -26,12 +28,14 @@
 #' @export
 joinDatabase <- function(fileDataPath = NULL,
                          fileName = NULL,
+                         package = "IncidencePrevalence",
+                         versionData = "0.5.1",
                          csvLocation = NULL) {
 
   # Loading yml file
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  packagesNames <- names(configData)
-
+  configData <- configData[[package]][[versionData]]
+  configDataTypes <- names(configData)
   # Check zip
   if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
     # Empty list to allocate data
@@ -62,110 +66,125 @@ joinDatabase <- function(fileDataPath = NULL,
           databaseName <- metadata$cdmSourceName
         }
         # Checks the type of every individual file
-        data <- loadFileData(data, file, configData, resultsData, resultsColumns, databaseName)
+        data <- loadFileData(data, file, configData, configDataTypes, resultsData, resultsColumns, databaseName)
       }
     }
   } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
-    data <- list()
-    for (i in seq(1:length(fileDataPath))) {
-      resultsData <- read_csv(fileDataPath[i], show_col_types = FALSE)
-      resultsColumns <- names(resultsData)
-      data <- loadFileData(data, fileName[i], configData, resultsData, resultsColumns, databaseName = NULL)
-    }
+    data <- columnCheck(csvFiles = fileDataPath,
+                        fileName = fileName,
+                        configData = configData,
+                        configDataTypes = configDataTypes)
   }
   return(data)
 }
 
-
-#' Load file data and save it in a list.
-#'
-#' @param data named list with data.
-#' @param fileName the file to load
-#' @param configData config loaded from file
-#' @param resultsData the loaded file data
-#' @param resultsColumns the loaded file columns
-#' @param databaseName db name
-#'
-#' @return the list with data
-loadFileData <- function(data, fileName, configData, resultsData, resultsColumns, databaseName) {
-  resultType <- NULL
-  if ("result_type" %in% resultsColumns) {
-    resultType <- unique(resultsData$result_type)
+columnCheck <- function(csvFiles,
+                        fileName,
+                        configData,
+                        configDataTypes) {
+  data <- list()
+  for (i in seq(1:length(csvFiles))) {
+    resultsData <- read_csv(csvFiles[i], show_col_types = FALSE)
+    resultsColumns <- names(resultsData)
+    data <- loadFileData(data, fileName[i], configData, configDataTypes, resultsData, resultsColumns, databaseName = NULL)
   }
+  return(data)
+}
 
-  for (pkg in names(configData)) {
-    pkgConfigData <- configData[[pkg]]
-
-    # if possible use resultType
-    if (!is.null(resultType)) {
-      if (resultType == "Survival estimate") {
-         analysis_type <- unique(resultsData$analysis_type)
-         if (analysis_type == "Competing risk") {
-          resultType <- "Survival cumulative incidence"
-         }
+loadFileData <- function(data,
+                         fileName,
+                         configData,
+                         configDataTypes,
+                         resultsData,
+                         resultsColumns,
+                         databaseName) {
+  for (val in configDataTypes) {
+    if (val == "incidence_attrition" & grepl("incidence_attrition", fileName)) {
+      configColumns <- configData[[val]]
+      configColumns <- unlist(configColumns$names)
+      if (all(configColumns %in% resultsColumns)) {
+        message(paste0(val, ": match yes"))
+        data[[val]] <- bind_rows(data[[val]], resultsData)
       }
-      if (resultType %in% names(pkgConfigData)) {
-        configColumns <- pkgConfigData[[resultType]]
-        configColumns <- unlist(configColumns$names)
-        if (all(configColumns %in% resultsColumns)) {
-          message(paste0(resultType, ": match (using resultType)"))
-          data[[pkg]][[resultType]] <- bind_rows(data[[pkg]][[resultType]], resultsData)
-        }
+    } else if (val == "prevalence_attrition" & grepl("prevalence_attrition", fileName)) {
+      configColumns <- configData[[val]]
+      configColumns <- unlist(configColumns$names)
+      if (all(configColumns %in% resultsColumns)) {
+        message(paste0(val, ": match yes"))
+        data[[val]] <- bind_rows(data[[val]], resultsData)
       }
-    } else {
-      for (val in names(pkgConfigData)) {
-        configColumns <- pkgConfigData[[val]]
-        configColumns <- unlist(configColumns$names)
-        if (val == "incidence_attrition" & grepl("incidence_attrition", fileName)) {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "prevalence_attrition" & grepl("prevalence_attrition", fileName)) {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "incidence_estimates" & grepl("incidence_", fileName)) {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "prevalence_estimates" & grepl("prevalence_", fileName)) {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "treatmentPathways" & grepl("treatment", fileName)) {
-          if (all(configColumns %in% resultsColumns)) {
-            if (!('cdm_name' %in% resultsColumns)) {
-              resultsData <- mutate(resultsData,
-                                    cdm_name = databaseName)
-            }
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "Summarised Characteristics" & grepl("patient", fileName)) {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "Summarised Large Scale Characteristics" & grepl("patient", fileName)) {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "Survival estimate" & grepl("single_event", fileName)) {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "Survival cumulative incidence" & grepl("competing_risk", fileName)) {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
+    } else if (val == "incidence_estimates") {
+      configColumns <- configData[[val]]
+      configColumns <- unlist(configColumns$names)
+      if (all(configColumns %in% resultsColumns)) {
+        if (!('denominator_days_prior_observation' %in% resultsColumns)) {
+          resultsData <- mutate(resultsData,
+                                denominator_days_prior_observation = denominator_days_prior_history)
         }
+        if (!('analysis_outcome_washout' %in% resultsColumns)) {
+          resultsData <- mutate(resultsData,
+                                analysis_outcome_washout = 0)
+        }
+        message(paste0(val, ": match yes"))
+        data[[val]] <- bind_rows(data[[val]], resultsData)
+      }
+    } else if (val == "prevalence_estimates") {
+      configColumns <- configData[[val]]
+      configColumns <- unlist(configColumns$names)
+      if (all(configColumns %in% resultsColumns)) {
+        if (!('denominator_days_prior_observation' %in% resultsColumns)) {
+          resultsData <- mutate(resultsData,
+                                denominator_days_prior_observation = denominator_days_prior_history)
+        }
+        message(paste0(val, ": match yes"))
+        data[[val]] <- bind_rows(data[[val]], resultsData)
+      }
+    } else if (val == "treatmentPathways") {
+      configColumns <- configData[[val]]
+      configColumns <- unlist(configColumns$names)
+      if (all(configColumns %in% resultsColumns)) {
+        if (!('cdm_name' %in% resultsColumns)) {
+          resultsData <- mutate(resultsData,
+                                cdm_name = databaseName)
+        }
+        message(paste0(val, ": match yes"))
+        data[[val]] <- bind_rows(data[[val]], resultsData)
+      }
+    } else if (val == "Summarised Characteristics") {
+      configColumns <- configData[[val]]
+      configColumns <- unlist(configColumns$names)
+      if (all(configColumns %in% resultsColumns)) {
+        if (!('cdm_name' %in% resultsColumns)) {
+          resultsData <- mutate(resultsData,
+                                cdm_name = databaseName)
+        }
+        message(paste0(val, ": match yes"))
+        data[[val]] <- bind_rows(data[[val]], resultsData)
+      }
+    } else if (val == "Summarised Large Scale Characteristics") {
+      configColumns <- configData[[val]]
+      configColumns <- unlist(configColumns$names)
+      if (all(configColumns %in% resultsColumns)) {
+        if (!('cdm_name' %in% resultsColumns)) {
+          resultsData <- mutate(resultsData,
+                                cdm_name = databaseName)
+        }
+        message(paste0(val, ": match yes"))
+        data[[val]] <- bind_rows(data[[val]], resultsData)
+      }
+    } else if (val == "Survival estimate" & !grepl("competing", fileName)) {
+      configColumns <- configData[[val]]
+      configColumns <- unlist(configColumns$names)
+      if (all(configColumns %in% resultsColumns)) {
+        message(paste0(val, ": match yes"))
+        data[[val]] <- bind_rows(data[[val]], resultsData)
+      }
+    } else if (val == "Survival cumulative incidence" & grepl("competing", fileName)) {
+      configColumns <- configData[[val]]
+      configColumns <- unlist(configColumns$names)
+      if (all(configColumns %in% resultsColumns)) {
+        message(paste0(val, ": match yes"))
+        data[[val]] <- bind_rows(data[[val]], resultsData)
       }
     }
   }
@@ -368,15 +387,12 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
 
 #' `testData()` extracts data from zip results and saves it in .rda format
 #' @param testFilesIP testthat dir location of the test files with version number of folder (internal use).
-#' @param testFilesTP testthat dir of treatment pattern files
-#' @param testFilesPP testthat dir of patient profiles files
-#' @param testFilesCS testthat dir of cohort survival files
 #'
 #' @importFrom usethis use_data
 #'
 #' @return sysdata.rda instruction
-testData <- function(testFilesIP = testthat::test_path("IncPrev", "0.6.0", "zip"),
-                     testFilesTP = testthat::test_path("TrePat", "2.5.2", "csv", "CHUBX"),
+testData <- function(testFilesIP = testthat::test_path("IP", "0.6.0", "zip"),
+                     testFilesTP = testthat::test_path("TP", "2.5.2", "csv", "CHUBX"),
                      testFilesPP = testthat::test_path("PP", "0.5.1", "zip"),
                      testFilesCS = testthat::test_path("CS", "0.2.5", "zip")) {
   checkmate::assertDirectoryExists(testFilesIP)
@@ -406,12 +422,18 @@ testData <- function(testFilesIP = testthat::test_path("IncPrev", "0.6.0", "zip"
 
   # Extract
   testData <- joinDatabase(fileDataPath  = uploadedFilesIP,
-                             csvLocation = csvLocation)$IncidencePrevalence
+                             package = "IncidencePrevalence",
+                             versionData = "0.6.0",
+                             csvLocation = csvLocation)
   testData[["treatmentPathways_test"]] <- treatmentPathways_test
   testDataPP <- joinDatabase(fileDataPath  = uploadedFilesPP,
-                             csvLocation = csvLocation)$PatientProfiles
+                             package = "PatientProfiles",
+                             versionData = "0.5.1",
+                             csvLocation = csvLocation)
   testDataCS <- joinDatabase(fileDataPath  = uploadedFilesCS,
-                             csvLocation = csvLocation)$CohortSurvival
+                             package = "CohortSurvival",
+                             versionData = "0.2.5",
+                             csvLocation = csvLocation)
 
   testData <- c(testData, testDataPP, testDataCS)
   unlink(csvLocation, recursive = TRUE)
