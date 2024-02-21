@@ -98,10 +98,10 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
     # if possible use resultType
     if (!is.null(resultType)) {
       if (resultType == "Survival estimate") {
-         analysis_type <- unique(resultsData$analysis_type)
-         if (analysis_type == "Competing risk") {
+        analysis_type <- unique(resultsData$analysis_type)
+        if (analysis_type == "Competing risk") {
           resultType <- "Survival cumulative incidence"
-         }
+        }
       }
       if (resultType %in% names(pkgConfigData)) {
         configColumns <- pkgConfigData[[resultType]]
@@ -270,8 +270,8 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     }
     cdm <- CohortSurvival::mockMGUS2cdm()
     MGUS_death <- CohortSurvival::estimateSingleEventSurvival(cdm,
-                                              targetCohortTable = "mgus_diagnosis",
-                                              outcomeCohortTable = "death_cohort"
+                                                              targetCohortTable = "mgus_diagnosis",
+                                                              outcomeCohortTable = "death_cohort"
     )
     columnSurvival <- names(MGUS_death)
     configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
@@ -405,7 +405,7 @@ testData <- function(testFilesIP = testthat::test_path("IP", "0.6.0", "zip"),
 
   # Extract
   testData <- joinDatabase(fileDataPath  = uploadedFilesIP,
-                             csvLocation = csvLocation)$IncidencePrevalence
+                           csvLocation = csvLocation)$IncidencePrevalence
   testData[["treatmentPathways_test"]] <- treatmentPathways_test
   testDataPP <- joinDatabase(fileDataPath  = uploadedFilesPP,
                              csvLocation = csvLocation)$PatientProfiles
