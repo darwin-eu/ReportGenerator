@@ -25,37 +25,37 @@ table1Inc:
   options: NULL
 plotIncidenceYear:
   title: "Plot - Incidence rate per year"
-  function: plotIncidence(incidence_estimates, colour, facet)
+  function: plotIncidence(incidence_estimates, colour, facet, ribbon = TRUE)
   type:
     - incidence_estimates
   options: Facet by outcome, Facet by database
 plotIncidenceSex:
   title: "Plot - Incidence rate per year by sex"
-  function: plotIncidence(incidence_estimates, colour, facet)
+  function: plotIncidence(incidence_estimates, colour, facet, ribbon = TRUE)
   type:
     - incidence_estimates
   options: Facet by outcome, Facet by database
 plotIncidenceAge:
   title: "Plot - Incidence rate per year by age"
-  function: plotIncidence(incidence_estimates, colour, facet)
+  function: plotIncidence(incidence_estimates, colour, facet, ribbon = TRUE)
   type:
     - incidence_estimates
   options: Facet by outcome, Facet by database
 plotPrevalenceYear:
   title: "Plot - Prevalence rate per year"
-  function: plotPrevalence(prevalence_estimates, colour, facet)
+  function: plotPrevalence(prevalence_estimates, colour, facet, ribbon = TRUE)
   type:
     - prevalence_estimates
   options: Facet by outcome, Facet by database
 plotPrevalenceSex:
   title: "Plot - Prevalence rate per year by sex"
-  function: plotPrevalence(prevalence_estimates, colour, facet)
+  function: plotPrevalence(prevalence_estimates, colour, facet, ribbon = TRUE)
   type:
     - prevalence_estimates
   options: Facet by outcome, Facet by database
 plotPrevalenceAge:
   title: "Plot - Prevalence rate per year by age"
-  function: plotPrevalence(prevalence_estimates, colour, facet)
+  function: plotPrevalence(prevalence_estimates, colour, facet, ribbon = TRUE)
   type:
     - prevalence_estimates
   options: Facet by outcome, Facet by database
