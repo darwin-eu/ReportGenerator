@@ -79,7 +79,7 @@ summaryCharacteristics:
   title: "Summarised Characteristics"
   function: gtCharacteristics(summarisedCharacteristics)
   type:
-    - summarised_characteristics
+    - Summarised Characteristics
 Summarised Large Scale Characteristics:
   title: "Summarised Large Scale Characteristics"
   function: gtCharacteristics(summarisedCharacteristics)

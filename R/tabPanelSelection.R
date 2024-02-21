@@ -1,4 +1,4 @@
-tabPanelSelection <- function(selection, uploadedFiles) {
+tabPanelSelection <- function(selection, uploadedFiles, version) {
   if (selection == "Table - Number of participants") {
     tabPanel(selection, attritionUI(selection, uploadedFiles))
   } else if (selection == "Table - Incidence Attrition") {
