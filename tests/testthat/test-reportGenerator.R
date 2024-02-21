@@ -60,7 +60,7 @@ test_that("datasetLoad IncPrev Wrong Data 0.6.0", {
 
 test_that("datasetLoad TrePat", {
   testServer(reportGenerator(), {
-    session$setInputs(datasetLoadTP = data.frame(name = c("CHUBX.zip",
+    session$setInputs(datasetLoad = data.frame(name = c("CHUBX.zip",
                                                           "CPRD.zip",
                                                           "IQVIA.zip"),
                                                  datapath = c(test_path("TP", "2.5.2", "zip", "CHUBX.zip"),
@@ -84,7 +84,7 @@ test_that("datasetLoad TrePat Wrong Data 0.6.0", {
 
 test_that("datasetLoad TrePat Wrong Data", {
   testServer(reportGenerator(), {
-    session$setInputs(datasetLoadTP = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip",
+    session$setInputs(datasetLoad = data.frame(name = c("mock_data_ReportGenerator_CHUBX.zip",
                                                           "mock_data_ReportGenerator_CHUBX.zip",
                                                           "mock_data_ReportGenerator_IMASIS.zip"),
                                                  datapath = c(test_path("IP", "0.5.1", "zip", "mock_data_ReportGenerator_CHUBX.zip"),
@@ -109,13 +109,12 @@ test_that("datasetLoad TrePat Wrong Data 0.6.0", {
 
 test_that("datasetLoad PP", {
   testServer(reportGenerator(), {
-    session$setInputs(datasetLoadPP = data.frame(name = c("results_CPRD.zip",
+    session$setInputs(datasetLoad = data.frame(name = c("results_CPRD.zip",
                                                         "results_EBB.zip",
                                                         "results_IPCI.zip"),
                                                datapath = c(test_path("PP", "0.5.1", "zip", "results_CPRD.zip"),
                                                             test_path("PP", "0.5.1", "zip", "results_EBB.zip"),
-                                                            test_path("PP", "0.5.1", "zip", "results_IPCI.zip"))),
-                      dataVersionPP = "0.5.1")
+                                                            test_path("PP", "0.5.1", "zip", "results_IPCI.zip"))))
 
     expect_equal(length(uploadedFiles$dataPP), 2)
   })
@@ -123,9 +122,8 @@ test_that("datasetLoad PP", {
 
 test_that("datasetLoad PP", {
   testServer(reportGenerator(), {
-    session$setInputs(datasetLoadPP = data.frame(name = c("patientCharacteristics_hepatitisb.csv"),
-                                                 datapath = c(test_path("PP", "0.5.1", "csv", "patientCharacteristics_hepatitisb.csv"))),
-                      dataVersionPP = "0.5.1")
+    session$setInputs(datasetLoad = data.frame(name = c("patientCharacteristics_hepatitisb.csv"),
+                                               datapath = c(test_path("PP", "0.5.1", "csv", "patientCharacteristics_hepatitisb.csv"))))
     expect_equal(length(uploadedFiles$dataPP), 1)
   })
 })
@@ -133,9 +131,8 @@ test_that("datasetLoad PP", {
 
 test_that("datasetLoad PP 0.5.1", {
   testServer(reportGenerator(), {
-    session$setInputs(datasetLoadPP = data.frame(name = c("results_CPRD.zip"),
-                                               datapath = c(test_path("PP", "0.5.1", "zip", "results_CPRD.zip"))),
-                      dataVersionPP = "0.5.1")
+    session$setInputs(datasetLoad = data.frame(name = c("results_CPRD.zip"),
+                                               datapath = c(test_path("PP", "0.5.1", "zip", "results_CPRD.zip"))))
 
     expect_equal(length(uploadedFiles$dataPP), 2)
   })
@@ -191,7 +188,3 @@ test_that("survival modules classes", {
     expect_s3_class(cohortSurvivalServer("failurePlot", survivalCumulativeIncidence), "shiny.render.function")
   })
 })
-
-
-
-

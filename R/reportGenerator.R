@@ -38,24 +38,14 @@ reportGenerator <- function() {
     dashboardHeader(title = "ReportGenerator"),
     dashboardSidebar(
       sidebarMenu(
-        menuItem("IncidencePrevalence",
-                 datasetLoadUI("IncidencePrevalence")
-        ),
-        menuItem("TreatmentPatterns",
-                 datasetLoadUI("TreatmentPatterns"),
-                 tags$br()
-        ),
-        menuItem("PatientProfiles",
-                 datasetLoadUI("PatientProfiles"),
-                 tags$br()
-        ),
-        menuItem("CohortSurival",
-                 datasetLoadUI("CohortSurvival"),
-                 tags$br()
-        ),
+        menuItem("StudyPackage", datasetLoadUI("StudyPackage"),
+                 startExpanded = TRUE),
         tags$br(),
         actionButton('resetData', 'Reset data'),
-        tags$br()
+        tags$br(), tags$br(), tags$br(),
+        shinyjs::useShinyjs(),
+        tags$head(tags$style(".dlStudyDataBtn{ margin-left:15px;margin-right:15px; color:#444 !important; }")),
+        downloadButton("downloadStudyData", "Sample dataset", class = "dlStudyDataBtn")
       )
     ),
     dashboardBody(
@@ -72,17 +62,26 @@ reportGenerator <- function() {
                           h2("1. Choose objects"),
                           uiOutput("navPanelPreview")
                    )
-                 ),
-                 tags$br(),
+                 )
+        ),
+        tabPanel("Generate report",
                  fluidRow(
-                   column(width = 4,
-                          h2("2. Objects to print"),
+                   column(width = 6,
+                          h2("Report items"),
                           DTOutput("dataReportMenu"),
                           # verbatimTextOutput("dataReportMenu"),
                           tags$br(),
-                          downloadButton("generateReport", "Generate Report"),
-                          tags$br()
-                          )
+                          tags$head(tags$style(".dlReportBtn{ margin-left:15px;margin-right:15px; margin-top:25px; color:#444 !important; }")),
+                          splitLayout(
+                            downloadButton("generateReport", "Generate Report", class = "dlReportBtn"),
+                            downloadButton("saveReportData", "Save report items", class = "dlReportBtn"),
+                            fileInput("loadReportItems",
+                                      "Load report items",
+                                      accept = c(".rds"),
+                                      placeholder = "rds")
+                          ),
+                          div(id = "reportOutput")
+                   )
                  )
         )
       )
@@ -92,15 +91,7 @@ reportGenerator <- function() {
   server <- function(input, output, session) {
 
     # 1. Load data
-
-    # IncidencePrevalence Module
-    datasetLoadServer("IncidencePrevalence")
-    # TreatmentPatterns Module
-    datasetLoadServer("TreatmentPatterns")
-    # PatientProfiles Module
-    datasetLoadServer("PatientProfiles")
-    # CohortSurvival Module
-    datasetLoadServer("CohortSurvival")
+    datasetLoadServer("StudyPackage")
 
     # ReactiveValues
     uploadedFiles <- reactiveValues(dataIP = NULL,
@@ -110,7 +101,6 @@ reportGenerator <- function() {
     itemsList <- reactiveValues(objects = NULL)
 
     # Check input data
-    # IncidencePrevalence
     observeEvent(input$datasetLoad, {
       # Read  file paths
       inFile <- input$datasetLoad
@@ -119,109 +109,34 @@ reportGenerator <- function() {
       # Temp directory to unzip files
       csvLocation <- file.path(tempdir(), "dataLocation")
       dir.create(csvLocation)
-      # Joins one or several zips from different data partners into the reactive value
-      dataVersion <- input$dataVersion
-      uploadedFiles$dataIP <- joinDatabase(fileDataPath = fileDataPath,
+      # Joins one or several zips into the reactive value
+      uploadedFileDataList <- joinDatabase(fileDataPath = fileDataPath,
                                            fileName = fileName,
-                                           package = "IncidencePrevalence",
-                                           versionData = dataVersion,
                                            csvLocation = csvLocation)
-      if (length(uploadedFiles$dataIP) == 0) {
+      if (length(uploadedFileDataList) == 0) {
         show_alert(title = "Data mismatch",
-                   text = "Not a valid IncidencePrevalence file or check version")
+                   text = "No valid package files found")
       }
-      # Get list of items to show in toggle menu
-      itemsIP <- names(uploadedFiles$dataIP)
-      itemsIPList <- getItemsList(itemsIP)
-      # Items list into reactive value to show in toggle menu
-      itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], itemsIPList)
-      # itemsList$objects[["items"]] <- getItemsList(items)
-      unlink(csvLocation, recursive = TRUE)
-    })
+      pkgNames <- names(uploadedFileDataList)
+      if ("IncidencePrevalence" %in% pkgNames) {
+        uploadedFiles$dataIP <- uploadedFileDataList[["IncidencePrevalence"]]
+      }
+      if ("TreatmentPatterns" %in% pkgNames) {
+        uploadedFiles$dataTP <- uploadedFileDataList[["TreatmentPatterns"]]
+      }
+      if ("PatientProfiles" %in% pkgNames) {
+        uploadedFiles$dataPP <- uploadedFileDataList[["PatientProfiles"]]
+      }
+      if ("CohortSurvival" %in% pkgNames) {
+        uploadedFiles$dataCS <- uploadedFileDataList[["CohortSurvival"]]
+      }
 
-    # TreatmentPatterns
-    observeEvent(input$datasetLoadTP, {
-      # Read  file paths
-      inFile <- input$datasetLoadTP
-      fileDataPath <- inFile$datapath
-      fileName <- inFile$name
-      # Temp directory to unzip files
-      csvLocation <- file.path(tempdir(), "dataLocation")
-      dir.create(csvLocation)
-      # Joins one or several zips from different data partners into the reactive value
-      versionData <- input$dataVersionTP
-      uploadedFiles$dataTP <- joinDatabase(fileDataPath = fileDataPath,
-                                           fileName = fileName,
-                                           package = "TreatmentPatterns",
-                                           versionData = versionData,
-                                           csvLocation = csvLocation)
-      if (length(uploadedFiles$dataTP) == 0) {
-        show_alert(title = "Data mismatch",
-                   text = "Not a valid TreatmentPathways file or check version")
-      }
       # Get list of items to show in toggle menu
-      itemsTP <- names(uploadedFiles$dataTP)
-      itemsTPList <- getItemsList(itemsTP)
-      # Items list into reactive value to show in toggle menu
-      itemsList$objects[["items"]] <-  c(itemsList$objects[["items"]], itemsTPList)
-      # itemsList$objects[["items"]] <- getItemsList(itemsTP)
-      unlink(csvLocation, recursive = TRUE)
-    })
-
-    # PatientProfiles
-    observeEvent(input$datasetLoadPP, {
-      # Read  file paths
-      inFile <- input$datasetLoadPP
-      fileDataPath <- inFile$datapath
-      fileName <- inFile$name
-      # Temp directory to unzip files
-      csvLocation <- file.path(tempdir(), "dataLocation")
-      dir.create(csvLocation)
-      # Joins one or several zips from different data partners into the reactive value
-      versionData <- input$dataVersionPP
-      uploadedFiles$dataPP <- joinDatabase(fileDataPath = fileDataPath,
-                                           fileName = fileName,
-                                           package = "PatientProfiles",
-                                           versionData = versionData,
-                                           csvLocation = csvLocation)
-      if (length(uploadedFiles$dataPP) == 0) {
-        show_alert(title = "Data mismatch",
-                   text = "Not a valid PatientProfiles file or check version")
+      for (pkgName in pkgNames) {
+        pkgDataList <- uploadedFileDataList[[pkgName]]
+        items <- names(pkgDataList)
+        itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], getItemsList(items))
       }
-      # Get list of items to show in toggle menu
-      itemsPP <- names(uploadedFiles$dataPP)
-      itemsPPList <- getItemsList(itemsPP)
-      # Items list into reactive value to show in toggle menu
-      itemsList$objects[["items"]] <-  c(itemsList$objects[["items"]], itemsPPList)
-      # itemsList$objects[["items"]] <- getItemsList(itemsPP)
-      unlink(csvLocation, recursive = TRUE)
-    })
-
-    # CohortSurvival
-    observeEvent(input$datasetLoadCS, {
-      # Read file paths
-      inFile <- input$datasetLoadCS
-      fileDataPath <- inFile$datapath
-      fileName <- inFile$name
-      # Temp directory to unzip files
-      csvLocation <- file.path(tempdir(), "dataLocation")
-      dir.create(csvLocation)
-      # Joins one or several zips from different data partners into the reactive value
-      versionData <- input$dataVersionCS
-      uploadedFiles$dataCS <- joinDatabase(fileDataPath = fileDataPath,
-                                           fileName = fileName,
-                                           package = "CohortSurvival",
-                                           versionData = versionData,
-                                           csvLocation = csvLocation)
-      if (length(uploadedFiles$dataCS) == 0) {
-        show_alert(title = "Data mismatch",
-                   text = "Not a valid CohortSurvival file or check version")
-      }
-      # Get list of items to show in toggle menu
-      itemsCS <- names(uploadedFiles$dataCS)
-      itemsCSList <- getItemsList(itemsCS)
-      # Items list into reactive value to show in toggle menu
-      itemsList$objects[["items"]] <-  c(itemsList$objects[["items"]], itemsCSList)
       unlink(csvLocation, recursive = TRUE)
     })
 
@@ -231,20 +146,15 @@ reportGenerator <- function() {
       uploadedFiles <- reactiveValues(dataIP = NULL,
                                       dataTP = NULL,
                                       dataPP = NULL)
-      dataReport <- reactiveValues()
       updateTabsetPanel(session, "mainPanel",
                         selected = "Item selection")
-      datasetLoadServer("IncidencePrevalence")
-      # TreatmentPatterns Module
-      datasetLoadServer("TreatmentPatterns")
-      # PatientProfiles Module
-      datasetLoadServer("PatientProfiles")
-      # CohortSurvival Module
-      datasetLoadServer("CohortSurvival")
-      # }
+      datasetLoadServer("StudyPackage")
+      dataReport$objects <- NULL
+      shinyjs::html("reportOutput", "")
     })
 
     # 1. Interactive menu
+
 
     output$itemSelectionMenu <- renderUI({
       column(tags$b("Item selection"),
@@ -268,9 +178,8 @@ reportGenerator <- function() {
     output$navPanelPreview <- renderUI({
       previewPanels <- lapply(input$objectSelection,
                               tabPanelSelection,
-                              uploadedFiles = uploadedFiles,
-                              version = input$dataVersionTP)
-      do.call(navlistPanel, previewPanels)
+                              uploadedFiles = uploadedFiles)
+      do.call(navlistPanel, c(previewPanels, list(widths = c(4, 8))))
     })
 
     # 2.Assign Data
@@ -510,55 +419,60 @@ reportGenerator <- function() {
 
     observeEvent(input$locksurvivalTable, {
       objectChoice <- "Survival table"
-      randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
-      dataReport[[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimateData()
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'survivalTable-captionSurvivalEstimateData'
+      randomId <- getRandomId()
+      dataReport[["objects"]][[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimateData()
+      dataReport[["objects"]][[randomId]][[objectChoice]][["caption"]] <- input$'survivalTable-captionSurvivalEstimateData'
     })
 
     observeEvent(input$locksurvivalPlot, {
       objectChoice <- "Survival plot"
-      randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
-      dataReport[[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimatePlotData()
-      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'survivalPlot-captionSurvivalEstimate'
+      randomId <- getRandomId()
+      dataReport[["objects"]][[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimatePlotData()
+      dataReport[["objects"]][[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
+      dataReport[["objects"]][[randomId]][[objectChoice]][["caption"]] <- input$'survivalPlot-captionSurvivalEstimate'
     })
 
     observeEvent(input$lockfailureTable, {
       objectChoice <- "Cumulative incidence table"
-      randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
-      dataReport[[randomId]][[objectChoice]][["cumulativeSurvivalEstimate"]] <- cumulativeSurvivalData()
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'failureTable-captionCumulativeIncidenceData'
+      randomId <- getRandomId()
+      dataReport[["objects"]][[randomId]][[objectChoice]][["cumulativeSurvivalEstimate"]] <- cumulativeSurvivalData()
+      dataReport[["objects"]][[randomId]][[objectChoice]][["caption"]] <- input$'failureTable-captionCumulativeIncidenceData'
     })
 
     observeEvent(input$lockfailurePlot, {
       objectChoice <- "Cumulative incidence plot"
-      randomId <- stringr::str_c(sample(c(0:9, letters, LETTERS), 4, replace = TRUE) , collapse = "" )
-      dataReport[[randomId]][[objectChoice]][["cumulativeSurvivalEstimate"]] <- cumulativeSurvivalPlotData()
-      dataReport[[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
-      dataReport[[randomId]][[objectChoice]][["caption"]] <- input$'failurePlot-captionCumulativeIncidence'
+      randomId <- getRandomId()
+      dataReport[["objects"]][[randomId]][[objectChoice]][["cumulativeSurvivalEstimate"]] <- cumulativeSurvivalPlotData()
+      dataReport[["objects"]][[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
+      dataReport[["objects"]][[randomId]][[objectChoice]][["caption"]] <- input$'failurePlot-captionCumulativeIncidence'
     })
 
     # Data Report Preview
 
     objectsListPreview <- reactive({
-      dataReportList <- reactiveValuesToList(dataReport)
-      if (length(dataReportList) == 0) {
+      if (is.null(dataReport$objects)) {
         return("None")
       } else {
-        objectList <- list()
+        dataReportList <- reactiveValuesToList(do.call(reactiveValues, dataReport$objects))
+        result <- data.frame(name = character(0), caption = character(0))
         for (i in seq(1:length(dataReportList))) {
-          objectList <- rbind(objectList, names(dataReportList[[i]]))
+          name <- names(dataReportList[[i]])
+          reportItem <- dataReportList[[i]][[name]]
+          caption <- ""
+          if ("caption" %in% names(reportItem)) {
+            caption <- reportItem$caption
+          }
+          result <- rbind(result, data.frame(name = name, caption = caption))
         }
-        result <- unlist(objectList)
         return(result)
       }
     })
 
     output$dataReportMenu <- renderDT({
-      dataReportFrame <- data.frame(
-        Name = objectsListPreview()
-      )
-      DT::datatable(dataReportFrame, options = list(dom = 't'))
+      dataReportFrame <- objectsListPreview()
+      if (inherits(dataReportFrame, "data.frame")) {
+        DT::datatable(dataReportFrame, options = list(dom = 't'))
+      }
     })
 
     # To check data in report:
@@ -579,16 +493,53 @@ reportGenerator <- function() {
       content = function(file) {
         shinyjs::disable("generateReport")
         # Load template and generate report
+        shinyjs::html("reportOutput", "<br>Generating report", add = TRUE)
         reportDocx <- read_docx(path = system.file("templates",
                                                    "word",
                                                    "DARWIN_EU_Study_Report.docx",
                                                    package = "ReportGenerator"))
+        reportItems <- list()
+        if (!is.null(dataReport$objects)) {
+          reportItems <- rev(reactiveValuesToList(do.call(reactiveValues, dataReport$objects)))
+        }
         generateReport(reportDocx,
-                       rev(reactiveValuesToList(dataReport)),
+                       reportItems,
                        file)
         shinyjs::enable("generateReport")
       }
     )
+
+    # download sample study data
+    output$downloadStudyData <- downloadHandler(
+      filename = function() { "StudyResults.zip" },
+      content = function(file) {
+        file.copy(system.file("extdata/examples/StudyResults.zip", package = "ReportGenerator"), file)
+      },
+      contentType = "application/zip"
+    )
+
+    # save report
+    output$saveReportData <- downloadHandler(
+      filename = "reportItems.rds",
+      content = function(file) {
+        if (!is.null(dataReport$objects)) {
+          shinyjs::html("reportOutput", "<br>Saving report items to rds file", add = TRUE)
+          shinyjs::disable("saveReportData")
+          reportItems <- reactiveValuesToList(do.call(reactiveValues, dataReport$objects))
+          saveRDS(reportItems, file)
+          shinyjs::enable("saveReportData")
+        }
+      }
+    )
+    # Check input data
+    observeEvent(input$loadReportItems, {
+      inFile <- input$loadReportItems
+      fileDataPath <- inFile$datapath
+      reportItems <- readRDS(fileDataPath)
+      dataReport$objects <- reportItems
+      shinyjs::html("reportOutput", "<br>Loaded report items from rds file", add = TRUE)
+    })
+
   }
   shinyApp(ui, server)
 }

@@ -6,7 +6,7 @@ test_that("getItemsList all", {
              "incidence_estimates",
              "prevalence_estimates",
              "treatmentPathways",
-             "Summarised Characteristics",
+             "summarised_characteristics",
              "Summarised Large Scale Characteristics")
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 13)
@@ -119,13 +119,13 @@ test_that("addPreviewItemType edge cases", {
 # PatientProfiles
 
 test_that("PatientProfiles Both Summaries", {
-  items <- c("Summarised Characteristics", "Summarised Large Scale Characteristics")
+  items <- c("summarised_characteristics", "Summarised Large Scale Characteristics")
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 2)
 })
 
 test_that("PatientProfiles Summary", {
-  items <- c("Summarised Characteristics")
+  items <- c("summarised_characteristics")
   menuList <- getItemsList(items)
   expect_equal(menuList, "Summarised Characteristics")
 })

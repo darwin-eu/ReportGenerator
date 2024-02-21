@@ -6,55 +6,9 @@ test_that("test basic", {
                                   "prevalence_estimates",
                                   "treatmentPathways_test",
                                   "Summarised Large Scale Characteristics",
-                                  "Summarised Characteristics",
+                                  "summarised_characteristics",
                                   "Survival cumulative incidence",
                                   "Survival estimate"))
-})
-
-test_that("VariablesConfig IncidencePrevalence", {
-  fileDataPath <- list.files(testthat::test_path("IP",
-                                                 "0.5.1",
-                                                 "zip"),
-                             pattern = "zip",
-                             full.names = TRUE)
-  variablesConfigYaml(fileDataPath = fileDataPath[1],
-                      package = "IncidencePrevalence",
-                      version = "0.5.1")
-  package <- "IncidencePrevalence"
-  version <- "0.5.1"
-  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  expect_equal(length(configData[[package]][[version]]), 4)
-  expect_type(configData[[package]][[version]], "list")
-})
-
-test_that("VariablesConfig IncidencePrevalence", {
-  fileDataPath <- list.files(testthat::test_path("IP",
-                                                 "0.6.0",
-                                                 "zip"),
-                             pattern = "zip",
-                             full.names = TRUE)
-  variablesConfigYaml(fileDataPath = fileDataPath[1],
-                      package = "IncidencePrevalence",
-                      version = "0.6.0")
-  package <- "IncidencePrevalence"
-  version <- "0.6.0"
-  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  expect_equal(length(configData[[package]][[version]]), 4)
-  expect_type(configData[[package]][[version]], "list")
-})
-
-test_that("VariablesConfig TreatmentPatterns", {
-  fileDataPath <- list.files(testthat::test_path("TP", "csv"),
-                             pattern = "csv",
-                             full.names = TRUE)
-  variablesConfigYaml(fileDataPath = fileDataPath,
-                      package = "TreatmentPatterns",
-                      version = "2.5.0")
-  package <- "TreatmentPatterns"
-  version <- "2.5.0"
-  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  expect_equal(length(configData[[package]][[version]]), 1)
-  expect_type(configData[[package]][[version]], "list")
 })
 
 test_that("Loading 1 zip files IncidencePrevalence", {
@@ -66,9 +20,7 @@ test_that("Loading 1 zip files IncidencePrevalence", {
                              pattern = "zip",
                              full.names = TRUE)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
-                                package = "IncidencePrevalence",
-                                versionData = "0.5.1",
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation)$IncidencePrevalence
   expect_equal(length(uploadedFiles), 4)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -83,9 +35,7 @@ test_that("Loading multiple zip files IncidencePrevalence", {
                              pattern = "zip",
                              full.names = TRUE)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
-                                package = "IncidencePrevalence",
-                                versionData = "0.5.1",
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation)$IncidencePrevalence
   expect_equal(length(uploadedFiles), 4)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -106,37 +56,11 @@ test_that("Loading 1 csv files IncidencePrevalence", {
   fileName <- tools::file_path_sans_ext(fileName)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[3],
                                 fileName = fileName[3],
-                                package = "IncidencePrevalence",
-                                versionData = "0.5.1",
                                 csvLocation = csvLocation)
   expect_equal(length(uploadedFiles), 1)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
 })
-
-# test_that("Loading 1 csv files extra column check IncidencePrevalence", {
-#   csvFiles <- list.files(testthat::test_path("IP",
-#                                              "extras"),
-#                          pattern = "csv",
-#                          full.names = TRUE)
-#   csvFiles <- csvFiles[1]
-#   fileName <- list.files(testthat::test_path("IP",
-#                                              "extras"),
-#                          pattern = "csv")
-#   fileName <- tools::file_path_sans_ext(fileName)
-#   fileName <- fileName[1]
-#   package <- "IncidencePrevalence"
-#   versionData <- "0.5.1"
-#   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-#   configData <- configData[[package]][[versionData]]
-#   configDataTypes <- names(configData)
-#   uploadedFiles <- columnCheck(csvFiles = csvFiles,
-#                                fileName = fileName,
-#                                configData = configData,
-#                                configDataTypes = configDataTypes)
-#   expect_equal(length(uploadedFiles), 1)
-#   expect_type(uploadedFiles, "list")
-# })
 
 test_that("Loading multiple csv files IncidencePrevalence", {
   csvLocation <- file.path(tempdir(), "dataLocation")
@@ -153,9 +77,7 @@ test_that("Loading multiple csv files IncidencePrevalence", {
   fileName <- tools::file_path_sans_ext(fileName)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
                                 fileName = fileName,
-                                package = "IncidencePrevalence",
-                                versionData = "0.5.1",
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation)$IncidencePrevalence
   expect_equal(length(uploadedFiles), 4)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -176,8 +98,6 @@ test_that("Loading 1 csv files TreatmentPatterns", {
   fileName <- "treatmentPathways"
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
                                 fileName = fileName,
-                                package = package,
-                                versionData = versionData,
                                 csvLocation = csvLocation)
   expect_equal(length(uploadedFiles), 1)
   # expect_equal(length(unique(uploadedFiles$treatmentPathways$cdm_name)), 1)
@@ -194,9 +114,7 @@ test_that("Loading multiple csv files TreatmentPatterns", {
                              pattern = "treatmentPathways.csv",
                              full.names = TRUE,
                              recursive = TRUE)
-  package <- "TreatmentPatterns"
-  versionData <- "2.5.2"
-  fileName <- list.files(testthat::test_path("TP",
+  fileName <- list.files(testthat::test_path("TrePat",
                                              "2.5.2",
                                              "csv"),
                          pattern = "treatmentPathways.csv",
@@ -204,9 +122,7 @@ test_that("Loading multiple csv files TreatmentPatterns", {
   fileName <- tools::file_path_sans_ext(fileName)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
                                 fileName = fileName,
-                                package = package,
-                                versionData = versionData,
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation)$TreatmentPatterns
   expect_equal(length(uploadedFiles), 1)
   # expect_equal(length(unique(uploadedFiles$treatmentPathways$cdm_name)), 3)
   expect_type(uploadedFiles, "list")
@@ -221,12 +137,8 @@ test_that("Loading 1 zip files TreatmentPatterns", {
                                                  "zip"),
                              pattern = "zip",
                              full.names = TRUE)
-  package <- "TreatmentPatterns"
-  versionData <- "2.5.2"
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
-                                package = package,
-                                versionData = versionData,
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation)$TreatmentPatterns
   expect_equal(length(uploadedFiles), 1)
   expect_equal(length(unique(uploadedFiles$treatmentPathways$cdm_name)), 1)
   expect_type(uploadedFiles, "list")
@@ -241,12 +153,8 @@ test_that("Loading multiple zip files TreatmentPatterns", {
                                                  "zip"),
                              pattern = "zip",
                              full.names = TRUE)
-  package <- "TreatmentPatterns"
-  versionData <- "2.5.2"
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
-                                package = package,
-                                versionData = versionData,
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation)$TreatmentPatterns
   expect_equal(length(uploadedFiles), 1)
   expect_type(uploadedFiles, "list")
   expect_equal(length(unique(uploadedFiles$treatmentPathways$cdm_name)), 3)
@@ -290,9 +198,7 @@ test_that("Loading 1 zip files PatientProfiles", {
                              pattern = "zip",
                              full.names = TRUE)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
-                                package = "PatientProfiles",
-                                versionData = "0.5.1",
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation)$PatientProfiles
   expect_equal(length(uploadedFiles), 2)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -307,9 +213,7 @@ test_that("Loading multiple zip files PatientProfiles", {
                              pattern = "zip",
                              full.names = TRUE)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
-                                package = "PatientProfiles",
-                                versionData = "0.5.1",
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation)$PatientProfiles
   expect_equal(length(uploadedFiles), 2)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -331,9 +235,7 @@ test_that("Loading 1 csv files PatientProfiles", {
   fileName <- tools::file_path_sans_ext(fileName)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
                                 fileName = fileName[1],
-                                package = "PatientProfiles",
-                                versionData = "0.5.1",
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation)$PatientProfiles
   expect_equal(length(uploadedFiles), 1)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -352,9 +254,7 @@ test_that("Loading 1 csv files PatientProfiles", {
   fileName <- tools::file_path_sans_ext(fileName)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[4],
                                 fileName = fileName[4],
-                                package = "PatientProfiles",
-                                versionData = "0.5.1",
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation)$PatientProfiles
   expect_equal(length(uploadedFiles), 1)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -375,9 +275,7 @@ test_that("Loading multiple csv files PatientProfiles", {
   fileName <- tools::file_path_sans_ext(fileName)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
                                 fileName = fileName,
-                                package = "PatientProfiles",
-                                versionData = "0.5.1",
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation)$PatientProfiles
   expect_equal(length(uploadedFiles), 2)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)

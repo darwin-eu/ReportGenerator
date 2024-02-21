@@ -75,12 +75,11 @@ createSankeyDiagram:
   options: TRUE, FALSE
   type:
     - diagram
-
 summaryCharacteristics:
   title: "Summarised Characteristics"
   function: gtCharacteristics(summarisedCharacteristics)
   type:
-    - Summarised Characteristics
+    - summarised_characteristics
 Summarised Large Scale Characteristics:
   title: "Summarised Large Scale Characteristics"
   function: gtCharacteristics(summarisedCharacteristics)
