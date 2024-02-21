@@ -155,7 +155,6 @@ reportGenerator <- function() {
 
     # 1. Interactive menu
 
-
     output$itemSelectionMenu <- renderUI({
       column(tags$b("Item selection"),
              width = 12,
