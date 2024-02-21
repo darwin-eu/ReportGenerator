@@ -42,34 +42,39 @@ plotIncidenceAge:
     - incidence_estimates
   options: Facet by outcome, Facet by database
 plotPrevalenceYear:
-  title: "Plot - Prevalence rate per year"
+  title: "Plot - Prevalence per year"
   function: plotPrevalence(prevalence_estimates, colour, facet, ribbon = TRUE)
   type:
     - prevalence_estimates
   options: Facet by outcome, Facet by database
 plotPrevalenceSex:
-  title: "Plot - Prevalence rate per year by sex"
+  title: "Plot - Prevalence per year by sex"
   function: plotPrevalence(prevalence_estimates, colour, facet, ribbon = TRUE)
   type:
     - prevalence_estimates
   options: Facet by outcome, Facet by database
 plotPrevalenceAge:
-  title: "Plot - Prevalence rate per year by age"
+  title: "Plot - Prevalence per year by age"
   function: plotPrevalence(prevalence_estimates, colour, facet, ribbon = TRUE)
   type:
     - prevalence_estimates
   options: Facet by outcome, Facet by database
+treatmentPathways:
+  title: "Treatment Pathways Interactive Plots"
+  type:
+    - treatmentPathways
 createSunburstPlot:
   title: "Sunburst Plot - TreatmentPatterns"
-  function: createSunburstPlot(treatmentPathways, outputFile, returnHTML)
-  type:
-    - treatmentPathways
+  function: createSunburstPlot(treatmentPathways, groupCombinations)
   options: TRUE, FALSE
+  type:
+    - plot
 createSankeyDiagram:
   title: "Sankey Diagram - TreatmentPatterns"
-  function: createSankeyDiagram(treatmentPathways)
+  function: createSankeyDiagram(treatmentPathways, groupCombinations)
+  options: TRUE, FALSE
   type:
-    - treatmentPathways
+    - diagram
 summaryCharacteristics:
   title: "Summarised Characteristics"
   function: gtCharacteristics(summarisedCharacteristics)
