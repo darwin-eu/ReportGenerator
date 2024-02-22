@@ -8,16 +8,16 @@ characteristicsUI <- function(id, uploadedFiles) {
         column(4,
                pickerInput(inputId = ns("cdm_name"),
                            label = "Database",
-                           choices = unique(uploadedFiles$dataPP$`Summarised Characteristics`$cdm_name),
-                           selected = unique(uploadedFiles$dataPP$`Summarised Characteristics`$cdm_name),
+                           choices = unique(uploadedFiles$dataPP$summarised_characteristics$cdm_name),
+                           selected = unique(uploadedFiles$dataPP$summarised_characteristics$cdm_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("group_level"),
                            label = "Group Level",
-                           choices = unique(uploadedFiles$dataPP$`Summarised Characteristics`$group_level),
-                           selected = unique(uploadedFiles$dataPP$`Summarised Characteristics`$group_level),
+                           choices = unique(uploadedFiles$dataPP$summarised_characteristics$group_level),
+                           selected = unique(uploadedFiles$dataPP$summarised_characteristics$group_level),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
@@ -26,16 +26,16 @@ characteristicsUI <- function(id, uploadedFiles) {
         column(4,
                pickerInput(inputId = ns("strata_name"),
                            label = "Strata Name",
-                           choices = unique(uploadedFiles$dataPP$`Summarised Characteristics`$strata_name),
-                           selected = unique(uploadedFiles$dataPP$`Summarised Characteristics`$strata_name),
+                           choices = unique(uploadedFiles$dataPP$summarised_characteristics$strata_name),
+                           selected = unique(uploadedFiles$dataPP$summarised_characteristics$strata_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("variable"),
                            label = "Variable",
-                           choices = sort(unique(uploadedFiles$dataPP$`Summarised Characteristics`$variable)),
-                           selected = unique(uploadedFiles$dataPP$`Summarised Characteristics`$variable),
+                           choices = sort(unique(uploadedFiles$dataPP$summarised_characteristics$variable)),
+                           selected = unique(uploadedFiles$dataPP$summarised_characteristics$variable),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
@@ -44,16 +44,16 @@ characteristicsUI <- function(id, uploadedFiles) {
         column(4,
                pickerInput(inputId = ns("variable_level"),
                            label = "Variable Level",
-                           choices = sort(unique(uploadedFiles$dataPP$`Summarised Characteristics`$variable_level)),
-                           selected = unique(uploadedFiles$dataPP$`Summarised Characteristics`$variable_level),
+                           choices = sort(unique(uploadedFiles$dataPP$summarised_characteristics$variable_level)),
+                           selected = unique(uploadedFiles$dataPP$summarised_characteristics$variable_level),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("estimate_type"),
                            label = "Estimate Type",
-                           choices = sort(unique(uploadedFiles$dataPP$`Summarised Characteristics`$estimate_type)),
-                           selected = sort(unique(uploadedFiles$dataPP$`Summarised Characteristics`$estimate_type)),
+                           choices = sort(unique(uploadedFiles$dataPP$summarised_characteristics$estimate_type)),
+                           selected = sort(unique(uploadedFiles$dataPP$summarised_characteristics$estimate_type)),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
@@ -242,7 +242,7 @@ characteristicsServer <- function(id, dataset) {
 
     observeEvent(input$lockSummary, {
       addObject(
-        list(`Summarised Characteristics` = list(summarisedCharacteristics = dataPP(),
+        list(summarised_characteristics = list(summarisedCharacteristics = dataPP(),
                                                  caption = input$captionCharacteristics))
       )
     })
