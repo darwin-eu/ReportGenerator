@@ -62,6 +62,12 @@ incidenceUI <- function(id, uploadedFiles) {
                            label = "Select plot type",
                            choices = c("Facet by outcome", "Facet by database"),
                            selected = "Facet by outcome")
+        ),
+        column(4,
+               pickerInput(inputId = NS(id, "ribbonIncidence"),
+                           label = "Ribbon",
+                           choices = c(TRUE, FALSE),
+                           selected = TRUE)
         )
       ),
       fluidRow(
@@ -220,7 +226,8 @@ incidenceServer <- function(id, uploadedFiles) {
         expression <- getItemConfig(input = "title",
                                     output = "function",
                                     inputValue = id) %>%
-          addPreviewItemType(input$facetIncidence)
+          addPreviewItemType(input$facetIncidence) %>%
+          addPreviewItemRibbon(input$ribbonIncidence)
         incidence_estimates <- incidenceCommonData()
         eval(parse(text = expression))
       })
@@ -229,7 +236,8 @@ incidenceServer <- function(id, uploadedFiles) {
         expression <- getItemConfig(input = "title",
                                     output = "function",
                                     inputValue = id) %>%
-          addPreviewItemTypeSex(input$facetIncidence)
+          addPreviewItemTypeSex(input$facetIncidence) %>%
+          addPreviewItemRibbon(input$ribbonIncidence)
         incidence_estimates <- incidenceCommonData()
         eval(parse(text = expression))
       })
@@ -239,7 +247,8 @@ incidenceServer <- function(id, uploadedFiles) {
         expression <- getItemConfig(input = "title",
                                     output = "function",
                                     inputValue = id) %>%
-          addPreviewItemTypeAge(input$facetIncidence)
+          addPreviewItemTypeAge(input$facetIncidence) %>%
+          addPreviewItemRibbon(input$ribbonIncidence)
         incidence_estimates <- incidenceCommonData()
         eval(parse(text = expression))
       })
@@ -264,7 +273,8 @@ incidenceServer <- function(id, uploadedFiles) {
     addObject(
       list(`Plot - Incidence rate per year` = list(incidence_estimates = incidenceCommonData(),
                                                    plotOption = input$facetIncidence,
-                                                   caption = input$captionInc))
+                                                   caption = input$captionInc,
+                                                   ribbon = input$ribbonIncidence))
     )
   })
 
@@ -272,7 +282,8 @@ incidenceServer <- function(id, uploadedFiles) {
     addObject(
       list(`Plot - Incidence rate per year by sex` = list(incidence_estimates = incidenceCommonData(),
                                                           plotOption = input$facetIncidence,
-                                                          caption = input$captionInc))
+                                                          caption = input$captionInc,
+                                                          ribbon = input$ribbonIncidence))
     )
   })
 
@@ -280,7 +291,8 @@ incidenceServer <- function(id, uploadedFiles) {
     addObject(
       list(`Plot - Incidence rate per year by age` = list(incidence_estimates = incidenceCommonData(),
                                                           plotOption = input$facetIncidence,
-                                                          caption = input$captionInc))
+                                                          caption = input$captionInc,
+                                                          ribbon = input$ribbonIncidence))
     )
   })
 

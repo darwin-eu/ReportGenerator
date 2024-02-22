@@ -53,6 +53,10 @@ generateReport <- function(reportDocx, dataReportList, fileName) {
           expression <- expression %>%
             addPreviewItemType(dataReportList[[i]][[1]][["plotOption"]])
         }
+        if (grepl("Ribbon", itemOptions)) {
+          expression <- expression %>%
+            addPreviewItemRibbon(dataReportList[[i]][[1]][["ribbon"]])
+        }
       }
 
       # Evaluate function

@@ -152,6 +152,17 @@ addPreviewItemTypeAge <- function(previewItemString, previewItemType) {
   return(result)
 }
 
+#' Adds the given ribbon to the current previewItem string.
+#'
+#' @param previewItemString string representing the previewItem
+#' @param ribbon ribbon value
+#'
+#' @return the updated preview item string
+addPreviewItemRibbon <- function(previewItemString, ribbon) {
+  ribbonStr <- paste0("ribbon = ", ribbon)
+  return(gsub("ribbon", ribbonStr, previewItemString))
+}
+
 #' Export list of package results
 #'
 #' @param resultList Named list with results from a darwin package

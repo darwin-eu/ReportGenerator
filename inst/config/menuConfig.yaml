@@ -25,40 +25,40 @@ table1Inc:
   options: NULL
 plotIncidenceYear:
   title: "Plot - Incidence rate per year"
-  function: plotIncidence(incidence_estimates, colour, facet, ribbon = TRUE)
+  function: plotIncidence(incidence_estimates, colour, facet, ribbon)
   type:
     - incidence_estimates
-  options: Facet by outcome, Facet by database
+  options: Facet by outcome, Facet by database, Ribbon
 plotIncidenceSex:
   title: "Plot - Incidence rate per year by sex"
-  function: plotIncidence(incidence_estimates, colour, facet, ribbon = TRUE)
+  function: plotIncidence(incidence_estimates, colour, facet, ribbon)
   type:
     - incidence_estimates
-  options: Facet by outcome, Facet by database
+  options: Facet by outcome, Facet by database, Ribbon
 plotIncidenceAge:
   title: "Plot - Incidence rate per year by age"
-  function: plotIncidence(incidence_estimates, colour, facet, ribbon = TRUE)
+  function: plotIncidence(incidence_estimates, colour, facet, ribbon)
   type:
     - incidence_estimates
-  options: Facet by outcome, Facet by database
+  options: Facet by outcome, Facet by database, Ribbon
 plotPrevalenceYear:
   title: "Plot - Prevalence per year"
-  function: plotPrevalence(prevalence_estimates, colour, facet, ribbon = TRUE)
+  function: plotPrevalence(prevalence_estimates, colour, facet, ribbon)
   type:
     - prevalence_estimates
-  options: Facet by outcome, Facet by database
+  options: Facet by outcome, Facet by database, Ribbon
 plotPrevalenceSex:
   title: "Plot - Prevalence per year by sex"
-  function: plotPrevalence(prevalence_estimates, colour, facet, ribbon = TRUE)
+  function: plotPrevalence(prevalence_estimates, colour, facet, ribbon)
   type:
     - prevalence_estimates
-  options: Facet by outcome, Facet by database
+  options: Facet by outcome, Facet by database, Ribbon
 plotPrevalenceAge:
   title: "Plot - Prevalence per year by age"
-  function: plotPrevalence(prevalence_estimates, colour, facet, ribbon = TRUE)
+  function: plotPrevalence(prevalence_estimates, colour, facet, ribbon)
   type:
     - prevalence_estimates
-  options: Facet by outcome, Facet by database
+  options: Facet by outcome, Facet by database, Ribbon
 treatmentPathways:
   title: "Treatment Pathways Interactive Plots"
   type:
