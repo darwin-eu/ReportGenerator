@@ -19,9 +19,9 @@ incidenceUI <- function(id, uploadedFiles) {
 
   } else if (id == "Plot - Incidence rate per year by sex") {
 
-    databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
-    databaseSelected <- uploadedFiles$dataIP$incidence_estimates$cdm_name[1]
-    databaseOptions <- list(maxOptions = 1)
+    databaseChoices <- c("All", unique(uploadedFiles$dataIP$incidence_estimates$cdm_name))
+    databaseSelected <- "All"
+    databaseOptions <- list()
 
     sexChoices <- c("Male", "Female")
     sexSelected <- c("Male", "Female")
@@ -37,9 +37,9 @@ incidenceUI <- function(id, uploadedFiles) {
 
   } else if (id == "Plot - Incidence rate per year by age") {
 
-    databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
-    databaseSelected <- uploadedFiles$dataIP$incidence_estimates$cdm_name[1]
-    databaseOptions <- list(maxOptions = 1)
+    databaseChoices <- c("All", unique(uploadedFiles$dataIP$incidence_estimates$cdm_name))
+    databaseSelected <- "All"
+    databaseOptions <- list()
 
     sexChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)
     sexSelected <-  unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)[1]
