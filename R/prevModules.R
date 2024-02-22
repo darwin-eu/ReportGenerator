@@ -171,11 +171,12 @@ prevalenceUI <- function(id, uploadedFiles) {
 
 }
 
-prevalenceServer <- function(id, dataset) {
+prevalenceServer <- function(id, uploadedFiles) {
   moduleServer(id, function(input, output, session) {
     # Figure 1
     prevalenceCommonData <- reactive({
-      prevalence_estimates <- dataset()
+      uploadedFiles <- uploadedFiles()
+      prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
       class(prevalence_estimates) <- c("IncidencePrevalenceResult",
                                        "PrevalenceResult", "tbl_df", "tbl", "data.frame")
       prevalence_estimates[is.na(prevalence_estimates)] = 0

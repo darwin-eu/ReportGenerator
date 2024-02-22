@@ -249,7 +249,7 @@ reportGenerator <- function() {
       # Year
 
     dataIncidenceYear <- incidenceServer(id = "Plot - Incidence rate per year",
-                                         reactive(uploadedFiles$dataIP$incidence_estimates))
+                                         reactive(uploadedFiles))
 
     observe({
       for (key in names(dataIncidenceYear())) {
@@ -263,7 +263,7 @@ reportGenerator <- function() {
     # Sex
 
     dataIncidenceSex <- incidenceServer(id = "Plot - Incidence rate per year by sex",
-                                        reactive(uploadedFiles$dataIP$incidence_estimates))
+                                        reactive(uploadedFiles))
 
     observe({
       for (key in names(dataIncidenceSex())) {
@@ -277,7 +277,7 @@ reportGenerator <- function() {
       # Age
 
     dataIncidenceAge <- incidenceServer(id = "Plot - Incidence rate per year by age",
-                                        reactive(uploadedFiles$dataIP$incidence_estimates))
+                                        reactive(uploadedFiles))
 
     observe({
       for (key in names(dataIncidenceAge())) {
@@ -293,7 +293,7 @@ reportGenerator <- function() {
       # Year
 
     dataPrevalenceYear <- prevalenceServer(id = "Plot - Prevalence per year",
-                                           reactive(uploadedFiles$dataIP$prevalence_estimates))
+                                           reactive(uploadedFiles))
 
     observe({
       for (key in names(dataPrevalenceYear())) {
@@ -307,7 +307,7 @@ reportGenerator <- function() {
       # Sex
 
     dataPrevalenceSex <- prevalenceServer(id = "Plot - Prevalence per year by sex",
-                                          reactive(uploadedFiles$dataIP$prevalence_estimates))
+                                          reactive(uploadedFiles))
 
     observe({
       for (key in names(dataPrevalenceSex())) {
@@ -321,7 +321,7 @@ reportGenerator <- function() {
       # Age
 
     dataPrevalenceAge <- prevalenceServer(id = "Plot - Prevalence per year by age",
-                                          reactive(uploadedFiles$dataIP$prevalence_estimates))
+                                          reactive(uploadedFiles))
 
     observe({
       for (key in names(dataPrevalenceAge())) {
