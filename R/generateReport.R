@@ -53,6 +53,10 @@ generateReport <- function(reportDocx, dataReportList, fileName) {
           expression <- expression %>%
             addPreviewItemType(dataReportList[[i]][[1]][["plotOption"]])
         }
+        if (grepl("Ribbon", itemOptions)) {
+          expression <- expression %>%
+            addPreviewItemRibbon(dataReportList[[i]][[1]][["ribbon"]])
+        }
       }
 
       # Evaluate function
@@ -71,8 +75,11 @@ generateReport <- function(reportDocx, dataReportList, fileName) {
 
       } else if ("ggplot" %in% class(object)) {
         body_end_section_landscape(reportDocx)
+        plotDim <- getGGPlotDimensions()
         body_add_gg(x = reportDocx,
                     value = object,
+                    width = plotDim[["width"]],
+                    height = plotDim[["height"]],
                     style = "Normal")
         body_add(reportDocx,
                  value = dataReportList[[i]][[1]][["caption"]])
@@ -121,4 +128,9 @@ generateReport <- function(reportDocx, dataReportList, fileName) {
   body_add_toc(reportDocx)
   print(reportDocx,
         target = fileName)
+}
+
+getGGPlotDimensions <- function() {
+  return(list("width" = 10.5,
+              "height" = 4.75))
 }

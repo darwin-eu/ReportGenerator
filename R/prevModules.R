@@ -77,6 +77,12 @@ prevalenceUI <- function(id, uploadedFiles) {
                          label = "Select plot type",
                          choices = c("Facet by outcome", "Facet by database"),
                          selected = "Facet by outcome")
+      ),
+      column(4,
+             pickerInput(inputId = NS(id, "ribbonPrevalence"),
+                         label = "Ribbon",
+                         choices = c(TRUE, FALSE),
+                         selected = TRUE)
       )
     ),
     fluidRow(
@@ -215,7 +221,8 @@ prevalenceServer <- function(id, dataset) {
         expression <- getItemConfig(input = "title",
                                     output = "function",
                                     inputValue = id) %>%
-          addPreviewItemType(input$facetPrevalence)
+          addPreviewItemType(input$facetPrevalence) %>%
+          addPreviewItemRibbon(input$ribbonPrevalence)
         prevalence_estimates <- prevalenceCommonData()
         eval(parse(text = expression))
       })
@@ -224,7 +231,8 @@ prevalenceServer <- function(id, dataset) {
         expression <- getItemConfig(input = "title",
                                     output = "function",
                                     inputValue = id) %>%
-          addPreviewItemTypeSex(input$facetPrevalence)
+          addPreviewItemTypeSex(input$facetPrevalence) %>%
+          addPreviewItemRibbon(input$ribbonPrevalence)
         prevalence_estimates <- prevalenceCommonData()
         eval(parse(text = expression))
       })
@@ -234,7 +242,8 @@ prevalenceServer <- function(id, dataset) {
         expression <- getItemConfig(input = "title",
                                     output = "function",
                                     inputValue = id) %>%
-          addPreviewItemTypeAge(input$facetPrevalence)
+          addPreviewItemTypeAge(input$facetPrevalence) %>%
+          addPreviewItemRibbon(input$ribbonPrevalence)
         prevalence_estimates <- prevalenceCommonData()
         eval(parse(text = expression))
       })
@@ -258,24 +267,27 @@ prevalenceServer <- function(id, dataset) {
     observeEvent(input$lockDataPrevalenceYear, {
       addObject(
         list(`Plot - Prevalence per year` = list(prevalence_estimates = prevalenceCommonData(),
-                                                     plotOption = input$facetPrevalence,
-                                                     caption = input$captionInc))
+                                                 plotOption = input$facetPrevalence,
+                                                 caption = input$captionInc,
+                                                 ribbon = input$ribbonPrevalence))
       )
     })
 
     observeEvent(input$lockDataPrevalenceSex, {
       addObject(
         list(`Plot - Prevalence per year by sex` = list(prevalence_estimates = prevalenceCommonData(),
-                                                            plotOption = input$facetPrevalence,
-                                                            caption = input$captionInc))
+                                                        plotOption = input$facetPrevalence,
+                                                        caption = input$captionInc,
+                                                        ribbon = input$ribbonPrevalence))
       )
     })
 
     observeEvent(input$lockDataPrevalenceAge, {
       addObject(
         list(`Plot - Prevalence per year by age` = list(prevalence_estimates = prevalenceCommonData(),
-                                                            plotOption = input$facetPrevalence,
-                                                            caption = input$captionInc))
+                                                        plotOption = input$facetPrevalence,
+                                                        caption = input$captionInc,
+                                                        ribbon = input$ribbonPrevalence))
       )
     })
 
