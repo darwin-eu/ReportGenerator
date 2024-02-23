@@ -4,22 +4,12 @@
 \alias{joinDatabase}
 \title{`joinDatabase()` joins several zip or csv folders into a list of dataframes.}
 \usage{
-joinDatabase(
-  fileDataPath = NULL,
-  fileName = NULL,
-  package = "IncidencePrevalence",
-  versionData = "0.5.1",
-  csvLocation = NULL
-)
+joinDatabase(fileDataPath = NULL, fileName = NULL, csvLocation = NULL)
 }
 \arguments{
 \item{fileDataPath}{File path(s) in character}
 
 \item{fileName}{Name of the file in character to process in case the input is only csv}
-
-\item{package}{Name of the packages that generated the results}
-
-\item{versionData}{Version of the package}
 
 \item{csvLocation}{Path folder location to uncompress the zip files}
 }
