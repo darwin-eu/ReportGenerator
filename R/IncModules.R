@@ -176,7 +176,8 @@ incidenceServer <- function(id, uploadedFiles) {
   moduleServer(id, function(input, output, session) {
     # Figure 1
     incidenceCommonData <- reactive({
-      incidence_estimates <- uploadedFiles()
+      uploadedFiles <- uploadedFiles()
+      incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
       incidence_estimates[is.na(incidence_estimates)] = 0
       # Washout
