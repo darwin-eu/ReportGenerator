@@ -38,7 +38,7 @@ tableServer <- function(id, uploadedFiles) {
     addObject <- reactiveVal()
     observeEvent(input$lockTable, {
       addObject(
-        list(`Table - Number of participants by sex and age group` = list(incidence_estimates = uploadedFiles$dataIP$incidence_estimates,
+        list(`Table - Number of participants by sex and age group` = list(incidence_estimates = uploadedFiles()$dataIP$incidence_estimates,
                                                                           caption = input$captionTable))
       )
     })

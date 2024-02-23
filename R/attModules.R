@@ -132,7 +132,7 @@ attritionServer <- function(id, uploadedFiles) {
           addObject(
             list(`Table - Incidence Attrition` = list(incidence_attrition = incidenceAttritionCommon(),
                                                       attritionDataType = attritionDataType,
-                                                      caption = input$captionTableInc))
+                                                      caption = input$captionTableAtt))
           )
         })
 
@@ -151,7 +151,7 @@ attritionServer <- function(id, uploadedFiles) {
           addObject(
             list(`Table - Prevalence Attrition` = list(prevalence_attrition = prevalenceAttritionCommon(),
                                                        attritionDataType = attritionDataType,
-                                                       caption = input$captionTablePrev))
+                                                       caption = input$captionTableAtt))
             )
           })
       }

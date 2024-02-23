@@ -194,8 +194,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(tableNumPar())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- tableNumPar()
       }
     }) %>%
@@ -208,8 +207,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(tableAttInc())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- tableAttInc()
       }
     }) %>%
@@ -222,8 +220,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(tableAttPrev())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- tableAttPrev()
       }
     }) %>%
@@ -236,8 +233,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(tableSexAge())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- tableSexAge()
       }
     }) %>%
@@ -253,8 +249,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataIncidenceYear())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataIncidenceYear()
       }
     }) %>%
@@ -267,8 +262,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataIncidenceSex())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataIncidenceSex()
       }
     }) %>%
@@ -281,8 +275,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataIncidenceAge())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataIncidenceAge()
       }
     }) %>%
@@ -297,8 +290,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataPrevalenceYear())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataPrevalenceYear()
       }
     }) %>%
@@ -311,8 +303,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataPrevalenceSex())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataPrevalenceSex()
       }
     }) %>%
@@ -325,8 +316,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataPrevalenceAge())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataPrevalenceAge()
       }
     }) %>%
@@ -339,8 +329,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataPatterns())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataPatterns()
       }
     }) %>%
@@ -353,8 +342,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataCharacteristics())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataCharacteristics()
       }
     }) %>%
@@ -365,8 +353,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataLSC())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataLSC()
       }
     }) %>%
@@ -434,6 +421,7 @@ reportGenerator <- function() {
           if ("caption" %in% names(reportItem)) {
             caption <- reportItem$caption
           }
+          caption <- ifelse(is.null(caption), "", caption)
           result <- rbind(result, data.frame(name = name, caption = caption))
         }
         return(result)

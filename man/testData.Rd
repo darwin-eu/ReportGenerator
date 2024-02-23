@@ -13,6 +13,12 @@ testData(
 }
 \arguments{
 \item{testFilesIP}{testthat dir location of the test files with version number of folder (internal use).}
+
+\item{testFilesTP}{testthat dir of treatment pattern files}
+
+\item{testFilesPP}{testthat dir of patient profiles files}
+
+\item{testFilesCS}{testthat dir of cohort survival files}
 }
 \value{
 sysdata.rda instruction
