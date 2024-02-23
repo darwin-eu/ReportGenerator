@@ -365,8 +365,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataSurvivalTable())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataSurvivalTable()
       }
     }) %>%
@@ -376,8 +375,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataSurvivalPlot())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataSurvivalPlot()
       }
     }) %>%
@@ -387,8 +385,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataFailureTable())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataFailureTable()
       }
     }) %>%
@@ -398,8 +395,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataFailurePlot())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataFailurePlot()
       }
     }) %>%
