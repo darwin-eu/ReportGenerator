@@ -448,6 +448,7 @@ reportGenerator <- function() {
           if ("caption" %in% names(reportItem)) {
             caption <- reportItem$caption
           }
+          caption <- ifelse(is.null(caption), "", caption)
           result <- rbind(result, data.frame(name = name, caption = caption))
         }
         return(result)
