@@ -211,7 +211,7 @@ incidenceServer <- function(id, uploadedFiles) {
         filter(cdm_name %in% c(input$databaseIncidence))
       # Outcome
       incidence_estimates <- incidence_estimates %>%
-        filter(outcome_cohort_name == input$outcomeIncidence)
+        filter(outcome_cohort_name %in% input$outcomeIncidence)
       # Sex
       incidence_estimates <- incidence_estimates %>%
         filter(denominator_sex %in% input$sexIncidence)

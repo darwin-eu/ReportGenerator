@@ -187,6 +187,7 @@ prevalenceUI <- function(id, uploadedFiles) {
 }
 
 prevalenceServer <- function(id, uploadedFiles) {
+
   moduleServer(id, function(input, output, session) {
     # Figure 1
     prevalenceCommonData <- reactive({
@@ -201,7 +202,7 @@ prevalenceServer <- function(id, uploadedFiles) {
         filter(cdm_name %in% c(input$databasePrevalence))
       # Outcome
       prevalence_estimates <- prevalence_estimates %>%
-        filter(outcome_cohort_name == input$outcomePrevalence)
+        filter(outcome_cohort_name %in% input$outcomePrevalence)
       # Sex
       prevalence_estimates <- prevalence_estimates %>%
         filter(denominator_sex %in% input$sexPrevalence)
@@ -225,39 +226,27 @@ prevalenceServer <- function(id, uploadedFiles) {
       return(prevalence_estimates)
     })
 
-
-    if (id == "Plot - Prevalence per year") {
-      previewFigure <- reactive({
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = id) %>%
-          addPreviewItemType(input$facetPrevalence) %>%
-          addPreviewItemRibbon(input$ribbonPrevalence)
-        prevalence_estimates <- prevalenceCommonData()
+    previewFigure <- reactive({
+      expression <- getItemConfig(input = "title",
+                                  output = "function",
+                                  inputValue = id)
+      if (id == "Plot - Prevalence rate per year") {
+        expression <- expression %>%
+          addPreviewItemType(input$facetIncidence)
+      } else if (id == "Plot - Prevalence rate per year by sex") {
+        expression <- expression %>%
+          addPreviewItemTypeSex(input$facetIncidence)
+      } else if (id == "Plot - Prevalence rate per year by age") {
+        expression <- expression %>%
+          addPreviewItemTypeAge(input$facetIncidence)
+      }
+      expression <- expression %>%
+        addPreviewItemRibbon(input$ribbonIncidence)
+      prevalence_estimates <- prevalenceCommonData()
+      if (nrow(prevalence_estimates) > 0) {
         eval(parse(text = expression))
-      })
-    } else if (id == "Plot - Prevalence per year by sex") {
-      previewFigure <- reactive({
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = id) %>%
-          addPreviewItemTypeSex(input$facetPrevalence) %>%
-          addPreviewItemRibbon(input$ribbonPrevalence)
-        prevalence_estimates <- prevalenceCommonData()
-        eval(parse(text = expression))
-      })
-
-    } else if (id == "Plot - Prevalence per year by age") {
-      previewFigure <- reactive({
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = id) %>%
-          addPreviewItemTypeAge(input$facetPrevalence) %>%
-          addPreviewItemRibbon(input$ribbonPrevalence)
-        prevalence_estimates <- prevalenceCommonData()
-        eval(parse(text = expression))
-      })
-    }
+      }
+    })
 
     output$previewFigure <- renderPlot({
       req(previewFigure())
