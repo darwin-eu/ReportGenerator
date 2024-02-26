@@ -194,8 +194,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(tableNumPar())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- tableNumPar()
       }
     }) %>%
@@ -208,8 +207,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(tableAttInc())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- tableAttInc()
       }
     }) %>%
@@ -222,8 +220,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(tableAttPrev())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- tableAttPrev()
       }
     }) %>%
@@ -236,8 +233,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(tableSexAge())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- tableSexAge()
       }
     }) %>%
@@ -253,8 +249,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataIncidenceYear())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataIncidenceYear()
       }
     }) %>%
@@ -267,8 +262,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataIncidenceSex())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataIncidenceSex()
       }
     }) %>%
@@ -281,8 +275,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataIncidenceAge())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataIncidenceAge()
       }
     }) %>%
@@ -297,8 +290,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataPrevalenceYear())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataPrevalenceYear()
       }
     }) %>%
@@ -311,8 +303,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataPrevalenceSex())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataPrevalenceSex()
       }
     }) %>%
@@ -325,8 +316,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataPrevalenceAge())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataPrevalenceAge()
       }
     }) %>%
@@ -339,8 +329,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataPatterns())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataPatterns()
       }
     }) %>%
@@ -353,8 +342,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataCharacteristics())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataCharacteristics()
       }
     }) %>%
@@ -365,8 +353,7 @@ reportGenerator <- function() {
 
     observe({
       for (key in names(dataLSC())) {
-        chars <- c(0:9, letters, LETTERS)
-        randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "" )
+        randomId <- getRandomId()
         dataReport[["objects"]][[randomId]] <- dataLSC()
       }
     }) %>%
@@ -374,77 +361,46 @@ reportGenerator <- function() {
 
     # Cohort Survival Modules
 
-    cohortSurvivalServer("survivalTable", uploadedFiles$dataCS$`Survival estimate`)
-    cohortSurvivalServer("survivalPlot", uploadedFiles$dataCS$`Survival estimate`)
-    cohortSurvivalServer("failureTable", uploadedFiles$dataCS$`Survival cumulative incidence`)
-    cohortSurvivalServer("failurePlot", uploadedFiles$dataCS$`Survival cumulative incidence`)
+    dataSurvivalTable <- cohortSurvivalServer("survivalTable", reactive(uploadedFiles))
 
-    # Cohort Survival report items
-
-    survivalEstimateData <- reactive({
-      if (!is.null(uploadedFiles$dataCS$`Survival estimate`)) {
-        uploadedFiles$dataCS$`Survival estimate` %>%
-          dplyr::filter(cdm_name %in% input$`survivalTable-cdm_name`) %>%
-          dplyr::filter(strata_name %in% input$`survivalTable-strata_name`) %>%
-          dplyr::slice_head(n = input$`survivalTable-top_n`) %>%
-          select(c("cdm_name", "result_type", "group_level", "strata_name",
-                   "strata_level", "variable_type", "time", "estimate"))
+    observe({
+      for (key in names(dataSurvivalTable())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- dataSurvivalTable()
       }
-    })
-    survivalEstimatePlotData <- reactive({
-      if (!is.null(uploadedFiles$dataCS$`Survival estimate`)) {
-        uploadedFiles$dataCS$`Survival estimate` %>%
-          dplyr::filter(cdm_name %in% input$`survivalPlot-cdm_name`) %>%
-          dplyr::filter(strata_name %in% input$`survivalPlot-strata_name`)
+    }) %>%
+      bindEvent(dataSurvivalTable())
+
+    dataSurvivalPlot <- cohortSurvivalServer("survivalPlot", reactive(uploadedFiles))
+
+    observe({
+      for (key in names(dataSurvivalPlot())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- dataSurvivalPlot()
       }
-    })
-    cumulativeSurvivalData <- reactive({
-      if (!is.null(uploadedFiles$dataCS$`Survival cumulative incidence`)) {
-        uploadedFiles$dataCS$`Survival cumulative incidence` %>%
-          dplyr::filter(cdm_name %in% input$`failureTable-cdm_name`) %>%
-          dplyr::filter(strata_name %in% input$`failureTable-strata_name`) %>%
-          dplyr::slice_head(n = input$`failureTable-top_n`) %>%
-          select(c("cdm_name", "result_type", "group_level", "strata_name",
-                   "strata_level", "variable_type", "time", "estimate"))
+    }) %>%
+      bindEvent(dataSurvivalPlot())
+
+    dataFailureTable <- cohortSurvivalServer("failureTable", reactive(uploadedFiles))
+
+    observe({
+      for (key in names(dataFailureTable())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- dataFailureTable()
       }
-    })
-    cumulativeSurvivalPlotData <- reactive({
-      if (!is.null(uploadedFiles$dataCS$`Survival cumulative incidence`)) {
-        uploadedFiles$dataCS$`Survival cumulative incidence` %>%
-          dplyr::filter(cdm_name %in% input$`failurePlot-cdm_name`) %>%
-          dplyr::filter(strata_name %in% input$`failurePlot-strata_name`)
+    }) %>%
+      bindEvent(dataFailureTable())
+
+    dataFailurePlot <- cohortSurvivalServer("failurePlot", reactive(uploadedFiles))
+
+    observe({
+      for (key in names(dataFailurePlot())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- dataFailurePlot()
       }
-    })
+    }) %>%
+      bindEvent(dataFailurePlot())
 
-    observeEvent(input$locksurvivalTable, {
-      objectChoice <- "Survival table"
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimateData()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["caption"]] <- input$'survivalTable-captionSurvivalEstimateData'
-    })
-
-    observeEvent(input$locksurvivalPlot, {
-      objectChoice <- "Survival plot"
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimatePlotData()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
-      dataReport[["objects"]][[randomId]][[objectChoice]][["caption"]] <- input$'survivalPlot-captionSurvivalEstimate'
-    })
-
-    observeEvent(input$lockfailureTable, {
-      objectChoice <- "Cumulative incidence table"
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["cumulativeSurvivalEstimate"]] <- cumulativeSurvivalData()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["caption"]] <- input$'failureTable-captionCumulativeIncidenceData'
-    })
-
-    observeEvent(input$lockfailurePlot, {
-      objectChoice <- "Cumulative incidence plot"
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["cumulativeSurvivalEstimate"]] <- cumulativeSurvivalPlotData()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
-      dataReport[["objects"]][[randomId]][[objectChoice]][["caption"]] <- input$'failurePlot-captionCumulativeIncidence'
-    })
 
     # Data Report Preview
 
@@ -461,6 +417,7 @@ reportGenerator <- function() {
           if ("caption" %in% names(reportItem)) {
             caption <- reportItem$caption
           }
+          caption <- ifelse(is.null(caption), "", caption)
           result <- rbind(result, data.frame(name = name, caption = caption))
         }
         return(result)

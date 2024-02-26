@@ -60,10 +60,10 @@ attritionServer <- function(id, uploadedFiles) {
         uploadedFiles <- uploadedFiles()
         if (!is.null(uploadedFiles$dataIP$prevalence_attrition)) {
           commonData <- uploadedFiles$dataIP$prevalence_attrition
-          if (class(commonData$excluded_records) == "character") {
+          if (inherits(commonData$excluded_records, "character")) {
             commonData$excluded_records <- as.numeric(commonData$excluded_records)
           }
-          if (class(commonData$excluded_subjects) == "character") {
+          if (inherits(commonData$excluded_subjects, "character")) {
             commonData$excluded_subjects <- as.numeric(commonData$excluded_subjects)
           }
           commonData[is.na(commonData)] = 0
@@ -81,10 +81,10 @@ attritionServer <- function(id, uploadedFiles) {
         uploadedFiles <- uploadedFiles()
         if (!is.null(uploadedFiles$dataIP$incidence_attrition)) {
           commonData <- uploadedFiles$dataIP$incidence_attrition
-          if (class(commonData$excluded_records) == "character") {
+          if (inherits(commonData$excluded_records, "character")) {
             commonData$excluded_records <- as.numeric(commonData$excluded_records)
           }
-          if (class(commonData$excluded_subjects) == "character") {
+          if (inherits(commonData$excluded_subjects, "character")) {
             commonData$excluded_subjects <- as.numeric(commonData$excluded_subjects)
           }
           commonData[is.na(commonData)] = 0
@@ -132,7 +132,7 @@ attritionServer <- function(id, uploadedFiles) {
           addObject(
             list(`Table - Incidence Attrition` = list(incidence_attrition = incidenceAttritionCommon(),
                                                       attritionDataType = attritionDataType,
-                                                      caption = input$captionTableInc))
+                                                      caption = input$captionTableAtt))
           )
         })
 
@@ -151,7 +151,7 @@ attritionServer <- function(id, uploadedFiles) {
           addObject(
             list(`Table - Prevalence Attrition` = list(prevalence_attrition = prevalenceAttritionCommon(),
                                                        attritionDataType = attritionDataType,
-                                                       caption = input$captionTablePrev))
+                                                       caption = input$captionTableAtt))
             )
           })
       }
