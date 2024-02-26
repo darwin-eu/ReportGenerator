@@ -361,77 +361,46 @@ reportGenerator <- function() {
 
     # Cohort Survival Modules
 
-    cohortSurvivalServer("survivalTable", uploadedFiles$dataCS$`Survival estimate`)
-    cohortSurvivalServer("survivalPlot", uploadedFiles$dataCS$`Survival estimate`)
-    cohortSurvivalServer("failureTable", uploadedFiles$dataCS$`Survival cumulative incidence`)
-    cohortSurvivalServer("failurePlot", uploadedFiles$dataCS$`Survival cumulative incidence`)
+    dataSurvivalTable <- cohortSurvivalServer("survivalTable", reactive(uploadedFiles))
 
-    # Cohort Survival report items
-
-    survivalEstimateData <- reactive({
-      if (!is.null(uploadedFiles$dataCS$`Survival estimate`)) {
-        uploadedFiles$dataCS$`Survival estimate` %>%
-          dplyr::filter(cdm_name %in% input$`survivalTable-cdm_name`) %>%
-          dplyr::filter(strata_name %in% input$`survivalTable-strata_name`) %>%
-          dplyr::slice_head(n = input$`survivalTable-top_n`) %>%
-          select(c("cdm_name", "result_type", "group_level", "strata_name",
-                   "strata_level", "variable_type", "time", "estimate"))
+    observe({
+      for (key in names(dataSurvivalTable())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- dataSurvivalTable()
       }
-    })
-    survivalEstimatePlotData <- reactive({
-      if (!is.null(uploadedFiles$dataCS$`Survival estimate`)) {
-        uploadedFiles$dataCS$`Survival estimate` %>%
-          dplyr::filter(cdm_name %in% input$`survivalPlot-cdm_name`) %>%
-          dplyr::filter(strata_name %in% input$`survivalPlot-strata_name`)
+    }) %>%
+      bindEvent(dataSurvivalTable())
+
+    dataSurvivalPlot <- cohortSurvivalServer("survivalPlot", reactive(uploadedFiles))
+
+    observe({
+      for (key in names(dataSurvivalPlot())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- dataSurvivalPlot()
       }
-    })
-    cumulativeSurvivalData <- reactive({
-      if (!is.null(uploadedFiles$dataCS$`Survival cumulative incidence`)) {
-        uploadedFiles$dataCS$`Survival cumulative incidence` %>%
-          dplyr::filter(cdm_name %in% input$`failureTable-cdm_name`) %>%
-          dplyr::filter(strata_name %in% input$`failureTable-strata_name`) %>%
-          dplyr::slice_head(n = input$`failureTable-top_n`) %>%
-          select(c("cdm_name", "result_type", "group_level", "strata_name",
-                   "strata_level", "variable_type", "time", "estimate"))
+    }) %>%
+      bindEvent(dataSurvivalPlot())
+
+    dataFailureTable <- cohortSurvivalServer("failureTable", reactive(uploadedFiles))
+
+    observe({
+      for (key in names(dataFailureTable())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- dataFailureTable()
       }
-    })
-    cumulativeSurvivalPlotData <- reactive({
-      if (!is.null(uploadedFiles$dataCS$`Survival cumulative incidence`)) {
-        uploadedFiles$dataCS$`Survival cumulative incidence` %>%
-          dplyr::filter(cdm_name %in% input$`failurePlot-cdm_name`) %>%
-          dplyr::filter(strata_name %in% input$`failurePlot-strata_name`)
+    }) %>%
+      bindEvent(dataFailureTable())
+
+    dataFailurePlot <- cohortSurvivalServer("failurePlot", reactive(uploadedFiles))
+
+    observe({
+      for (key in names(dataFailurePlot())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- dataFailurePlot()
       }
-    })
+    }) %>%
+      bindEvent(dataFailurePlot())
 
-    observeEvent(input$locksurvivalTable, {
-      objectChoice <- "Survival table"
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimateData()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["caption"]] <- input$'survivalTable-captionSurvivalEstimateData'
-    })
-
-    observeEvent(input$locksurvivalPlot, {
-      objectChoice <- "Survival plot"
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["survivalEstimate"]] <- survivalEstimatePlotData()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
-      dataReport[["objects"]][[randomId]][[objectChoice]][["caption"]] <- input$'survivalPlot-captionSurvivalEstimate'
-    })
-
-    observeEvent(input$lockfailureTable, {
-      objectChoice <- "Cumulative incidence table"
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["cumulativeSurvivalEstimate"]] <- cumulativeSurvivalData()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["caption"]] <- input$'failureTable-captionCumulativeIncidenceData'
-    })
-
-    observeEvent(input$lockfailurePlot, {
-      objectChoice <- "Cumulative incidence plot"
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["cumulativeSurvivalEstimate"]] <- cumulativeSurvivalPlotData()
-      dataReport[["objects"]][[randomId]][[objectChoice]][["plotOption"]] <- "Facet by database, colour by strata_name"
-      dataReport[["objects"]][[randomId]][[objectChoice]][["caption"]] <- input$'failurePlot-captionCumulativeIncidence'
-    })
 
     # Data Report Preview
 
