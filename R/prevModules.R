@@ -237,13 +237,13 @@ prevalenceServer <- function(id, uploadedFiles) {
       expression <- getItemConfig(input = "title",
                                   output = "function",
                                   inputValue = id)
-      if (id == "Plot - Prevalence rate per year") {
+      if (id == "Plot - Prevalence per year") {
         expression <- expression %>%
           addPreviewItemType(input$facetPrevalence)
-      } else if (id == "Plot - Prevalence rate per year by sex") {
+      } else if (id == "Plot - Prevalence per year by sex") {
         expression <- expression %>%
           addPreviewItemTypeSex(input$facetPrevalence)
-      } else if (id == "Plot - Prevalence rate per year by age") {
+      } else if (id == "Plot - Prevalence per year by age") {
         expression <- expression %>%
           addPreviewItemTypeAge(input$facetPrevalence)
       }
