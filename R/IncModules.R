@@ -56,7 +56,7 @@ incidenceUI <- function(id, uploadedFiles) {
   daysPriorHistorySelected <- daysPriorHistoryChoices[1]
   outcomeChoices <- unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)
   outcomeSelected <- outcomeChoices
-  startDateChoices <- unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)
+  startDateChoices <- as.character(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
 
   tagList(
     fluidRow(
