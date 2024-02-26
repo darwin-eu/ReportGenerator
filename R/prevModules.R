@@ -66,8 +66,15 @@ prevalenceUI <- function(id, uploadedFiles) {
 
   pickerOptions <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
   outcomeChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)
-  outcomeSelected <- outcomeChoices
-  startDateChoices <- as.character(unique(uploadedFiles$dataIP$prevalence_estimates$incidence_start_date))
+  startDateChoices <- as.character(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date))
+  dbPickerOptions <- list()
+  if (length(databaseChoices) > 1) {
+    dbPickerOptions <- pickerOptions
+  }
+  outcomePickerOptions <- list()
+  if (length(outcomeChoices) > 1) {
+    outcomePickerOptions <- pickerOptions
+  }
   sexPickerOptions <- list()
   if (sexMultiple) {
     sexPickerOptions <- pickerOptions
@@ -101,15 +108,15 @@ prevalenceUI <- function(id, uploadedFiles) {
                          choices = databaseChoices,
                          selected = databaseSelected,
                          multiple = TRUE,
-                         options = pickerOptions)
+                         options = dbPickerOptions)
       ),
       column(4,
              pickerInput(inputId = NS(id, "outcomePrevalence"),
                          label = "Outcome",
-                         choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)),
-                         selected = "All",
+                         choices = outcomeChoices,
+                         selected = outcomeChoices,
                          multiple = TRUE,
-                         options = pickerOptions)
+                         options = outcomePickerOptions)
       )
     ),
     fluidRow(
@@ -232,16 +239,16 @@ prevalenceServer <- function(id, uploadedFiles) {
                                   inputValue = id)
       if (id == "Plot - Prevalence rate per year") {
         expression <- expression %>%
-          addPreviewItemType(input$facetIncidence)
+          addPreviewItemType(input$facetPrevalence)
       } else if (id == "Plot - Prevalence rate per year by sex") {
         expression <- expression %>%
-          addPreviewItemTypeSex(input$facetIncidence)
+          addPreviewItemTypeSex(input$facetPrevalence)
       } else if (id == "Plot - Prevalence rate per year by age") {
         expression <- expression %>%
-          addPreviewItemTypeAge(input$facetIncidence)
+          addPreviewItemTypeAge(input$facetPrevalence)
       }
       expression <- expression %>%
-        addPreviewItemRibbon(input$ribbonIncidence)
+        addPreviewItemRibbon(input$ribbonPrevalence)
       prevalence_estimates <- prevalenceCommonData()
       if (nrow(prevalence_estimates) > 0) {
         eval(parse(text = expression))

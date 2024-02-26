@@ -50,13 +50,20 @@ incidenceUI <- function(id, uploadedFiles) {
   }
 
   pickerOptions <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+  startDateChoices <- as.character(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
   washoutChoices <- unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)
   washoutSelected <- washoutChoices[1]
   daysPriorHistoryChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)
   daysPriorHistorySelected <- daysPriorHistoryChoices[1]
   outcomeChoices <- unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)
-  outcomeSelected <- outcomeChoices
-  startDateChoices <- as.character(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
+  dbPickerOptions <- list()
+  if (length(databaseChoices) > 1) {
+    dbPickerOptions <- pickerOptions
+  }
+  outcomePickerOptions <- list()
+  if (length(outcomeChoices) > 1) {
+    outcomePickerOptions <- pickerOptions
+  }
   sexPickerOptions <- list()
   if (sexMultiple) {
     sexPickerOptions <- pickerOptions
@@ -106,15 +113,15 @@ incidenceUI <- function(id, uploadedFiles) {
                          choices = databaseChoices,
                          selected = databaseSelected,
                          multiple = TRUE,
-                         options = pickerOptions)
+                         options = dbPickerOptions)
       ),
       column(4,
              pickerInput(inputId = NS(id, "outcomeIncidence"),
                          label = "Outcome",
                          choices = outcomeChoices,
-                         selected = outcomeSelected,
+                         selected = outcomeChoices,
                          multiple = TRUE,
-                         options = pickerOptions)
+                         options = outcomePickerOptions)
       )
     ),
     fluidRow(
