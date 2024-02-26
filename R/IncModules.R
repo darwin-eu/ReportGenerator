@@ -192,6 +192,7 @@ incidenceUI <- function(id, uploadedFiles) {
 }
 
 incidenceServer <- function(id, uploadedFiles) {
+
   moduleServer(id, function(input, output, session) {
     # Figure 1
     incidenceCommonData <- reactive({
@@ -233,39 +234,27 @@ incidenceServer <- function(id, uploadedFiles) {
       return(incidence_estimates)
     })
 
-
-    if (id == "Plot - Incidence rate per year") {
-      previewFigure <- reactive({
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = id) %>%
-          addPreviewItemType(input$facetIncidence) %>%
-          addPreviewItemRibbon(input$ribbonIncidence)
-        incidence_estimates <- incidenceCommonData()
+    previewFigure <- reactive({
+      expression <- getItemConfig(input = "title",
+                                  output = "function",
+                                  inputValue = id)
+      if (id == "Plot - Incidence rate per year") {
+        expression <- expression %>%
+          addPreviewItemType(input$facetIncidence)
+      } else if (id == "Plot - Incidence rate per year by sex") {
+        expression <- expression %>%
+          addPreviewItemTypeSex(input$facetIncidence)
+      } else if (id == "Plot - Incidence rate per year by age") {
+        expression <- expression %>%
+          addPreviewItemTypeAge(input$facetIncidence)
+      }
+      expression <- expression %>%
+        addPreviewItemRibbon(input$ribbonIncidence)
+      incidence_estimates <- incidenceCommonData()
+      if (nrow(incidence_estimates) > 0) {
         eval(parse(text = expression))
-      })
-    } else if (id == "Plot - Incidence rate per year by sex") {
-      previewFigure <- reactive({
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = id) %>%
-          addPreviewItemTypeSex(input$facetIncidence) %>%
-          addPreviewItemRibbon(input$ribbonIncidence)
-        incidence_estimates <- incidenceCommonData()
-        eval(parse(text = expression))
-      })
-
-    } else if (id == "Plot - Incidence rate per year by age") {
-      previewFigure <- reactive({
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = id) %>%
-          addPreviewItemTypeAge(input$facetIncidence) %>%
-          addPreviewItemRibbon(input$ribbonIncidence)
-        incidence_estimates <- incidenceCommonData()
-        eval(parse(text = expression))
-      })
-    }
+      }
+    })
 
     output$previewFigure <- renderPlot({
       req(previewFigure())
