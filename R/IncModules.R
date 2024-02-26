@@ -5,7 +5,7 @@ incidenceUI <- function(id, uploadedFiles) {
     databaseSelected <- databaseChoices
 
     sexChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)
-    sexSelected <-  databaseChoices[1]
+    sexSelected <-  sexChoices[1]
     sexMultiple <- FALSE
 
     ageChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)
@@ -57,6 +57,14 @@ incidenceUI <- function(id, uploadedFiles) {
   outcomeChoices <- unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)
   outcomeSelected <- outcomeChoices
   startDateChoices <- as.character(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
+  sexPickerOptions <- list()
+  if (sexMultiple) {
+    sexPickerOptions <- pickerOptions
+  }
+  agePickerOptions <- list()
+  if (ageMultiple) {
+    agePickerOptions <- pickerOptions
+  }
 
   tagList(
     fluidRow(
@@ -115,14 +123,16 @@ incidenceUI <- function(id, uploadedFiles) {
                          label = "Sex",
                          choices = sexChoices,
                          selected = sexSelected,
-                         multiple = sexMultiple)
+                         multiple = sexMultiple,
+                         options = sexPickerOptions)
       ),
       column(4,
              pickerInput(inputId = NS(id, "ageIncidence"),
                          label = "Age",
                          choices = ageChoices,
                          selected = ageSelected,
-                         multiple = ageMultiple)
+                         multiple = ageMultiple,
+                         options = agePickerOptions)
       ),
     ),
     fluidRow(
