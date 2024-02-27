@@ -1,33 +1,39 @@
 patternsUI <- function(id, uploadedFiles) {
   ns <- NS(id)
+
+  cdmChoices <- unique(uploadedFiles$dataTP$treatmentPathways$cdm_name)
+  sexChoices <- unique(uploadedFiles$dataTP$treatmentPathways$sex)
+  ageChoices <- unique(uploadedFiles$dataTP$treatmentPathways$age)
+  yearChoices <- unique(uploadedFiles$dataTP$treatmentPathways$indexYear)
+
   tagList(
     fluidRow(
       column(4,
              pickerInput(inputId = ns("cdmPatterns"),
                          label = "CDM",
-                         choices = unique(uploadedFiles$dataTP$treatmentPathways$cdm_name),
-                         selected = unique(uploadedFiles$dataTP$treatmentPathways$cdm_name)[1],
+                         choices = cdmChoices,
+                         selected = cdmChoices[1],
                          multiple = FALSE)),
       column(4,
              pickerInput(inputId = ns("sexPatterns"),
                          label = "Sex",
-                         choices = unique(uploadedFiles$dataTP$treatmentPathways$sex),
-                         selected = unique(uploadedFiles$dataTP$treatmentPathways$sex)[1],
+                         choices = sexChoices,
+                         selected = sexChoices[1],
                          multiple = FALSE))
       ),
       fluidRow(
         column(4,
                pickerInput(inputId = ns("agePatterns"),
                            label = "Age",
-                           choices = unique(uploadedFiles$dataTP$treatmentPathways$age),
-                           selected = unique(uploadedFiles$dataTP$treatmentPathways$age)[1],
+                           choices = ageChoices,
+                           selected = ageChoices[1],
                            multiple = FALSE)),
         column(4,
                pickerInput(
                inputId = ns("indexPatterns"),
                label = "Index year",
-               choices = unique(uploadedFiles$dataTP$treatmentPathways$indexYear),
-               selected = unique(uploadedFiles$dataTP$treatmentPathways$indexYear)[1],
+               choices = yearChoices,
+               selected = yearChoices[1],
                multiple = FALSE))
         ),
       tags$br(),
@@ -46,6 +52,7 @@ patternsUI <- function(id, uploadedFiles) {
 }
 
 patternsServer <- function(id, uploadedFiles) {
+
   moduleServer(id, function(input, output, session) {
 
     pathwaysData <- reactive({
@@ -62,16 +69,20 @@ patternsServer <- function(id, uploadedFiles) {
 
     output$previewSunburst <- renderUI({
       treatmentPathways <- pathwaysData()
-      TreatmentPatterns::createSunburstPlot(treatmentPathways,
-                                            groupCombinations = FALSE)
+      if (nrow(treatmentPathways) > 0) {
+        TreatmentPatterns::createSunburstPlot(treatmentPathways,
+                                              groupCombinations = FALSE)
+      }
     })
 
     # Sankey
 
     output$previewSankey <- renderUI({
       treatmentPathways <- pathwaysData()
-      TreatmentPatterns::createSankeyDiagram(treatmentPathways,
-                                             groupCombinations = TRUE)
+      if (nrow(treatmentPathways) > 0) {
+        TreatmentPatterns::createSankeyDiagram(treatmentPathways,
+                                               groupCombinations = TRUE)
+      }
     })
 
     output$downloadSunburst <- downloadHandler(
@@ -146,8 +157,6 @@ patternsServer <- function(id, uploadedFiles) {
                                                          fileImage = sankeyPNG))
       )
     })
-
     return(addObject)
-
   })
 }
