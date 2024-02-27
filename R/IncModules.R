@@ -1,178 +1,205 @@
 incidenceUI <- function(id, uploadedFiles) {
   if (id == "Plot - Incidence rate per year") {
 
-    databaseChoices <- c("All", unique(uploadedFiles$dataIP$incidence_estimates$cdm_name))
-    databaseSelected <- ("All")
-    databaseOptions <- list()
+    databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
+    databaseSelected <- databaseChoices
 
     sexChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)
-    sexSelected <-  unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)[1]
+    sexSelected <-  sexChoices[1]
     sexMultiple <- FALSE
 
     ageChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)
-    ageSelected <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)[1]
+    ageSelected <- ageChoices[1]
     ageMultiple <- FALSE
 
     captionValue <-"Figure 1. Incidence rate/s of drug/s use over calendar time (per year) overall by database [Add months if relevant]"
 
     lockName <- "lockDataIncidenceYear"
-
   } else if (id == "Plot - Incidence rate per year by sex") {
 
     databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
-    databaseSelected <- uploadedFiles$dataIP$incidence_estimates$cdm_name[1]
-    databaseOptions <- list(maxOptions = 1)
+    databaseSelected <- databaseChoices[1]
 
     sexChoices <- c("Male", "Female")
-    sexSelected <- c("Male", "Female")
+    sexSelected <- sexChoices
     sexMultiple <- TRUE
 
     ageChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)
-    ageSelected <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)[1]
+    ageSelected <- ageChoices[1]
     ageMultiple <- FALSE
 
     captionValue <- "Figure 2. Incidence rate/s of drug/s use over calendar time (per year) stratified by sex and database [Add months if relevant]"
 
     lockName <- "lockDataIncidenceSex"
-
   } else if (id == "Plot - Incidence rate per year by age") {
 
     databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
-    databaseSelected <- uploadedFiles$dataIP$incidence_estimates$cdm_name[1]
-    databaseOptions <- list(maxOptions = 1)
+    databaseSelected <- databaseChoices[1]
 
     sexChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)
-    sexSelected <-  unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)[1]
+    sexSelected <-  sexChoices[1]
     sexMultiple <- FALSE
 
-    ageChoices <- c("All", unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group))
-    ageSelected <- "All"
+    ageChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)
+    ageSelected <- ageChoices
     ageMultiple <- TRUE
 
     captionValue <- "Figure 3. Incidence rate/s of drug/s use over calendar time (per year) overall stratified by age and database [Add months if relevant]"
 
     lockName <- "lockDataIncidenceAge"
-
   }
 
-    tagList(
-      fluidRow(
-        column(4,
-               pickerInput(inputId = NS(id, "facetIncidence"),
-                           label = "Select plot type",
-                           choices = c("Facet by outcome", "Facet by database"),
-                           selected = "Facet by outcome")
-        ),
-        column(4,
-               pickerInput(inputId = NS(id, "ribbonIncidence"),
-                           label = "Ribbon",
-                           choices = c(TRUE, FALSE),
-                           selected = TRUE)
-        )
+  pickerOptions <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+  startDateChoices <- as.character(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
+  washoutChoices <- unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)
+  washoutSelected <- washoutChoices[1]
+  daysPriorHistoryChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)
+  daysPriorHistorySelected <- daysPriorHistoryChoices[1]
+  outcomeChoices <- unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)
+  dbPickerOptions <- list()
+  if (length(databaseChoices) > 1) {
+    dbPickerOptions <- pickerOptions
+  }
+  outcomePickerOptions <- list()
+  if (length(outcomeChoices) > 1) {
+    outcomePickerOptions <- pickerOptions
+  }
+  sexPickerOptions <- list()
+  if (sexMultiple) {
+    sexPickerOptions <- pickerOptions
+  }
+  agePickerOptions <- list()
+  if (ageMultiple) {
+    agePickerOptions <- pickerOptions
+  }
+
+  tagList(
+    fluidRow(
+      column(4,
+             pickerInput(inputId = NS(id, "facetIncidence"),
+                         label = "Select plot type",
+                         choices = c("Facet by outcome", "Facet by database"),
+                         selected = "Facet by outcome",
+                         multiple = FALSE)
       ),
-      fluidRow(
-        column(4,
-               pickerInput(inputId = NS(id, "washoutIncidence"),
-                           label = "Washout",
-                           choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout),
-                           selected = unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)[1],
-                           multiple = FALSE)
-        ),
-        column(4,
-               pickerInput(inputId = NS(id, "daysPriorIncidence"),
-                           label = "Days Prior History",
-                           choices = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation),
-                           selected = unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)[1],
-                           multiple = FALSE)
-        )
+      column(4,
+             pickerInput(inputId = NS(id, "ribbonIncidence"),
+                         label = "Ribbon",
+                         choices = c(TRUE, FALSE),
+                         selected = TRUE,
+                         multiple = FALSE)
+      )
+    ),
+    fluidRow(
+      column(4,
+             pickerInput(inputId = NS(id, "washoutIncidence"),
+                         label = "Washout",
+                         choices = washoutChoices,
+                         selected = washoutSelected,
+                         multiple = FALSE)
       ),
-      fluidRow(
-        column(4,
-               pickerInput(inputId = NS(id, "databaseIncidence"),
-                           label = "Database",
-                           choices = databaseChoices,
-                           selected = databaseSelected,
-                           multiple = TRUE,
-                           options = databaseOptions)
-        ),
-        column(4,
-               pickerInput(inputId = NS(id, "outcomeIncidence"),
-                           label = "Outcome",
-                           choices = c("All", unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)),
-                           selected = "All",
-                           multiple = TRUE)
-        )
+      column(4,
+             pickerInput(inputId = NS(id, "daysPriorIncidence"),
+                         label = "Days Prior History",
+                         choices = daysPriorHistoryChoices,
+                         selected = daysPriorHistorySelected,
+                         multiple = FALSE)
+      )
+    ),
+    fluidRow(
+      column(4,
+             pickerInput(inputId = NS(id, "databaseIncidence"),
+                         label = "Database",
+                         choices = databaseChoices,
+                         selected = databaseSelected,
+                         multiple = TRUE,
+                         options = dbPickerOptions)
       ),
-      fluidRow(
-        column(4,
-               pickerInput(inputId = NS(id, "sexIncidence"),
-                           label = "Sex",
-                           choices = sexChoices,
-                           selected = sexSelected,
-                           multiple = sexMultiple)
-        ),
-        column(4,
-               pickerInput(inputId = NS(id, "ageIncidence"),
-                           label = "Age",
-                           choices = ageChoices,
-                           selected = ageSelected,
-                           multiple = ageMultiple)
-        ),
+      column(4,
+             pickerInput(inputId = NS(id, "outcomeIncidence"),
+                         label = "Outcome",
+                         choices = outcomeChoices,
+                         selected = outcomeChoices,
+                         multiple = TRUE,
+                         options = outcomePickerOptions)
+      )
+    ),
+    fluidRow(
+      column(4,
+             pickerInput(inputId = NS(id, "sexIncidence"),
+                         label = "Sex",
+                         choices = sexChoices,
+                         selected = sexSelected,
+                         multiple = sexMultiple,
+                         options = sexPickerOptions)
       ),
-      fluidRow(
-        column(4,
-               pickerInput(inputId = NS(id, "intervalIncidence"),
-                           label = "Interval",
-                           choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval)),
-        ),
-        column(4,
-               pickerInput(inputId = NS(id, "repeatedIncidence"),
-                           label = "Repeated Events",
-                           choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_repeated_events)),
-        )
+      column(4,
+             pickerInput(inputId = NS(id, "ageIncidence"),
+                         label = "Age",
+                         choices = ageChoices,
+                         selected = ageSelected,
+                         multiple = ageMultiple,
+                         options = agePickerOptions)
       ),
-      fluidRow(
-        column(4,
-               pickerInput(inputId = NS(id, "timeFromIncidence"),
-                           label = "From",
-                           choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
-                           selected = min(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
-        ),
-        column(4,
-               pickerInput(inputId = NS(id, "timeToIncidence"),
-                           label = "To",
-                           choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
-                           selected = max(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)))
-        )
+    ),
+    fluidRow(
+      column(4,
+             pickerInput(inputId = NS(id, "intervalIncidence"),
+                         label = "Interval",
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval),
+                         multiple = FALSE),
       ),
-      fluidRow(
-        column(8,
-               textAreaInput(inputId = NS(id, "captionInc"),
-                             label = "Caption",
-                             value = captionValue,
-                             width = '100%',
-                             height = "130px")
-        ),
+      column(4,
+             pickerInput(inputId = NS(id, "repeatedIncidence"),
+                         label = "Repeated Events",
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_repeated_events),
+                         multiple = FALSE),
+      )
+    ),
+    fluidRow(
+      column(4,
+             pickerInput(inputId = NS(id, "timeFromIncidence"),
+                         label = "From",
+                         choices = startDateChoices,
+                         selected = min(startDateChoices),
+                         multiple = FALSE)
       ),
-      fluidRow(
-        column(4,
-               actionButton(NS(id, lockName), "Add item to report")
-        ),
-        column(4,
-               downloadButton(NS(id, "downloadFigure"), "Download Plot")
-        ),
+      column(4,
+             pickerInput(inputId = NS(id, "timeToIncidence"),
+                         label = "To",
+                         choices = startDateChoices,
+                         selected = max(startDateChoices),
+                         multiple = FALSE)
+      )
+    ),
+    fluidRow(
+      column(8,
+             textAreaInput(inputId = NS(id, "captionInc"),
+                           label = "Caption",
+                           value = captionValue,
+                           width = '100%',
+                           height = "130px")
       ),
-      tags$br(),
-      fluidRow(
-        column(8,
-          plotOutput(NS(id, "previewFigure"))
-        )
+    ),
+    fluidRow(
+      column(4,
+             actionButton(NS(id, lockName), "Add item to report")
+      ),
+      column(4,
+             downloadButton(NS(id, "downloadFigure"), "Download Plot")
+      ),
+    ),
+    tags$br(),
+    fluidRow(
+      column(8,
+        plotOutput(NS(id, "previewFigure"))
       )
     )
-
+  )
 }
 
 incidenceServer <- function(id, uploadedFiles) {
+
   moduleServer(id, function(input, output, session) {
     # Figure 1
     incidenceCommonData <- reactive({
@@ -187,25 +214,18 @@ incidenceServer <- function(id, uploadedFiles) {
       incidence_estimates <- incidence_estimates %>%
         filter(denominator_days_prior_observation %in% c(input$daysPriorIncidence))
       # Database
-      if (length(input$databaseIncidence) != 1 || input$databaseIncidence != "All") {
-        incidence_estimates <- incidence_estimates %>%
-          filter(cdm_name %in% c(input$databaseIncidence))
-      }
+      incidence_estimates <- incidence_estimates %>%
+        filter(cdm_name %in% c(input$databaseIncidence))
       # Outcome
-      if (length(input$outcomeIncidence) != 1 || input$outcomeIncidence != "All") {
-        incidence_estimates <- incidence_estimates %>%
-          filter(outcome_cohort_name == input$outcomeIncidence)
-      }
+      incidence_estimates <- incidence_estimates %>%
+        filter(outcome_cohort_name %in% input$outcomeIncidence)
       # Sex
-      if (length(input$sexIncidence) != 1 || input$sexIncidence != "All") {
-        incidence_estimates <- incidence_estimates %>%
-          filter(denominator_sex %in% input$sexIncidence)
-      }
+      incidence_estimates <- incidence_estimates %>%
+        filter(denominator_sex %in% input$sexIncidence)
       # Age group
-      if (length(input$ageIncidence) != 1 || input$ageIncidence != "All") {
-        incidence_estimates <- incidence_estimates %>%
-          filter(denominator_age_group %in% input$ageIncidence)
-      }
+      incidence_estimates <- incidence_estimates %>%
+        filter(denominator_age_group %in% input$ageIncidence)
+
       # Start Time
       incidence_estimates <- incidence_estimates %>%
         filter(between(incidence_start_date,
@@ -221,83 +241,69 @@ incidenceServer <- function(id, uploadedFiles) {
       return(incidence_estimates)
     })
 
-
-    if (id == "Plot - Incidence rate per year") {
-      previewFigure <- reactive({
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = id) %>%
-          addPreviewItemType(input$facetIncidence) %>%
-          addPreviewItemRibbon(input$ribbonIncidence)
-        incidence_estimates <- incidenceCommonData()
+    previewFigure <- reactive({
+      expression <- getItemConfig(input = "title",
+                                  output = "function",
+                                  inputValue = id)
+      if (id == "Plot - Incidence rate per year") {
+        expression <- expression %>%
+          addPreviewItemType(input$facetIncidence)
+      } else if (id == "Plot - Incidence rate per year by sex") {
+        expression <- expression %>%
+          addPreviewItemTypeSex(input$facetIncidence)
+      } else if (id == "Plot - Incidence rate per year by age") {
+        expression <- expression %>%
+          addPreviewItemTypeAge(input$facetIncidence)
+      }
+      expression <- expression %>%
+        addPreviewItemRibbon(input$ribbonIncidence)
+      incidence_estimates <- incidenceCommonData()
+      if (nrow(incidence_estimates) > 0) {
         eval(parse(text = expression))
-      })
-    } else if (id == "Plot - Incidence rate per year by sex") {
-      previewFigure <- reactive({
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = id) %>%
-          addPreviewItemTypeSex(input$facetIncidence) %>%
-          addPreviewItemRibbon(input$ribbonIncidence)
-        incidence_estimates <- incidenceCommonData()
-        eval(parse(text = expression))
-      })
+      }
+    })
 
-    } else if (id == "Plot - Incidence rate per year by age") {
-      previewFigure <- reactive({
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = id) %>%
-          addPreviewItemTypeAge(input$facetIncidence) %>%
-          addPreviewItemRibbon(input$ribbonIncidence)
-        incidence_estimates <- incidenceCommonData()
-        eval(parse(text = expression))
-      })
-    }
+    output$previewFigure <- renderPlot({
+      req(previewFigure())
+      previewFigure()
+    })
 
-  output$previewFigure <- renderPlot({
-    req(previewFigure())
-    previewFigure()
-  })
-
-  output$downloadFigure <- downloadHandler(
-    filename = function() {
-      paste(id, ".png", sep = "")
-    },
-    content = function(file) {
-      ggplot2::ggsave(file, plot = previewFigure(), device = "png", height = 500, width = 845, units = "mm")
-    }
-  )
-
-  addObject <- reactiveVal()
-  observeEvent(input$lockDataIncidenceYear, {
-    addObject(
-      list(`Plot - Incidence rate per year` = list(incidence_estimates = incidenceCommonData(),
-                                                   plotOption = input$facetIncidence,
-                                                   caption = input$captionInc,
-                                                   ribbon = input$ribbonIncidence))
+    output$downloadFigure <- downloadHandler(
+      filename = function() {
+        paste(id, ".png", sep = "")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file, plot = previewFigure(), device = "png", height = 500, width = 845, units = "mm")
+      }
     )
-  })
 
-  observeEvent(input$lockDataIncidenceSex, {
-    addObject(
-      list(`Plot - Incidence rate per year by sex` = list(incidence_estimates = incidenceCommonData(),
-                                                          plotOption = input$facetIncidence,
-                                                          caption = input$captionInc,
-                                                          ribbon = input$ribbonIncidence))
-    )
-  })
+    addObject <- reactiveVal()
+    observeEvent(input$lockDataIncidenceYear, {
+      addObject(
+        list(`Plot - Incidence rate per year` = list(incidence_estimates = incidenceCommonData(),
+                                                     plotOption = input$facetIncidence,
+                                                     caption = input$captionInc,
+                                                     ribbon = input$ribbonIncidence))
+      )
+    })
 
-  observeEvent(input$lockDataIncidenceAge, {
-    addObject(
-      list(`Plot - Incidence rate per year by age` = list(incidence_estimates = incidenceCommonData(),
-                                                          plotOption = input$facetIncidence,
-                                                          caption = input$captionInc,
-                                                          ribbon = input$ribbonIncidence))
-    )
-  })
+    observeEvent(input$lockDataIncidenceSex, {
+      addObject(
+        list(`Plot - Incidence rate per year by sex` = list(incidence_estimates = incidenceCommonData(),
+                                                            plotOption = input$facetIncidence,
+                                                            caption = input$captionInc,
+                                                            ribbon = input$ribbonIncidence))
+      )
+    })
 
+    observeEvent(input$lockDataIncidenceAge, {
+      addObject(
+        list(`Plot - Incidence rate per year by age` = list(incidence_estimates = incidenceCommonData(),
+                                                            plotOption = input$facetIncidence,
+                                                            caption = input$captionInc,
+                                                            ribbon = input$ribbonIncidence))
+      )
+    })
     return(addObject)
-
   })
 }

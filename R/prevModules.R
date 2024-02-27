@@ -2,18 +2,17 @@ prevalenceUI <- function(id, uploadedFiles) {
   if (id == "Plot - Prevalence per year") {
 
     # Database
-    databaseChoices <- c("All", unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name))
-    databaseSelected <- ("All")
-    databaseOptions <- list()
+    databaseChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)
+    databaseSelected <- databaseChoices
 
     # Sex
     sexChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_sex)
-    sexSelected <-  unique(uploadedFiles$dataIP$prevalence_estimates$denominator_sex)[1]
+    sexSelected <-  sexChoices[1]
     sexMultiple <- FALSE
 
     # Age
     ageChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)
-    ageSelected <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)[1]
+    ageSelected <- ageChoices[1]
     ageMultiple <- FALSE
 
     # Caption
@@ -21,22 +20,20 @@ prevalenceUI <- function(id, uploadedFiles) {
 
     # Lock
     lockVariable <- "lockDataPrevalenceYear"
-
   } else if (id == "Plot - Prevalence per year by sex") {
 
     # Database
     databaseChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)
-    databaseSelected <- uploadedFiles$dataIP$prevalence_estimates$cdm_name[1]
-    databaseOptions <- list(maxOptions = 1)
+    databaseSelected <- databaseChoices[1]
 
     # Sex
     sexChoices <- c("Male", "Female")
-    sexSelected <- c("Male", "Female")
+    sexSelected <- sexChoices
     sexMultiple <- TRUE
 
     # Age
     ageChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)
-    ageSelected <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)[1]
+    ageSelected <- ageChoices[1]
     ageMultiple <- FALSE
 
     # Caption
@@ -44,22 +41,20 @@ prevalenceUI <- function(id, uploadedFiles) {
 
     # Lock
     lockVariable <- "lockDataPrevalenceSex"
-
   } else if (id == "Plot - Prevalence per year by age") {
 
     # Database
     databaseChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)
-    databaseSelected <- uploadedFiles$dataIP$prevalence_estimates$cdm_name[1]
-    databaseOptions <- list(maxOptions = 1)
+    databaseSelected <- databaseChoices[1]
 
     # Sex
     sexChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_sex)
-    sexSelected <-  unique(uploadedFiles$dataIP$prevalence_estimates$denominator_sex)[1]
+    sexSelected <-  sexChoices[1]
     sexMultiple <- FALSE
 
     # Age
-    ageChoices <- c("All", unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group))
-    ageSelected <- "All"
+    ageChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)
+    ageSelected <- ageChoices
     ageMultiple <- TRUE
 
     # Caption
@@ -67,7 +62,26 @@ prevalenceUI <- function(id, uploadedFiles) {
 
     # Lock
     lockVariable <- "lockDataPrevalenceAge"
+  }
 
+  pickerOptions <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+  outcomeChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)
+  startDateChoices <- as.character(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date))
+  dbPickerOptions <- list()
+  if (length(databaseChoices) > 1) {
+    dbPickerOptions <- pickerOptions
+  }
+  outcomePickerOptions <- list()
+  if (length(outcomeChoices) > 1) {
+    outcomePickerOptions <- pickerOptions
+  }
+  sexPickerOptions <- list()
+  if (sexMultiple) {
+    sexPickerOptions <- pickerOptions
+  }
+  agePickerOptions <- list()
+  if (ageMultiple) {
+    agePickerOptions <- pickerOptions
   }
 
   tagList(
@@ -76,13 +90,15 @@ prevalenceUI <- function(id, uploadedFiles) {
              pickerInput(inputId = NS(id, "facetPrevalence"),
                          label = "Select plot type",
                          choices = c("Facet by outcome", "Facet by database"),
-                         selected = "Facet by outcome")
+                         selected = "Facet by outcome",
+                         multiple = FALSE)
       ),
       column(4,
              pickerInput(inputId = NS(id, "ribbonPrevalence"),
                          label = "Ribbon",
                          choices = c(TRUE, FALSE),
-                         selected = TRUE)
+                         selected = TRUE,
+                         multiple = FALSE)
       )
     ),
     fluidRow(
@@ -92,14 +108,15 @@ prevalenceUI <- function(id, uploadedFiles) {
                          choices = databaseChoices,
                          selected = databaseSelected,
                          multiple = TRUE,
-                         options = databaseOptions)
+                         options = dbPickerOptions)
       ),
       column(4,
              pickerInput(inputId = NS(id, "outcomePrevalence"),
                          label = "Outcome",
-                         choices = c("All", unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)),
-                         selected = "All",
-                         multiple = TRUE)
+                         choices = outcomeChoices,
+                         selected = outcomeChoices,
+                         multiple = TRUE,
+                         options = outcomePickerOptions)
       )
     ),
     fluidRow(
@@ -108,40 +125,46 @@ prevalenceUI <- function(id, uploadedFiles) {
                          label = "Sex",
                          choices = sexChoices,
                          selected = sexSelected,
-                         multiple = sexMultiple)
+                         multiple = sexMultiple,
+                         options = sexPickerOptions)
       ),
       column(4,
              pickerInput(inputId = NS(id, "agePrevalence"),
                          label = "Age",
                          choices = ageChoices,
                          selected = ageSelected,
-                         multiple = ageMultiple)
+                         multiple = ageMultiple,
+                         options = agePickerOptions)
       ),
     ),
     fluidRow(
       column(4,
              pickerInput(inputId = NS(id, "intervalPrevalence"),
                          label = "Interval",
-                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_interval)),
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_interval),
+                         multiple = FALSE),
       ),
       column(4,
              pickerInput(inputId = NS(id, "typePrevalence"),
                          label = "Type",
-                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_type)),
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_type),
+                         multiple = FALSE),
       )
     ),
     fluidRow(
       column(4,
              pickerInput(inputId = NS(id, "timeFromPrevalence"),
                          label = "From",
-                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date),
-                         selected = min(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date)))
+                         choices = startDateChoices,
+                         selected = min(startDateChoices),
+                         multiple = FALSE)
       ),
       column(4,
              pickerInput(inputId = NS(id, "timeToPrevalence"),
                          label = "To",
-                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date),
-                         selected = max(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date)))
+                         choices = startDateChoices,
+                         selected = max(startDateChoices),
+                         multiple = FALSE)
       )
     ),
     fluidRow(
@@ -168,10 +191,10 @@ prevalenceUI <- function(id, uploadedFiles) {
       )
     )
   )
-
 }
 
 prevalenceServer <- function(id, uploadedFiles) {
+
   moduleServer(id, function(input, output, session) {
     # Figure 1
     prevalenceCommonData <- reactive({
@@ -182,25 +205,19 @@ prevalenceServer <- function(id, uploadedFiles) {
       prevalence_estimates[is.na(prevalence_estimates)] = 0
 
       # Database
-      if (length(input$databasePrevalence) != 1 || input$databasePrevalence != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(cdm_name %in% c(input$databasePrevalence))
-      }
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(cdm_name %in% c(input$databasePrevalence))
       # Outcome
-      if (length(input$outcomePrevalence) != 1 || input$outcomePrevalence != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(outcome_cohort_name == input$outcomePrevalence)
-      }
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(outcome_cohort_name %in% input$outcomePrevalence)
       # Sex
-      if (length(input$sexPrevalence) != 1 || input$sexPrevalence != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(denominator_sex %in% input$sexPrevalence)
-      }
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(denominator_sex %in% input$sexPrevalence)
+
       # Age group
-      if (length(input$agePrevalence) != 1 || input$agePrevalence != "All") {
-        prevalence_estimates <- prevalence_estimates %>%
-          filter(denominator_age_group %in% input$agePrevalence)
-      }
+      prevalence_estimates <- prevalence_estimates %>%
+        filter(denominator_age_group %in% input$agePrevalence)
+
       # Start Time
       prevalence_estimates <- prevalence_estimates %>%
         filter(between(prevalence_start_date,
@@ -216,39 +233,27 @@ prevalenceServer <- function(id, uploadedFiles) {
       return(prevalence_estimates)
     })
 
-
-    if (id == "Plot - Prevalence per year") {
-      previewFigure <- reactive({
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = id) %>%
-          addPreviewItemType(input$facetPrevalence) %>%
-          addPreviewItemRibbon(input$ribbonPrevalence)
-        prevalence_estimates <- prevalenceCommonData()
+    previewFigure <- reactive({
+      expression <- getItemConfig(input = "title",
+                                  output = "function",
+                                  inputValue = id)
+      if (id == "Plot - Prevalence per year") {
+        expression <- expression %>%
+          addPreviewItemType(input$facetPrevalence)
+      } else if (id == "Plot - Prevalence per year by sex") {
+        expression <- expression %>%
+          addPreviewItemTypeSex(input$facetPrevalence)
+      } else if (id == "Plot - Prevalence per year by age") {
+        expression <- expression %>%
+          addPreviewItemTypeAge(input$facetPrevalence)
+      }
+      expression <- expression %>%
+        addPreviewItemRibbon(input$ribbonPrevalence)
+      prevalence_estimates <- prevalenceCommonData()
+      if (nrow(prevalence_estimates) > 0) {
         eval(parse(text = expression))
-      })
-    } else if (id == "Plot - Prevalence per year by sex") {
-      previewFigure <- reactive({
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = id) %>%
-          addPreviewItemTypeSex(input$facetPrevalence) %>%
-          addPreviewItemRibbon(input$ribbonPrevalence)
-        prevalence_estimates <- prevalenceCommonData()
-        eval(parse(text = expression))
-      })
-
-    } else if (id == "Plot - Prevalence per year by age") {
-      previewFigure <- reactive({
-        expression <- getItemConfig(input = "title",
-                                    output = "function",
-                                    inputValue = id) %>%
-          addPreviewItemTypeAge(input$facetPrevalence) %>%
-          addPreviewItemRibbon(input$ribbonPrevalence)
-        prevalence_estimates <- prevalenceCommonData()
-        eval(parse(text = expression))
-      })
-    }
+      }
+    })
 
     output$previewFigure <- renderPlot({
       req(previewFigure())
@@ -291,8 +296,6 @@ prevalenceServer <- function(id, uploadedFiles) {
                                                         ribbon = input$ribbonPrevalence))
       )
     })
-
     return(addObject)
-
   })
 }
