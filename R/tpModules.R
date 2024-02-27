@@ -91,12 +91,15 @@ patternsServer <- function(id, uploadedFiles) {
       },
       content = function(file) {
         outputFile <- tempfile(pattern = "sunburstPlot", fileext = ".html")
-        outputSunburst <- TreatmentPatterns::createSunburstPlot(
-          treatmentPathways = pathwaysData(),
-          groupCombinations = TRUE,
+        treatmentPathways <- pathwaysData()
+        if (nrow(treatmentPathways) > 0) {
+          outputSunburst <- TreatmentPatterns::createSunburstPlot(
+            treatmentPathways = treatmentPathways,
+            groupCombinations = TRUE,
           )
-        htmlwidgets::saveWidget(outputSunburst, outputFile)
-        file.copy(outputFile, file)
+          htmlwidgets::saveWidget(outputSunburst, outputFile)
+          file.copy(outputFile, file)
+        }
       }
     )
 
@@ -106,11 +109,14 @@ patternsServer <- function(id, uploadedFiles) {
       },
       content = function(file) {
         outputFile <- tempfile(pattern = "sankeyDiagram", fileext = ".html")
-        outputSankey <- TreatmentPatterns::createSankeyDiagram(
-          treatmentPathways = pathwaysData(),
-          groupCombinations = TRUE)
-        htmlwidgets::saveWidget(outputSankey, outputFile)
-        file.copy(outputFile, file)
+        treatmentPathways <- pathwaysData()
+        if (nrow(treatmentPathways) > 0) {
+          outputSankey <- TreatmentPatterns::createSankeyDiagram(
+            treatmentPathways = treatmentPathways,
+            groupCombinations = TRUE)
+          htmlwidgets::saveWidget(outputSankey, outputFile)
+          file.copy(outputFile, file)
+        }
       }
     )
 
@@ -118,44 +124,51 @@ patternsServer <- function(id, uploadedFiles) {
 
     observeEvent(input$lockSunburst, {
       outputFile <- here::here("sunburstPlot.html")
-      outputSunburst <- TreatmentPatterns::createSunburstPlot(
-        treatmentPathways = pathwaysData(),
-        groupCombinations = TRUE,
-      )
-      htmlwidgets::saveWidget(outputSunburst, outputFile)
-      sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
-      webshot2::webshot(
-        url = outputFile,
-        file = sunburstPNG,
-        vwidth = 1200,
-        vheight = 1200)
-      sunburstPNG <- normalizePath(sunburstPNG)
-      addObject(
-        list(`Sunburst Plot - TreatmentPatterns` = list(treatmentPathways = pathwaysData(),
-                                                        groupCombinations = TRUE,
-                                                        fileImage = sunburstPNG))
-      )
+
+      treatmentPathways <- pathwaysData()
+      if (nrow(treatmentPathways) > 0) {
+        outputSunburst <- TreatmentPatterns::createSunburstPlot(
+          treatmentPathways = treatmentPathways,
+          groupCombinations = TRUE,
+        )
+        htmlwidgets::saveWidget(outputSunburst, outputFile)
+        sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
+        webshot2::webshot(
+          url = outputFile,
+          file = sunburstPNG,
+          vwidth = 1200,
+          vheight = 1200)
+        sunburstPNG <- normalizePath(sunburstPNG)
+        addObject(
+          list(`Sunburst Plot - TreatmentPatterns` = list(treatmentPathways = treatmentPathways,
+                                                          groupCombinations = TRUE,
+                                                          fileImage = sunburstPNG))
+        )
+      }
     })
 
     observeEvent(input$lockSankey, {
       outputFile <- here::here("sankeyDiagram.html")
-      outputSankey <- TreatmentPatterns::createSankeyDiagram(
-        treatmentPathways = pathwaysData(),
-        groupCombinations = TRUE,
-      )
-      htmlwidgets::saveWidget(outputSankey, outputFile)
-      sankeyPNG <- tempfile(pattern = "sankeyDiagram", fileext = ".png")
-      webshot2::webshot(
-        url = outputFile,
-        file = sankeyPNG,
-        vwidth = 1200,
-        vheight = 1200)
-      sankeyPNG <- normalizePath(sankeyPNG)
-      addObject(
-        list(`Sankey Diagram - TreatmentPatterns` = list(treatmentPathways = pathwaysData(),
-                                                         groupCombinations = TRUE,
-                                                         fileImage = sankeyPNG))
-      )
+
+      treatmentPathways <- pathwaysData()
+      if (nrow(treatmentPathways) > 0) {
+        outputSankey <- TreatmentPatterns::createSankeyDiagram(
+          treatmentPathways = treatmentPathways,
+          groupCombinations = TRUE,
+        )
+        htmlwidgets::saveWidget(outputSankey, outputFile)
+        sankeyPNG <- tempfile(pattern = "sankeyDiagram", fileext = ".png")
+        webshot2::webshot(
+          url = outputFile,
+          file = sankeyPNG,
+          vwidth = 1200,
+          vheight = 1200)
+        sankeyPNG <- normalizePath(sankeyPNG)
+        addObject(
+          list(`Sankey Diagram - TreatmentPatterns` = list(treatmentPathways = treatmentPathways,
+                                                           groupCombinations = TRUE,
+                                                           fileImage = sankeyPNG)))
+      }
     })
     return(addObject)
   })
