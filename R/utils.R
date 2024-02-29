@@ -255,3 +255,11 @@ getRandomId <- function() {
   randomId <- stringr::str_c(sample(chars, 4, replace = TRUE) , collapse = "")
   return(randomId)
 }
+
+createCaptionInput <- function(inputId, value, height = "80px") {
+  textAreaInput(inputId = inputId,
+                label = "Caption",
+                value = value,
+                width = '100%',
+                height = height)
+}

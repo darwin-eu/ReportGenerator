@@ -34,31 +34,31 @@ plotIncidenceSex:
   function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)
   type:
     - incidence_estimates
-  options: Facet by outcome, Facet by database, Ribbon
+  options: Facet by outcome, Facet by database, Ribbon, Options
 plotIncidenceAge:
   title: "Plot - Incidence rate per year by age"
   function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)
   type:
     - incidence_estimates
-  options: Facet by outcome, Facet by database, Ribbon
+  options: Facet by outcome, Facet by database, Ribbon, Options
 plotPrevalenceYear:
   title: "Plot - Prevalence per year"
   function: plotPrevalence(prevalence_estimates, colour, facet, ribbon, options)
   type:
     - prevalence_estimates
-  options: Facet by outcome, Facet by database, Ribbon
+  options: Facet by outcome, Facet by database, Ribbon, Options
 plotPrevalenceSex:
   title: "Plot - Prevalence per year by sex"
   function: plotPrevalence(prevalence_estimates, colour, facet, ribbon, options)
   type:
     - prevalence_estimates
-  options: Facet by outcome, Facet by database, Ribbon
+  options: Facet by outcome, Facet by database, Ribbon, Options
 plotPrevalenceAge:
   title: "Plot - Prevalence per year by age"
   function: plotPrevalence(prevalence_estimates, colour, facet, ribbon, options)
   type:
     - prevalence_estimates
-  options: Facet by outcome, Facet by database, Ribbon
+  options: Facet by outcome, Facet by database, Ribbon, Options
 treatmentPathways:
   title: "Treatment Pathways Interactive Plots"
   type:

@@ -1,4 +1,5 @@
 prevalenceUI <- function(id, uploadedFiles) {
+  ns <- NS(id)
   if (id == "Plot - Prevalence per year") {
 
     # Database
@@ -87,14 +88,14 @@ prevalenceUI <- function(id, uploadedFiles) {
   tagList(
     fluidRow(
       column(4,
-             pickerInput(inputId = NS(id, "facetPrevalence"),
+             pickerInput(inputId = ns("facetPrevalence"),
                          label = "Select plot type",
                          choices = c("Facet by outcome", "Facet by database"),
                          selected = "Facet by outcome",
                          multiple = FALSE)
       ),
       column(4,
-             pickerInput(inputId = NS(id, "databasePrevalence"),
+             pickerInput(inputId = ns("databasePrevalence"),
                          label = "Database",
                          choices = databaseChoices,
                          selected = databaseSelected,
@@ -102,7 +103,7 @@ prevalenceUI <- function(id, uploadedFiles) {
                          options = dbPickerOptions)
       ),
       column(4,
-             pickerInput(inputId = NS(id, "outcomePrevalence"),
+             pickerInput(inputId = ns("outcomePrevalence"),
                          label = "Outcome",
                          choices = outcomeChoices,
                          selected = outcomeChoices,
@@ -112,7 +113,7 @@ prevalenceUI <- function(id, uploadedFiles) {
     ),
     fluidRow(
       column(4,
-             pickerInput(inputId = NS(id, "sexPrevalence"),
+             pickerInput(inputId = ns("sexPrevalence"),
                          label = "Sex",
                          choices = sexChoices,
                          selected = sexSelected,
@@ -120,7 +121,7 @@ prevalenceUI <- function(id, uploadedFiles) {
                          options = sexPickerOptions)
       ),
       column(4,
-             pickerInput(inputId = NS(id, "agePrevalence"),
+             pickerInput(inputId = ns("agePrevalence"),
                          label = "Age",
                          choices = ageChoices,
                          selected = ageSelected,
@@ -128,7 +129,7 @@ prevalenceUI <- function(id, uploadedFiles) {
                          options = agePickerOptions)
       ),
       column(4,
-             pickerInput(inputId = NS(id, "typePrevalence"),
+             pickerInput(inputId = ns("typePrevalence"),
                          label = "Type",
                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_type),
                          multiple = FALSE),
@@ -136,20 +137,20 @@ prevalenceUI <- function(id, uploadedFiles) {
     ),
     fluidRow(
       column(4,
-             pickerInput(inputId = NS(id, "intervalPrevalence"),
+             pickerInput(inputId = ns("intervalPrevalence"),
                          label = "Interval",
                          choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_interval),
                          multiple = FALSE),
       ),
       column(4,
-             pickerInput(inputId = NS(id, "timeFromPrevalence"),
+             pickerInput(inputId = ns("timeFromPrevalence"),
                          label = "From",
                          choices = startDateChoices,
                          selected = min(startDateChoices),
                          multiple = FALSE)
       ),
       column(4,
-             pickerInput(inputId = NS(id, "timeToPrevalence"),
+             pickerInput(inputId = ns("timeToPrevalence"),
                          label = "To",
                          choices = startDateChoices,
                          selected = max(startDateChoices),
@@ -158,48 +159,45 @@ prevalenceUI <- function(id, uploadedFiles) {
     ),
     fluidRow(
       column(4,
-             pickerInput(inputId = NS(id, "showCIPrevalence"),
+             pickerInput(inputId = ns("ribbonPrevalence"),
+                         label = "Ribbon",
+                         choices = c(TRUE, FALSE),
+                         selected = TRUE,
+                         multiple = FALSE)
+      ),
+      column(4,
+             pickerInput(inputId = ns("showCIPrevalence"),
                          label = "Show confidence interval",
                          choices = c(TRUE, FALSE),
                          selected = TRUE,
                          multiple = FALSE)
       ),
       column(4,
-             pickerInput(inputId = NS(id, "stackPlotsPrevalence"),
+             pickerInput(inputId = ns("stackPlotsPrevalence"),
                          label = "Stack plots",
                          choices = c(TRUE, FALSE),
                          selected = FALSE,
                          multiple = FALSE)
-      ),
-      column(4,
-             pickerInput(inputId = NS(id, "ribbonPrevalence"),
-                         label = "Ribbon",
-                         choices = c(TRUE, FALSE),
-                         selected = TRUE,
-                         multiple = FALSE)
       )
     ),
     fluidRow(
-      column(8,
-             textAreaInput(inputId = NS(id, "captionInc"),
-                           label = "Caption",
-                           value = captionValue,
-                           width = '100%',
-                           height = "130px")
+      column(12,
+             createCaptionInput(inputId = ns("captionInc"),
+                                value = captionValue)
       ),
     ),
     fluidRow(
       column(4,
-             actionButton(NS(id, lockVariable), "Add item to report")
+             actionButton(ns(lockVariable), "Add item to report")
       ),
       column(4,
-             downloadButton(NS(id, "downloadFigure"), "Download Plot")
+             downloadButton(ns("downloadFigure"), "Download Plot")
       ),
     ),
     tags$br(),
     fluidRow(
-      column(8,
-             plotOutput(NS(id, "previewFigure"))
+      column(12,
+             plotOutput(ns("previewFigure"))
       )
     )
   )

@@ -27,12 +27,9 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
     dataset <- uploadedFiles$dataCS$`Survival cumulative incidence`
   }
   captionUI <- fluidRow(
-    column(8,
-           textAreaInput(ns(captionId),
-                         "Caption",
-                         captionText,
-                         width = '100%',
-                         height = "130px")
+    column(12,
+           createCaptionInput(inputId = ns(captionId),
+                              value = captionText)
     ),
   )
 
@@ -42,37 +39,36 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
   cdmOptions <- unique(dataset$cdm_name)
 
   tagList(
-    div(
-      style = "display: inline-block;vertical-align:top; width: 150px;",
-      pickerInput(
-        inputId = ns("cdm_name"),
-        label = "Database",
-        choices = cdmOptions,
-        selected = cdmOptions,
-        options = pickerOptions,
-        multiple = TRUE
-      )
-    ),
-    div(
-      style = "display: inline-block;vertical-align:top; width: 150px;",
-      pickerInput(
-        inputId = ns("group_level"),
-        label = "Group Level",
-        choices = groupLevelOptions,
-        selected = groupLevelOptions[1],
-        options = pickerOptions,
-        multiple = TRUE
-      )
-    ),
-    div(
-      style = "display: inline-block;vertical-align:top; width: 150px;",
-      pickerInput(
-        inputId = ns("strata_name"),
-        label = "Strata Name",
-        choices = strataNameOptions,
-        selected = strataNameOptions[1],
-        options = pickerOptions,
-        multiple = TRUE
+    fluidRow(
+      column(4,
+             pickerInput(
+               inputId = ns("cdm_name"),
+               label = "Database",
+               choices = cdmOptions,
+               selected = cdmOptions,
+               options = pickerOptions,
+               multiple = TRUE
+             )
+      ),
+      column(4,
+             pickerInput(
+              inputId = ns("group_level"),
+              label = "Group Level",
+              choices = groupLevelOptions,
+              selected = groupLevelOptions[1],
+              options = pickerOptions,
+              multiple = TRUE
+             )
+      ),
+      column(4,
+             pickerInput(
+               inputId = ns("strata_name"),
+               label = "Strata Name",
+               choices = strataNameOptions,
+               selected = strataNameOptions[1],
+               options = pickerOptions,
+               multiple = TRUE
+             )
       )
     ),
     captionUI,

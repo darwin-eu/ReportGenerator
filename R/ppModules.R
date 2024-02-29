@@ -59,12 +59,9 @@ characteristicsUI <- function(id, uploadedFiles) {
         )
       ),
       fluidRow(
-        column(8,
-               textAreaInput(inputId = ns("captionCharacteristics"),
-                             label = "Caption",
-                             value = captionText,
-                             width = '100%',
-                             height = "130px")
+        column(12,
+               createCaptionInput(inputId = ns("captionCharacteristics"),
+                                  value = captionText)
         ),
       ),
       fluidRow(column(4, actionButton(ns(lockName), "Add item to report"))),
@@ -152,12 +149,9 @@ characteristicsUI <- function(id, uploadedFiles) {
         )
       ),
       fluidRow(
-        column(8,
-               textAreaInput(inputId = ns("captionCharacteristics"),
-                             label = "Caption",
-                             value = captionText,
-                             width = '100%',
-                             height = "130px")
+        column(12,
+               createCaptionInput(inputId = ns("captionCharacteristics"),
+                                  value = captionText)
         ),
       ),
       fluidRow(column(4, actionButton(ns(lockName), "Add item to report"))),
