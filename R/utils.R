@@ -256,7 +256,7 @@ getRandomId <- function() {
   return(randomId)
 }
 
-createCaptionInput <- function(inputId, value, height = "80px") {
+createCaptionInput <- function(inputId, value, height = "50px") {
   textAreaInput(inputId = inputId,
                 label = "Caption",
                 value = value,

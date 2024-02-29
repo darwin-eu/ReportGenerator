@@ -20,9 +20,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                            selected = unique(uploadedFiles$dataPP$summarised_characteristics$group_level),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        )
-      ),
-      fluidRow(
+        ),
         column(4,
                pickerInput(inputId = ns("strata_name"),
                            label = "Strata Name",
@@ -30,7 +28,9 @@ characteristicsUI <- function(id, uploadedFiles) {
                            selected = unique(uploadedFiles$dataPP$summarised_characteristics$strata_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        ),
+        )
+      ),
+      fluidRow(
         column(4,
                pickerInput(inputId = ns("variable"),
                            label = "Variable",
@@ -38,9 +38,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                            selected = unique(uploadedFiles$dataPP$summarised_characteristics$variable),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        )
-      ),
-      fluidRow(
+        ),
         column(4,
                pickerInput(inputId = ns("variable_level"),
                            label = "Variable Level",
@@ -61,7 +59,8 @@ characteristicsUI <- function(id, uploadedFiles) {
       fluidRow(
         column(12,
                createCaptionInput(inputId = ns("captionCharacteristics"),
-                                  value = captionText)
+                                  value = captionText,
+                                  height = "80px")
         ),
       ),
       fluidRow(column(4, actionButton(ns(lockName), "Add item to report"))),
@@ -100,22 +99,12 @@ characteristicsUI <- function(id, uploadedFiles) {
                            selected = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$group_level),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        )
-      ),
-      fluidRow(
+        ),
         column(4,
                pickerInput(inputId = ns("strata_name"),
                            label = "Strata Name",
                            choices = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$strata_name),
                            selected = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$strata_name),
-                           multiple = TRUE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        ),
-        column(4,
-               pickerInput(inputId = ns("table_name"),
-                           label = "Table Name",
-                           choices = sort(unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$table_name)),
-                           selected = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$table_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
@@ -136,9 +125,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                            selected = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$variable_level),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        )
-      ),
-      fluidRow(
+        ),
         column(4,
                pickerInput(inputId = ns("estimate_type"),
                            label = "Estimate Type",
@@ -149,9 +136,20 @@ characteristicsUI <- function(id, uploadedFiles) {
         )
       ),
       fluidRow(
+        column(4,
+               pickerInput(inputId = ns("table_name"),
+                           label = "Table Name",
+                           choices = sort(unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$table_name)),
+                           selected = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$table_name),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        )
+      ),
+      fluidRow(
         column(12,
                createCaptionInput(inputId = ns("captionCharacteristics"),
-                                  value = captionText)
+                                  value = captionText,
+                                  height = "80px")
         ),
       ),
       fluidRow(column(4, actionButton(ns(lockName), "Add item to report"))),
@@ -206,7 +204,6 @@ characteristicsServer <- function(id, dataset) {
                              variable %in% input$variable,
                              variable_level %in% input$variable_level,
                              estimate_type %in% input$estimate_type) %>%
-          # select(cdm_name, group_level, strata_name, variable, variable_level , estimate_type, estimate) %>%
           mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
       })
     } else {
@@ -218,7 +215,6 @@ characteristicsServer <- function(id, dataset) {
                              variable_level %in% input$variable_level,
                              table_name %in% input$table_name,
                              estimate_type %in% input$estimate_type) %>%
-          # select(cdm_name, group_level, strata_name, variable, variable_level, estimate_type, estimate) %>%
           mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
       })
     }

@@ -32,7 +32,8 @@ attritionUI <- function(id, uploadedFiles) {
       ),
       column(12,
              createCaptionInput(inputId = ns("captionTableAtt"),
-                                value = captionText)
+                                value = captionText,
+                                height = "80px")
       )
     ),
     fluidRow(
