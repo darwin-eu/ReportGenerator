@@ -163,6 +163,27 @@ addPreviewItemRibbon <- function(previewItemString, ribbon) {
   return(gsub("ribbon", ribbonStr, previewItemString))
 }
 
+#' Adds plot options to the current previewItem string.
+#'
+#' @param previewItemString string representing the previewItem
+#' @param showCI if confidence interval should be shown
+#' @param stackPlots if subplots should be stacked (on top of each other) or not
+#'
+#' @return the updated preview item string
+addPlotOptions <- function(previewItemString, showCI, stackPlots) {
+  optionsStr <- "options = list("
+  showCI <- as.logical(showCI)
+  stackPlots <- as.logical(stackPlots)
+  if (!showCI) {
+    optionsStr <- paste0(optionsStr, "hideConfidenceInterval = TRUE")
+  }
+  if (stackPlots) {
+    optionsStr <- paste0(optionsStr, ifelse(!showCI, ",", ""), "facetNcols = 1")
+  }
+  optionsStr <- paste0(optionsStr, ")")
+  return(gsub("options", optionsStr, previewItemString))
+}
+
 #' Export list of package results
 #'
 #' @param resultList Named list with results from a darwin package

@@ -83,31 +83,6 @@ incidenceUI <- function(id, uploadedFiles) {
                          multiple = FALSE)
       ),
       column(4,
-             pickerInput(inputId = NS(id, "ribbonIncidence"),
-                         label = "Ribbon",
-                         choices = c(TRUE, FALSE),
-                         selected = TRUE,
-                         multiple = FALSE)
-      )
-    ),
-    fluidRow(
-      column(4,
-             pickerInput(inputId = NS(id, "washoutIncidence"),
-                         label = "Washout",
-                         choices = washoutChoices,
-                         selected = washoutSelected,
-                         multiple = FALSE)
-      ),
-      column(4,
-             pickerInput(inputId = NS(id, "daysPriorIncidence"),
-                         label = "Days Prior History",
-                         choices = daysPriorHistoryChoices,
-                         selected = daysPriorHistorySelected,
-                         multiple = FALSE)
-      )
-    ),
-    fluidRow(
-      column(4,
              pickerInput(inputId = NS(id, "databaseIncidence"),
                          label = "Database",
                          choices = databaseChoices,
@@ -126,6 +101,28 @@ incidenceUI <- function(id, uploadedFiles) {
     ),
     fluidRow(
       column(4,
+             pickerInput(inputId = NS(id, "washoutIncidence"),
+                         label = "Washout",
+                         choices = washoutChoices,
+                         selected = washoutSelected,
+                         multiple = FALSE)
+      ),
+      column(4,
+             pickerInput(inputId = NS(id, "daysPriorIncidence"),
+                         label = "Days Prior History",
+                         choices = daysPriorHistoryChoices,
+                         selected = daysPriorHistorySelected,
+                         multiple = FALSE)
+      ),
+      column(4,
+             pickerInput(inputId = NS(id, "intervalIncidence"),
+                         label = "Interval",
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval),
+                         multiple = FALSE),
+      )
+    ),
+    fluidRow(
+      column(4,
              pickerInput(inputId = NS(id, "sexIncidence"),
                          label = "Sex",
                          choices = sexChoices,
@@ -140,14 +137,6 @@ incidenceUI <- function(id, uploadedFiles) {
                          selected = ageSelected,
                          multiple = ageMultiple,
                          options = agePickerOptions)
-      ),
-    ),
-    fluidRow(
-      column(4,
-             pickerInput(inputId = NS(id, "intervalIncidence"),
-                         label = "Interval",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval),
-                         multiple = FALSE),
       ),
       column(4,
              pickerInput(inputId = NS(id, "repeatedIncidence"),
@@ -170,28 +159,51 @@ incidenceUI <- function(id, uploadedFiles) {
                          choices = startDateChoices,
                          selected = max(startDateChoices),
                          multiple = FALSE)
+      ),
+      column(4,
+             pickerInput(inputId = NS(id, "ribbonIncidence"),
+                         label = "Ribbon",
+                         choices = c(TRUE, FALSE),
+                         selected = TRUE,
+                         multiple = FALSE)
       )
     ),
     fluidRow(
-      column(8,
+      column(4,
+             pickerInput(inputId = NS(id, "showCIIncidence"),
+                         label = "Show confidence interval",
+                         choices = c(TRUE, FALSE),
+                         selected = TRUE,
+                         multiple = FALSE)
+      ),
+      column(4,
+             pickerInput(inputId = NS(id, "stackPlotsIncidence"),
+                         label = "Stack plots",
+                         choices = c(TRUE, FALSE),
+                         selected = FALSE,
+                         multiple = FALSE)
+      )
+    ),
+    fluidRow(
+      column(12,
              textAreaInput(inputId = NS(id, "captionInc"),
                            label = "Caption",
                            value = captionValue,
                            width = '100%',
                            height = "130px")
-      ),
+      )
     ),
     fluidRow(
-      column(4,
+      column(6,
              actionButton(NS(id, lockName), "Add item to report")
       ),
-      column(4,
+      column(6,
              downloadButton(NS(id, "downloadFigure"), "Download Plot")
       ),
     ),
     tags$br(),
     fluidRow(
-      column(8,
+      column(12,
         plotOutput(NS(id, "previewFigure"))
       )
     )
@@ -256,7 +268,8 @@ incidenceServer <- function(id, uploadedFiles) {
           addPreviewItemTypeAge(input$facetIncidence)
       }
       expression <- expression %>%
-        addPreviewItemRibbon(input$ribbonIncidence)
+        addPreviewItemRibbon(input$ribbonIncidence) %>%
+        addPlotOptions(input$showCIIncidence, input$stackPlotsIncidence)
       incidence_estimates <- incidenceCommonData()
       if (nrow(incidence_estimates) > 0) {
         eval(parse(text = expression))

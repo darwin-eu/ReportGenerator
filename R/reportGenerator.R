@@ -178,7 +178,7 @@ reportGenerator <- function() {
       previewPanels <- lapply(input$objectSelection,
                               tabPanelSelection,
                               uploadedFiles = uploadedFiles)
-      do.call(navlistPanel, c(previewPanels, list(widths = c(4, 8))))
+      do.call(navlistPanel, c(previewPanels, list(widths = c(3, 9))))
     })
 
     # 2.Assign Data
