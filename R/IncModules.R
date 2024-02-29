@@ -296,7 +296,8 @@ incidenceServer <- function(id, uploadedFiles) {
         list(`Plot - Incidence rate per year` = list(incidence_estimates = incidenceCommonData(),
                                                      plotOption = input$facetIncidence,
                                                      caption = input$captionInc,
-                                                     ribbon = input$ribbonIncidence))
+                                                     ribbon = input$ribbonIncidence,
+                                                     options = c(input$showCIIncidence, input$stackPlotsIncidence)))
       )
     })
 
@@ -305,7 +306,8 @@ incidenceServer <- function(id, uploadedFiles) {
         list(`Plot - Incidence rate per year by sex` = list(incidence_estimates = incidenceCommonData(),
                                                             plotOption = input$facetIncidence,
                                                             caption = input$captionInc,
-                                                            ribbon = input$ribbonIncidence))
+                                                            ribbon = input$ribbonIncidence,
+                                                            options = c(input$showCIIncidence, input$stackPlotsIncidence)))
       )
     })
 
@@ -314,7 +316,8 @@ incidenceServer <- function(id, uploadedFiles) {
         list(`Plot - Incidence rate per year by age` = list(incidence_estimates = incidenceCommonData(),
                                                             plotOption = input$facetIncidence,
                                                             caption = input$captionInc,
-                                                            ribbon = input$ribbonIncidence))
+                                                            ribbon = input$ribbonIncidence,
+                                                            options = c(input$showCIIncidence, input$stackPlotsIncidence)))
       )
     })
     return(addObject)

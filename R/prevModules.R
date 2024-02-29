@@ -94,15 +94,6 @@ prevalenceUI <- function(id, uploadedFiles) {
                          multiple = FALSE)
       ),
       column(4,
-             pickerInput(inputId = NS(id, "ribbonPrevalence"),
-                         label = "Ribbon",
-                         choices = c(TRUE, FALSE),
-                         selected = TRUE,
-                         multiple = FALSE)
-      )
-    ),
-    fluidRow(
-      column(4,
              pickerInput(inputId = NS(id, "databasePrevalence"),
                          label = "Database",
                          choices = databaseChoices,
@@ -136,14 +127,6 @@ prevalenceUI <- function(id, uploadedFiles) {
                          multiple = ageMultiple,
                          options = agePickerOptions)
       ),
-    ),
-    fluidRow(
-      column(4,
-             pickerInput(inputId = NS(id, "intervalPrevalence"),
-                         label = "Interval",
-                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_interval),
-                         multiple = FALSE),
-      ),
       column(4,
              pickerInput(inputId = NS(id, "typePrevalence"),
                          label = "Type",
@@ -152,6 +135,12 @@ prevalenceUI <- function(id, uploadedFiles) {
       )
     ),
     fluidRow(
+      column(4,
+             pickerInput(inputId = NS(id, "intervalPrevalence"),
+                         label = "Interval",
+                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_interval),
+                         multiple = FALSE),
+      ),
       column(4,
              pickerInput(inputId = NS(id, "timeFromPrevalence"),
                          label = "From",
@@ -164,6 +153,29 @@ prevalenceUI <- function(id, uploadedFiles) {
                          label = "To",
                          choices = startDateChoices,
                          selected = max(startDateChoices),
+                         multiple = FALSE)
+      )
+    ),
+    fluidRow(
+      column(4,
+             pickerInput(inputId = NS(id, "showCIPrevalence"),
+                         label = "Show confidence interval",
+                         choices = c(TRUE, FALSE),
+                         selected = TRUE,
+                         multiple = FALSE)
+      ),
+      column(4,
+             pickerInput(inputId = NS(id, "stackPlotsPrevalence"),
+                         label = "Stack plots",
+                         choices = c(TRUE, FALSE),
+                         selected = FALSE,
+                         multiple = FALSE)
+      ),
+      column(4,
+             pickerInput(inputId = NS(id, "ribbonPrevalence"),
+                         label = "Ribbon",
+                         choices = c(TRUE, FALSE),
+                         selected = TRUE,
                          multiple = FALSE)
       )
     ),
@@ -248,7 +260,8 @@ prevalenceServer <- function(id, uploadedFiles) {
           addPreviewItemTypeAge(input$facetPrevalence)
       }
       expression <- expression %>%
-        addPreviewItemRibbon(input$ribbonPrevalence)
+        addPreviewItemRibbon(input$ribbonPrevalence) %>%
+        addPlotOptions(input$showCIPrevalence, input$stackPlotsPrevalence)
       prevalence_estimates <- prevalenceCommonData()
       if (nrow(prevalence_estimates) > 0) {
         eval(parse(text = expression))
@@ -275,7 +288,8 @@ prevalenceServer <- function(id, uploadedFiles) {
         list(`Plot - Prevalence per year` = list(prevalence_estimates = prevalenceCommonData(),
                                                  plotOption = input$facetPrevalence,
                                                  caption = input$captionInc,
-                                                 ribbon = input$ribbonPrevalence))
+                                                 ribbon = input$ribbonPrevalence,
+                                                 options = c(input$showCIPrevalence, input$stackPlotsPrevalence)))
       )
     })
 
@@ -284,7 +298,8 @@ prevalenceServer <- function(id, uploadedFiles) {
         list(`Plot - Prevalence per year by sex` = list(prevalence_estimates = prevalenceCommonData(),
                                                         plotOption = input$facetPrevalence,
                                                         caption = input$captionInc,
-                                                        ribbon = input$ribbonPrevalence))
+                                                        ribbon = input$ribbonPrevalence,
+                                                        options = c(input$showCIPrevalence, input$stackPlotsPrevalence)))
       )
     })
 
@@ -293,7 +308,8 @@ prevalenceServer <- function(id, uploadedFiles) {
         list(`Plot - Prevalence per year by age` = list(prevalence_estimates = prevalenceCommonData(),
                                                         plotOption = input$facetPrevalence,
                                                         caption = input$captionInc,
-                                                        ribbon = input$ribbonPrevalence))
+                                                        ribbon = input$ribbonPrevalence,
+                                                        options = c(input$showCIPrevalence, input$stackPlotsPrevalence)))
       )
     })
     return(addObject)
