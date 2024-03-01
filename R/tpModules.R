@@ -19,15 +19,15 @@ patternsUI <- function(id, uploadedFiles) {
                          label = "Sex",
                          choices = sexChoices,
                          selected = sexChoices[1],
+                         multiple = FALSE)),
+      column(4,
+             pickerInput(inputId = ns("agePatterns"),
+                         label = "Age",
+                         choices = ageChoices,
+                         selected = ageChoices[1],
                          multiple = FALSE))
-      ),
-      fluidRow(
-        column(4,
-               pickerInput(inputId = ns("agePatterns"),
-                           label = "Age",
-                           choices = ageChoices,
-                           selected = ageChoices[1],
-                           multiple = FALSE)),
+    ),
+    fluidRow(
         column(4,
                pickerInput(
                inputId = ns("indexPatterns"),
@@ -35,20 +35,20 @@ patternsUI <- function(id, uploadedFiles) {
                choices = yearChoices,
                selected = yearChoices[1],
                multiple = FALSE))
-        ),
-      tags$br(),
-      fluidRow(
-        tabsetPanel(type = "tabs",
-                    tabPanel("Sunburst", br(),
-                             fluidRow(column(4, actionButton(ns("lockSunburst"), "Add plot to the report")),
-                                      column(4, downloadButton(ns("downloadSunburst"), "Download Plot"))),
-                             htmlOutput(ns("previewSunburst"))),
-                    tabPanel("Sankey", br(),
-                             fluidRow(column(4, actionButton(ns("lockSankey"), "Add diagram to the report")),
-                                      column(4, downloadButton(ns("downloadSankey"), "Download Plot"))),
-                             htmlOutput(ns("previewSankey"))))
-        )
+    ),
+    tags$br(),
+    fluidRow(
+      tabsetPanel(type = "tabs",
+                  tabPanel("Sunburst", br(),
+                           fluidRow(column(6, actionButton(ns("lockSunburst"), "Add plot to the report")),
+                                    column(6, downloadButton(ns("downloadSunburst"), "Download Plot"))),
+                           htmlOutput(ns("previewSunburst"))),
+                  tabPanel("Sankey", br(),
+                           fluidRow(column(6, actionButton(ns("lockSankey"), "Add diagram to the report")),
+                                    column(6, downloadButton(ns("downloadSankey"), "Download Plot"))),
+                           htmlOutput(ns("previewSankey"))))
       )
+    )
 }
 
 patternsServer <- function(id, uploadedFiles) {

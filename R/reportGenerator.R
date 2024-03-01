@@ -19,7 +19,7 @@
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
 #' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml googleVis TreatmentPatterns PatientProfiles
-#' @importFrom sortable bucket_list add_rank_list
+#' @importFrom sortable bucket_list add_rank_list sortable_options
 #' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @importFrom utils read.csv tail unzip
 #' @importFrom gtools mixedsort
@@ -163,10 +163,12 @@ reportGenerator <- function() {
                          orientation = "horizontal",
                          add_rank_list(text = "Drag from here",
                                        labels = itemsList$objects[["items"]],
-                                       input_id = "objectMenu"),
+                                       input_id = "objectMenu",
+                                       options = sortable_options(multiDrag = TRUE)),
                          add_rank_list(text = "to here",
                                        labels = NULL,
-                                       input_id = "objectSelection")
+                                       input_id = "objectSelection",
+                                       options = sortable_options(multiDrag = TRUE))
              )
       )
     })
@@ -178,7 +180,7 @@ reportGenerator <- function() {
       previewPanels <- lapply(input$objectSelection,
                               tabPanelSelection,
                               uploadedFiles = uploadedFiles)
-      do.call(navlistPanel, c(previewPanels, list(widths = c(4, 8))))
+      do.call(navlistPanel, c(previewPanels, list(widths = c(3, 9))))
     })
 
     # 2.Assign Data

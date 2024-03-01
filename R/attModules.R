@@ -30,12 +30,10 @@ attritionUI <- function(id, uploadedFiles) {
                          label = "Analysis ID",
                          choices = analysisChoices)
       ),
-      column(8,
-             textAreaInput(ns("captionTableAtt"),
-                           "Caption",
-                           captionText,
-                           width = '100%',
-                           height = "130px")
+      column(12,
+             createCaptionInput(inputId = ns("captionTableAtt"),
+                                value = captionText,
+                                height = "80px")
       )
     ),
     fluidRow(
