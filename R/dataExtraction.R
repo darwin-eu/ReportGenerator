@@ -90,6 +90,10 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
   resultType <- NULL
   if ("result_type" %in% resultsColumns) {
     resultType <- unique(resultsData$result_type)
+    if (resultType == "Summary characteristics") {
+      resultsData$result_type <- "summarised_characteristics"
+      resultType <- "summarised_characteristics"
+    }
   }
 
   for (pkg in names(configData)) {
