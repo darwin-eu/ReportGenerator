@@ -284,7 +284,7 @@ incidenceServer <- function(id, uploadedFiles) {
         paste(id, ".png", sep = "")
       },
       content = function(file) {
-        ggplot2::ggsave(file, plot = previewFigure(), device = "png", height = 500, width = 845, units = "mm")
+        saveGGPlot(file, previewFigure())
       }
     )
 
