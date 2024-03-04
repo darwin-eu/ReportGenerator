@@ -93,7 +93,7 @@ test_that("addPreviewItemType happy flow", {
                                previewItemType = "Facet by outcome")
 
   expect_equal(class(result), "character")
-  expect_equal(result, "plotIncidence(incidence_estimates, colour = 'cdm_name', facet = 'outcome_cohort_name', ribbon)")
+  expect_equal(result, "plotIncidence(incidence_estimates, colour = 'cdm_name', facet = 'outcome_cohort_name', ribbon, options)")
 
   # type might be empty, set default
   result <- addPreviewItemType(previewItemString = getItemConfig(input = "title",
@@ -102,7 +102,7 @@ test_that("addPreviewItemType happy flow", {
                                previewItemType = NULL)
 
   expect_equal(class(result), "character")
-  expect_equal(result, "plotIncidence(incidence_estimates, colour = 'cdm_name', facet = 'outcome_cohort_name', ribbon)")
+  expect_equal(result, "plotIncidence(incidence_estimates, colour = 'cdm_name', facet = 'outcome_cohort_name', ribbon, options)")
 })
 
 

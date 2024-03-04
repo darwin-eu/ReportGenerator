@@ -3,33 +3,27 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
   ns <- NS(id)
   outResult <- NULL
   topN <- NULL
+  dlButton <- NULL
   if (id == "survivalTable") {
     outResult <- DT::dataTableOutput(ns("cs_data"))
     topN <- numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100)
-    captionText <- "Table 1. Survival estimate data"
-    captionId <-  "captionSurvivalEstimateData"
     dataset <- uploadedFiles$dataCS$`Survival estimate`
   } else if (id == "survivalPlot") {
     outResult <- plotOutput(ns("cs_plot"))
-    captionText <- "Figure 1. Survival estimate plot"
-    captionId <-  "captionSurvivalEstimate"
     dataset <- uploadedFiles$dataCS$`Survival estimate`
+    dlButton <- downloadButton(ns("downloadFigure"), "Download Plot")
   } else if (id == "failureTable") {
     outResult <- DT::dataTableOutput(ns("cu_inc_data"))
     topN <- numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100)
-    captionText <- "Table 1. Cumulative incidence data"
-    captionId <-  "captionCumulativeIncidenceData"
     dataset <- uploadedFiles$dataCS$`Survival cumulative incidence`
   } else if (id == "failurePlot") {
     outResult <- plotOutput(ns("cu_inc_plot"))
-    captionText <- "Figure 1. Cumulative incidence plot"
-    captionId <-  "captionCumulativeIncidence"
     dataset <- uploadedFiles$dataCS$`Survival cumulative incidence`
+    dlButton <- downloadButton(ns("downloadFigure"), "Download Plot")
   }
   captionUI <- fluidRow(
     column(12,
-           createCaptionInput(inputId = ns(captionId),
-                              value = captionText)
+           uiOutput(outputId = ns("caption"))
     ),
   )
 
@@ -74,7 +68,10 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
     captionUI,
     fluidRow(column(2, tagList(shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
                                shiny::br(), actionButton(ns(paste0("lock", id)), "Add item to report"))),
-             column(2, topN)),
+             column(2, topN),
+             column(6, tagList(shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
+                               shiny::br(), dlButton))
+             ),
     tags$br(),
     fluidRow(column(12, outResult))
   )
@@ -82,6 +79,7 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
 
 cohortSurvivalServer <- function(id, uploadedFiles) {
 
+  ns <- NS(id)
   moduleServer(id, function(input, output, session) {
 
     getData <- reactive({
@@ -110,11 +108,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
       })
     } else if (id == "survivalPlot") {
       output$cs_plot <- renderPlot({
-        if (nrow(getData()) > 0) {
-          CohortSurvival::plotSurvival(getData(),
-                                       facet = "cdm_name",
-                                       colour = "strata_name")
-        }
+        previewFigure()
       })
     } else if (id == "failureTable") {
       output$cu_inc_data <- DT::renderDataTable(server = FALSE, {
@@ -122,13 +116,54 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
       })
     } else if (id == "failurePlot") {
       output$cu_inc_plot <- renderPlot({
-        if (nrow(getData()) > 0) {
-          CohortSurvival::plotCumulativeIncidence(getData(),
-                                                  facet = "cdm_name",
-                                                  colour = "strata_name")
-        }
+        previewFigure()
       })
     }
+
+    previewFigure <- reactive({
+      plot <- NULL
+      if (nrow(getData()) > 0) {
+        if (id == "survivalPlot") {
+          plot <- CohortSurvival::plotSurvival(getData(),
+                                               facet = "cdm_name",
+                                               colour = "strata_name")
+        } else if (id == "failurePlot") {
+            plot <- CohortSurvival::plotCumulativeIncidence(getData(),
+                                                            facet = "cdm_name",
+                                                            colour = "strata_name")
+          }
+      }
+      return(plot)
+    })
+
+    output$downloadFigure <- downloadHandler(
+      filename = function() {
+        paste(id, ".png", sep = "")
+      },
+      content = function(file) {
+        saveGGPlot(file, previewFigure())
+      }
+    )
+
+    output$caption <- renderUI({
+      captionId <- captionText <- NULL
+      if (id == "survivalTable") {
+        captionText <- "Table 1. Survival Probability"
+        captionId <-  "captionSurvivalEstimateData"
+      } else if (id == "survivalPlot") {
+        captionText <- "Figure 1. Survival Probability"
+        captionId <-  "captionSurvivalEstimate"
+      } else if (id == "failureTable") {
+        captionText <- "Table 1. Cumulative Survival Probability"
+        captionId <-  "captionCumulativeIncidenceData"
+      } else if (id == "failurePlot") {
+        captionText <- "Figure 1. Cumulative Survival Probability"
+        captionId <-  "captionCumulativeIncidence"
+      }
+      captionText <- glue::glue("{captionText} in {paste0(input$cdm_name, collapse = ',')} (group_level: {paste0(input$group_level, collapse = ',')}; strata: {paste0(input$strata_name, collapse = ',')})")
+      createCaptionInput(inputId = ns(captionId),
+                         value = captionText)
+    })
 
     addObject <- reactiveVal()
     observeEvent(input$locksurvivalTable, {

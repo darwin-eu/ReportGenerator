@@ -263,3 +263,13 @@ createCaptionInput <- function(inputId, value, height = "50px") {
                 width = '100%',
                 height = height)
 }
+
+saveGGPlot <- function(file, plot) {
+  ggplot2::ggsave(file,
+                  plot = plot,
+                  device = "png",
+                  height = 10,
+                  width = 20,
+                  dpi = 300,
+                  units = "cm")
+}
