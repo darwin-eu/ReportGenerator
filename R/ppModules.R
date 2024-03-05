@@ -42,8 +42,8 @@ characteristicsUI <- function(id, uploadedFiles) {
         column(4,
                pickerInput(inputId = ns("variable_level"),
                            label = "Variable Level",
-                           choices = sort(unique(uploadedFiles$dataPP$summarised_characteristics$variable_level)),
-                           selected = unique(uploadedFiles$dataPP$summarised_characteristics$variable_level),
+                           choices = c("NA", sort(unique(uploadedFiles$dataPP$summarised_characteristics$variable_level))),
+                           selected = c("NA", unique(uploadedFiles$dataPP$summarised_characteristics$variable_level)),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
