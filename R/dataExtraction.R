@@ -131,11 +131,17 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
           }
         } else if (val == "incidence_estimates") {
           if (all(configColumns %in% resultsColumns)) {
+            if ("denominator_days_prior_history" %in% resultsColumns) {
+              colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
+            }
             message(paste0(val, ": match"))
             data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
           }
         } else if (val == "prevalence_estimates") {
           if (all(configColumns %in% resultsColumns)) {
+            if ("denominator_days_prior_history" %in% resultsColumns) {
+              colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
+            }
             message(paste0(val, ": match"))
             data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
           }

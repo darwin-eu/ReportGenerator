@@ -127,7 +127,7 @@ test_that("PatientProfiles Both Summaries", {
 test_that("PatientProfiles Summary", {
   items <- c("summarised_characteristics")
   menuList <- getItemsList(items)
-  expect_equal(menuList, "Summarised Characteristics")
+  expect_equal(menuList, "summarised_characteristics")
 })
 
 test_that("PatientProfiles LSC", {

@@ -20,7 +20,6 @@
 #'
 #' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml googleVis TreatmentPatterns PatientProfiles
 #' @importFrom sortable bucket_list add_rank_list sortable_options
-#' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @importFrom utils read.csv tail unzip
 #' @importFrom gtools mixedsort
 #' @importFrom ggplot2 ggsave
