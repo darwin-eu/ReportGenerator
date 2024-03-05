@@ -192,12 +192,8 @@ incidenceUI <- function(id, uploadedFiles) {
       )
     ),
     fluidRow(
-      column(6,
-             actionButton(ns(lockName), "Add item to report")
-      ),
-      column(6,
-             downloadButton(ns("downloadFigure"), "Download Plot")
-      ),
+      createAddItemToReportUI(ns(lockName)),
+      createDownloadPlotUI(ns)
     ),
     tags$br(),
     fluidRow(
@@ -284,7 +280,11 @@ incidenceServer <- function(id, uploadedFiles) {
         paste(id, ".png", sep = "")
       },
       content = function(file) {
-        saveGGPlot(file, previewFigure())
+        saveGGPlot(file = file,
+                   plot = previewFigure(),
+                   height = as.numeric(input$plotHeight),
+                   width = as.numeric(input$plotWidth),
+                   dpi = as.numeric(input$plotDpi))
       }
     )
 

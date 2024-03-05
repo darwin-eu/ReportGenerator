@@ -187,12 +187,8 @@ prevalenceUI <- function(id, uploadedFiles) {
       ),
     ),
     fluidRow(
-      column(4,
-             actionButton(ns(lockVariable), "Add item to report")
-      ),
-      column(4,
-             downloadButton(ns("downloadFigure"), "Download Plot")
-      ),
+      createAddItemToReportUI(ns(lockVariable)),
+      createDownloadPlotUI(ns)
     ),
     tags$br(),
     fluidRow(
@@ -276,7 +272,11 @@ prevalenceServer <- function(id, uploadedFiles) {
         paste(id, ".png", sep = "")
       },
       content = function(file) {
-        saveGGPlot(file, previewFigure())
+        saveGGPlot(file = file,
+                   plot = previewFigure(),
+                   height = as.numeric(input$plotHeight),
+                   width = as.numeric(input$plotWidth),
+                   dpi = as.numeric(input$plotDpi))
       }
     )
 
