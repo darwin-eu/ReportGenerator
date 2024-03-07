@@ -40,12 +40,12 @@ Plot incidence results
 }
 \examples{
 \donttest{
-cdm <- mockIncidencePrevalenceRef(sampleSize = 1000)
-cdm <- generateDenominatorCohortSet(
+cdm <- IncidencePrevalence::mockIncidencePrevalenceRef(sampleSize = 1000)
+cdm <- IncidencePrevalence::generateDenominatorCohortSet(
   cdm = cdm, name = "denominator",
-  cohortDateRange = c(as.Date("2008-01-01"), as.Date("2018-01-01"))
+  cohortDateRange = c(as.Date("2014-01-01"), as.Date("2018-01-01"))
 )
-inc <- estimateIncidence(
+inc <- IncidencePrevalence::estimateIncidence(
   cdm = cdm,
   denominatorTable = "denominator",
   outcomeTable = "outcome"

@@ -482,8 +482,10 @@ reportGenerator <- function() {
         if (!is.null(dataReport$objects)) {
           shinyjs::html("reportOutput", "<br>Saving report items to rds file", add = TRUE)
           shinyjs::disable("saveReportData")
-          reportItems <- reactiveValuesToList(do.call(reactiveValues, dataReport$objects))
-          saveRDS(reportItems, file)
+          saveRDS(list("reportItems" = reactiveValuesToList(do.call(reactiveValues, dataReport$objects)),
+                       "uploadedFiles" = reactiveValuesToList(uploadedFiles),
+                       "itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects))),
+                  file)
           shinyjs::enable("saveReportData")
         }
       }
@@ -492,8 +494,14 @@ reportGenerator <- function() {
     observeEvent(input$loadReportItems, {
       inFile <- input$loadReportItems
       fileDataPath <- inFile$datapath
-      reportItems <- readRDS(fileDataPath)
-      dataReport$objects <- reportItems
+      reportData <- readRDS(fileDataPath)
+      dataReport$objects <- reportData$reportItems
+      itemsList$objects <- reportData$itemsList
+      upFiles <- reportData$uploadedFiles
+      uploadedFiles$dataCS <- upFiles$dataCS
+      uploadedFiles$dataIP <- upFiles$dataIP
+      uploadedFiles$dataPP <- upFiles$dataPP
+      uploadedFiles$dataTP <- upFiles$dataTP
       shinyjs::html("reportOutput", "<br>Loaded report items from rds file", add = TRUE)
     })
 
