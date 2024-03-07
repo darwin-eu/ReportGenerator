@@ -47,7 +47,9 @@ Imports:
     TreatmentPatterns (>= 2.6.0),
     PatientProfiles,
     shinycssloaders,
-    shinyjs
+    shinyjs,
+    rlang,
+    tidyselect
 Suggests:
     testthat,
     rmarkdown,
