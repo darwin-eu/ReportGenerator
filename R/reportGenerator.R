@@ -29,8 +29,9 @@
 #' @export
 reportGenerator <- function() {
 
-  # set max file upload size
-  options(shiny.maxRequestSize = 1000*1024^2)
+  # set global options
+  options(shiny.maxRequestSize = 1000*1024^2, spinner.type = 5, spinner.color = "#0dc5c1",
+          page.spinner.type = 5, page.spinner.color = "#0dc5c1")
 
   ui <- dashboardPage(
     dashboardHeader(title = "ReportGenerator"),
