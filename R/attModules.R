@@ -64,8 +64,8 @@ attritionServer <- function(id, uploadedFiles) {
           if (inherits(commonData$excluded_subjects, "character")) {
             commonData$excluded_subjects <- as.numeric(commonData$excluded_subjects)
           }
-          commonData[is.na(commonData)] = 0
           commonData <- commonData %>%
+            mutate_if(is.numeric, list(~replace_na(., 0))) %>%
             filter(analysis_id %in% c(input$analysisIdTable1))
           commonData
         } else {
@@ -85,8 +85,8 @@ attritionServer <- function(id, uploadedFiles) {
           if (inherits(commonData$excluded_subjects, "character")) {
             commonData$excluded_subjects <- as.numeric(commonData$excluded_subjects)
           }
-          commonData[is.na(commonData)] = 0
           commonData <- commonData %>%
+            mutate_if(is.numeric, list(~replace_na(., 0))) %>%
             filter(analysis_id %in% c(input$analysisIdTable1))
           commonData
         } else {

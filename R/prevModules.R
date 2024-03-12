@@ -208,7 +208,8 @@ prevalenceServer <- function(id, uploadedFiles) {
       prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
       class(prevalence_estimates) <- c("IncidencePrevalenceResult",
                                        "PrevalenceResult", "tbl_df", "tbl", "data.frame")
-      prevalence_estimates[is.na(prevalence_estimates)] = 0
+      prevalence_estimate <- prevalence_estimates %>%
+        mutate_if(is.numeric, list(~replace_na(., 0)))
 
       # Database
       prevalence_estimates <- prevalence_estimates %>%
