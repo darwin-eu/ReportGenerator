@@ -59,7 +59,7 @@ reportGenerator <- function() {
                  fluidRow(
                    column(width = 12,
                           h2("1. Choose objects"),
-                          uiOutput("navPanelPreview")
+                          shinycssloaders::withSpinner(uiOutput("navPanelPreview"))
                    )
                  )
         ),
