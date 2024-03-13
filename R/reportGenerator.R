@@ -18,10 +18,9 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
-#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml googleVis TreatmentPatterns PatientProfiles
+#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml TreatmentPatterns PatientProfiles
 #' @importFrom sortable bucket_list add_rank_list sortable_options
 #' @importFrom utils read.csv tail unzip
-#' @importFrom gtools mixedsort
 #' @importFrom ggplot2 ggsave
 #' @importFrom gto body_add_gt
 #' @importFrom here here
@@ -30,8 +29,9 @@
 #' @export
 reportGenerator <- function() {
 
-  # set max file upload size
-  options(shiny.maxRequestSize = 1000*1024^2)
+  # set global options
+  options(shiny.maxRequestSize = 1000*1024^2, spinner.type = 5, spinner.color = "#0dc5c1",
+          page.spinner.type = 5, page.spinner.color = "#0dc5c1")
 
   ui <- dashboardPage(
     dashboardHeader(title = "ReportGenerator"),
@@ -59,7 +59,7 @@ reportGenerator <- function() {
                  fluidRow(
                    column(width = 12,
                           h2("1. Choose objects"),
-                          uiOutput("navPanelPreview")
+                          shinycssloaders::withSpinner(uiOutput("navPanelPreview"))
                    )
                  )
         ),
@@ -101,6 +101,8 @@ reportGenerator <- function() {
 
     # Check input data
     observeEvent(input$datasetLoad, {
+      shinycssloaders::showPageSpinner()
+
       # Read  file paths
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
@@ -137,6 +139,7 @@ reportGenerator <- function() {
         itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], getItemsList(items))
       }
       unlink(csvLocation, recursive = TRUE)
+      shinycssloaders::hidePageSpinner()
     })
 
     # Reset and back to initial tab
@@ -431,16 +434,6 @@ reportGenerator <- function() {
         DT::datatable(dataReportFrame, options = list(dom = 't'))
       }
     })
-
-    # To check data in report:
-
-    # output$dataReportMenu <- renderPrint({
-    #   # dataReport
-    #   dataReportList <- reactiveValuesToList(dataReport)
-    #   dataReportList
-    #   # length(dataReportList) == 0
-    #   # objectsListPreview()
-    # })
 
     # Word report generator
     output$generateReport <- downloadHandler(

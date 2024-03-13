@@ -35,8 +35,6 @@ Imports:
     glue,
     yaml,
     waldo,
-    googleVis,
-    gtools,
     ggplot2,
     gto,
     gt,

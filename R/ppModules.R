@@ -74,7 +74,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                                          choices = c("Group", "Strata"),
                                          selected = c("Group", "Strata"),
                                          multiple = TRUE),
-                             column(12, gt::gt_output(ns("summarisedTableGt")))),
+                             column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
         )
       )
@@ -163,7 +163,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                                          choices = c("Group", "Strata"),
                                          selected = c("Group", "Strata"),
                                          multiple = TRUE),
-                             column(12, gt::gt_output(ns("summarisedTableGt")))),
+                             column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
         )
       )
