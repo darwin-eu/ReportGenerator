@@ -7,7 +7,7 @@ test_that("getItemsList all", {
              "prevalence_estimates",
              "treatmentPathways",
              "summarised_characteristics",
-             "Summarised Large Scale Characteristics")
+             "summarised_large_scale_characteristics")
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 13)
 })
@@ -69,6 +69,14 @@ test_that("getItemConfig for getting a function", {
                               output = "function",
                               inputValue = title)
   expect_equal(expression, c("table1NumPar(incidence_attrition, prevalence_attrition)"))
+})
+
+test_that("getItemConfig for getting options", {
+  title <- c("Table - Number of participants")
+  itemOptions <- getItemConfig(input = "title",
+                               output = "options",
+                               inputValue = title)
+  expect_equal(itemOptions, NULL)
 })
 
 test_that("getItemConfig for getting options", {

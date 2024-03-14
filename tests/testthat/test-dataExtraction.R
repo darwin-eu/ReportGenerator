@@ -75,3 +75,7 @@ test_that("Loading multiple csv files whole study", {
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
 })
+
+test_that("getPackageData returns data for Patient Profiles", {
+  getPackageData
+})

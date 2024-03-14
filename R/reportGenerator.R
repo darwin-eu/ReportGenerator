@@ -27,6 +27,7 @@
 #' @importFrom here here
 #' @importFrom TreatmentPatterns createSankeyDiagram
 #' @importFrom DT renderDT DTOutput
+#' @importFrom stringr str_split
 #' @export
 reportGenerator <- function() {
 
@@ -350,7 +351,7 @@ reportGenerator <- function() {
       bindEvent(dataCharacteristics())
 
     dataLSC <- characteristicsServer(id = "lsc",
-                                     reactive(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`))
+                                     reactive(uploadedFiles$dataPP$summarised_large_scale_characteristics))
 
     observe({
       for (key in names(dataLSC())) {

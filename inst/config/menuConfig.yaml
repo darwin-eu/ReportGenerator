@@ -76,15 +76,15 @@ createSankeyDiagram:
   type:
     - diagram
 summaryCharacteristics:
-  title: "summarised_characteristics"
+  title: "Summarised Characteristics"
   function: gtCharacteristics(summarisedCharacteristics)
   type:
     - summarised_characteristics
-Summarised Large Scale Characteristics:
+summarised_large_scale_characteristics:
   title: "Summarised Large Scale Characteristics"
   function: gtCharacteristics(summarisedCharacteristics)
   type:
-    - Summarised Large Scale Characteristics
+    - summarised_large_scale_characteristics
 Survival table:
   title: "Survival table"
   function: cohortSurvivalTable(survivalEstimate)

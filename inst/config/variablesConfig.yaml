@@ -42,63 +42,72 @@ TreatmentPatterns:
 PatientProfiles:
   summarised_characteristics:
     names:
+    - result_id
     - cdm_name
     - result_type
+    - package_name
+    - package_version
     - group_name
     - group_level
     - strata_name
     - strata_level
-    - variable
+    - variable_name
     - variable_level
-    - variable_type
+    - estimate_name
     - estimate_type
-    - estimate
-  Summarised Large Scale Characteristics:
+    - estimate_value
+    - additional_name
+    - additional_level
+  summarised_large_scale_characteristics:
     names:
-    - result_type
+    - result_id
     - cdm_name
+    - result_type
+    - package_name
+    - package_version
     - group_name
     - group_level
     - strata_name
     - strata_level
-    - table_name
-    - type
-    - analysis
-    - concept
-    - variable
+    - variable_name
     - variable_level
+    - estimate_name
     - estimate_type
-    - estimate
+    - estimate_value
+    - additional_name
+    - additional_level
 CohortSurvival:
   Survival estimate:
     names:
     - cdm_name
     - result_type
+    - package_name
+    - package_version
     - group_name
     - group_level
     - strata_name
     - strata_level
-    - variable
+    - variable_name
     - variable_level
-    - variable_type
+    - estimate_name
     - estimate_type
-    - time
-    - analysis_type
-    - outcome
-    - estimate
+    - estimate_value
+    - additional_name
+    - additional_level
   Survival cumulative incidence:
     names:
     - cdm_name
     - result_type
+    - package_name
+    - package_version
     - group_name
     - group_level
     - strata_name
     - strata_level
-    - variable
+    - variable_name
     - variable_level
-    - variable_type
+    - estimate_name
     - estimate_type
-    - time
-    - analysis_type
-    - outcome
-    - estimate
+    - estimate_value
+    - additional_name
+    - additional_level

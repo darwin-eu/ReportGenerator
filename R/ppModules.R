@@ -2,7 +2,6 @@ characteristicsUI <- function(id, uploadedFiles) {
   ns <- NS(id)
   if (id == "characteristics") {
     lockName <- "lockSummary"
-    captionText <- "Table 1. Baseline characteristics of drug user/s at the time of therapy initiation, including pre-specified indication/s. Number of participants per pre-specified strata will be included where necessary/applicable"
     tagList(
       fluidRow(
         column(4,
@@ -32,10 +31,10 @@ characteristicsUI <- function(id, uploadedFiles) {
       ),
       fluidRow(
         column(4,
-               pickerInput(inputId = ns("variable"),
+               pickerInput(inputId = ns("variable_name"),
                            label = "Variable",
-                           choices = sort(unique(uploadedFiles$dataPP$summarised_characteristics$variable)),
-                           selected = unique(uploadedFiles$dataPP$summarised_characteristics$variable),
+                           choices = sort(unique(uploadedFiles$dataPP$summarised_characteristics$variable_name)),
+                           selected = unique(uploadedFiles$dataPP$summarised_characteristics$variable_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
@@ -58,9 +57,10 @@ characteristicsUI <- function(id, uploadedFiles) {
       ),
       fluidRow(
         column(12,
-               createCaptionInput(inputId = ns("captionCharacteristics"),
-                                  value = captionText,
-                                  height = "80px")
+               uiOutput(outputId = ns("captionInput"))
+               # createCaptionInput(inputId = ns("captionCharacteristics"),
+               #                    value = captionText,
+               #                    height = "80px")
         ),
       ),
       fluidRow(column(4, actionButton(ns(lockName), "Add item to report"))),
@@ -87,50 +87,50 @@ characteristicsUI <- function(id, uploadedFiles) {
         column(4,
                pickerInput(inputId = ns("cdm_name"),
                            label = "Database",
-                           choices = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$cdm_name),
-                           selected = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$cdm_name),
+                           choices = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$cdm_name),
+                           selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$cdm_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("group_level"),
                            label = "Group Level",
-                           choices = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$group_level),
-                           selected = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$group_level),
+                           choices = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$group_level),
+                           selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$group_level),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("strata_name"),
                            label = "Strata Name",
-                           choices = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$strata_name),
-                           selected = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$strata_name),
+                           choices = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$strata_name),
+                           selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$strata_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
       ),
       fluidRow(
         column(4,
-               pickerInput(inputId = ns("variable"),
+               pickerInput(inputId = ns("variable_name"),
                            label = "Variable",
-                           choices = sort(unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$variable)),
-                           selected = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$variable),
+                           choices = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$variable_name)),
+                           selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$variable_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("variable_level"),
                            label = "Variable Level",
-                           choices = sort(unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$variable_level)),
-                           selected = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$variable_level),
+                           choices = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$variable_level)),
+                           selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$variable_level),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("estimate_type"),
                            label = "Estimate Type",
-                           choices = sort(unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$estimate_type)),
-                           selected = sort(unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$estimate_type)),
+                           choices = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$estimate_type)),
+                           selected = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$estimate_type)),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
@@ -139,8 +139,8 @@ characteristicsUI <- function(id, uploadedFiles) {
         column(4,
                pickerInput(inputId = ns("table_name"),
                            label = "Table Name",
-                           choices = sort(unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$table_name)),
-                           selected = unique(uploadedFiles$dataPP$`Summarised Large Scale Characteristics`$table_name),
+                           choices = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$table_name)),
+                           selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$table_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
@@ -195,29 +195,42 @@ createDataTable <- function(data, tableName = "result") {
 
 characteristicsServer <- function(id, dataset) {
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
 
     if (id == "characteristics") {
       dataPP <- reactive({
         dataset() %>% filter(cdm_name %in% input$cdm_name,
                              group_level %in% input$group_level,
                              strata_name %in% input$strata_name,
-                             variable %in% input$variable,
+                             variable_name %in% input$variable_name,
                              variable_level %in% input$variable_level,
                              estimate_type %in% input$estimate_type) %>%
-          mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
+          mutate(estimate_value = ifelse(estimate_type == "percentage", round(as.numeric(estimate_value), 2), estimate_value))
       })
     } else {
       dataPP <- reactive({
         dataset() %>% filter(cdm_name %in% input$cdm_name,
                              group_level %in% input$group_level,
                              strata_name %in% input$strata_name,
-                             variable %in% input$variable,
+                             variable_name %in% input$variable_name,
                              variable_level %in% input$variable_level,
                              table_name %in% input$table_name,
                              estimate_type %in% input$estimate_type) %>%
-          mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
+          mutate(estimate_value = ifelse(estimate_type == "percentage", round(as.numeric(estimate_value), 2), estimate_value))
       })
     }
+
+    captionText <- reactive({autoCaptionCharac(dataPP())})
+
+    output$captionInput <- renderUI({
+      createCaptionInput(inputId = ns("captionCharacteristics"),
+                         value = captionText())
+      # textAreaInput(inputId = ns("captionCharacteristics"),
+      #               label = "Caption",
+      #               value = captionText,
+      #               width = '100%',
+      #               height = "50px")
+    })
 
     output$summarisedTable <- DT::renderDataTable(server = FALSE, {
       createDataTable(dataPP())
@@ -239,7 +252,7 @@ characteristicsServer <- function(id, dataset) {
 
     observeEvent(input$lockLSC, {
       addObject(
-        list(`Summarised Large Scale Characteristics` = list(summarisedCharacteristics = dataPP(),
+        list(summarised_large_scale_characteristics = list(summarisedCharacteristics = dataPP(),
                                                              caption = input$captionCharacteristics))
       )
     })

@@ -1,3 +1,17 @@
+#' Generic to create automatic text paragraph for the caption for table from summarised_characteristics object.
+#'
+#' @param uploadedFiles Data frame with summarised_characteristics data
+#'
+#' @return Automatic text as a character string
+#'
+#' @import glue
+#' @importFrom scales label_percent
+autoCaptionCharac <- function(summarisedCharacteristics) {
+  groupLevels <- glue::glue_collapse(unique(summarisedCharacteristics$group_level), ", ", last = " and ")
+  result <- glue::glue("Demographic characteristics of {groupLevels} patients.")
+  return(result)
+}
+
 #' Generates automatic text paragraph for Table 1
 #'
 #' @param incidence_attrition Data frame with incidence attrition data

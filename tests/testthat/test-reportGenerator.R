@@ -5,7 +5,7 @@ incidence_estimates_test <- testData$incidence_estimates
 prevalence_attrition_test <- testData$prevalence_attrition
 prevalence_estimates_test <- testData$prevalence_estimates
 treatmentPathways_test <- testData$treatmentPathways_test
-summarisedCharacteristics <- testData$`Summarised Characteristics`
+summarisedCharacteristics <- testData$summarised_characteristics
 summarisedCharacteristicsLSC <- testData$`Summarised Large Scale Characteristics`
 survivalEstimate <- testData$`Survival estimate`
 survivalCumulativeIncidence <- testData$`Survival cumulative incidence`

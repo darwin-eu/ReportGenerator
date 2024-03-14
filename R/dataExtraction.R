@@ -52,17 +52,17 @@ joinDatabase <- function(fileDataPath = NULL,
                                   pattern = ".csv",
                                   full.names = TRUE,
                                   recursive = TRUE)
-      # Iterates every individual file
-      for (file in filesLocation) {
-        resultsData <- read_csv(file, show_col_types = FALSE)
+      # Iterates every individual fileName
+      for (fileName in filesLocation) {
+        resultsData <- read_csv(fileName, show_col_types = FALSE)
         resultsColumns <- names(resultsData)
-        if (grepl("metadata.csv", file)) {
-          metadata <- read_csv(file = file,
+        if (grepl("metadata.csv", fileName)) {
+          metadata <- read_csv(file = fileName,
                                show_col_types = FALSE)
           databaseName <- metadata$cdmSourceName
         }
-        # Checks the type of every individual file
-        data <- loadFileData(data, file, configData, resultsData, resultsColumns, databaseName)
+        # Checks the type of every individual fileName
+        data <- loadFileData(data, fileName, configData, resultsData, resultsColumns, databaseName)
       }
     }
   } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
@@ -86,36 +86,39 @@ joinDatabase <- function(fileDataPath = NULL,
 #' @param databaseName db name
 #'
 #' @return the list with data
-loadFileData <- function(data, fileName, configData, resultsData, resultsColumns, databaseName) {
-  resultType <- NULL
+loadFileData <- function(data,
+                         fileName,
+                         configData,
+                         resultsData,
+                         resultsColumns,
+                         databaseName) {
+
   if ("result_type" %in% resultsColumns) {
     resultType <- unique(resultsData$result_type)
-    if (resultType == "Summary characteristics") {
-      resultsData$result_type <- "summarised_characteristics"
-      resultType <- "summarised_characteristics"
-    }
-  }
+    package <- unique(resultsData$package_name)
+    if ("Summary characteristics"%in% resultType) {
+        resultsData$result_type <- "summarised_characteristics"
+        resultType <- "summarised_characteristics"
+        } else if ("Summarised Large Scale Characteristics" %in% resultType) {
+          resultsData$result_type <- "summarised_large_scale_characteristics"
+          resultType <- "summarised_large_scale_characteristics"
+          } else if ("Survival stimate" %in% resultType) {
+            analysis_type <- unique({resultsData %>%
+                filter(result_type == "survival_summary") %>%
+                pull(additional_level)
+              })
+            if (grepl("competing_risk", analysis_type)) {
+              resultType <- "Survival cumulative incidence"
+              } else if (grepl("single_event", analysis_type)) {
+                resultType <- "Survival estimate"
+              }
+          }
+    data <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData) %>%
+    return(data)
+  } else {
+    for (pkg in names(configData)) {
+      pkgConfigData <- configData[[pkg]]
 
-  for (pkg in names(configData)) {
-    pkgConfigData <- configData[[pkg]]
-
-    # if possible use resultType
-    if (!is.null(resultType)) {
-      if (resultType == "Survival estimate") {
-        analysis_type <- unique(resultsData$analysis_type)
-        if (analysis_type == "Competing risk") {
-          resultType <- "Survival cumulative incidence"
-        }
-      }
-      if (resultType %in% names(pkgConfigData)) {
-        configColumns <- pkgConfigData[[resultType]]
-        configColumns <- unlist(configColumns$names)
-        if (all(configColumns %in% resultsColumns)) {
-          message(paste0(resultType, ": match (using resultType)"))
-          data[[pkg]][[resultType]] <- bind_rows(data[[pkg]][[resultType]], resultsData)
-        }
-      }
-    } else {
       for (val in names(pkgConfigData)) {
         configColumns <- pkgConfigData[[val]]
         configColumns <- unlist(configColumns$names)
@@ -123,60 +126,50 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
           if (all(configColumns %in% resultsColumns)) {
             message(paste0(val, ": match"))
             data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "prevalence_attrition") {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "incidence_estimates") {
-          if (all(configColumns %in% resultsColumns)) {
-            if ("denominator_days_prior_history" %in% resultsColumns) {
-              colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
             }
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "prevalence_estimates") {
-          if (all(configColumns %in% resultsColumns)) {
-            if ("denominator_days_prior_history" %in% resultsColumns) {
-              colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
-            }
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "treatmentPathways") {
-          if (all(configColumns %in% resultsColumns)) {
-            if (!('cdm_name' %in% resultsColumns)) {
-              resultsData <- mutate(resultsData,
-                                    cdm_name = databaseName)
-            }
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "Summarised Characteristics") {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "Summarised Large Scale Characteristics") {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "Survival estimate") {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        } else if (val == "Survival cumulative incidence") {
-          if (all(configColumns %in% resultsColumns)) {
-            message(paste0(val, ": match"))
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-          }
-        }
+          } else if (val == "prevalence_attrition") {
+            if (all(configColumns %in% resultsColumns)) {
+              message(paste0(val, ": match"))
+              data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+              }
+            } else if (val == "incidence_estimates") {
+              if (all(configColumns %in% resultsColumns)) {
+                if ("denominator_days_prior_history" %in% resultsColumns) {
+                  colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
+                  }
+                message(paste0(val, ": match"))
+                data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+                }
+              } else if (val == "prevalence_estimates") {
+                if (all(configColumns %in% resultsColumns)) {
+                  if ("denominator_days_prior_history" %in% resultsColumns) {
+                    colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
+                    }
+                  message(paste0(val, ": match"))
+                  data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+                  }
+                } else if (val == "treatmentPathways") {
+                  if (all(configColumns %in% resultsColumns)) {
+                    if (!('cdm_name' %in% resultsColumns)) {
+                      resultsData <- mutate(resultsData, cdm_name = databaseName)
+                      }
+                    message(paste0(val, ": match"))
+                    data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+                  }
+                }
       }
     }
+    return(data)
+    }
+  }
+
+getPackageData <- function(data, package, resultType, resultsColumns, resultsData, configData) {
+  pkgConfigData <- configData[[package]]
+  configColumns <- pkgConfigData[[resultType]][["names"]]
+  if (all(configColumns %in% resultsColumns)) {
+    message(paste0(resultType, ": match (using resultType)"))
+    resultsDataWithCols <- additionalCols(resultsData)
+    data[[package]][[resultType]] <- bind_rows(data[[package]][[resultType]], resultsDataWithCols)
   }
   return(data)
 }

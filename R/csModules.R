@@ -99,7 +99,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
       getData() %>%
         dplyr::slice_head(n = input$top_n) %>%
         select(c("cdm_name", "result_type", "group_level", "strata_name",
-                 "strata_level", "variable_type", "time", "estimate"))
+                 "strata_level", "estimate_name", "time", "estimate_value"))
     })
 
     if (id == "survivalTable") {
