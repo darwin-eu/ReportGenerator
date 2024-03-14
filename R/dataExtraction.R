@@ -90,13 +90,6 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
   resultType <- NULL
 
   if (nrow(resultsData) > 0 && !endsWith(fileName, "dbinfo.csv") && !endsWith(fileName, "metadata.csv")) {
-    if ("result_type" %in% resultsColumns) {
-      resultType <- unique(resultsData$result_type)
-      if (resultType == "Summary characteristics") {
-        resultsData$result_type <- "summarised_characteristics"
-        resultType <- "summarised_characteristics"
-      }
-    }
     for (pkg in names(configData)) {
       pkgConfigData <- configData[[pkg]]
 
