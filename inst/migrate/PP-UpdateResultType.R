@@ -13,7 +13,7 @@ if (!file.exists(inputZipFile)) {
   stop("Input file does not exist!")
 }
 tempDir <- tempdir()
-outDir <- file.path(tempDir, gsub(".zip", "", basename(zipFile)))
+outDir <- file.path(tempDir, gsub(".zip", "", basename(inputZipFile)))
 utils::unzip(zipfile = inputZipFile,
              exdir = tempDir)
 
@@ -53,7 +53,7 @@ for (filename in ppFiles) {
 
 # create zip
 if (anyUpdates) {
-  utils::zip(zipfile =outputZipFile, files = file.path(outDir, files))
+  utils::zip(zipfile = outputZipFile, files = file.path(outDir, files), extras = "-j")
   message(glue::glue("The updated zip file is available at {outputZipFile}"))
 } else {
   message("No modifications made: your zip file is already up-to-date!")
