@@ -180,8 +180,6 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
               log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
-          } else {
-            log4r::info(logger, glue::glue("LoadFileData, unknown val: {val}"))
           }
         }
       }
