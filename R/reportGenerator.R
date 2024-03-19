@@ -123,7 +123,7 @@ reportGenerator <- function(logger = NULL) {
       uploadedFileDataList <- joinDatabase(fileDataPath = fileDataPath,
                                            fileName = fileName,
                                            csvLocation = csvLocation,
-                                           logger)
+                                           logger = logger)
       if (length(uploadedFileDataList) == 0) {
         show_alert(title = "Data mismatch",
                    text = "No valid package files found")
