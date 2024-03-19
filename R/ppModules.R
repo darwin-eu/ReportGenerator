@@ -63,7 +63,8 @@ characteristicsUI <- function(id, uploadedFiles) {
                                   height = "80px")
         ),
       ),
-      fluidRow(column(4, actionButton(ns(lockName), "Add item to report"))),
+      fluidRow(createAddItemToReportUI(ns(lockName)),
+               column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))),
       tags$br(),
       fluidRow(
         tabsetPanel(type = "tabs",
@@ -152,7 +153,8 @@ characteristicsUI <- function(id, uploadedFiles) {
                                   height = "80px")
         ),
       ),
-      fluidRow(column(4, actionButton(ns(lockName), "Add item to report"))),
+      fluidRow(createAddItemToReportUI(ns(lockName)),
+               column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))),
       tags$br(),
       fluidRow(
         tabsetPanel(type = "tabs",
@@ -194,30 +196,25 @@ createDataTable <- function(data, tableName = "result") {
 }
 
 characteristicsServer <- function(id, dataset) {
+
   moduleServer(id, function(input, output, session) {
 
-    if (id == "characteristics") {
-      dataPP <- reactive({
-        dataset() %>% filter(cdm_name %in% input$cdm_name,
-                             group_level %in% input$group_level,
-                             strata_name %in% input$strata_name,
-                             variable %in% input$variable,
-                             variable_level %in% input$variable_level,
-                             estimate_type %in% input$estimate_type) %>%
-          mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
-      })
-    } else {
-      dataPP <- reactive({
-        dataset() %>% filter(cdm_name %in% input$cdm_name,
-                             group_level %in% input$group_level,
-                             strata_name %in% input$strata_name,
-                             variable %in% input$variable,
-                             variable_level %in% input$variable_level,
-                             table_name %in% input$table_name,
-                             estimate_type %in% input$estimate_type) %>%
-          mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
-      })
-    }
+    dataPP <- reactive({
+      result <- dataset() %>% filter(cdm_name %in% input$cdm_name,
+                                     group_level %in% input$group_level,
+                                     strata_name %in% input$strata_name,
+                                     variable %in% input$variable,
+                                     variable_level %in% input$variable_level,
+                                     estimate_type %in% input$estimate_type)
+      if (id != "characteristics") {
+        result %>% filter(table_name %in% input$table_name)
+      }
+      if (!is.na(input$top_n)) {
+        result <- result %>% dplyr::slice_head(n = input$top_n)
+      }
+      result %>%
+        mutate(estimate = ifelse(estimate_type == "percentage", round(as.numeric(estimate), 2), estimate))
+    })
 
     output$summarisedTable <- DT::renderDataTable(server = FALSE, {
       createDataTable(dataPP())
