@@ -47,7 +47,8 @@ Imports:
     shinycssloaders,
     shinyjs,
     rlang,
-    tidyselect
+    tidyselect,
+    log4r
 Suggests:
     testthat,
     rmarkdown,

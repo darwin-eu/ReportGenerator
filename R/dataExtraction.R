@@ -19,14 +19,16 @@
 #' @param fileDataPath File path(s) in character
 #' @param fileName Name of the file in character to process in case the input is only csv
 #' @param csvLocation Path folder location to uncompress the zip files
+#' @param logger logger object
 #'
 #' @return A list of dataframes
 #'
 #' @import yaml
 #' @export
-joinDatabase <- function(fileDataPath = NULL,
+joinDatabase <- function(fileDataPath,
                          fileName = NULL,
-                         csvLocation = NULL) {
+                         csvLocation,
+                         logger) {
 
   # Loading yml file
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
@@ -34,6 +36,7 @@ joinDatabase <- function(fileDataPath = NULL,
 
   # Check zip
   if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
+    log4r::info(logger, glue::glue("Processing zip file(s), length: {length(fileDataPath)}"))
     # Empty list to allocate data
     data <- list()
     # Folder count to allocate multiple databases
@@ -62,15 +65,16 @@ joinDatabase <- function(fileDataPath = NULL,
           databaseName <- metadata$cdmSourceName
         }
         # Checks the type of every individual file
-        data <- loadFileData(data, file, configData, resultsData, resultsColumns, databaseName)
+        data <- loadFileData(data, file, configData, resultsData, resultsColumns, databaseName, logger)
       }
     }
   } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
+    log4r::info(logger, glue::glue("Processing csv file(s), length: {length(fileDataPath)}"))
     data <- list()
     for (i in seq(1:length(fileDataPath))) {
       resultsData <- read_csv(fileDataPath[i], show_col_types = FALSE)
       resultsColumns <- names(resultsData)
-      data <- loadFileData(data, fileName[i], configData, resultsData, resultsColumns, databaseName = NULL)
+      data <- loadFileData(data, fileName[i], configData, resultsData, resultsColumns, databaseName = NULL, logger)
     }
   }
   return(data)
@@ -84,9 +88,10 @@ joinDatabase <- function(fileDataPath = NULL,
 #' @param resultsData the loaded file data
 #' @param resultsColumns the loaded file columns
 #' @param databaseName db name
+#' @param logger logger object
 #'
 #' @return the list with data
-loadFileData <- function(data, fileName, configData, resultsData, resultsColumns, databaseName) {
+loadFileData <- function(data, fileName, configData, resultsData, resultsColumns, databaseName, logger) {
   resultType <- NULL
 
   if (nrow(resultsData) > 0 && !endsWith(fileName, "dbinfo.csv") && !endsWith(fileName, "metadata.csv")) {
@@ -112,7 +117,7 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
           configColumns <- pkgConfigData[[resultType]]
           configColumns <- unlist(configColumns$names)
           if (all(configColumns %in% resultsColumns)) {
-            message(paste0(resultType, ": match (using resultType)"))
+            log4r::info(logger, glue::glue("Match file using resultType: {resultType}"))
             data[[pkg]][[resultType]] <- bind_rows(data[[pkg]][[resultType]], resultsData)
           }
         }
@@ -122,12 +127,12 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
           configColumns <- unlist(configColumns$names)
           if (val == "incidence_attrition") {
             if (all(configColumns %in% resultsColumns)) {
-              message(paste0(val, ": match"))
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           } else if (val == "prevalence_attrition") {
             if (all(configColumns %in% resultsColumns)) {
-              message(paste0(val, ": match"))
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           } else if (val == "incidence_estimates") {
@@ -135,7 +140,7 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
               if ("denominator_days_prior_history" %in% resultsColumns) {
                 colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
               }
-              message(paste0(val, ": match"))
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           } else if (val == "prevalence_estimates") {
@@ -143,7 +148,7 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
               if ("denominator_days_prior_history" %in% resultsColumns) {
                 colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
               }
-              message(paste0(val, ": match"))
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           } else if (val == "treatmentPathways") {
@@ -152,29 +157,31 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
                 resultsData <- mutate(resultsData,
                                       cdm_name = databaseName)
               }
-              message(paste0(val, ": match"))
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           } else if (val == "Summarised Characteristics") {
             if (all(configColumns %in% resultsColumns)) {
-              message(paste0(val, ": match"))
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           } else if (val == "Summarised Large Scale Characteristics") {
             if (all(configColumns %in% resultsColumns)) {
-              message(paste0(val, ": match"))
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           } else if (val == "Survival estimate") {
             if (all(configColumns %in% resultsColumns)) {
-              message(paste0(val, ": match"))
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           } else if (val == "Survival cumulative incidence") {
             if (all(configColumns %in% resultsColumns)) {
-              message(paste0(val, ": match"))
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
+          } else {
+            log4r::info(logger, glue::glue("LoadFileData, unknown val: {val}"))
           }
         }
       }
@@ -192,14 +199,13 @@ loadFileData <- function(data, fileName, configData, resultsData, resultsColumns
 #' @param version A string to identify which version of IncidencePrevalence is used to generate the results.
 #'
 #' @return Adds column names to the variablesConfig.yaml
-#' @export
+#'
 #' @import dplyr
 #' @importFrom utils unzip
 #' @importFrom readr read_csv
 variablesConfigYaml <- function(fileDataPath = NULL,
                                 package = "IncidencePrevalence",
                                 version = NULL) {
-  # fileDataPath <- fileDataPath[1]
 
   if (package == "IncidencePrevalence") {
     csvLocation <- file.path(tempdir(), "dataLocation")
@@ -292,14 +298,20 @@ variablesConfigYaml <- function(fileDataPath = NULL,
   }
 }
 
-dataCleanAttrition <- function(incidence_attrition = NULL,
-                               prevalence_attrition = NULL) {
-  if (!is.null(prevalence_attrition)) {
-    prevalence_attrition$reason <- gsub("Prior history requirement not fullfilled during study period",
+#' Clean attrition data
+#'
+#' `dataCleanAttrition()` clean incidence/prevalence attrition data
+#'
+#' @param attrition attrition data
+#'
+#' @return the updated attrition
+dataCleanAttrition <- function(attrition) {
+  if (!is.null(attrition)) {
+    attrition$reason <- gsub("Prior history requirement not fullfilled during study period",
                                         "Prior history requirement not fulfilled during study period ",
-                                        prevalence_attrition$reason)
-    if (!("reason_id" %in% names(prevalence_attrition))) {
-      prevalence_attrition <- prevalence_attrition %>%
+                             attrition$reason)
+    if (!("reason_id" %in% names(attrition))) {
+      attrition <- attrition %>%
         mutate(reason_id = case_when(reason == "Starting population"  ~ 1,
                                      reason == "Missing year of birth"  ~ 2,
                                      reason == "Missing sex"  ~ 3,
@@ -317,7 +329,7 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
                number_subjects = current_n,
                excluded_subjects = excluded)
     } else {
-      prevalence_attrition <- prevalence_attrition %>%
+      attrition <- attrition %>%
         mutate(reason_id = case_when(reason == "Starting population"  ~ 1,
                                      reason == "Missing year of birth"  ~ 2,
                                      reason == "Missing sex"  ~ 3,
@@ -333,47 +345,7 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
                                      reason == "Not observed during the complete database interval"  ~ 14,
                                      reason == "Do not satisfy full contribution requirement for an interval"  ~ 16))
     }
-    return(prevalence_attrition)
-  } else if (!is.null(incidence_attrition)) {
-    incidence_attrition$reason <- gsub("Prior history requirement not fullfilled during study period",
-                                       "Prior history requirement not fulfilled during study period ",
-                                       incidence_attrition$reason)
-    if (!("reason_id" %in% names(incidence_attrition))) {
-      incidence_attrition <- incidence_attrition %>%
-        mutate(reason_id = case_when(reason == "Starting population"  ~ 1,
-                                     reason == "Missing year of birth"  ~ 2,
-                                     reason == "Missing sex"  ~ 3,
-                                     reason == "Cannot satisfy age criteria during the study period based on year of birth"  ~ 4,
-                                     reason == "No observation time available during study period"  ~ 5,
-                                     reason == "Doesn't satisfy age criteria during the study period"  ~ 6,
-                                     reason == "Prior history requirement not fulfilled during study period"  ~ 7,
-                                     reason == "No observation time available after applying age and prior history criteria"  ~ 8,
-                                     reason == "Not Female"  ~ 9,
-                                     reason == "Not Male"  ~ 10,
-                                     reason == "Starting analysis population" ~ 11,
-                                     reason == "Excluded due to prior event (do not pass outcome washout during study period)" ~ 12,
-                                     reason == "Not observed during the complete database interval"  ~ 14,
-                                     reason == "Do not satisfy full contribution requirement for an interval"  ~ 16),
-               number_subjects = current_n,
-               excluded_subjects = excluded)
-    } else {
-      incidence_attrition <- incidence_attrition %>%
-        mutate(reason_id = case_when(reason == "Starting population"  ~ 1,
-                                     reason == "Missing year of birth"  ~ 2,
-                                     reason == "Missing sex"  ~ 3,
-                                     reason == "Cannot satisfy age criteria during the study period based on year of birth"  ~ 4,
-                                     reason == "No observation time available during study period"  ~ 5,
-                                     reason == "Doesn't satisfy age criteria during the study period"  ~ 6,
-                                     reason == "Prior history requirement not fulfilled during study period"  ~ 7,
-                                     reason == "No observation time available after applying age and prior history criteria"  ~ 8,
-                                     reason == "Not Female"  ~ 9,
-                                     reason == "Not Male"  ~ 10,
-                                     reason == "Starting analysis population" ~ 11,
-                                     reason == "Excluded due to prior event (do not pass outcome washout during study period)" ~ 12,
-                                     reason == "Not observed during the complete database interval"  ~ 14,
-                                     reason == "Do not satisfy full contribution requirement for an interval"  ~ 16))
-    }
-    return(incidence_attrition)
+    return(attrition)
   }
 }
 

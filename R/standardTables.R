@@ -24,8 +24,8 @@
 #' @export
 table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 
-  prevalence_attrition <- dataCleanAttrition(prevalence_attrition = prevalence_attrition)
-  incidence_attrition <- dataCleanAttrition(incidence_attrition = incidence_attrition)
+  prevalence_attrition <- dataCleanAttrition(attrition = prevalence_attrition)
+  incidence_attrition <- dataCleanAttrition(attrition = incidence_attrition)
 
   if (length(unique(prevalence_attrition$cdm_name)) == 1) {
 
@@ -252,11 +252,7 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 #' @export
 table1Att <- function(attritionData, attritionDataType) {
 
-  if (attritionDataType == "incidence") {
-    attritionData <- dataCleanAttrition(incidence_attrition = attritionData)
-  } else {
-    attritionData <- dataCleanAttrition(prevalence_attrition = attritionData)
-  }
+  attritionData <- dataCleanAttrition(attrition = attritionData)
 
   if (length(unique(attritionData$cdm_name)) == 1) {
     # Table data incidence

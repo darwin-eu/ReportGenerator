@@ -89,6 +89,11 @@ reportGenerator <- function() {
 
   server <- function(input, output, session) {
 
+    # create logger
+    log_file <- glue::glue("log.txt")
+    logger <- log4r::logger(threshold = "INFO", appenders = list(log4r::console_appender(), log4r::file_appender(log_file)))
+    log4r::info(logger, "Start ReportGenerator")
+
     # 1. Load data
     datasetLoadServer("StudyPackage")
 
@@ -113,7 +118,8 @@ reportGenerator <- function() {
       # Joins one or several zips into the reactive value
       uploadedFileDataList <- joinDatabase(fileDataPath = fileDataPath,
                                            fileName = fileName,
-                                           csvLocation = csvLocation)
+                                           csvLocation = csvLocation,
+                                           logger)
       if (length(uploadedFileDataList) == 0) {
         show_alert(title = "Data mismatch",
                    text = "No valid package files found")
@@ -454,7 +460,8 @@ reportGenerator <- function() {
         }
         generateReport(reportDocx,
                        reportItems,
-                       file)
+                       file,
+                       logger)
         shinyjs::enable("generateReport")
       }
     )
