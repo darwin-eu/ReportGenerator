@@ -1,27 +1,22 @@
 attritionUI <- function(id, uploadedFiles) {
   ns <- NS(id)
-  if (id == "Table - Number of participants") {
 
+  if (id == "Table - Number of participants") {
     lockName <- "lockTableNumPar"
     analysisChoices <- unique(uploadedFiles$dataIP$incidence_attrition$analysis_id)
     captionText <- table1aAutText(uploadedFiles$dataIP$incidence_attrition, uploadedFiles$dataIP$prevalence_attrition)
     outputTableName <- "previewTableAtt"
-
   } else if (id == "Table - Incidence Attrition") {
-
     lockName <- "lockTableIncAtt"
     analysisChoices <- unique(uploadedFiles$dataIP$incidence_attrition$analysis_id)
     captionText <- tableAttrition(uploadedFiles$dataIP$incidence_attrition)
     outputTableName <- "previewTableAttInc"
-
-    } else if (id == "Table - Prevalence Attrition") {
-
-      lockName <- "lockTablePrevAtt"
-      analysisChoices <- unique(uploadedFiles$dataIP$prevalence_attrition$analysis_id)
-      captionText <- tableAttrition(uploadedFiles$dataIP$prevalence_attrition)
-      outputTableName <- "previewTableAttPrev"
-
-    }
+  } else if (id == "Table - Prevalence Attrition") {
+    lockName <- "lockTablePrevAtt"
+    analysisChoices <- unique(uploadedFiles$dataIP$prevalence_attrition$analysis_id)
+    captionText <- tableAttrition(uploadedFiles$dataIP$prevalence_attrition)
+    outputTableName <- "previewTableAttPrev"
+  }
 
   tagList(
     fluidRow(
@@ -36,11 +31,8 @@ attritionUI <- function(id, uploadedFiles) {
                                 height = "80px")
       )
     ),
-    fluidRow(
-      column(4,
-             actionButton(ns(lockName), "Add item to report")
-      )
-    ),
+    fluidRow(createAddItemToReportUI(ns(lockName)),
+             column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))),
     tags$br(),
     fluidRow(
       column(12,
@@ -52,6 +44,7 @@ attritionUI <- function(id, uploadedFiles) {
 
 
 attritionServer <- function(id, uploadedFiles) {
+
   moduleServer(id, function(input, output, session) {
 
       prevalenceAttritionCommon <- reactive({
@@ -67,6 +60,9 @@ attritionServer <- function(id, uploadedFiles) {
           commonData <- commonData %>%
             mutate_if(is.numeric, list(~replace_na(., 0))) %>%
             filter(analysis_id %in% c(input$analysisIdTable1))
+          if (!is.na(input$top_n)) {
+            commonData <- commonData %>% dplyr::slice_head(n = input$top_n)
+          }
           commonData
         } else {
           NULL
@@ -88,6 +84,9 @@ attritionServer <- function(id, uploadedFiles) {
           commonData <- commonData %>%
             mutate_if(is.numeric, list(~replace_na(., 0))) %>%
             filter(analysis_id %in% c(input$analysisIdTable1))
+          if (!is.na(input$top_n)) {
+            commonData <- commonData %>% dplyr::slice_head(n = input$top_n)
+          }
           commonData
         } else {
           NULL
@@ -97,7 +96,6 @@ attritionServer <- function(id, uploadedFiles) {
       addObject <- reactiveVal()
 
       if (id == "Table - Number of participants") {
-
         output$previewTableAtt <- renderTable({
           prevalence_attrition <- prevalenceAttritionCommon()
           incidence_attrition <- incidenceAttritionCommon()
@@ -113,13 +111,9 @@ attritionServer <- function(id, uploadedFiles) {
                                                          caption = input$captionTableAtt))
           )
         })
-
       } else if (id == "Table - Incidence Attrition") {
-
         attritionDataType <- "incidence"
-
         output$previewTableAttInc <- renderTable({
-          incidence_attrition <- incidenceAttritionCommon()
           incidence_attrition <- incidenceAttritionCommon()
           eval(parse(text = getItemConfig(input = "title",
                                           output = "function",
@@ -133,11 +127,8 @@ attritionServer <- function(id, uploadedFiles) {
                                                       caption = input$captionTableAtt))
           )
         })
-
       } else if (id == "Table - Prevalence Attrition") {
-
         attritionDataType <- "prevalence"
-
         output$previewTableAttPrev <- renderTable({
             prevalence_attrition <- prevalenceAttritionCommon()
             eval(parse(text = getItemConfig(input = "title",
@@ -153,7 +144,6 @@ attritionServer <- function(id, uploadedFiles) {
             )
           })
       }
-
       return(addObject)
   })
 }

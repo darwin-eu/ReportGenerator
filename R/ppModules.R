@@ -173,28 +173,6 @@ characteristicsUI <- function(id, uploadedFiles) {
   }
 }
 
-createDataTable <- function(data, tableName = "result") {
-  DT::datatable(data,
-                extensions = 'Buttons',
-                options = list(pageLength = 10,
-                               paging = TRUE,
-                               searching = TRUE,
-                               fixedColumns = TRUE,
-                               autoWidth = TRUE,
-                               ordering = TRUE,
-                               scrollX = TRUE,
-                               dom = 'Bfrtip',
-                               buttons =
-                                 list(list(
-                                   extend = "collection",
-                                   buttons = list(
-                                     list(extend = "csv", title = tableName),
-                                     list(extend = "excel", title = tableName)),
-                                   text = "Download"
-                                 ))),
-                class = "display")
-}
-
 characteristicsServer <- function(id, dataset) {
 
   moduleServer(id, function(input, output, session) {

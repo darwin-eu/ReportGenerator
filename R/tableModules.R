@@ -8,26 +8,40 @@ tableUI <- function(id, uploadedFiles) {
                                 height = "130px")
       )
     ),
-    fluidRow(
-      column(4,
-             actionButton(ns("lockTable"), "Add item to report")
-      ),
-    ),
+    fluidRow(createAddItemToReportUI(ns("lockTable")),
+            column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))),
     tags$br(),
-    fluidRow(
-      column(12,
-             gt_output(ns("previewTable"))
-      ),
+    tabsetPanel(type = "tabs",
+                tabPanel("Table",
+                         fluidRow(column(12, gt_output(ns("previewTable"))))),
+                tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("inputDataTable"))))
     )
   )
 }
 
 tableServer <- function(id, uploadedFiles) {
+
   moduleServer(id, function(input, output, session) {
 
-    output$previewTable <- render_gt({
+    getData <- reactive({
       uploadedFiles <- uploadedFiles()
-      incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
+      uploadedFiles$dataIP$incidence_estimates
+    })
+
+    getTopData <- reactive({
+      result <- getData()
+      if (!is.na(input$top_n)) {
+        result <- result %>% dplyr::slice_head(n = input$top_n)
+      }
+      result
+    })
+
+    output$inputDataTable <- DT::renderDataTable(server = FALSE, {
+      createDataTable(getTopData())
+    })
+
+    output$previewTable <- render_gt({
+      incidence_estimates <- getData()
       eval(parse(text = getItemConfig(input = "title",
                                       output = "function",
                                       inputValue = id)))
@@ -36,7 +50,7 @@ tableServer <- function(id, uploadedFiles) {
     addObject <- reactiveVal()
     observeEvent(input$lockTable, {
       addObject(
-        list(`Table - Number of participants by sex and age group` = list(incidence_estimates = uploadedFiles()$dataIP$incidence_estimates,
+        list(`Table - Number of participants by sex and age group` = list(incidence_estimates = getTopData(),
                                                                           caption = input$captionTable))
       )
     })
