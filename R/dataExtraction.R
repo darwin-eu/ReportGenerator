@@ -354,6 +354,7 @@ dataCleanAttrition <- function(attrition) {
 #' @param testFilesTP testthat dir of treatment pattern files
 #' @param testFilesPP testthat dir of patient profiles files
 #' @param testFilesCS testthat dir of cohort survival files
+#' @param logger logger object
 #'
 #' @importFrom usethis use_data
 #'
@@ -361,7 +362,8 @@ dataCleanAttrition <- function(attrition) {
 testData <- function(testFilesIP = testthat::test_path("IP", "0.6.0", "zip"),
                      testFilesTP = testthat::test_path("TP", "2.5.2", "csv", "CHUBX"),
                      testFilesPP = testthat::test_path("PP", "0.5.1", "zip"),
-                     testFilesCS = testthat::test_path("CS", "0.2.5", "zip")) {
+                     testFilesCS = testthat::test_path("CS", "0.2.5", "zip"),
+                     logger) {
   checkmate::assertDirectoryExists(testFilesIP)
   checkmate::assertDirectoryExists(testFilesTP)
   checkmate::assertDirectoryExists(testFilesPP)
@@ -389,12 +391,15 @@ testData <- function(testFilesIP = testthat::test_path("IP", "0.6.0", "zip"),
 
   # Extract
   testData <- joinDatabase(fileDataPath  = uploadedFilesIP,
-                           csvLocation = csvLocation)$IncidencePrevalence
+                           csvLocation = csvLocation,
+                           logger = logger)$IncidencePrevalence
   testData[["treatmentPathways_test"]] <- treatmentPathways_test
   testDataPP <- joinDatabase(fileDataPath  = uploadedFilesPP,
-                             csvLocation = csvLocation)$PatientProfiles
+                             csvLocation = csvLocation,
+                             logger = logger)$PatientProfiles
   testDataCS <- joinDatabase(fileDataPath  = uploadedFilesCS,
-                             csvLocation = csvLocation)$CohortSurvival
+                             csvLocation = csvLocation,
+                             logger = logger)$CohortSurvival
 
   testData <- c(testData, testDataPP, testDataCS)
   unlink(csvLocation, recursive = TRUE)

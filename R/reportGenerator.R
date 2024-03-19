@@ -18,6 +18,8 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
+#' @param logger optional logger object
+#'
 #' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml TreatmentPatterns PatientProfiles
 #' @importFrom sortable bucket_list add_rank_list sortable_options
 #' @importFrom utils read.csv tail unzip
@@ -27,7 +29,7 @@
 #' @importFrom TreatmentPatterns createSankeyDiagram
 #' @importFrom DT renderDT DTOutput
 #' @export
-reportGenerator <- function() {
+reportGenerator <- function(logger = NULL) {
 
   # set global options
   options(shiny.maxRequestSize = 1000*1024^2, spinner.type = 5, spinner.color = "#0dc5c1",
@@ -90,8 +92,10 @@ reportGenerator <- function() {
   server <- function(input, output, session) {
 
     # create logger
-    log_file <- glue::glue("log.txt")
-    logger <- log4r::logger(threshold = "INFO", appenders = list(log4r::console_appender(), log4r::file_appender(log_file)))
+    if (is.null(logger)) {
+      log_file <- glue::glue("log.txt")
+      logger <- log4r::logger(threshold = "INFO", appenders = list(log4r::console_appender(), log4r::file_appender(log_file)))
+    }
     log4r::info(logger, "Start ReportGenerator")
 
     # 1. Load data

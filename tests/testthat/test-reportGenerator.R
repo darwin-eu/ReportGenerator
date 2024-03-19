@@ -1,4 +1,4 @@
-testData <- testData()
+testData <- testData(logger = logger)
 
 incidence_attrition_test <- testData$incidence_attrition
 incidence_estimates_test <- testData$incidence_estimates
@@ -11,7 +11,7 @@ survivalEstimate <- testData$`Survival estimate`
 survivalCumulativeIncidence <- testData$`Survival cumulative incidence`
 
 test_that("datasetLoad IncPrev", {
-  testServer(reportGenerator(), {
+  testServer(reportGenerator(logger), {
     session$setInputs(datasetLoad = data.frame(name = c("StudyResults.zip"),
                                                datapath = c(test_path("studies",
                                                                       "zip",
@@ -22,7 +22,7 @@ test_that("datasetLoad IncPrev", {
 })
 
 test_that("reset data", {
-  testServer(reportGenerator(), {
+  testServer(reportGenerator(logger), {
     session$setInputs(resetData = TRUE)
     expect_equal(uploadedFiles$dataIP, NULL)
     expect_equal(uploadedFiles$dataTP, NULL)
@@ -35,7 +35,7 @@ test_that("reset data", {
 })
 
 test_that("summarised Characteristics and LSC", {
-  testServer(reportGenerator(), {
+  testServer(reportGenerator(logger), {
     expect_s3_class(characteristicsUI("characteristics",
                                       summarisedCharacteristics), "shiny.tag.list")
     expect_s3_class(characteristicsServer("characteristics",
@@ -48,7 +48,7 @@ test_that("summarised Characteristics and LSC", {
 })
 
 test_that("survival modules classes", {
-  testServer(reportGenerator(), {
+  testServer(reportGenerator(logger), {
     expect_s3_class(cohortSurvivalUI("survivalTable", survivalEstimate), "shiny.tag.list")
     expect_s3_class(cohortSurvivalServer("survivalTable", survivalEstimate), "reactiveVal")
     expect_s3_class(cohortSurvivalUI("survivalPlot", survivalEstimate), "shiny.tag.list")
