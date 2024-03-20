@@ -289,3 +289,25 @@ createDownloadPlotUI <- function(ns) {
           column(2, tagList(shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
                             shiny::br(), downloadButton(ns("downloadFigure"), "Download Plot"))))
 }
+
+createDataTable <- function(data, tableName = "result") {
+  DT::datatable(data,
+                extensions = 'Buttons',
+                options = list(pageLength = 10,
+                               paging = TRUE,
+                               searching = TRUE,
+                               fixedColumns = TRUE,
+                               autoWidth = TRUE,
+                               ordering = TRUE,
+                               scrollX = TRUE,
+                               dom = 'Bfrtip',
+                               buttons =
+                                 list(list(
+                                   extend = "collection",
+                                   buttons = list(
+                                     list(extend = "csv", title = tableName),
+                                     list(extend = "excel", title = tableName)),
+                                   text = "Download"
+                                 ))),
+                class = "display")
+}
