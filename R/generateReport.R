@@ -19,9 +19,10 @@
 #' @param reportDocx the report document
 #' @param dataReportList the list of items to be added
 #' @param fileName the name of the report file
+#' @param logger logger object
 #'
 #' @return NULL, the report is written to given file
-generateReport <- function(reportDocx, dataReportList, fileName) {
+generateReport <- function(reportDocx, dataReportList, fileName, logger) {
   errorMessage <- checkmate::makeAssertCollection()
   checkmate::assertClass(reportDocx, "rdocx", add = errorMessage)
   checkmate::assertList(dataReportList, add = errorMessage)
@@ -30,6 +31,7 @@ generateReport <- function(reportDocx, dataReportList, fileName) {
 
   if (length(dataReportList) > 0) {
     # Loop through ever object selected in the menu
+    log4r::info(logger, glue::glue("Start generating report, number of items: {length(dataReportList)}"))
     for (i in seq(1:length(dataReportList))) {
       # Get the function to generate and print in report
       titleText <- names(dataReportList[[i]])
@@ -127,9 +129,10 @@ generateReport <- function(reportDocx, dataReportList, fileName) {
       }
     }
   } else {
-    message("No items added to the report")
+    log4r::warn(logger, "No items added to the report")
   }
   body_add_toc(reportDocx)
+  log4r::info(logger, "Printing report")
   print(reportDocx,
         target = fileName)
 }

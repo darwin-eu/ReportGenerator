@@ -4,7 +4,7 @@
 \alias{generateReport}
 \title{Generate report}
 \usage{
-generateReport(reportDocx, dataReportList, fileName)
+generateReport(reportDocx, dataReportList, fileName, logger)
 }
 \arguments{
 \item{reportDocx}{the report document}
@@ -12,6 +12,8 @@ generateReport(reportDocx, dataReportList, fileName)
 \item{dataReportList}{the list of items to be added}
 
 \item{fileName}{the name of the report file}
+
+\item{logger}{logger object}
 }
 \value{
 NULL, the report is written to given file

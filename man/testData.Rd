@@ -8,7 +8,8 @@ testData(
   testFilesIP = testthat::test_path("IP", "0.6.0", "zip"),
   testFilesTP = testthat::test_path("TP", "2.5.2", "csv", "CHUBX"),
   testFilesPP = testthat::test_path("PP", "0.5.1", "zip"),
-  testFilesCS = testthat::test_path("CS", "0.2.5", "zip")
+  testFilesCS = testthat::test_path("CS", "0.2.5", "zip"),
+  logger
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ testData(
 \item{testFilesPP}{testthat dir of patient profiles files}
 
 \item{testFilesCS}{testthat dir of cohort survival files}
+
+\item{logger}{logger object}
 }
 \value{
 sysdata.rda instruction

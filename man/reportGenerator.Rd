@@ -4,7 +4,10 @@
 \alias{reportGenerator}
 \title{ReportGenerator Shiny App}
 \usage{
-reportGenerator()
+reportGenerator(logger = NULL)
+}
+\arguments{
+\item{logger}{optional logger object}
 }
 \description{
 `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.

@@ -5,7 +5,8 @@ test_that("Loading 1 zip files whole study", {
                              pattern = "zip",
                              full.names = TRUE)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation,
+                                logger = logger)
   expect_equal(length(uploadedFiles), 4)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -18,7 +19,8 @@ test_that("Loading multiple zip files whole study", {
                              pattern = "zip",
                              full.names = TRUE)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation,
+                                logger = logger)
   expect_equal(length(uploadedFiles), 4)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -53,7 +55,8 @@ test_that("Loading 1 csv files whole study", {
   fileName <- tools::file_path_sans_ext(fileName)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[3],
                                 fileName = fileName[3],
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation,
+                                logger = logger)
   expect_equal(length(uploadedFiles), 1)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -70,7 +73,8 @@ test_that("Loading multiple csv files whole study", {
   fileName <- tools::file_path_sans_ext(fileName)
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
                                 fileName = fileName,
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation,
+                                logger = logger)
   expect_equal(length(uploadedFiles), 4)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
