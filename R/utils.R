@@ -239,6 +239,7 @@ exportResults <- function(resultList,
                      row.names = FALSE
     )
   }
+
   zip::zip(
     zipfile = file.path(outputFolder, paste0(zipName, ".zip")),
     files = list.files(tempDir, full.names = TRUE)
@@ -272,19 +273,4 @@ saveGGPlot <- function(file, plot) {
                   width = 20,
                   dpi = 300,
                   units = "cm")
-}
-
-additionalCols <- function(data) {
-
-  additionalCols <- data %>%
-    pull(additional_name) %>%
-    unique() %>%
-    str_split(" and ") %>%
-    unlist()
-
-  result <- data %>%
-    separate_wider_delim(additional_level, delim = " and ", names = additionalCols) %>%
-    select(!additional_name)
-
-  return(result)
 }

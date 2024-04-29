@@ -77,12 +77,12 @@ createSankeyDiagram:
     - diagram
 summaryCharacteristics:
   title: "Summarised Characteristics"
-  function: gtCharacteristics(summarisedCharacteristics)
+  function: tableCharacteristics(summarisedCharacteristics)
   type:
     - summarised_characteristics
 summarised_large_scale_characteristics:
   title: "Summarised Large Scale Characteristics"
-  function: gtCharacteristics(summarisedCharacteristics)
+  function: tableCharacteristics(summarisedCharacteristics)
   type:
     - summarised_large_scale_characteristics
 Survival table:

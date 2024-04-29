@@ -1,9 +1,26 @@
-# test_that("mock data works", {
-#   outputDir <- file.path(tempdir(), "dataLocation")
-#   dir.create(outputDir)
-#   ReportGenerator::generateMockData(databaseName = c("CHUBX"),
-#                    simulatePopulation = FALSE,
-#                    outputDir = outputDir)
-#   expect_equal(list.files(file.path(outputDir, "0.6.0")),"mock_data_ReportGenerator_CHUBX.zip")
-#   unlink(outputDir, recursive = TRUE)
+# Tests waiting for latest release that solves update of dbplyr
+
+# test_that("generateMockData result output", {
+#   outputPath <- file.path(tempdir(), "dataLocation")
+#   dir.create(outputPath)
+#   generateMockData(databaseName = c("CHUBX"),
+#                    simulatePopulation = TRUE,
+#                    outputPath = outputPath,
+#                    internal = FALSE)
+#   expect_equal(list.files(file.path(outputPath)),"mock_data_CHUBX.zip")
+#   unlink(outputPath, recursive = TRUE)
 # })
+
+# test_that("generateMockData result output", {
+#   outputPath <- file.path(tempdir(), "dataLocation")
+#   dir.create(outputPath)
+#   generateMockData(databaseName = c("CHUBX", "CPRD GOLD", "IMASIS"),
+#                    simulatePopulation = TRUE,
+#                    outputPath = outputPath,
+#                    internal = FALSE)
+#   expect_equal(list.files(file.path(outputPath)), c("mock_data_CHUBX.zip",
+#                                                     "mock_data_CPRD GOLD.zip",
+#                                                     "mock_data_IMASIS.zip"))
+#   unlink(outputPath, recursive = TRUE)
+# })
+

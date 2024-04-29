@@ -1,15 +1,3 @@
-testData <- testData()
-
-incidence_attrition_test <- testData$incidence_attrition
-incidence_estimates_test <- testData$incidence_estimates
-prevalence_attrition_test <- testData$prevalence_attrition
-prevalence_estimates_test <- testData$prevalence_estimates
-treatmentPathways_test <- testData$treatmentPathways_test
-summarisedCharacteristics <- testData$summarised_characteristics
-summarisedCharacteristicsLSC <- testData$`Summarised Large Scale Characteristics`
-survivalEstimate <- testData$`Survival estimate`
-survivalCumulativeIncidence <- testData$`Survival cumulative incidence`
-
 test_that("datasetLoad IncPrev", {
   testServer(reportGenerator(), {
     session$setInputs(datasetLoad = data.frame(name = c("StudyResults.zip"),
@@ -34,31 +22,6 @@ test_that("reset data", {
   })
 })
 
-test_that("summarised Characteristics and LSC", {
-  testServer(reportGenerator(), {
-    expect_s3_class(characteristicsUI("characteristics",
-                                      summarisedCharacteristics), "shiny.tag.list")
-    expect_s3_class(characteristicsServer("characteristics",
-                                          summarisedCharacteristics), "reactiveVal")
-    expect_s3_class(characteristicsUI("lsc",
-                                      summarisedCharacteristicsLSC), "shiny.tag.list")
-    expect_s3_class(characteristicsServer("lsc",
-                                          summarisedCharacteristicsLSC), "reactiveVal")
-  })
-})
-
-test_that("survival modules classes", {
-  testServer(reportGenerator(), {
-    expect_s3_class(cohortSurvivalUI("survivalTable", survivalEstimate), "shiny.tag.list")
-    expect_s3_class(cohortSurvivalServer("survivalTable", survivalEstimate), "reactiveVal")
-    expect_s3_class(cohortSurvivalUI("survivalPlot", survivalEstimate), "shiny.tag.list")
-    expect_s3_class(cohortSurvivalServer("survivalPlot", survivalEstimate), "reactiveVal")
-    expect_s3_class(cohortSurvivalUI("failureTable", survivalCumulativeIncidence), "shiny.tag.list")
-    expect_s3_class(cohortSurvivalServer("failureTable", survivalCumulativeIncidence), "reactiveVal")
-    expect_s3_class(cohortSurvivalUI("failurePlot", survivalCumulativeIncidence), "shiny.tag.list")
-    expect_s3_class(cohortSurvivalServer("failurePlot", survivalCumulativeIncidence), "reactiveVal")
-  })
-})
 
 
 

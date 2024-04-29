@@ -5,16 +5,18 @@
 \title{Creates a mock data set for ReportGenerator}
 \usage{
 generateMockData(
-  databaseName = c("IPCI", "CHUBX", "CPRD"),
-  outputDir = file.path(getwd(), "results")
+  databaseName = c("CHUBX", "CPRD GOLD", "IMASIS", "IPCI", "SIDIAP"),
+  simulatePopulation = TRUE,
+  outputPath = file.path(getwd(), "results"),
+  internal = FALSE
 )
 }
 \arguments{
 \item{databaseName}{A vector with the name in characters of each database.}
 
-\item{outputDir}{A character vector of the directory to export mock data.}
-
 \item{simulatePopulation}{TRUE or FALSE to simulate different population sizes. TRUE is default.}
+
+\item{outputDir}{A character vector of the directory to export mock data.}
 }
 \value{
 csv files

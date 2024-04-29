@@ -15,6 +15,7 @@ Depends:
     R (>= 3.6.1),
     dplyr
 Imports:
+    ggpubr,
     flextable,
     IncidencePrevalence,
     officer,

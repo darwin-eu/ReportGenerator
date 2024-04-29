@@ -28,14 +28,14 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
     filter(reason == "Starting population") %>%
     group_by(cdm_name,
              reason) %>%
-    summarise(current_n = unique(number_records)) %>%
+    summarise(current_n = unique(as.numeric(number_records))) %>%
     arrange(desc(current_n))
 
   tablePrevalenceAttFem <- prevalence_attrition %>%
     filter(reason == "Not Male") %>%
     group_by(cdm_name,
              reason) %>%
-    summarise(current_n = unique(number_records)) %>%
+    summarise(current_n = unique(as.numeric(number_records))) %>%
     arrange(desc(current_n))
 
   tablePrevNotObs <- prevalence_attrition %>%
@@ -107,14 +107,14 @@ tableAttrition <- function(attritionData) {
     filter(reason == "Starting population") %>%
     group_by(cdm_name,
              reason) %>%
-    summarise(current_n = unique(number_records)) %>%
+    summarise(current_n = unique(as.numeric(number_records))) %>%
     arrange(desc(current_n))
 
   tableAttFem <- attritionData %>%
     filter(reason == "Not Male") %>%
     group_by(cdm_name,
              reason) %>%
-    summarise(current_n = unique(number_records)) %>%
+    summarise(current_n = unique(as.numeric(number_records))) %>%
     arrange(desc(current_n))
 
   tablePrevNotObs <- attritionData %>%

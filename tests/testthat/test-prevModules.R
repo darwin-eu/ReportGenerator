@@ -1,0 +1,34 @@
+test_that("Prevalence per year module", {
+  testServer(reportGenerator(), {
+    uploadedFiles <- list()
+    uploadedFiles[["dataIP"]][["prevalence_estimates"]] <- testData$prevalence_estimates
+    selection <- "Plot - Prevalence per year"
+    expect_s3_class(prevalenceUI(selection, uploadedFiles), "shiny.tag.list")
+    dataPrevalenceYear <- prevalenceServer(id = selection, reactive(uploadedFiles))
+    expect_s3_class(dataPrevalenceYear, "reactiveVal")
+  })
+})
+
+test_that("Prevalence per year by sex module", {
+  testServer(reportGenerator(), {
+    uploadedFiles <- list()
+    uploadedFiles[["dataIP"]][["prevalence_estimates"]] <- testData$prevalence_estimates
+    selection <- "Plot - Prevalence per year by sex"
+    expect_s3_class(prevalenceUI(selection, uploadedFiles), "shiny.tag.list")
+    dataPrevalenceSex <- prevalenceServer(id = "Plot - Prevalence per year by sex",
+                                          reactive(uploadedFiles))
+    expect_s3_class(dataPrevalenceSex, "reactiveVal")
+  })
+})
+
+test_that("Prevalence per year by age module", {
+  testServer(reportGenerator(), {
+    uploadedFiles <- list()
+    uploadedFiles[["dataIP"]][["prevalence_estimates"]] <- testData$prevalence_estimates
+    selection <- "Plot - Prevalence per year by sex"
+    expect_s3_class(prevalenceUI(selection, uploadedFiles), "shiny.tag.list")
+    dataPrevalenceAge <- prevalenceServer(id = "Plot - Prevalence per year by age",
+                                          reactive(uploadedFiles))
+    expect_s3_class(dataPrevalenceAge, "reactiveVal")
+  })
+})

@@ -237,8 +237,8 @@ characteristicsServer <- function(id, dataset) {
     })
 
     output$summarisedTableGt <- gt::render_gt({
-      gtCharacteristics(summarisedCharacteristics = dataPP(),
-                        pivotWide = c("CDM Name", input$pivotWide))
+      dataPP <- selectCols(dataPP())
+      tableCharacteristics(result = dataPP)
     })
 
     addObject <- reactiveVal()

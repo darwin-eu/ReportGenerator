@@ -52,15 +52,17 @@ joinDatabase <- function(fileDataPath = NULL,
                                   pattern = ".csv",
                                   full.names = TRUE,
                                   recursive = TRUE)
+
+      metadata <- filesLocation[stringr::str_detect(filesLocation, "metadata")]
+      if (!identical(metadata, character(0))) {
+        databaseName <- readr::read_csv(metadata, show_col_types = FALSE) %>%
+          pull(cdmSourceName) %>%
+          unique()
+      }
       # Iterates every individual fileName
       for (fileName in filesLocation) {
         resultsData <- read_csv(fileName, show_col_types = FALSE)
         resultsColumns <- names(resultsData)
-        if (grepl("metadata.csv", fileName)) {
-          metadata <- read_csv(file = fileName,
-                               show_col_types = FALSE)
-          databaseName <- metadata$cdmSourceName
-        }
         # Checks the type of every individual fileName
         data <- loadFileData(data, fileName, configData, resultsData, resultsColumns, databaseName)
       }
@@ -112,8 +114,11 @@ loadFileData <- function(data,
               } else if (grepl("single_event", analysis_type)) {
                 resultType <- "Survival estimate"
               }
+          } else if ("summarised_characteristics" %in% resultType & length(resultType) >= 2) {
+            resultType <- "summarised_characteristics"
           }
-    data <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData) %>%
+
+    data <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
     return(data)
   } else {
     for (pkg in names(configData)) {
@@ -123,13 +128,17 @@ loadFileData <- function(data,
         configColumns <- pkgConfigData[[val]]
         configColumns <- unlist(configColumns$names)
         if (val == "incidence_attrition") {
-          if (all(configColumns %in% resultsColumns)) {
+          if (all(configColumns %in% resultsColumns) & grepl("incidence", fileName)) {
             message(paste0(val, ": match"))
+            resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
+            resultsData$excluded_records <- as.character(resultsData$excluded_records)
             data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           } else if (val == "prevalence_attrition") {
-            if (all(configColumns %in% resultsColumns)) {
+            if (all(configColumns %in% resultsColumns) & grepl("prevalence", fileName)) {
               message(paste0(val, ": match"))
+              resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
+              resultsData$excluded_records <- as.character(resultsData$excluded_records)
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
               }
             } else if (val == "incidence_estimates") {
@@ -161,7 +170,34 @@ loadFileData <- function(data,
     }
     return(data)
     }
+}
+
+additionalCols <- function(data) {
+
+  additionalCols <- data %>%
+    pull(additional_name)
+
+
+  additionalCols <- additionalCols[stringr::str_detect(additionalCols, " and ")] %>%
+    unique() %>%
+    str_split(" and ") %>%
+    unlist()
+
+  if (!is.null(additionalCols)) {
+    result <- data %>%
+      separate_wider_delim(additional_level,
+                           delim = " and ",
+                           names = additionalCols,
+                           too_few = c("align_start"),
+                           cols_remove = FALSE)
+    # %>%
+    #   select(!additional_name)
+    return(result)
+  } else {
+    return(data)
   }
+
+}
 
 getPackageData <- function(data, package, resultType, resultsColumns, resultsData, configData) {
   pkgConfigData <- configData[[package]]
@@ -169,9 +205,24 @@ getPackageData <- function(data, package, resultType, resultsColumns, resultsDat
   if (all(configColumns %in% resultsColumns)) {
     message(paste0(resultType, ": match (using resultType)"))
     resultsDataWithCols <- additionalCols(resultsData)
+    if (is.null(data[[package]])) {
+      data[[package]] <- list()
+    }
+    if (is.null(data[[package]][["summarised_characteristics"]])) {
+      data[[package]][["summarised_characteristics"]] <- data.frame()
+    }
     data[[package]][[resultType]] <- bind_rows(data[[package]][[resultType]], resultsDataWithCols)
   }
   return(data)
+}
+
+selectCols <- function(data) {
+  result <- data %>%
+    select(c(result_id, cdm_name, result_type, package_name, package_version,
+             group_name, group_level, strata_name, strata_level, variable_name,
+             variable_level, estimate_name, estimate_type, estimate_value,
+             additional_name, additional_level))
+  return(result)
 }
 
 #' Writes variablesConfig file in Yaml
@@ -368,54 +419,54 @@ dataCleanAttrition <- function(incidence_attrition = NULL,
   }
 }
 
-#' `testData()` extracts data from zip results and saves it in .rda format
-#' @param testFilesIP testthat dir location of the test files with version number of folder (internal use).
-#' @param testFilesTP testthat dir of treatment pattern files
-#' @param testFilesPP testthat dir of patient profiles files
-#' @param testFilesCS testthat dir of cohort survival files
+#' #' `testData()` extracts data from zip results and saves it in .rda format
+#' #' @param testFilesIP testthat dir location of the test files with version number of folder (internal use).
+#' #' @param testFilesTP testthat dir of treatment pattern files
+#' #' @param testFilesPP testthat dir of patient profiles files
+#' #' @param testFilesCS testthat dir of cohort survival files
+#' #'
+#' #' @importFrom usethis use_data
+#' #'
+#' #' @return sysdata.rda instruction
+#' testData <- function(testFilesIP = testthat::test_path("IP", "0.6.0", "zip"),
+#'                      testFilesTP = testthat::test_path("TP", "2.5.2", "csv", "CHUBX"),
+#'                      testFilesPP = testthat::test_path("PP", "0.5.1", "zip"),
+#'                      testFilesCS = testthat::test_path("CS", "0.2.5", "zip")) {
+#'   checkmate::assertDirectoryExists(testFilesIP)
+#'   checkmate::assertDirectoryExists(testFilesTP)
+#'   checkmate::assertDirectoryExists(testFilesPP)
+#'   checkmate::assertDirectoryExists(testFilesCS)
+#'   uploadedFilesIP <- list.files(testFilesIP,
+#'                                 pattern = ".zip",
+#'                                 full.names = TRUE,
+#'                                 recursive = TRUE)
+#'   treatmentPathways_test <- read_csv(file.path(testFilesTP, "treatmentPathways.csv"),
+#'                                      show_col_types = FALSE)
+#'   uploadedFilesPP <- list.files(testFilesPP,
+#'                                 pattern = ".zip",
+#'                                 full.names = TRUE,
+#'                                 recursive = TRUE)
+#'   uploadedFilesCS <- list.files(testFilesCS,
+#'                                 pattern = ".zip",
+#'                                 full.names = TRUE,
+#'                                 recursive = TRUE)
+#'   checkmate::assertFileExists(uploadedFilesIP)
+#'   checkmate::assertFileExists(uploadedFilesPP[1])
+#'   checkmate::assertFileExists(uploadedFilesCS[1])
+#'   checkmate::assertTibble(treatmentPathways_test)
+#'   csvLocation <- file.path(tempdir(), "dataLocation")
+#'   dir.create(csvLocation)
 #'
-#' @importFrom usethis use_data
+#'   # Extract
+#'   testData <- joinDatabase(fileDataPath  = uploadedFilesIP,
+#'                            csvLocation = csvLocation)$IncidencePrevalence
+#'   testData[["treatmentPathways_test"]] <- treatmentPathways_test
+#'   testDataPP <- joinDatabase(fileDataPath  = uploadedFilesPP,
+#'                              csvLocation = csvLocation)$PatientProfiles
+#'   testDataCS <- joinDatabase(fileDataPath  = uploadedFilesCS,
+#'                              csvLocation = csvLocation)$CohortSurvival
 #'
-#' @return sysdata.rda instruction
-testData <- function(testFilesIP = testthat::test_path("IP", "0.6.0", "zip"),
-                     testFilesTP = testthat::test_path("TP", "2.5.2", "csv", "CHUBX"),
-                     testFilesPP = testthat::test_path("PP", "0.5.1", "zip"),
-                     testFilesCS = testthat::test_path("CS", "0.2.5", "zip")) {
-  checkmate::assertDirectoryExists(testFilesIP)
-  checkmate::assertDirectoryExists(testFilesTP)
-  checkmate::assertDirectoryExists(testFilesPP)
-  checkmate::assertDirectoryExists(testFilesCS)
-  uploadedFilesIP <- list.files(testFilesIP,
-                                pattern = ".zip",
-                                full.names = TRUE,
-                                recursive = TRUE)
-  treatmentPathways_test <- read_csv(file.path(testFilesTP, "treatmentPathways.csv"),
-                                     show_col_types = FALSE)
-  uploadedFilesPP <- list.files(testFilesPP,
-                                pattern = ".zip",
-                                full.names = TRUE,
-                                recursive = TRUE)
-  uploadedFilesCS <- list.files(testFilesCS,
-                                pattern = ".zip",
-                                full.names = TRUE,
-                                recursive = TRUE)
-  checkmate::assertFileExists(uploadedFilesIP)
-  checkmate::assertFileExists(uploadedFilesPP[1])
-  checkmate::assertFileExists(uploadedFilesCS[1])
-  checkmate::assertTibble(treatmentPathways_test)
-  csvLocation <- file.path(tempdir(), "dataLocation")
-  dir.create(csvLocation)
-
-  # Extract
-  testData <- joinDatabase(fileDataPath  = uploadedFilesIP,
-                           csvLocation = csvLocation)$IncidencePrevalence
-  testData[["treatmentPathways_test"]] <- treatmentPathways_test
-  testDataPP <- joinDatabase(fileDataPath  = uploadedFilesPP,
-                             csvLocation = csvLocation)$PatientProfiles
-  testDataCS <- joinDatabase(fileDataPath  = uploadedFilesCS,
-                             csvLocation = csvLocation)$CohortSurvival
-
-  testData <- c(testData, testDataPP, testDataCS)
-  unlink(csvLocation, recursive = TRUE)
-  return(testData)
-}
+#'   testData <- c(testData, testDataPP, testDataCS)
+#'   unlink(csvLocation, recursive = TRUE)
+#'   return(testData)
+#' }

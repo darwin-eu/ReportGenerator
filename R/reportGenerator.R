@@ -26,6 +26,7 @@
 #' @importFrom gto body_add_gt
 #' @importFrom here here
 #' @importFrom TreatmentPatterns createSankeyDiagram
+#' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @importFrom DT renderDT DTOutput
 #' @importFrom stringr str_split
 #' @export
