@@ -39,8 +39,6 @@ docs/
 docs
 sunburstDiagram.html
 sankeyDiagram.html
-renv.lock
-renv/
 TASKS.R
 TRUE
 sunburstPlot.html

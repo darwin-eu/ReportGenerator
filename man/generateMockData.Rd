@@ -2,12 +2,12 @@
 % Please edit documentation in R/generateMockData.R
 \name{generateMockData}
 \alias{generateMockData}
-\title{Creates a mock data set for ReportGenerator}
+\title{Creates a mock data set for ReportGenerator. The output is a zip folder for each database.}
 \usage{
 generateMockData(
   databaseName = c("CHUBX", "CPRD GOLD", "IMASIS", "IPCI", "SIDIAP"),
   simulatePopulation = TRUE,
-  outputPath = file.path(getwd(), "results"),
+  outputPath = testthat::test_path("studies", "zip"),
   internal = FALSE
 )
 }
@@ -22,5 +22,5 @@ generateMockData(
 csv files
 }
 \description{
-`generateMockData()` uses [IncidencePrevalence::mockIncidencePrevalenceRef()] function to create csv files to test ReportGenerator.
+`generateMockData()` uses functions such as [IncidencePrevalence::mockIncidencePrevalenceRef()] to create csv files to test ReportGenerator.
 }

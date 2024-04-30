@@ -10,8 +10,7 @@ loadFileData(
   configData,
   resultsData,
   resultsColumns,
-  databaseName,
-  logger
+  databaseName
 )
 }
 \arguments{
