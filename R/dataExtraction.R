@@ -67,7 +67,7 @@ joinDatabase <- function(fileDataPath,
         resultsData <- read_csv(fileName, show_col_types = FALSE)
         resultsColumns <- names(resultsData)
         # Checks the type of every individual fileName
-        data <- loadFileData(data, fileName, configData, resultsData, resultsColumns, databaseName)
+        data <- loadFileData(data, fileName, configData, resultsData, resultsColumns, databaseName, logger)
       }
     }
   } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
@@ -98,7 +98,8 @@ loadFileData <- function(data,
                          configData,
                          resultsData,
                          resultsColumns,
-                         databaseName) {
+                         databaseName,
+                         logger) {
 
   if ("result_type" %in% resultsColumns) {
     resultType <- unique(resultsData$result_type)
@@ -123,7 +124,7 @@ loadFileData <- function(data,
             resultType <- "summarised_characteristics"
           }
 
-    data <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
+    data <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData, logger)
     return(data)
   } else {
     for (pkg in names(configData)) {
@@ -134,14 +135,14 @@ loadFileData <- function(data,
         configColumns <- unlist(configColumns$names)
         if (val == "incidence_attrition") {
           if (all(configColumns %in% resultsColumns) & grepl("incidence", fileName)) {
-            message(paste0(val, ": match"))
+            log4r::info(logger, glue::glue("Match file using config columns: {val}"))
             resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
             resultsData$excluded_records <- as.character(resultsData$excluded_records)
             data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           } else if (val == "prevalence_attrition") {
             if (all(configColumns %in% resultsColumns) & grepl("prevalence", fileName)) {
-              message(paste0(val, ": match"))
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
               resultsData$excluded_records <- as.character(resultsData$excluded_records)
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
@@ -151,7 +152,7 @@ loadFileData <- function(data,
                 if ("denominator_days_prior_history" %in% resultsColumns) {
                   colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
                   }
-                message(paste0(val, ": match"))
+                log4r::info(logger, glue::glue("Match file using config columns: {val}"))
                 data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
                 }
               } else if (val == "prevalence_estimates") {
@@ -159,7 +160,7 @@ loadFileData <- function(data,
                   if ("denominator_days_prior_history" %in% resultsColumns) {
                     colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
                     }
-                  message(paste0(val, ": match"))
+                  log4r::info(logger, glue::glue("Match file using config columns: {val}"))
                   data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
                   }
                 } else if (val == "treatmentPathways") {
@@ -167,7 +168,7 @@ loadFileData <- function(data,
                     if (!('cdm_name' %in% resultsColumns)) {
                       resultsData <- mutate(resultsData, cdm_name = databaseName)
                       }
-                    message(paste0(val, ": match"))
+                    log4r::info(logger, glue::glue("Match file using config columns: {val}"))
                     data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
                   }
                 }
@@ -204,11 +205,11 @@ additionalCols <- function(data) {
 
 }
 
-getPackageData <- function(data, package, resultType, resultsColumns, resultsData, configData) {
+getPackageData <- function(data, package, resultType, resultsColumns, resultsData, configData, logger) {
   pkgConfigData <- configData[[package]]
   configColumns <- pkgConfigData[[resultType]][["names"]]
   if (all(configColumns %in% resultsColumns)) {
-    message(paste0(resultType, ": match (using resultType)"))
+    log4r::info(logger, glue::glue("Match file using resultType: {resultType}"))
     resultsDataWithCols <- additionalCols(resultsData)
     if (is.null(data[[package]])) {
       data[[package]] <- list()

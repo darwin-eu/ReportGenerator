@@ -18,8 +18,10 @@ test_that("summarised Characteristics and LSC", {
   fileDataPath <- list.files("~/darwin-docs/studyPackages/P2C1014PrescriptionsICU/results",
                              pattern = "zip",
                              full.names = TRUE)
+  logger <- log4r::logger()
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
-                                csvLocation = csvLocation)
+                                csvLocation = csvLocation,
+                                logger = logger)
   testServer(reportGenerator(), {
     expect_s3_class(characteristicsUI("characteristics", uploadedFiles$PatientProfiles$summarised_characteristics), "shiny.tag.list")
     expect_s3_class(characteristicsServer("characteristics", uploadedFiles$PatientProfiles$summarised_characteristics), "reactiveVal")

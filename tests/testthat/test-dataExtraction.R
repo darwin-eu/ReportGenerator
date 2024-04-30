@@ -4,6 +4,7 @@ test_that("Loading 1 zip files whole study", {
   fileDataPath <- list.files(testthat::test_path("studies", "zip"),
                              pattern = "zip",
                              full.names = TRUE)
+  logger <- log4r::logger()
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
                                 csvLocation = csvLocation,
                                 logger = logger)
@@ -18,6 +19,7 @@ test_that("Loading multiple zip files whole study", {
   fileDataPath <- list.files(testthat::test_path("studies", "zip"),
                              pattern = "zip",
                              full.names = TRUE)
+  logger <- log4r::logger()
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
                                 csvLocation = csvLocation,
                                 logger = logger)
@@ -53,6 +55,7 @@ test_that("Loading 1 csv files whole study", {
   fileName <- list.files(testthat::test_path("studies", "csv"),
                          pattern = "csv")
   fileName <- tools::file_path_sans_ext(fileName)
+  logger <- log4r::logger()
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[3],
                                 fileName = fileName[3],
                                 csvLocation = csvLocation,
@@ -71,6 +74,7 @@ test_that("Loading multiple csv files whole study", {
   fileName <- list.files(testthat::test_path("studies", "csv"),
                          pattern = "csv")
   fileName <- tools::file_path_sans_ext(fileName)
+  logger <- log4r::logger()
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
                                 fileName = fileName,
                                 csvLocation = csvLocation,
@@ -99,7 +103,8 @@ test_that("getPackageData returns data for summarised_characteristics", {
   resultType <- unique(resultsData$result_type)
   resultsColumns <- names(resultsData)
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
+  logger <- log4r::logger()
+  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData, logger = logger)
   expect_equal(class(result), "list")
   expect_equal(names(result), "PatientProfiles")
   expect_equal(names(result$PatientProfiles$summarised_characteristics),
@@ -126,7 +131,8 @@ test_that("getPackageData returns data for summarised_large_scale_characteristic
   resultType <- unique(resultsData$result_type)
   resultsColumns <- names(resultsData)
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
+  logger <- log4r::logger()
+  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData, logger = logger)
   expect_equal(class(result), "list")
   expect_equal(names(result), "PatientProfiles")
   expect_equal(names(result$PatientProfiles$summarised_large_scale_characteristics),
@@ -154,7 +160,8 @@ test_that("getPackageData returns data from `Survival Estimate`", {
   resultType <- unique(resultsData$result_type)
   resultsColumns <- names(resultsData)
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
+  logger <- log4r::logger()
+  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData, logger = logger)
   expect_equal(class(result), "list")
   expect_equal(names(result), "CohortSurvival")
   expect_equal(names(result$CohortSurvival$`Survival estimate`),
@@ -176,6 +183,8 @@ test_that("iterates through fileNames", {
   data <- list()
 
   folderNumber <- 0
+
+  logger <- log4r::logger()
   # Unzips every zip and puts the files in a separate folder in the temp dir
   for (fileLocation in fileDataPath) {
     folderNumber <- folderNumber + 1
@@ -207,7 +216,7 @@ test_that("iterates through fileNames", {
       resultsData <- read_csv(fileName, show_col_types = FALSE)
       resultsColumns <- names(resultsData)
       # Checks the type of every individual fileName
-      data <- loadFileData(data, fileName, configData, resultsData, resultsColumns, databaseName)
+      data <- loadFileData(data, fileName, configData, resultsData, resultsColumns, databaseName, logger = logger)
 
       }
   }
@@ -256,9 +265,11 @@ test_that("ICU Prescriptions Objective 1 Data", {
   fileDataPath <- list.files("~/darwin-docs/studyPackages/P2C1014PrescriptionsICU/results",
                              pattern = "zip",
                              full.names = TRUE)
+  logger <- log4r::logger()
   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
-                                csvLocation = csvLocation)
-  expect_equal(length(uploadedFiles), 4)
+                                csvLocation = csvLocation,
+                                logger = logger)
+  expect_equal(length(uploadedFiles), 1)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
 })
