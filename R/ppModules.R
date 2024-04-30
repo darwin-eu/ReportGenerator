@@ -237,7 +237,7 @@ characteristicsServer <- function(id, dataset) {
     })
 
     output$summarisedTableGt <- gt::render_gt({
-      dataPP <- selectCols(dataPP())
+      dataPP <- as_tibble(selectCols(dataPP()))
       tableCharacteristics(result = dataPP)
     })
 

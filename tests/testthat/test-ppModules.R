@@ -10,3 +10,18 @@ test_that("summarised Characteristics and LSC", {
                                           testData$summarised_large_scale_characteristics), "reactiveVal")
   })
 })
+
+
+test_that("summarised Characteristics and LSC", {
+  csvLocation <- file.path(tempdir(), "dataLocation")
+  dir.create(csvLocation)
+  fileDataPath <- list.files("~/darwin-docs/studyPackages/P2C1014PrescriptionsICU/results",
+                             pattern = "zip",
+                             full.names = TRUE)
+  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
+                                csvLocation = csvLocation)
+  testServer(reportGenerator(), {
+    expect_s3_class(characteristicsUI("characteristics", uploadedFiles$PatientProfiles$summarised_characteristics), "shiny.tag.list")
+    expect_s3_class(characteristicsServer("characteristics", uploadedFiles$PatientProfiles$summarised_characteristics), "reactiveVal")
+  })
+})
