@@ -3,23 +3,24 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
   ns <- NS(id)
   outResult <- NULL
   topN <- NULL
-  dlButton <- NULL
+  dlPlot <- NULL
   if (id == "survivalTable") {
     outResult <- DT::dataTableOutput(ns("cs_data"))
-    topN <- numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100)
     dataset <- uploadedFiles$dataCS$`Survival estimate`
   } else if (id == "survivalPlot") {
     outResult <- plotOutput(ns("cs_plot"))
     dataset <- uploadedFiles$dataCS$`Survival estimate`
-    dlButton <- downloadButton(ns("downloadFigure"), "Download Plot")
   } else if (id == "failureTable") {
     outResult <- DT::dataTableOutput(ns("cu_inc_data"))
-    topN <- numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100)
     dataset <- uploadedFiles$dataCS$`Survival cumulative incidence`
   } else if (id == "failurePlot") {
     outResult <- plotOutput(ns("cu_inc_plot"))
     dataset <- uploadedFiles$dataCS$`Survival cumulative incidence`
-    dlButton <- downloadButton(ns("downloadFigure"), "Download Plot")
+  }
+  if (grepl("Plot", id)) {
+    dlPlot <- createDownloadPlotUI(ns)
+  } else {
+    topN <- column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))
   }
   captionUI <- fluidRow(
     column(12,
@@ -66,12 +67,9 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
       )
     ),
     captionUI,
-    fluidRow(column(2, tagList(shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
-                               shiny::br(), actionButton(ns(paste0("lock", id)), "Add item to report"))),
-             column(2, topN),
-             column(6, tagList(shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
-                               shiny::br(), dlButton))
-             ),
+    fluidRow(createAddItemToReportUI(ns(paste0("lock", id))),
+             topN,
+             dlPlot),
     tags$br(),
     fluidRow(column(12, outResult))
   )
@@ -141,7 +139,11 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
         paste(id, ".png", sep = "")
       },
       content = function(file) {
-        saveGGPlot(file, previewFigure())
+        saveGGPlot(file = file,
+                   plot = previewFigure(),
+                   height = as.numeric(input$plotHeight),
+                   width = as.numeric(input$plotWidth),
+                   dpi = as.numeric(input$plotDpi))
       }
     )
 

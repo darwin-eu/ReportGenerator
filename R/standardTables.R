@@ -24,8 +24,8 @@
 #' @export
 table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 
-  prevalence_attrition <- dataCleanAttrition(prevalence_attrition = prevalence_attrition)
-  incidence_attrition <- dataCleanAttrition(incidence_attrition = incidence_attrition)
+  prevalence_attrition <- dataCleanAttrition(attrition = prevalence_attrition)
+  incidence_attrition <- dataCleanAttrition(attrition = incidence_attrition)
 
   if (length(unique(prevalence_attrition$cdm_name)) == 1) {
 
@@ -252,11 +252,7 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
 #' @export
 table1Att <- function(attritionData, attritionDataType) {
 
-  if (attritionDataType == "incidence") {
-    attritionData <- dataCleanAttrition(incidence_attrition = attritionData)
-  } else {
-    attritionData <- dataCleanAttrition(prevalence_attrition = attritionData)
-  }
+  attritionData <- dataCleanAttrition(attrition = attritionData)
 
   if (length(unique(attritionData$cdm_name)) == 1) {
     # Table data incidence
@@ -349,47 +345,47 @@ table1Att <- function(attritionData, attritionDataType) {
 #' @export
 table1Inc <- function(incidence_estimates) {
 
-    databaseNameInc <- unique(incidence_estimates$cdm_name)
+  databaseNameInc <- unique(incidence_estimates$cdm_name)
 
-    totalParSex <- incidence_estimates %>%
-      filter(cdm_name == databaseNameInc) %>%
-      filter(denominator_sex != "Both") %>%
-      select(cdm_name, outcome_cohort_name, denominator_sex, n_persons) %>%
-      group_by(cdm_name,
-               outcome_cohort_name,
-               denominator_sex) %>%
-      summarise(`Number of Persons` = sum(n_persons))
+  totalParSex <- incidence_estimates %>%
+    filter(cdm_name == databaseNameInc) %>%
+    filter(denominator_sex != "Both") %>%
+    select(cdm_name, outcome_cohort_name, denominator_sex, n_persons) %>%
+    group_by(cdm_name,
+             outcome_cohort_name,
+             denominator_sex) %>%
+    summarise(`Number of Persons` = sum(n_persons))
 
-    totalParSex <- pivot_wider(totalParSex, names_from = denominator_sex, values_from = `Number of Persons`)
+  totalParSex <- pivot_wider(totalParSex, names_from = denominator_sex, values_from = `Number of Persons`)
 
-    totalParAge <- incidence_estimates %>%
-      filter(cdm_name == databaseNameInc) %>%
-      filter(denominator_sex == "Both") %>%
-      select(cdm_name, outcome_cohort_name, denominator_age_group, n_persons) %>%
-      group_by(cdm_name,
-               outcome_cohort_name,
-               denominator_age_group) %>%
-      summarise(`Number of Persons` = sum(n_persons))
+  totalParAge <- incidence_estimates %>%
+    filter(cdm_name == databaseNameInc) %>%
+    filter(denominator_sex == "Both") %>%
+    select(cdm_name, outcome_cohort_name, denominator_age_group, n_persons) %>%
+    group_by(cdm_name,
+             outcome_cohort_name,
+             denominator_age_group) %>%
+    summarise(`Number of Persons` = sum(n_persons))
 
-    totalParAge <- pivot_wider(totalParAge, names_from = denominator_age_group , values_from = `Number of Persons`)
-    totalSexAge <- left_join(totalParSex, totalParAge, by = c("cdm_name", "outcome_cohort_name"))
+  totalParAge <- pivot_wider(totalParAge, names_from = denominator_age_group , values_from = `Number of Persons`)
+  totalSexAge <- left_join(totalParSex, totalParAge, by = c("cdm_name", "outcome_cohort_name"))
 
-    table1Inc <- gt::gt(totalSexAge,
-                     rowname_col = "Outcome",
-                     groupname_col = "cdm_name") %>%
-      tab_spanner(
-        label = "Sex",
-        columns = c(Female, Male)
-      ) %>%
-      tab_spanner(
-        label = "Age Group",
-        columns = c(unique(incidence_estimates$denominator_age_group))
-      ) %>%
-      opt_interactive(active = FALSE,
-                      use_pagination = FALSE,
-                      use_pagination_info = FALSE,
-                      use_sorting = FALSE,
-                      use_compact_mode = FALSE)
+  table1Inc <- gt::gt(totalSexAge,
+                      rowname_col = "Outcome",
+                      groupname_col = "cdm_name") %>%
+    tab_spanner(
+      label = "Sex",
+      columns = c(Female, Male)
+    ) %>%
+    tab_spanner(
+      label = "Age Group",
+      columns = c(unique(incidence_estimates$denominator_age_group))
+    ) %>%
+    opt_interactive(active = FALSE,
+                    use_pagination = FALSE,
+                    use_pagination_info = FALSE,
+                    use_sorting = FALSE,
+                    use_compact_mode = FALSE)
     table1Inc
   }
 

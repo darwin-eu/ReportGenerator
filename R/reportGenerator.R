@@ -18,10 +18,11 @@
 #'
 #' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
 #'
-#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml googleVis TreatmentPatterns PatientProfiles
+#' @param logger optional logger object
+#'
+#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml TreatmentPatterns PatientProfiles
 #' @importFrom sortable bucket_list add_rank_list sortable_options
 #' @importFrom utils read.csv tail unzip
-#' @importFrom gtools mixedsort
 #' @importFrom ggplot2 ggsave
 #' @importFrom gto body_add_gt
 #' @importFrom here here
@@ -30,10 +31,11 @@
 #' @importFrom DT renderDT DTOutput
 #' @importFrom stringr str_split
 #' @export
-reportGenerator <- function() {
+reportGenerator <- function(logger = NULL) {
 
-  # set max file upload size
-  options(shiny.maxRequestSize = 1000*1024^2)
+  # set global options
+  options(shiny.maxRequestSize = 1000*1024^2, spinner.type = 5, spinner.color = "#0dc5c1",
+          page.spinner.type = 5, page.spinner.color = "#0dc5c1")
 
   ui <- dashboardPage(
     dashboardHeader(title = "ReportGenerator"),
@@ -61,7 +63,7 @@ reportGenerator <- function() {
                  fluidRow(
                    column(width = 12,
                           h2("1. Choose objects"),
-                          uiOutput("navPanelPreview")
+                          shinycssloaders::withSpinner(uiOutput("navPanelPreview"))
                    )
                  )
         ),
@@ -91,6 +93,13 @@ reportGenerator <- function() {
 
   server <- function(input, output, session) {
 
+    # create logger
+    if (is.null(logger)) {
+      log_file <- glue::glue("log.txt")
+      logger <- log4r::logger(threshold = "INFO", appenders = list(log4r::console_appender(), log4r::file_appender(log_file)))
+    }
+    log4r::info(logger, "Start ReportGenerator")
+
     # 1. Load data
     datasetLoadServer("StudyPackage")
 
@@ -103,6 +112,8 @@ reportGenerator <- function() {
 
     # Check input data
     observeEvent(input$datasetLoad, {
+      shinycssloaders::showPageSpinner()
+
       # Read  file paths
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
@@ -113,7 +124,8 @@ reportGenerator <- function() {
       # Joins one or several zips into the reactive value
       uploadedFileDataList <- joinDatabase(fileDataPath = fileDataPath,
                                            fileName = fileName,
-                                           csvLocation = csvLocation)
+                                           csvLocation = csvLocation,
+                                           logger = logger)
       if (length(uploadedFileDataList) == 0) {
         show_alert(title = "Data mismatch",
                    text = "No valid package files found")
@@ -139,6 +151,7 @@ reportGenerator <- function() {
         itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], getItemsList(items))
       }
       unlink(csvLocation, recursive = TRUE)
+      shinycssloaders::hidePageSpinner()
     })
 
     # Reset and back to initial tab
@@ -434,16 +447,6 @@ reportGenerator <- function() {
       }
     })
 
-    # To check data in report:
-
-    # output$dataReportMenu <- renderPrint({
-    #   # dataReport
-    #   dataReportList <- reactiveValuesToList(dataReport)
-    #   dataReportList
-    #   # length(dataReportList) == 0
-    #   # objectsListPreview()
-    # })
-
     # Word report generator
     output$generateReport <- downloadHandler(
       filename = function() {
@@ -463,7 +466,8 @@ reportGenerator <- function() {
         }
         generateReport(reportDocx,
                        reportItems,
-                       file)
+                       file,
+                       logger)
         shinyjs::enable("generateReport")
       }
     )
@@ -484,8 +488,10 @@ reportGenerator <- function() {
         if (!is.null(dataReport$objects)) {
           shinyjs::html("reportOutput", "<br>Saving report items to rds file", add = TRUE)
           shinyjs::disable("saveReportData")
-          reportItems <- reactiveValuesToList(do.call(reactiveValues, dataReport$objects))
-          saveRDS(reportItems, file)
+          saveRDS(list("reportItems" = reactiveValuesToList(do.call(reactiveValues, dataReport$objects)),
+                       "uploadedFiles" = reactiveValuesToList(uploadedFiles),
+                       "itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects))),
+                  file)
           shinyjs::enable("saveReportData")
         }
       }
@@ -494,8 +500,14 @@ reportGenerator <- function() {
     observeEvent(input$loadReportItems, {
       inFile <- input$loadReportItems
       fileDataPath <- inFile$datapath
-      reportItems <- readRDS(fileDataPath)
-      dataReport$objects <- reportItems
+      reportData <- readRDS(fileDataPath)
+      dataReport$objects <- reportData$reportItems
+      itemsList$objects <- reportData$itemsList
+      upFiles <- reportData$uploadedFiles
+      uploadedFiles$dataCS <- upFiles$dataCS
+      uploadedFiles$dataIP <- upFiles$dataIP
+      uploadedFiles$dataPP <- upFiles$dataPP
+      uploadedFiles$dataTP <- upFiles$dataTP
       shinyjs::html("reportOutput", "<br>Loaded report items from rds file", add = TRUE)
     })
 

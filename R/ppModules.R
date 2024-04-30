@@ -63,7 +63,8 @@ characteristicsUI <- function(id, uploadedFiles) {
                #                    height = "80px")
         ),
       ),
-      fluidRow(column(4, actionButton(ns(lockName), "Add item to report"))),
+      fluidRow(createAddItemToReportUI(ns(lockName)),
+               column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))),
       tags$br(),
       fluidRow(
         tabsetPanel(type = "tabs",
@@ -74,7 +75,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                                          choices = c("Group", "Strata"),
                                          selected = c("Group", "Strata"),
                                          multiple = TRUE),
-                             column(12, gt::gt_output(ns("summarisedTableGt")))),
+                             column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
         )
       )
@@ -152,7 +153,8 @@ characteristicsUI <- function(id, uploadedFiles) {
                                   height = "80px")
         ),
       ),
-      fluidRow(column(4, actionButton(ns(lockName), "Add item to report"))),
+      fluidRow(createAddItemToReportUI(ns(lockName)),
+               column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))),
       tags$br(),
       fluidRow(
         tabsetPanel(type = "tabs",
@@ -163,7 +165,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                                          choices = c("Group", "Strata"),
                                          selected = c("Group", "Strata"),
                                          multiple = TRUE),
-                             column(12, gt::gt_output(ns("summarisedTableGt")))),
+                             column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
         )
       )
@@ -171,29 +173,8 @@ characteristicsUI <- function(id, uploadedFiles) {
   }
 }
 
-createDataTable <- function(data, tableName = "result") {
-  DT::datatable(data,
-                extensions = 'Buttons',
-                options = list(pageLength = 10,
-                               paging = TRUE,
-                               searching = TRUE,
-                               fixedColumns = TRUE,
-                               autoWidth = TRUE,
-                               ordering = TRUE,
-                               scrollX = TRUE,
-                               dom = 'Bfrtip',
-                               buttons =
-                                 list(list(
-                                   extend = "collection",
-                                   buttons = list(
-                                     list(extend = "csv", title = tableName),
-                                     list(extend = "excel", title = tableName)),
-                                   text = "Download"
-                                 ))),
-                class = "display")
-}
-
 characteristicsServer <- function(id, dataset) {
+
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 

@@ -192,12 +192,8 @@ incidenceUI <- function(id, uploadedFiles) {
       )
     ),
     fluidRow(
-      column(6,
-             actionButton(ns(lockName), "Add item to report")
-      ),
-      column(6,
-             downloadButton(ns("downloadFigure"), "Download Plot")
-      ),
+      createAddItemToReportUI(ns(lockName)),
+      createDownloadPlotUI(ns)
     ),
     tags$br(),
     fluidRow(
@@ -216,7 +212,9 @@ incidenceServer <- function(id, uploadedFiles) {
       uploadedFiles <- uploadedFiles()
       incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
-      incidence_estimates[is.na(incidence_estimates)] = 0
+      incidence_estimates <- incidence_estimates %>%
+        mutate_if(is.numeric, list(~replace_na(., 0)))
+
       # Washout
       incidence_estimates <- incidence_estimates %>%
         filter(analysis_outcome_washout %in% c(input$washoutIncidence))
@@ -284,7 +282,11 @@ incidenceServer <- function(id, uploadedFiles) {
         paste(id, ".png", sep = "")
       },
       content = function(file) {
-        saveGGPlot(file, previewFigure())
+        saveGGPlot(file = file,
+                   plot = previewFigure(),
+                   height = as.numeric(input$plotHeight),
+                   width = as.numeric(input$plotWidth),
+                   dpi = as.numeric(input$plotDpi))
       }
     )
 
