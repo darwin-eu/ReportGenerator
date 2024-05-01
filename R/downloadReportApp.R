@@ -1,37 +1,4 @@
-# Copyright 2023 DARWIN EU®
-#
-# This file is part of ReportGenerator
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-#' ReportGenerator Shiny App
-#'
-#' `ReportGenerator()` launches the package's main app. The user can upload a zip folder, and the function detects what figures and tables are available to generate a Word report.
-#'
-#' @param logger optional logger object
-#'
-#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml TreatmentPatterns PatientProfiles
-#' @importFrom sortable bucket_list add_rank_list sortable_options
-#' @importFrom utils read.csv tail unzip
-#' @importFrom ggplot2 ggsave
-#' @importFrom gto body_add_gt
-#' @importFrom here here
-#' @importFrom TreatmentPatterns createSankeyDiagram
-#' @importFrom IncidencePrevalence plotIncidence plotPrevalence
-#' @importFrom DT renderDT DTOutput
-#' @importFrom stringr str_split
-#' @export
-reportGenerator <- function(logger = NULL) {
+downloadReportApp <- function(reportItems, logger = NULL) {
 
   # set global options
   options(shiny.maxRequestSize = 1000*1024^2, spinner.type = 5, spinner.color = "#0dc5c1",
@@ -41,24 +8,25 @@ reportGenerator <- function(logger = NULL) {
     dashboardHeader(title = "ReportGenerator"),
     dashboardSidebar(
       sidebarMenu(
-        menuItem("StudyPackage", datasetLoadUI("StudyPackage"),
-                 startExpanded = TRUE),
-        tags$br(),
-        actionButton('resetData', 'Reset data'),
-        tags$br(), tags$br(), tags$br(),
-        shinyjs::useShinyjs(),
-        tags$head(tags$style(".dlStudyDataBtn{ margin-left:15px;margin-right:15px; color:#444 !important; }")),
-        downloadButton("downloadStudyData", "Sample dataset", class = "dlStudyDataBtn")
+        # uiOutput("navPanelPreview")
+        # menuItem("StudyPackage", datasetLoadUI("StudyPackage"),
+        #          startExpanded = TRUE),
+        # tags$br(),
+        # actionButton('resetData', 'Reset data'),
+        # tags$br(), tags$br(), tags$br(),
+        # shinyjs::useShinyjs(),
+        # tags$head(tags$style(".dlStudyDataBtn{ margin-left:15px;margin-right:15px; color:#444 !important; }")),
+        # downloadButton("downloadStudyData", "Sample dataset", class = "dlStudyDataBtn")
       )
     ),
     dashboardBody(
       tabsetPanel(
         id = "mainPanel",
-        tabPanel("Item selection",
-                 fluidRow(
-                   box(uiOutput("itemSelectionMenu"),
-                       tags$br())
-                 )),
+        # tabPanel("Item selection",
+        #          fluidRow(
+        #            box(uiOutput("itemSelectionMenu"),
+        #                tags$br())
+        #          )),
         tabPanel("Item preview",
                  fluidRow(
                    column(width = 12,
@@ -78,7 +46,6 @@ reportGenerator <- function(logger = NULL) {
                           splitLayout(
                             downloadButton("generateReport", "Generate Report", class = "dlReportBtn"),
                             downloadButton("saveReportData", "Save report items", class = "dlReportBtn"),
-                            actionButton("createReportApp", "create Report App"),
                             fileInput("loadReportItems",
                                       "Load report items",
                                       accept = c(".rds"),
@@ -105,94 +72,102 @@ reportGenerator <- function(logger = NULL) {
     datasetLoadServer("StudyPackage")
 
     # ReactiveValues
-    uploadedFiles <- reactiveValues(dataIP = NULL,
-                                    dataTP = NULL,
-                                    dataPP = NULL,
-                                    dataCS = NULL)
+
+    reportItems <- readRDS(here::here("ReportApp", "reportItems.rds"))
+
+    uploadedFiles <- reportItems$uploadedFiles
     itemsList <- reactiveValues(objects = NULL)
 
-    # Check input data
-    observeEvent(input$datasetLoad, {
-      shinycssloaders::showPageSpinner()
+    # uploadedFiles <- reactiveValues(dataIP = NULL,
+    #                                 dataTP = NULL,
+    #                                 dataPP = NULL,
+    #                                 dataCS = NULL)
+    # itemsList <- reactiveValues(objects = NULL)
 
-      # Read  file paths
-      inFile <- input$datasetLoad
-      fileDataPath <- inFile$datapath
-      fileName <- inFile$name
-      # Temp directory to unzip files
-      csvLocation <- file.path(tempdir(), "dataLocation")
-      dir.create(csvLocation)
-      # Joins one or several zips into the reactive value
-      uploadedFileDataList <- joinDatabase(fileDataPath = fileDataPath,
-                                           fileName = fileName,
-                                           csvLocation = csvLocation,
-                                           logger = logger)
-      if (length(uploadedFileDataList) == 0) {
-        show_alert(title = "Data mismatch",
-                   text = "No valid package files found")
-      }
-      pkgNames <- names(uploadedFileDataList)
-      if ("IncidencePrevalence" %in% pkgNames) {
-        uploadedFiles$dataIP <- uploadedFileDataList[["IncidencePrevalence"]]
-      }
-      if ("TreatmentPatterns" %in% pkgNames) {
-        uploadedFiles$dataTP <- uploadedFileDataList[["TreatmentPatterns"]]
-      }
-      if ("PatientProfiles" %in% pkgNames) {
-        uploadedFiles$dataPP <- uploadedFileDataList[["PatientProfiles"]]
-      }
-      if ("CohortSurvival" %in% pkgNames) {
-        uploadedFiles$dataCS <- uploadedFileDataList[["CohortSurvival"]]
-      }
-
-      # Get list of items to show in toggle menu
-      for (pkgName in pkgNames) {
-        pkgDataList <- uploadedFileDataList[[pkgName]]
-        items <- names(pkgDataList)
-        itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], getItemsList(items))
-      }
-      unlink(csvLocation, recursive = TRUE)
-      shinycssloaders::hidePageSpinner()
-    })
-
-    # Reset and back to initial tab
-    observeEvent(input$resetData, {
-      itemsList$objects <- NULL
-      uploadedFiles <- reactiveValues(dataIP = NULL,
-                                      dataTP = NULL,
-                                      dataPP = NULL)
-      updateTabsetPanel(session, "mainPanel",
-                        selected = "Item selection")
-      datasetLoadServer("StudyPackage")
-      dataReport$objects <- NULL
-      shinyjs::html("reportOutput", "")
-    })
+    # # Check input data
+    # observeEvent(input$datasetLoad, {
+    #   shinycssloaders::showPageSpinner()
+    #
+    #   # Read  file paths
+    #   inFile <- input$datasetLoad
+    #   fileDataPath <- inFile$datapath
+    #   fileName <- inFile$name
+    #   # Temp directory to unzip files
+    #   csvLocation <- file.path(tempdir(), "dataLocation")
+    #   dir.create(csvLocation)
+    #   # Joins one or several zips into the reactive value
+    #   uploadedFileDataList <- joinDatabase(fileDataPath = fileDataPath,
+    #                                        fileName = fileName,
+    #                                        csvLocation = csvLocation,
+    #                                        logger = logger)
+    #   if (length(uploadedFileDataList) == 0) {
+    #     show_alert(title = "Data mismatch",
+    #                text = "No valid package files found")
+    #   }
+    #   pkgNames <- names(uploadedFileDataList)
+    #   if ("IncidencePrevalence" %in% pkgNames) {
+    #     uploadedFiles$dataIP <- uploadedFileDataList[["IncidencePrevalence"]]
+    #   }
+    #   if ("TreatmentPatterns" %in% pkgNames) {
+    #     uploadedFiles$dataTP <- uploadedFileDataList[["TreatmentPatterns"]]
+    #   }
+    #   if ("PatientProfiles" %in% pkgNames) {
+    #     uploadedFiles$dataPP <- uploadedFileDataList[["PatientProfiles"]]
+    #   }
+    #   if ("CohortSurvival" %in% pkgNames) {
+    #     uploadedFiles$dataCS <- uploadedFileDataList[["CohortSurvival"]]
+    #   }
+    #
+    #   # Get list of items to show in toggle menu
+    #   for (pkgName in pkgNames) {
+    #     pkgDataList <- uploadedFileDataList[[pkgName]]
+    #     items <- names(pkgDataList)
+    #     itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], getItemsList(items))
+    #   }
+    #   unlink(csvLocation, recursive = TRUE)
+    #   shinycssloaders::hidePageSpinner()
+    # })
+    #
+    # # Reset and back to initial tab
+    # observeEvent(input$resetData, {
+    #   itemsList$objects <- NULL
+    #   uploadedFiles <- reactiveValues(dataIP = NULL,
+    #                                   dataTP = NULL,
+    #                                   dataPP = NULL)
+    #   updateTabsetPanel(session, "mainPanel",
+    #                     selected = "Item selection")
+    #   datasetLoadServer("StudyPackage")
+    #   dataReport$objects <- NULL
+    #   shinyjs::html("reportOutput", "")
+    # })
 
     # 1. Interactive menu
 
-    output$itemSelectionMenu <- renderUI({
-      column(tags$b("Item selection"),
-             width = 12,
-             bucket_list(header = "Select the figures you want in the report",
-                         group_name = "bucket_list_group",
-                         orientation = "horizontal",
-                         add_rank_list(text = "Drag from here",
-                                       labels = itemsList$objects[["items"]],
-                                       input_id = "objectMenu",
-                                       options = sortable_options(multiDrag = TRUE)),
-                         add_rank_list(text = "to here",
-                                       labels = NULL,
-                                       input_id = "objectSelection",
-                                       options = sortable_options(multiDrag = TRUE))
-             )
-      )
-    })
+    # output$itemSelectionMenu <- renderUI({
+    #   column(tags$b("Item selection"),
+    #          width = 12,
+    #          bucket_list(header = "Select the figures you want in the report",
+    #                      group_name = "bucket_list_group",
+    #                      orientation = "horizontal",
+    #                      add_rank_list(text = "Drag from here",
+    #                                    labels = itemsList$objects[["items"]],
+    #                                    input_id = "objectMenu",
+    #                                    options = sortable_options(multiDrag = TRUE)),
+    #                      add_rank_list(text = "to here",
+    #                                    labels = NULL,
+    #                                    input_id = "objectSelection",
+    #                                    options = sortable_options(multiDrag = TRUE))
+    #          )
+    #   )
+    # })
 
     # Item preview
 
+    objectSelection <- reportItems$itemsList$items
+
     # Renders the objectSelection into the main dashboard space
     output$navPanelPreview <- renderUI({
-      previewPanels <- lapply(input$objectSelection,
+      previewPanels <- lapply(objectSelection,
                               tabPanelSelection,
                               uploadedFiles = uploadedFiles)
       do.call(navlistPanel, c(previewPanels, list(widths = c(3, 9))))
@@ -204,7 +179,7 @@ reportGenerator <- function(logger = NULL) {
 
     # Inc/Prev Table Modules
 
-      # Table w/ attrition data from Inc/Prev
+    # Table w/ attrition data from Inc/Prev
 
     tableNumPar <- attritionServer(id = "Table - Number of participants",
                                    uploadedFiles = reactive(uploadedFiles))
@@ -259,7 +234,7 @@ reportGenerator <- function(logger = NULL) {
 
     # Incidence Modules
 
-      # Year
+    # Year
 
     dataIncidenceYear <- incidenceServer(id = "Plot - Incidence rate per year",
                                          reactive(uploadedFiles))
@@ -285,7 +260,7 @@ reportGenerator <- function(logger = NULL) {
     }) %>%
       bindEvent(dataIncidenceSex())
 
-      # Age
+    # Age
 
     dataIncidenceAge <- incidenceServer(id = "Plot - Incidence rate per year by age",
                                         reactive(uploadedFiles))
@@ -300,7 +275,7 @@ reportGenerator <- function(logger = NULL) {
 
     # Prevalence Modules
 
-      # Year
+    # Year
 
     dataPrevalenceYear <- prevalenceServer(id = "Plot - Prevalence per year",
                                            reactive(uploadedFiles))
@@ -313,7 +288,7 @@ reportGenerator <- function(logger = NULL) {
     }) %>%
       bindEvent(dataPrevalenceYear())
 
-      # Sex
+    # Sex
 
     dataPrevalenceSex <- prevalenceServer(id = "Plot - Prevalence per year by sex",
                                           reactive(uploadedFiles))
@@ -326,7 +301,7 @@ reportGenerator <- function(logger = NULL) {
     }) %>%
       bindEvent(dataPrevalenceSex())
 
-      # Age
+    # Age
 
     dataPrevalenceAge <- prevalenceServer(id = "Plot - Prevalence per year by age",
                                           reactive(uploadedFiles))
@@ -512,56 +487,7 @@ reportGenerator <- function(logger = NULL) {
       shinyjs::html("reportOutput", "<br>Loaded report items from rds file", add = TRUE)
     })
 
-    observeEvent(input$createReportApp, {
-      # Specify the source directory within the package
-      packagePath <- system.file("reportApp", package = "ReportGenerator")
-
-      # Specify the target directory (working directory in this case)
-      targetPath <- file.path(getwd(), "reportGeneratorApp")
-
-      # Create targetPath
-      dir.create(targetPath)
-
-      # List all files in the source directory
-      appFiles <- list.files(packagePath, pattern = "^.*.(proj|R)$", full.names = TRUE)
-
-      # Copy each file to the target directory
-      sapply(appFiles, function(file) {
-        file.copy(file, file.path(targetPath, basename(file)))
-      })
-
-      # Specify the target directory (working directory in this case)
-      targetPathModules <- file.path(getwd(), "reportGeneratorApp", "modules")
-
-      # Create targetPath
-      dir.create(targetPathModules)
-
-      # List all files in the source directory for modules
-      appFilesModules <- list.files(file.path(packagePath, "modules"), full.names = TRUE)
-
-      sapply(appFilesModules, function(file) {
-        file.copy(file, file.path(targetPathModules, basename(file)))
-      })
-
-      # Specify the target directory (working directory in this case)
-      targetPathResults <- file.path(getwd(), "reportGeneratorApp", "results")
-
-      # Create targetPath
-      dir.create(targetPathResults)
-
-      # File Name
-      resultFileName <- file.path(targetPathResults, "reportItems.rds")
-
-      # Insert results from app
-      saveRDS(list("reportItems" = reactiveValuesToList(do.call(reactiveValues, dataReport$objects)),
-                   "uploadedFiles" = reactiveValuesToList(uploadedFiles),
-                   "itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects))),
-              resultFileName)
-
-
-      output$feedback <- renderText("Shiny app copied successfully!")
-    })
-
   }
   shinyApp(ui, server)
 }
+
