@@ -76,7 +76,7 @@ createSankeyDiagram:
   type:
     - diagram
 summaryCharacteristics:
-  title: "Summarised Characteristics"
+  title: "summarised_characteristics"
   function: tableCharacteristics(summarisedCharacteristics)
   type:
     - summarised_characteristics

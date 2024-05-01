@@ -104,7 +104,8 @@ test_that("getPackageData returns data for summarised_characteristics", {
   resultsColumns <- names(resultsData)
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
   logger <- log4r::logger()
-  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData, logger = logger)
+  result1 <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData, logger = logger)
+  result <- getPackageData(result1, package, resultType, resultsColumns, resultsData, configData, logger = logger)
   expect_equal(class(result), "list")
   expect_equal(names(result), "PatientProfiles")
   expect_equal(names(result$PatientProfiles$summarised_characteristics),
@@ -219,6 +220,118 @@ test_that("iterates through fileNames", {
       data <- loadFileData(data, fileName, configData, resultsData, resultsColumns, databaseName, logger = logger)
 
       }
+  }
+  expect_equal(length(data), 4)
+  unlink(csvLocation, recursive = TRUE)
+})
+
+# test_that("iterates through fileNames", {
+#   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+#   fileDataPath <- list.files("D:/Users/cbarboza/Documents/darwin-docs/studyPackages/P2C1014PrescriptionsICU/results/zip", full.names = TRUE)
+#   packagesNames <- names(configData)
+#
+#   csvLocation <- tempdir()
+#
+#   data <- list()
+#
+#   folderNumber <- 0
+#
+#   logger <- log4r::logger()
+#   # Unzips every zip and puts the files in a separate folder in the temp dir
+#   for (fileLocation in fileDataPath) {
+#     folderNumber <- folderNumber + 1
+#     unzip(zipfile = fileLocation,
+#           exdir = file.path(csvLocation, paste0("database", as.character(folderNumber))))
+#   }
+#   # List of unzipped database directories where files are located
+#   databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
+#   for (filesList in databaseFolders) {
+#     # filesList <- databaseFolders[1]
+#     # List of unzipped database directories where files are located
+#     filesLocation <- list.files(filesList,
+#                                 pattern = ".csv",
+#                                 full.names = TRUE,
+#                                 recursive = TRUE)
+#     metadata <- filesLocation[stringr::str_detect(filesLocation, "metadata")]
+#     if (!identical(metadata, character(0))) {
+#       databaseName <- readr::read_csv(metadata, show_col_types = FALSE) %>%
+#         pull(cdmSourceName) %>%
+#         unique()
+#     }
+#
+#     # Iterates every individual fileName
+#     for (fileName in filesLocation) {
+#
+#       fileName <- filesLocation[3]
+#       resultsData <- read_csv(fileName, show_col_types = FALSE)
+#       resultsColumns <- names(resultsData)
+#       # Checks the type of every individual fileName
+#       print(fileName)
+#       data <- loadFileData(data,
+#                            fileName,
+#                            configData,
+#                            resultsData,
+#                            resultsColumns,
+#                            databaseName,
+#                            logger = logger)
+#
+#     }
+#   }
+#   expect_equal(length(data), 4)
+#   unlink(csvLocation, recursive = TRUE)
+# })
+
+test_that("Objective 3", {
+  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+  fileDataPath <- list.files("D:/Users/cbarboza/Documents/darwin-docs/studyPackages/P2C1014PrescriptionsICU/results/objective_3", full.names = TRUE)
+  packagesNames <- names(configData)
+
+  csvLocation <- tempdir()
+
+  data <- list()
+
+  folderNumber <- 0
+
+  logger <- log4r::logger()
+  # Unzips every zip and puts the files in a separate folder in the temp dir
+  for (fileLocation in fileDataPath) {
+    folderNumber <- folderNumber + 1
+    unzip(zipfile = fileLocation,
+          exdir = file.path(csvLocation, paste0("database", as.character(folderNumber))))
+  }
+  # List of unzipped database directories where files are located
+  databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
+  for (filesList in databaseFolders) {
+    # filesList <- databaseFolders[1]
+    # List of unzipped database directories where files are located
+    filesLocation <- list.files(filesList,
+                                pattern = ".csv",
+                                full.names = TRUE,
+                                recursive = TRUE)
+    # metadata <- filesLocation[stringr::str_detect(filesLocation, "metadata")]
+    # if (!identical(metadata, character(0))) {
+    #   databaseName <- readr::read_csv(metadata, show_col_types = FALSE) %>%
+    #     pull(cdmSourceName) %>%
+    #     unique()
+    # }
+
+    # Iterates every individual fileName
+    for (fileName in filesLocation) {
+
+      # fileName <- filesLocation[3]
+      resultsData <- read_csv(fileName, show_col_types = FALSE)
+      resultsColumns <- names(resultsData)
+      # Checks the type of every individual fileName
+      print(fileName)
+      data <- loadFileData(data,
+                           fileName,
+                           configData,
+                           resultsData,
+                           resultsColumns,
+                           databaseName,
+                           logger = logger)
+
+    }
   }
   expect_equal(length(data), 4)
   unlink(csvLocation, recursive = TRUE)

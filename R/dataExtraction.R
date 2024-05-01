@@ -64,7 +64,8 @@ joinDatabase <- function(fileDataPath,
       }
       # Iterates every individual fileName
       for (fileName in filesLocation) {
-        resultsData <- read_csv(fileName, show_col_types = FALSE)
+        resultsData <- read_csv(fileName, show_col_types = FALSE) %>%
+          mutate(estimate_value = as.character(estimate_value))
         resultsColumns <- names(resultsData)
         # Checks the type of every individual fileName
         data <- loadFileData(data, fileName, configData, resultsData, resultsColumns, databaseName, logger)
@@ -104,7 +105,7 @@ loadFileData <- function(data,
   if ("result_type" %in% resultsColumns) {
     resultType <- unique(resultsData$result_type)
     package <- unique(resultsData$package_name)
-    if ("Summary characteristics"%in% resultType) {
+    if ("summarised_characteristics" %in% resultType | "summarise_table" %in% resultType | "summarised_cohort_intersect" %in% resultType) {
         resultsData$result_type <- "summarised_characteristics"
         resultType <- "summarised_characteristics"
         } else if ("Summarised Large Scale Characteristics" %in% resultType) {
@@ -214,8 +215,8 @@ getPackageData <- function(data, package, resultType, resultsColumns, resultsDat
     if (is.null(data[[package]])) {
       data[[package]] <- list()
     }
-    if (is.null(data[[package]][["summarised_characteristics"]])) {
-      data[[package]][["summarised_characteristics"]] <- data.frame()
+    if (is.null(data[[package]][[resultType]])) {
+      data[[package]][[resultType]] <- tibble::tibble()
     }
     data[[package]][[resultType]] <- bind_rows(data[[package]][[resultType]], resultsDataWithCols)
   }

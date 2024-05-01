@@ -13,6 +13,14 @@ characteristicsUI <- function(id, uploadedFiles) {
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
+               pickerInput(inputId = ns("group_name"),
+                           label = "Group Name",
+                           choices = unique(uploadedFiles$dataPP$summarised_characteristics$group_name),
+                           selected = unique(uploadedFiles$dataPP$summarised_characteristics$group_name),
+                           multiple = FALSE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
                pickerInput(inputId = ns("group_level"),
                            label = "Group Level",
                            choices = unique(uploadedFiles$dataPP$summarised_characteristics$group_level),
@@ -25,6 +33,14 @@ characteristicsUI <- function(id, uploadedFiles) {
                            label = "Strata Name",
                            choices = unique(uploadedFiles$dataPP$summarised_characteristics$strata_name),
                            selected = unique(uploadedFiles$dataPP$summarised_characteristics$strata_name),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("strata_level"),
+                           label = "Strata Level",
+                           choices = unique(uploadedFiles$dataPP$summarised_characteristics$strata_level),
+                           selected = unique(uploadedFiles$dataPP$summarised_characteristics$strata_level),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
@@ -72,8 +88,8 @@ characteristicsUI <- function(id, uploadedFiles) {
                              br(),
                              pickerInput(inputId = ns("pivotWide"),
                                          label = "Arrange by",
-                                         choices = c("Group", "Strata"),
-                                         selected = c("Group", "Strata"),
+                                         choices = c("group", "strata"),
+                                         selected = c("group", "strata"),
                                          multiple = TRUE),
                              column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
@@ -119,14 +135,14 @@ characteristicsUI <- function(id, uploadedFiles) {
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
-        column(4,
-               pickerInput(inputId = ns("variable_level"),
-                           label = "Variable Level",
-                           choices = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$variable_level)),
-                           selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$variable_level),
-                           multiple = TRUE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        ),
+        # column(4,
+        #        pickerInput(inputId = ns("variable_level"),
+        #                    label = "Variable Level",
+        #                    choices = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$variable_level)),
+        #                    selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$variable_level),
+        #                    multiple = TRUE,
+        #                    list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        # ),
         column(4,
                pickerInput(inputId = ns("estimate_type"),
                            label = "Estimate Type",
@@ -162,8 +178,8 @@ characteristicsUI <- function(id, uploadedFiles) {
                              br(),
                              pickerInput(inputId = ns("pivotWide"),
                                          label = "Arrange by",
-                                         choices = c("Group", "Strata"),
-                                         selected = c("Group", "Strata"),
+                                         choices = c("group", "strata"),
+                                         selected = c("group", "strata"),
                                          multiple = TRUE),
                              column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
@@ -181,12 +197,17 @@ characteristicsServer <- function(id, dataset) {
     if (id == "characteristics") {
       dataPP <- reactive({
         dataset() %>% filter(cdm_name %in% input$cdm_name,
+                             group_name %in% input$group_name,
                              group_level %in% input$group_level,
                              strata_name %in% input$strata_name,
-                             variable_name %in% input$variable_name,
-                             variable_level %in% input$variable_level,
-                             estimate_type %in% input$estimate_type) %>%
-          mutate(estimate_value = ifelse(estimate_type == "percentage", round(as.numeric(estimate_value), 2), estimate_value))
+                             strata_level %in% input$strata_level,
+                             estimate_type %in% input$estimate_type,
+                             variable_name %in% input$variable_name
+                             # ,
+                             # variable_level %in% input$variable_level
+                             )
+        # %>%
+        #   mutate(estimate_value = ifelse(estimate_type == "percentage", round(as.numeric(estimate_value), 2), estimate_value))
       })
     } else {
       dataPP <- reactive({
@@ -219,7 +240,8 @@ characteristicsServer <- function(id, dataset) {
 
     output$summarisedTableGt <- gt::render_gt({
       dataPP <- as_tibble(selectCols(dataPP()))
-      tableCharacteristics(result = dataPP)
+      tableCharacteristics(result = dataPP,
+                           split = input$pivotWide)
     })
 
     addObject <- reactiveVal()

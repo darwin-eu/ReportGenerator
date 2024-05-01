@@ -21,7 +21,7 @@ tabPanelSelection <- function(selection, uploadedFiles) {
     tabPanel(selection, prevalenceUI(selection, uploadedFiles))
   } else if (selection == "Treatment Pathways Interactive Plots") {
     tabPanel(selection, patternsUI(selection, uploadedFiles))
-  } else if (selection == "Summarised Characteristics") {
+  } else if (selection == "summarised_characteristics") {
     tabPanel(selection, characteristicsUI("characteristics", uploadedFiles))
   } else if (selection == "Summarised Large Scale Characteristics") {
     tabPanel(selection, characteristicsUI("lsc", uploadedFiles))

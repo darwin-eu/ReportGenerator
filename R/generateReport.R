@@ -33,6 +33,7 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
     # Loop through ever object selected in the menu
     log4r::info(logger, glue::glue("Start generating report, number of items: {length(dataReportList)}"))
     for (i in seq(1:length(dataReportList))) {
+      # i <- 1
       # Get the function to generate and print in report
       titleText <- names(dataReportList[[i]])
       expression <- getItemConfig(input = "title",
@@ -70,6 +71,7 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
 
       # Check class of every function and add it to the word report accordingly
       if ("gt_tbl" %in% class(object)) {
+        log4r::info(logger, glue::glue("Generating gt_tble object"))
         body_end_section_landscape(reportDocx)
         body_add_gt(reportDocx, value = object)
         body_add(reportDocx,

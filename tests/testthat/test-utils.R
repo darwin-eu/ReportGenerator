@@ -71,6 +71,14 @@ test_that("getItemConfig for getting a function", {
   expect_equal(expression, c("table1NumPar(incidence_attrition, prevalence_attrition)"))
 })
 
+test_that("getItemConfig for getting a function", {
+  title <- c("Summarised Characteristics")
+  expression <- getItemConfig(input = "title",
+                              output = "function",
+                              inputValue = title)
+  expect_equal(expression, c("table1NumPar(incidence_attrition, prevalence_attrition)"))
+})
+
 test_that("getItemConfig for getting options", {
   title <- c("Table - Number of participants")
   itemOptions <- getItemConfig(input = "title",
@@ -86,6 +94,14 @@ test_that("getItemConfig for getting options", {
                                inputValue = title)
   expect_equal(itemOptions, NULL)
 })
+
+# test_that("getItemConfig for getting options ERROR", {
+#   title <- c("Table - Number of Giberish")
+#   itemOptions <- getItemConfig(input = "title",
+#                                output = "options",
+#                                inputValue = title)
+#   expect_equal(itemOptions, NULL)
+# })
 
 test_that("getFunctionReport error more than length 1", {
   title <- c("Table - Number of participants", "Table - Incidence Attrition")
