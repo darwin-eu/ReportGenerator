@@ -55,14 +55,14 @@ joinDatabase <- function(fileDataPath,
                                   pattern = ".csv",
                                   full.names = TRUE,
                                   recursive = TRUE)
-
+      # Assign the databaseName in case there is a metadata file from TreatmentPatterns
       metadata <- filesLocation[stringr::str_detect(filesLocation, "metadata")]
       if (!identical(metadata, character(0))) {
         databaseName <- readr::read_csv(metadata, show_col_types = FALSE) %>%
           pull(cdmSourceName) %>%
           unique()
       }
-      # Iterates every individual fileName
+      # Iterates every individual csv file
       for (fileName in filesLocation) {
         resultsData <- read_csv(fileName, show_col_types = FALSE) %>%
           mutate(estimate_value = as.character(estimate_value))
