@@ -64,9 +64,17 @@ joinDatabase <- function(fileDataPath,
       }
       # Iterates every individual csv file
       for (fileName in filesLocation) {
-        resultsData <- read_csv(fileName, show_col_types = FALSE) %>%
-          mutate(estimate_value = as.character(estimate_value))
+        resultsData <- read_csv(fileName, show_col_types = FALSE)
+
         resultsColumns <- names(resultsData)
+
+        if ("estimate_value" %in% resultsColumns) {
+          resultsData <- resultsData %>%
+            mutate(estimate_value = as.character(estimate_value))
+
+          checkmate::assertClass(resultsData$estimate_value, "character")
+        }
+
         # Checks the type of every individual fileName
         data <- loadFileData(data, fileName, configData, resultsData, resultsColumns, databaseName, logger)
       }
