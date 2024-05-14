@@ -13,6 +13,14 @@ characteristicsUI <- function(id, uploadedFiles) {
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
+               pickerInput(inputId = ns("result_id"),
+                           label = "Result Id",
+                           choices = unique(uploadedFiles$dataPP$summarised_characteristics$result_id),
+                           selected = unique(uploadedFiles$dataPP$summarised_characteristics$result_id),
+                           multiple = FALSE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
                pickerInput(inputId = ns("group_name"),
                            label = "Group Name",
                            choices = unique(uploadedFiles$dataPP$summarised_characteristics$group_name),
@@ -197,6 +205,7 @@ characteristicsServer <- function(id, dataset) {
     if (id == "characteristics") {
       dataPP <- reactive({
         dataset() %>% filter(cdm_name %in% input$cdm_name,
+                             result_id %in% input$result_id,
                              group_name %in% input$group_name,
                              group_level %in% input$group_level,
                              strata_name %in% input$strata_name,
