@@ -43,6 +43,5 @@ TASKS.R
 TRUE
 sunburstPlot.html
 sankeyDiagram.html
-ReportApp
 reportGeneratorApp/
 log.txt
