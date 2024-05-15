@@ -72,19 +72,27 @@ reportGenerator <- function(logger = NULL) {
                    column(width = 6,
                           h2("Report items"),
                           DTOutput("dataReportMenu"),
-                          # verbatimTextOutput("dataReportMenu"),
                           tags$br(),
                           tags$head(tags$style(".dlReportBtn{ margin-left:15px;margin-right:15px; margin-top:25px; color:#444 !important; }")),
                           splitLayout(
                             downloadButton("generateReport", "Generate Report", class = "dlReportBtn"),
                             downloadButton("saveReportData", "Save report items", class = "dlReportBtn"),
-                            actionButton("createReportApp", "create Report App"),
                             fileInput("loadReportItems",
                                       "Load report items",
                                       accept = c(".rds"),
                                       placeholder = "rds")
                           ),
                           div(id = "reportOutput")
+                   )
+                 ),
+                 fluidRow(
+                   column(width = 6,
+                          h2("Create report application"),
+                          tags$head(tags$style(".dlAppBtn{ margin-left:15px;margin-right:15px; margin-top:25px; color:#444 !important; }")),
+                          splitLayout(
+                            actionButton("createReportApp", "Generate app", class = "dlAppBtn")
+                          ),
+                          div(id = "createAppOutput")
                    )
                  )
         )
@@ -558,8 +566,7 @@ reportGenerator <- function(logger = NULL) {
                    "itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects))),
               resultFileName)
 
-
-      output$feedback <- renderText("Shiny app copied successfully!")
+      shinyjs::html("createAppOutput", glue::glue("<br>Shiny app created in {targetPath}"), add = TRUE)
     })
 
   }
