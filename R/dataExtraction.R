@@ -114,24 +114,28 @@ loadFileData <- function(data,
     resultType <- unique(resultsData$result_type)
     package <- unique(resultsData$package_name)
     if ("summarised_characteristics" %in% resultType | "summarise_table" %in% resultType | "summarised_cohort_intersect" %in% resultType) {
-        resultsData$result_type <- "summarised_characteristics"
-        resultType <- "summarised_characteristics"
-        } else if ("Summarised Large Scale Characteristics" %in% resultType) {
-          resultsData$result_type <- "summarised_large_scale_characteristics"
-          resultType <- "summarised_large_scale_characteristics"
-          } else if ("Survival stimate" %in% resultType) {
-            analysis_type <- unique({resultsData %>%
-                filter(result_type == "survival_summary") %>%
-                pull(additional_level)
-              })
-            if (grepl("competing_risk", analysis_type)) {
-              resultType <- "Survival cumulative incidence"
-              } else if (grepl("single_event", analysis_type)) {
-                resultType <- "Survival estimate"
-              }
-          } else if ("summarised_characteristics" %in% resultType & length(resultType) >= 2) {
-            resultType <- "summarised_characteristics"
-          }
+      resultsData$result_type <- "summarised_characteristics"
+      resultType <- "summarised_characteristics"
+    }
+    else if ("Summarised Large Scale Characteristics" %in% resultType) {
+      resultsData$result_type <- "summarised_large_scale_characteristics"
+      resultType <- "summarised_large_scale_characteristics"
+    }
+    else if ("Survival estimate" %in% resultType) {
+      analysis_type <- unique({ resultsData %>%
+          filter(result_type == "survival_summary") %>%
+          pull(additional_level) })
+      if (grepl("competing_risk", analysis_type)) {
+        resultType <- "Survival cumulative incidence"
+      }
+      else if (grepl("single_event", analysis_type)) {
+        resultType <- "Survival estimate"
+      }
+      if (is.null(package)) { package <- "CohortSurvival"}
+    }
+    else if ("summarised_characteristics" %in% resultType & length(resultType) >= 2) {
+      resultType <- "summarised_characteristics"
+    }
 
     data <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData, logger)
     return(data)
@@ -149,38 +153,42 @@ loadFileData <- function(data,
             resultsData$excluded_records <- as.character(resultsData$excluded_records)
             data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
-          } else if (val == "prevalence_attrition") {
+          }
+          else if (val == "prevalence_attrition") {
             if (all(configColumns %in% resultsColumns) & grepl("prevalence", fileName)) {
               log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
               resultsData$excluded_records <- as.character(resultsData$excluded_records)
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+            }
+          }
+          else if (val == "incidence_estimates") {
+            if (all(configColumns %in% resultsColumns)) {
+              if ("denominator_days_prior_history" %in% resultsColumns) {
+                colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
               }
-            } else if (val == "incidence_estimates") {
-              if (all(configColumns %in% resultsColumns)) {
-                if ("denominator_days_prior_history" %in% resultsColumns) {
-                  colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
-                  }
-                log4r::info(logger, glue::glue("Match file using config columns: {val}"))
-                data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
+              data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+            }
+          }
+          else if (val == "prevalence_estimates") {
+            if (all(configColumns %in% resultsColumns)) {
+              if ("denominator_days_prior_history" %in% resultsColumns) {
+                colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
+              }
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
+              data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+            }
+          }
+          else if (val == "treatmentPathways") {
+            if (all(configColumns %in% resultsColumns)) {
+              if (!('cdm_name' %in% resultsColumns)) {
+                resultsData <- mutate(resultsData, cdm_name = databaseName)
                 }
-              } else if (val == "prevalence_estimates") {
-                if (all(configColumns %in% resultsColumns)) {
-                  if ("denominator_days_prior_history" %in% resultsColumns) {
-                    colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
-                    }
-                  log4r::info(logger, glue::glue("Match file using config columns: {val}"))
-                  data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-                  }
-                } else if (val == "treatmentPathways") {
-                  if (all(configColumns %in% resultsColumns)) {
-                    if (!('cdm_name' %in% resultsColumns)) {
-                      resultsData <- mutate(resultsData, cdm_name = databaseName)
-                      }
-                    log4r::info(logger, glue::glue("Match file using config columns: {val}"))
-                    data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-                  }
-                }
+              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
+              data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+            }
+          }
       }
     }
     return(data)
@@ -215,6 +223,14 @@ additionalCols <- function(data) {
 }
 
 getPackageData <- function(data, package, resultType, resultsColumns, resultsData, configData, logger) {
+  if (resultType == "survival") {
+    analysisType <- unique(resultsData$analysis_type)
+    if (analysisType == "single_event") {
+      resultType <- "Survival estimate"
+    } else {
+      resultType <- "Survival cumulative incidence"
+    }
+  }
   pkgConfigData <- configData[[package]]
   configColumns <- pkgConfigData[[resultType]][["names"]]
   if (all(configColumns %in% resultsColumns)) {

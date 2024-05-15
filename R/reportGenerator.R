@@ -539,7 +539,7 @@ reportGenerator <- function(logger = NULL) {
       })
 
       # Specify the target directory (working directory in this case)
-      targetPathModules <- file.path(getwd(), "reportGeneratorApp", "modules")
+      targetPathModules <- file.path(targetPath, "modules")
 
       # Create targetPath
       dir.create(targetPathModules)

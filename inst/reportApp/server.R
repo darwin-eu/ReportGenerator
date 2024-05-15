@@ -7,34 +7,6 @@
 #    http://shiny.rstudio.com/
 #
 
-library(shiny)
-library(shinyWidgets)
-library(shinythemes)
-library(shinydashboard)
-library(here)
-library(log4r)
-library(gt)
-library(officer)
-library(yaml)
-library(scales)
-library(glue)
-library(tidyr)
-library(huxtable)
-library(IncidencePrevalence)
-
-source("modules/attModules.R", local = TRUE)
-source("modules/csModules.R", local = TRUE)
-source("modules/IncModules.R", local = TRUE)
-source("modules/ppModules.R", local = TRUE)
-source("modules/prevModules.R", local = TRUE)
-source("modules/standardTables.R", local = TRUE)
-source("modules/tableModules.R", local = TRUE)
-source("modules/tabPanelSelection.R", local = TRUE)
-source("modules/tpModules.R", local = TRUE)
-source("modules/utils.R", local = TRUE)
-source("modules/automaticText.R", local = TRUE)
-source("global.R", local = TRUE)
-
 # Define server logic required to draw a histogram
 function(input, output, session) {
   logger <- log4r::logger()
