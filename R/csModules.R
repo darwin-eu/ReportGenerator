@@ -124,12 +124,14 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
         if (id == "survivalPlot") {
           plot <- CohortSurvival::plotSurvival(getData(),
                                                facet = "cdm_name",
-                                               colour = "strata_name")
+                                               colour = "strata_name",
+                                               cumulativeFailure = FALSE)
         } else if (id == "failurePlot") {
-            plot <- CohortSurvival::plotCumulativeIncidence(getData(),
-                                                            facet = "cdm_name",
-                                                            colour = "strata_name")
-          }
+            plot <- CohortSurvival::plotSurvival(getData(),
+                                                 facet = "cdm_name",
+                                                 colour = "strata_name",
+                                                 cumulativeFailure = TRUE)
+        }
       }
       return(plot)
     })

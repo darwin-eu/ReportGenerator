@@ -20,7 +20,9 @@
 #'
 #' @param databaseName A vector with the name in characters of each database.
 #' @param simulatePopulation TRUE or FALSE to simulate different population sizes. TRUE is default.
-#' @param outputDir A character vector of the directory to export mock data.
+#' @param outputPath A character vector of the path to export mock data.
+#' @param internal interal usage
+#'
 #' @import dplyr tidyr IncidencePrevalence duckdb checkmate CDMConnector PatientProfiles CohortSurvival
 #' @importFrom IncidencePrevalence generateDenominatorCohortSet estimateIncidence attrition estimatePointPrevalence estimatePeriodPrevalence
 #' @importFrom utils head write.csv packageVersion
@@ -170,8 +172,6 @@ getIncidencePrevalence <- function(sampleSize) {
 }
 
 getCharacteristicsResult <- function() {
-
-  library(PatientProfiles)
 
   observation_period <- dplyr::tibble(
     observation_period_id = c(1, 2, 3),

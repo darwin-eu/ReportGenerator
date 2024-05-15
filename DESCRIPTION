@@ -15,7 +15,6 @@ Depends:
     R (>= 3.6.1),
     dplyr
 Imports:
-    ggpubr,
     flextable,
     IncidencePrevalence,
     officer,
@@ -49,9 +48,10 @@ Imports:
     CohortSurvival,
     shinycssloaders,
     shinyjs,
-    rlang,
-    tidyselect,
-    log4r
+    log4r,
+    DBI,
+    omopgenerics,
+    tibble
 Suggests:
     testthat,
     rmarkdown,

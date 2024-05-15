@@ -7,7 +7,7 @@
 autoCaptionCharac(summarisedCharacteristics)
 }
 \arguments{
-\item{uploadedFiles}{Data frame with summarised_characteristics data}
+\item{summarisedCharacteristics}{Data frame with summarised_characteristics data}
 }
 \value{
 Automatic text as a character string

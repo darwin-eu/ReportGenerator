@@ -16,7 +16,9 @@ generateMockData(
 
 \item{simulatePopulation}{TRUE or FALSE to simulate different population sizes. TRUE is default.}
 
-\item{outputDir}{A character vector of the directory to export mock data.}
+\item{outputPath}{A character vector of the path to export mock data.}
+
+\item{internal}{interal usage}
 }
 \value{
 csv files
