@@ -5,7 +5,7 @@
 \title{Creates a mock data set for ReportGenerator. The output is a zip folder for each database.}
 \usage{
 generateMockData(
-  databaseName = c("CHUBX", "CPRD GOLD", "IMASIS", "IPCI", "SIDIAP"),
+  databaseName = c("CHUBX", "CPRD_GOLD", "IMASIS", "IPCI", "SIDIAP"),
   simulatePopulation = TRUE,
   outputPath = testthat::test_path("studies", "zip"),
   internal = FALSE
