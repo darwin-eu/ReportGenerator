@@ -104,6 +104,7 @@ generateMockData <- function(databaseName = c("CHUBX",
                       overwrite = TRUE)
   }
   duckdb::duckdb_shutdown(duckdb::duckdb())
+  return(dataList)
 }
 
 getIncidencePrevalence <- function(sampleSize) {
@@ -255,13 +256,11 @@ getCharacteristicsResult <- function() {
       )
     )
   )
-  return(characteristicsResult)
+  return(addSettings(characteristicsResult))
 }
 
 getLargeScaleCharacteristicsResult <- function() {
-
   # Mock data example from PatientProfiles vignette
-
   person <- dplyr::tibble(
     person_id = c(1, 2),
     gender_concept_id = c(8507, 8532),
@@ -351,12 +350,11 @@ getLargeScaleCharacteristicsResult <- function() {
       episodeInWindow = c("condition_occurrence", "drug_exposure"),
       minimumFrequency = 0
     )
-  return(largeScaleCharacteristicsResult)
+  return(addSettings(largeScaleCharacteristicsResult))
 }
 
 
 getTreatmentPathways <- function() {
-
   cohortSet <- CDMConnector::readCohortSet(
     path = system.file(package = "TreatmentPatterns",
                        "exampleCohorts")
@@ -437,7 +435,13 @@ getCohortSurvival <- function() {
                                                                  competingOutcomeCohortTable = "death_cohort",
                                                                  strata = list(c("sex")))
 
-  result <- list("survivalEstimate" = singleEvent,
-                 "survivalCumulativeIncidence" = competingRisk)
+  result <- list("survivalEstimate" = addSettings(singleEvent),
+                 "survivalCumulativeIncidence" = addSettings(competingRisk))
   return(result)
+}
+
+addSettings <- function(data) {
+  data %>%
+    inner_join(settings(data),
+               by = "result_id")
 }
