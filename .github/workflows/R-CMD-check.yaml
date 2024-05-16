@@ -54,6 +54,8 @@ jobs:
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
+        env:
+          EUNOMIA_DATA_FOLDER: ${{ runner.temp }}
         with:
           upload-snapshots: true
           error-on: '"error"'
