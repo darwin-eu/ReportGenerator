@@ -31,7 +31,7 @@
 #' @return csv files
 #' @export
 generateMockData <- function(databaseName = c("CHUBX",
-                                              "CPRD GOLD",
+                                              "CPRD_GOLD",
                                               "IMASIS",
                                               "IPCI",
                                               "SIDIAP"),
@@ -49,7 +49,7 @@ generateMockData <- function(databaseName = c("CHUBX",
     if (simulatePopulation == TRUE) {
       if (dbName== "CHUBX") {
         sampleSize <- 21523
-      } else if (dbName== "CPRD GOLD") {
+      } else if (dbName== "CPRD_GOLD") {
         sampleSize <- 15662
       } else if (dbName== "IMASIS") {
         sampleSize <- 10147
