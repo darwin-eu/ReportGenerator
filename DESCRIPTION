@@ -58,7 +58,8 @@ Suggests:
     networkD3,
     sunburstR,
     knitr,
-    htmlwidgets
+    htmlwidgets,
+    CirceR
 Remotes:
     daattali/shinycssloaders
 Config/testthat/edition: 3
