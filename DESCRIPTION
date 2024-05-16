@@ -59,7 +59,8 @@ Suggests:
     sunburstR,
     knitr,
     htmlwidgets,
-    CirceR
+    CirceR,
+    SqlRender
 Remotes:
     daattali/shinycssloaders
 Config/testthat/edition: 3
