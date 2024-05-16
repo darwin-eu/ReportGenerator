@@ -81,7 +81,8 @@ generateMockData <- function(databaseName = c("CHUBX",
                      "summaryStatsTherapyDuration" = treatmentPathwaysData$summaryStatsTherapyDuration,
                      "summarised_characteristics" = characteristicsData,
                      "summarised_large_scale_characteristics" = largeScaleCharacteristicsData,
-                     "Survival estimate" = cohortSurvivalData$survivalEstimate)
+                     "Survival estimate" = cohortSurvivalData$survivalEstimate,
+                     "Survival cumulative incidence" = cohortSurvivalData$survivalCumulativeIncidence)
 
     # Insert database name
 
@@ -436,8 +437,7 @@ getCohortSurvival <- function() {
                                                                  competingOutcomeCohortTable = "death_cohort",
                                                                  strata = list(c("sex")))
 
-  survivalData <- rbind(singleEvent, competingRisk)
-
-  result <- list("survivalEstimate" = survivalData)
+  result <- list("survivalEstimate" = singleEvent,
+                 "survivalCumulativeIncidence" = competingRisk)
   return(result)
 }

@@ -123,12 +123,12 @@ loadFileData <- function(data,
     }
     else if ("Survival estimate" %in% resultType) {
       analysis_type <- unique({ resultsData %>%
-          filter(result_type == "survival_summary") %>%
+          filter(result_type == "Survival estimate") %>%
           pull(additional_level) })
-      if (grepl("competing_risk", analysis_type)) {
+      if (all(grepl("Competing_risk", analysis_type))) {
         resultType <- "Survival cumulative incidence"
       }
-      else if (grepl("single_event", analysis_type)) {
+      else if (all(grepl("Single_event", analysis_type))) {
         resultType <- "Survival estimate"
       }
       if (is.null(package)) { package <- "CohortSurvival"}
@@ -223,14 +223,6 @@ additionalCols <- function(data) {
 }
 
 getPackageData <- function(data, package, resultType, resultsColumns, resultsData, configData, logger) {
-  if (resultType == "survival") {
-    analysisType <- unique(resultsData$analysis_type)
-    if (analysisType == "single_event") {
-      resultType <- "Survival estimate"
-    } else {
-      resultType <- "Survival cumulative incidence"
-    }
-  }
   pkgConfigData <- configData[[package]]
   configColumns <- pkgConfigData[[resultType]][["names"]]
   if (all(configColumns %in% resultsColumns)) {
