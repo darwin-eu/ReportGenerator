@@ -45,3 +45,6 @@ sunburstPlot.html
 sankeyDiagram.html
 reportGeneratorApp/
 log.txt
+tests/testthat/log.txt
+tests/testthat/testlog.txt
+
