@@ -4,10 +4,10 @@ test_that("Generate Report", {
                                              "DARWIN_EU_Study_Report.docx",
                                              package = "ReportGenerator"))
   dataReportList <- reportItems$reportItems
-  fileName <-  here::here("results", "report.docx" )
+  fileName <-  file.path(tmpDir, "report.docx")
   logger <- log4r::logger()
-  generateReport(reportDocx,
-                 dataReportList,
-                 fileName,
-                 logger)
+  testthat::expect_no_error(generateReport(reportDocx,
+                                           dataReportList,
+                                           fileName,
+                                           logger))
 })

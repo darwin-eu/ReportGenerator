@@ -20,7 +20,9 @@
 #'
 #' @param databaseName A vector with the name in characters of each database.
 #' @param simulatePopulation TRUE or FALSE to simulate different population sizes. TRUE is default.
-#' @param outputDir A character vector of the directory to export mock data.
+#' @param outputPath A character vector of the path to export mock data.
+#' @param internal interal usage
+#'
 #' @import dplyr tidyr IncidencePrevalence duckdb checkmate CDMConnector PatientProfiles CohortSurvival
 #' @importFrom IncidencePrevalence generateDenominatorCohortSet estimateIncidence attrition estimatePointPrevalence estimatePeriodPrevalence
 #' @importFrom utils head write.csv packageVersion
@@ -29,7 +31,7 @@
 #' @return csv files
 #' @export
 generateMockData <- function(databaseName = c("CHUBX",
-                                              "CPRD GOLD",
+                                              "CPRD_GOLD",
                                               "IMASIS",
                                               "IPCI",
                                               "SIDIAP"),
@@ -47,7 +49,7 @@ generateMockData <- function(databaseName = c("CHUBX",
     if (simulatePopulation == TRUE) {
       if (dbName== "CHUBX") {
         sampleSize <- 21523
-      } else if (dbName== "CPRD GOLD") {
+      } else if (dbName== "CPRD_GOLD") {
         sampleSize <- 15662
       } else if (dbName== "IMASIS") {
         sampleSize <- 10147
@@ -79,7 +81,8 @@ generateMockData <- function(databaseName = c("CHUBX",
                      "summaryStatsTherapyDuration" = treatmentPathwaysData$summaryStatsTherapyDuration,
                      "summarised_characteristics" = characteristicsData,
                      "summarised_large_scale_characteristics" = largeScaleCharacteristicsData,
-                     "Survival estimate" = cohortSurvivalData$survivalEstimate)
+                     "Survival estimate" = cohortSurvivalData$survivalEstimate,
+                     "Survival cumulative incidence" = cohortSurvivalData$survivalCumulativeIncidence)
 
     # Insert database name
 
@@ -101,6 +104,7 @@ generateMockData <- function(databaseName = c("CHUBX",
                       overwrite = TRUE)
   }
   duckdb::duckdb_shutdown(duckdb::duckdb())
+  return(dataList)
 }
 
 getIncidencePrevalence <- function(sampleSize) {
@@ -170,8 +174,6 @@ getIncidencePrevalence <- function(sampleSize) {
 }
 
 getCharacteristicsResult <- function() {
-
-  library(PatientProfiles)
 
   observation_period <- dplyr::tibble(
     observation_period_id = c(1, 2, 3),
@@ -254,13 +256,11 @@ getCharacteristicsResult <- function() {
       )
     )
   )
-  return(characteristicsResult)
+  return(addSettings(characteristicsResult))
 }
 
 getLargeScaleCharacteristicsResult <- function() {
-
   # Mock data example from PatientProfiles vignette
-
   person <- dplyr::tibble(
     person_id = c(1, 2),
     gender_concept_id = c(8507, 8532),
@@ -350,12 +350,11 @@ getLargeScaleCharacteristicsResult <- function() {
       episodeInWindow = c("condition_occurrence", "drug_exposure"),
       minimumFrequency = 0
     )
-  return(largeScaleCharacteristicsResult)
+  return(addSettings(largeScaleCharacteristicsResult))
 }
 
 
 getTreatmentPathways <- function() {
-
   cohortSet <- CDMConnector::readCohortSet(
     path = system.file(package = "TreatmentPatterns",
                        "exampleCohorts")
@@ -436,8 +435,13 @@ getCohortSurvival <- function() {
                                                                  competingOutcomeCohortTable = "death_cohort",
                                                                  strata = list(c("sex")))
 
-  survivalData <- rbind(singleEvent, competingRisk)
-
-  result <- list("survivalEstimate" = survivalData)
+  result <- list("survivalEstimate" = addSettings(singleEvent),
+                 "survivalCumulativeIncidence" = addSettings(competingRisk))
   return(result)
+}
+
+addSettings <- function(data) {
+  data %>%
+    inner_join(settings(data),
+               by = "result_id")
 }

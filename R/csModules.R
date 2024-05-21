@@ -97,7 +97,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
       getData() %>%
         dplyr::slice_head(n = input$top_n) %>%
         select(c("cdm_name", "result_type", "group_level", "strata_name",
-                 "strata_level", "estimate_name", "time", "estimate_value"))
+                 "strata_level", "estimate_name", "estimate_value"))
     })
 
     if (id == "survivalTable") {
@@ -124,12 +124,14 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
         if (id == "survivalPlot") {
           plot <- CohortSurvival::plotSurvival(getData(),
                                                facet = "cdm_name",
-                                               colour = "strata_name")
+                                               colour = "strata_name",
+                                               cumulativeFailure = FALSE)
         } else if (id == "failurePlot") {
-            plot <- CohortSurvival::plotCumulativeIncidence(getData(),
-                                                            facet = "cdm_name",
-                                                            colour = "strata_name")
-          }
+            plot <- CohortSurvival::plotSurvival(getData(),
+                                                 facet = "cdm_name",
+                                                 colour = "strata_name",
+                                                 cumulativeFailure = TRUE)
+        }
       }
       return(plot)
     })

@@ -5,7 +5,7 @@
 \title{Creates a mock data set for ReportGenerator. The output is a zip folder for each database.}
 \usage{
 generateMockData(
-  databaseName = c("CHUBX", "CPRD GOLD", "IMASIS", "IPCI", "SIDIAP"),
+  databaseName = c("CHUBX", "CPRD_GOLD", "IMASIS", "IPCI", "SIDIAP"),
   simulatePopulation = TRUE,
   outputPath = testthat::test_path("studies", "zip"),
   internal = FALSE
@@ -16,7 +16,9 @@ generateMockData(
 
 \item{simulatePopulation}{TRUE or FALSE to simulate different population sizes. TRUE is default.}
 
-\item{outputDir}{A character vector of the directory to export mock data.}
+\item{outputPath}{A character vector of the path to export mock data.}
+
+\item{internal}{interal usage}
 }
 \value{
 csv files

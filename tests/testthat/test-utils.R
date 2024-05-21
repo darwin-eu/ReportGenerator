@@ -72,11 +72,11 @@ test_that("getItemConfig for getting a function", {
 })
 
 test_that("getItemConfig for getting a function", {
-  title <- c("Summarised Characteristics")
+  title <- c("summarised_characteristics")
   expression <- getItemConfig(input = "title",
                               output = "function",
                               inputValue = title)
-  expect_equal(expression, c("table1NumPar(incidence_attrition, prevalence_attrition)"))
+  expect_equal(expression, c("tableCharacteristics(summarisedCharacteristics)"))
 })
 
 test_that("getItemConfig for getting options", {
@@ -151,7 +151,7 @@ test_that("PatientProfiles Both Summaries", {
 test_that("PatientProfiles Summary", {
   items <- c("summarised_characteristics")
   menuList <- getItemsList(items)
-  expect_equal(menuList, "Summarised Characteristics")
+  expect_equal(menuList, "summarised_characteristics")
 })
 
 test_that("PatientProfiles LSC", {
