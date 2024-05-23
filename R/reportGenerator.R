@@ -86,11 +86,13 @@ reportGenerator <- function(logger = NULL) {
                    )
                  ),
                  fluidRow(
-                   column(width = 6,
+                   column(width = 3,
                           h2("Create report application"),
-                          tags$head(tags$style(".dlAppBtn{ margin-left:15px;margin-right:15px; margin-top:25px; color:#444 !important; }")),
+                          tags$head(tags$style(".dlAppBtn{ margin-left:15px;margin-right:15px; margin-top:25px; color:#444 !important; }
+                                                .dlCheck { margin-left:15px;margin-right:15px; margin-top:30px; color:#444 !important; }")),
                           splitLayout(
-                            actionButton("createReportApp", "Generate app", class = "dlAppBtn")
+                            actionButton("createReportApp", "Generate app", class = "dlAppBtn"),
+                            div(checkboxInput("enableReporting", "Add reporting option", value = TRUE), class = "dlCheck")
                           ),
                           div(id = "createAppOutput")
                    )
@@ -522,21 +524,36 @@ reportGenerator <- function(logger = NULL) {
 
     observeEvent(input$createReportApp, {
       # Specify source directory
-      packagePath <- system.file("reportApp", package = "ReportGenerator")
+      reportAppDir <- "reportApp"
+      packagePath <- system.file(reportAppDir, package = "ReportGenerator")
 
       # Copy files
       targetPath <- getwd()
       file.copy(packagePath, targetPath, recursive = T)
+      reportAppPath <- file.path(targetPath, reportAppDir)
 
+      # Copy template
+      if (input$enableReporting) {
+        reportTemplate <- system.file("templates",
+                                      "word",
+                                      "DARWIN_EU_Study_Report.docx",
+                                      package = "ReportGenerator")
+        file.copy(reportTemplate, file.path(reportAppPath, "DARWIN_EU_Study_Report.docx"))
+        # update ui
+        file.remove(file.path(reportAppPath, "ui.R"))
+        file.rename(file.path(reportAppPath, "ui_total.R"), file.path(reportAppPath, "ui.R"))
+      }
       # Create results dir
-      targetPathResults <- file.path(targetPath, "reportApp", "results")
+      targetPathResults <- file.path(reportAppPath, "results")
       dir.create(targetPathResults)
 
       # Insert results from app
-      saveRDS(list("reportItems" = reactiveValuesToList(do.call(reactiveValues, dataReport$objects)),
-                   "uploadedFiles" = reactiveValuesToList(uploadedFiles),
-                   "itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects))),
+      saveRDS(list("itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects)),
+                   "reportItems" = reactiveValuesToList(do.call(reactiveValues, dataReport$objects))),
               file.path(targetPathResults, "reportItems.rds"))
+
+      saveRDS(list("uploadedFiles" = reactiveValuesToList(uploadedFiles)),
+              file.path(targetPathResults, "uploadedFiles.rds"))
 
       shinyjs::html("createAppOutput", glue::glue("<br>Shiny app created in {targetPath}"), add = TRUE)
     })

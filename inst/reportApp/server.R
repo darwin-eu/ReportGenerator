@@ -18,18 +18,13 @@ function(input, output, session) {
   log4r::info(logger, "Start ReportGenerator")
 
   # 1. Load data
-  # datasetLoadServer("StudyPackage")
-
   # ReactiveValues
-
   reportItems <- readRDS(here::here("results", "reportItems.rds"))
-
-  uploadedFiles <- reportItems$uploadedFiles
-  itemsList <- reactiveValues(objects = NULL)
+  itemsList <- reportItems$items
+  uploadedFiles <- readRDS(here::here("results", "uploadedFiles.rds"))$uploadedFiles
 
   # Item preview
-
-  objectSelection <- reportItems$itemsList$items
+  objectSelection <- itemsList$items
 
   # Renders the objectSelection into the main dashboard space
   output$navPanelPreview <- renderUI({
@@ -260,97 +255,53 @@ function(input, output, session) {
     bindEvent(dataFailurePlot())
 
 
-  # # Data Report Preview
-  #
-  # objectsListPreview <- reactive({
-  #   if (is.null(dataReport$objects)) {
-  #     return("None")
-  #   } else {
-  #     dataReportList <- reactiveValuesToList(do.call(reactiveValues, dataReport$objects))
-  #     result <- data.frame(name = character(0), caption = character(0))
-  #     for (i in seq(1:length(dataReportList))) {
-  #       name <- names(dataReportList[[i]])
-  #       reportItem <- dataReportList[[i]][[name]]
-  #       caption <- ""
-  #       if ("caption" %in% names(reportItem)) {
-  #         caption <- reportItem$caption
-  #       }
-  #       caption <- ifelse(is.null(caption), "", caption)
-  #       result <- rbind(result, data.frame(name = name, caption = caption))
-  #     }
-  #     return(result)
-  #   }
-  # })
-  #
-  # output$dataReportMenu <- renderDT({
-  #   dataReportFrame <- objectsListPreview()
-  #   if (inherits(dataReportFrame, "data.frame")) {
-  #     DT::datatable(dataReportFrame, options = list(dom = 't'))
-  #   }
-  # })
-  #
-  # # Word report generator
-  # output$generateReport <- downloadHandler(
-  #   filename = function() {
-  #     "generatedReport.docx"
-  #   },
-  #   content = function(file) {
-  #     shinyjs::disable("generateReport")
-  #     # Load template and generate report
-  #     shinyjs::html("reportOutput", "<br>Generating report", add = TRUE)
-  #     reportDocx <- read_docx(path = system.file("templates",
-  #                                                "word",
-  #                                                "DARWIN_EU_Study_Report.docx",
-  #                                                package = "ReportGenerator"))
-  #     reportItems <- list()
-  #     if (!is.null(dataReport$objects)) {
-  #       reportItems <- rev(reactiveValuesToList(do.call(reactiveValues, dataReport$objects)))
-  #     }
-  #     generateReport(reportDocx,
-  #                    reportItems,
-  #                    file,
-  #                    logger)
-  #     shinyjs::enable("generateReport")
-  #   }
-  # )
-  #
-  # # download sample study data
-  # output$downloadStudyData <- downloadHandler(
-  #   filename = function() { "StudyResults.zip" },
-  #   content = function(file) {
-  #     file.copy(system.file("extdata/examples/StudyResults.zip", package = "ReportGenerator"), file)
-  #   },
-  #   contentType = "application/zip"
-  # )
-  #
-  # # save report
-  # output$saveReportData <- downloadHandler(
-  #   filename = "reportItems.rds",
-  #   content = function(file) {
-  #     if (!is.null(dataReport$objects)) {
-  #       shinyjs::html("reportOutput", "<br>Saving report items to rds file", add = TRUE)
-  #       shinyjs::disable("saveReportData")
-  #       saveRDS(list("reportItems" = reactiveValuesToList(do.call(reactiveValues, dataReport$objects)),
-  #                    "uploadedFiles" = reactiveValuesToList(uploadedFiles),
-  #                    "itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects))),
-  #               file)
-  #       shinyjs::enable("saveReportData")
-  #     }
-  #   }
-  # )
-  # # Check input data
-  # observeEvent(input$loadReportItems, {
-  #   inFile <- input$loadReportItems
-  #   fileDataPath <- inFile$datapath
-  #   reportData <- readRDS(fileDataPath)
-  #   dataReport$objects <- reportData$reportItems
-  #   itemsList$objects <- reportData$itemsList
-  #   upFiles <- reportData$uploadedFiles
-  #   uploadedFiles$dataCS <- upFiles$dataCS
-  #   uploadedFiles$dataIP <- upFiles$dataIP
-  #   uploadedFiles$dataPP <- upFiles$dataPP
-  #   uploadedFiles$dataTP <- upFiles$dataTP
-  #   shinyjs::html("reportOutput", "<br>Loaded report items from rds file", add = TRUE)
-  # })
+  # Data Report Preview
+  objectsListPreview <- reactive({
+    if (is.null(dataReport$objects)) {
+      return("None")
+    } else {
+      dataReportList <- reactiveValuesToList(do.call(reactiveValues, dataReport$objects))
+      result <- data.frame(name = character(0), caption = character(0))
+      for (i in seq(1:length(dataReportList))) {
+        name <- names(dataReportList[[i]])
+        reportItem <- dataReportList[[i]][[name]]
+        caption <- ""
+        if ("caption" %in% names(reportItem)) {
+          caption <- reportItem$caption
+        }
+        caption <- ifelse(is.null(caption), "", caption)
+        result <- rbind(result, data.frame(name = name, caption = caption))
+      }
+      return(result)
+    }
+  })
 
+  output$dataReportMenu <- renderDT({
+    dataReportFrame <- objectsListPreview()
+    if (inherits(dataReportFrame, "data.frame")) {
+      DT::datatable(dataReportFrame, options = list(dom = 't'))
+    }
+  })
+
+  # Word report generator
+  output$generateReport <- downloadHandler(
+    filename = function() {
+      "generatedReport.docx"
+    },
+    content = function(file) {
+      shinyjs::disable("generateReport")
+      # Load template and generate report
+      shinyjs::html("reportOutput", "<br>Generating report", add = TRUE)
+      reportDocx <- read_docx(path = file.path(getwd(), "DARWIN_EU_Study_Report.docx"))
+      reportItems <- list()
+      if (!is.null(dataReport$objects)) {
+        reportItems <- rev(reactiveValuesToList(do.call(reactiveValues, dataReport$objects)))
+      }
+      generateReport(reportDocx,
+                     reportItems,
+                     file,
+                     logger)
+      shinyjs::enable("generateReport")
+    }
+  )
 }
