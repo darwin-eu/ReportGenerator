@@ -521,50 +521,22 @@ reportGenerator <- function(logger = NULL) {
     })
 
     observeEvent(input$createReportApp, {
-      # Specify the source directory within the package
+      # Specify source directory
       packagePath <- system.file("reportApp", package = "ReportGenerator")
 
-      # Specify the target directory (working directory in this case)
-      targetPath <- file.path(getwd(), "reportGeneratorApp")
+      # Copy files
+      targetPath <- getwd()
+      file.copy(packagePath, targetPath, recursive = T)
 
-      # Create targetPath
-      dir.create(targetPath)
-
-      # List all files in the source directory
-      appFiles <- list.files(packagePath, pattern = "^.*.(proj|R)$", full.names = TRUE)
-
-      # Copy each file to the target directory
-      sapply(appFiles, function(file) {
-        file.copy(file, file.path(targetPath, basename(file)))
-      })
-
-      # Specify the target directory (working directory in this case)
-      targetPathModules <- file.path(targetPath, "modules")
-
-      # Create targetPath
-      dir.create(targetPathModules)
-
-      # List all files in the source directory for modules
-      appFilesModules <- list.files(file.path(packagePath, "modules"), full.names = TRUE)
-
-      sapply(appFilesModules, function(file) {
-        file.copy(file, file.path(targetPathModules, basename(file)))
-      })
-
-      # Specify the target directory (working directory in this case)
-      targetPathResults <- file.path(getwd(), "reportGeneratorApp", "results")
-
-      # Create targetPath
+      # Create results dir
+      targetPathResults <- file.path(targetPath, "reportApp", "results")
       dir.create(targetPathResults)
-
-      # File Name
-      resultFileName <- file.path(targetPathResults, "reportItems.rds")
 
       # Insert results from app
       saveRDS(list("reportItems" = reactiveValuesToList(do.call(reactiveValues, dataReport$objects)),
                    "uploadedFiles" = reactiveValuesToList(uploadedFiles),
                    "itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects))),
-              resultFileName)
+              file.path(targetPathResults, "reportItems.rds"))
 
       shinyjs::html("createAppOutput", glue::glue("<br>Shiny app created in {targetPath}"), add = TRUE)
     })
