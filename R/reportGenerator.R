@@ -531,30 +531,51 @@ reportGenerator <- function(logger = NULL) {
       targetPath <- getwd()
       file.copy(packagePath, targetPath, recursive = T)
       reportAppPath <- file.path(targetPath, reportAppDir)
+      reportAppConfigPath <- file.path(reportAppPath, "config")
+      dir.create(reportAppConfigPath)
 
       # Copy template
       if (input$enableReporting) {
+        reportTemplateFile <- "DARWIN_EU_Study_Report.docx"
         reportTemplate <- system.file("templates",
                                       "word",
-                                      "DARWIN_EU_Study_Report.docx",
+                                      reportTemplateFile,
                                       package = "ReportGenerator")
-        file.copy(reportTemplate, file.path(reportAppPath, "DARWIN_EU_Study_Report.docx"))
+        file.copy(reportTemplate, file.path(reportAppConfigPath, reportTemplateFile))
+        menuConfigFile <- "menuConfig.yaml"
+        menuConfig <- system.file("config", menuConfigFile, package = "ReportGenerator")
+        file.copy(menuConfig, file.path(reportAppConfigPath, menuConfigFile))
+
         # update ui
         file.remove(file.path(reportAppPath, "ui.R"))
         file.rename(file.path(reportAppPath, "ui_total.R"), file.path(reportAppPath, "ui.R"))
+      } else {
+        file.remove(file.path(reportAppPath, "ui_total.R"))
       }
       # Create results dir
       targetPathResults <- file.path(reportAppPath, "results")
       dir.create(targetPathResults)
 
       # Insert results from app
-      saveRDS(list("itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects)),
-                   "reportItems" = reactiveValuesToList(do.call(reactiveValues, dataReport$objects))),
-              file.path(targetPathResults, "reportItems.rds"))
+      uploadedFilesList <- reactiveValuesToList(uploadedFiles)
+      if (length(uploadedFilesList) > 0) {
+        saveRDS(list("uploadedFiles" = uploadedFilesList),
+                file.path(targetPathResults, "uploadedFiles.rds"))
+      }
 
-      saveRDS(list("uploadedFiles" = reactiveValuesToList(uploadedFiles)),
-              file.path(targetPathResults, "uploadedFiles.rds"))
-
+      itemsListObjects <- reactiveValuesToList(do.call(reactiveValues, itemsList$objects))
+      dataReportObjects <- reactiveValuesToList(do.call(reactiveValues, dataReport$objects))
+      if (length(itemsListObjects) > 0) {
+        if (length(dataReportObjects) > 0) {
+          saveRDS(list("itemsList" = itemsListObjects,
+                       "reportItems" = dataReportObjects),
+                  file.path(targetPathResults, "session.rds"))
+        } else {
+          saveRDS(list("itemsList" = itemsListObjects,
+                       "reportItems" = NULL),
+                  file.path(targetPathResults, "session.rds"))
+        }
+      }
       shinyjs::html("createAppOutput", glue::glue("<br>Shiny app created in {targetPath}"), add = TRUE)
     })
 

@@ -19,9 +19,11 @@ function(input, output, session) {
 
   # 1. Load data
   # ReactiveValues
-  reportItems <- readRDS(here::here("results", "reportItems.rds"))
-  itemsList <- reportItems$items
+  sessionItems <- readRDS(here::here("results", "session.rds"))
+  itemsList <- sessionItems$items
   uploadedFiles <- readRDS(here::here("results", "uploadedFiles.rds"))$uploadedFiles
+  dataReport <- reactiveValues()
+  dataReport$objects <- sessionItems$reportItems
 
   # Item preview
   objectSelection <- itemsList$items
@@ -35,11 +37,7 @@ function(input, output, session) {
   })
 
   # 2.Assign Data
-
-  dataReport <- reactiveValues()
-
   # Inc/Prev Table Modules
-
   # Table w/ attrition data from Inc/Prev
 
   tableNumPar <- attritionServer(id = "Table - Number of participants",
@@ -292,7 +290,7 @@ function(input, output, session) {
       shinyjs::disable("generateReport")
       # Load template and generate report
       shinyjs::html("reportOutput", "<br>Generating report", add = TRUE)
-      reportDocx <- read_docx(path = file.path(getwd(), "DARWIN_EU_Study_Report.docx"))
+      reportDocx <- read_docx(path = file.path(getwd(), "config", "DARWIN_EU_Study_Report.docx"))
       reportItems <- list()
       if (!is.null(dataReport$objects)) {
         reportItems <- rev(reactiveValuesToList(do.call(reactiveValues, dataReport$objects)))

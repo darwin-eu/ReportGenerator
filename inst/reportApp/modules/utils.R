@@ -23,7 +23,7 @@
 #'
 #' @return a dataframe with the properties of the items
 getItemsList <- function(items) {
-  menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
+  menuData <- yaml.load_file(file.path(getwd(), "config", "menuConfig.yaml"))
   menuList <- lapply(menuData, function(menuData, itemsList) {
     if (all(menuData[["type"]] %in% itemsList)) {
       menuData[["title"]]
@@ -60,7 +60,7 @@ getItemConfig <- function(input = NULL,
   checkmate::assertCharacter(output)
   checkmate::assertCharacter(inputValue)
 
-  menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
+  menuData <- yaml.load_file(file.path(getwd(), "config", "menuConfig.yaml"))
   functionText <- lapply(menuData, function(menuData, title) {
     if (menuData[[input]] == inputValue) {
       menuData[[output]]
