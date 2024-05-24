@@ -11,7 +11,6 @@ ui <- dashboardPage(
   dashboardHeader(title = "ReportGenerator"),
   dashboardSidebar(
     sidebarMenu(
-      # uiOutput("navPanelPreview")
       menuItem(
         text = "Home",
         tabName = "home"
