@@ -47,3 +47,4 @@ app.R
 ^sunburstDiagram\.html$
 ^sankeyDiagram\.html$
 ^TASKS\.R$
+^log\.txt$

@@ -3,8 +3,12 @@ test_that("Generate Report", {
                                              "word",
                                              "DARWIN_EU_Study_Report.docx",
                                              package = "ReportGenerator"))
+  reportItemsPath <- testthat::test_path("studies", "reportItems.rds")
+  reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
-  fileName <-  file.path(tmpDir, "report.docx")
+  testdir <- file.path(tempdir(), "reportItems")
+  dir.create(testdir)
+  fileName <-  file.path(testdir, "report.docx")
   logger <- log4r::logger()
   testthat::expect_no_error(generateReport(reportDocx,
                                            dataReportList,
