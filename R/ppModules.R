@@ -256,8 +256,9 @@ characteristicsServer <- function(id, dataset) {
     addObject <- reactiveVal()
 
     observeEvent(input$lockSummary, {
+      dataPP <- as_tibble(selectCols(dataPP()))
       addObject(
-        list(summarised_characteristics = list(summarisedCharacteristics = dataPP(),
+        list(summarised_characteristics = list(summarisedCharacteristics = dataPP,
                                                  caption = input$captionCharacteristics))
       )
     })
