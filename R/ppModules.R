@@ -118,6 +118,22 @@ characteristicsUI <- function(id, uploadedFiles) {
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
+               pickerInput(inputId = ns("result_id"),
+                           label = "Result Id",
+                           choices = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$result_id),
+                           selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$result_id),
+                           multiple = FALSE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("group_name"),
+                           label = "Group Name",
+                           choices = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$group_name),
+                           selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$group_name),
+                           multiple = FALSE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
                pickerInput(inputId = ns("group_level"),
                            label = "Group Level",
                            choices = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$group_level),
@@ -132,6 +148,14 @@ characteristicsUI <- function(id, uploadedFiles) {
                            selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$strata_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("strata_level"),
+                           label = "Strata Level",
+                           choices = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$strata_level),
+                           selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$strata_level),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
       ),
       fluidRow(
@@ -143,29 +167,27 @@ characteristicsUI <- function(id, uploadedFiles) {
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
-        # column(4,
-        #        pickerInput(inputId = ns("variable_level"),
-        #                    label = "Variable Level",
-        #                    choices = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$variable_level)),
-        #                    selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$variable_level),
-        #                    multiple = TRUE,
-        #                    list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        # ),
+        column(4,
+               pickerInput(inputId = ns("variable_level"),
+                           label = "Variable Level",
+                           choices = c("NA", sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$variable_level))),
+                           selected = c("NA", unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$variable_level)),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("table_name"),
+                           label = "Table Name",
+                           choices = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$table_name)),
+                           selected = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$table_name)),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
         column(4,
                pickerInput(inputId = ns("estimate_type"),
                            label = "Estimate Type",
                            choices = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$estimate_type)),
                            selected = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$estimate_type)),
-                           multiple = TRUE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        )
-      ),
-      fluidRow(
-        column(4,
-               pickerInput(inputId = ns("table_name"),
-                           label = "Table Name",
-                           choices = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$table_name)),
-                           selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$table_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
@@ -204,30 +226,52 @@ characteristicsServer <- function(id, dataset) {
 
     if (id == "characteristics") {
       dataPP <- reactive({
-        dataset() %>% filter(cdm_name %in% input$cdm_name,
-                             result_id %in% input$result_id,
-                             group_name %in% input$group_name,
-                             group_level %in% input$group_level,
-                             strata_name %in% input$strata_name,
-                             strata_level %in% input$strata_level,
-                             estimate_type %in% input$estimate_type,
-                             variable_name %in% input$variable_name
-                             # ,
-                             # variable_level %in% input$variable_level
-                             )
+        dataset() %>%
+          # mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
+          filter(cdm_name %in% input$cdm_name,
+                 result_id %in% input$result_id,
+                 group_name %in% input$group_name,
+                 group_level %in% input$group_level,
+                 strata_name %in% input$strata_name,
+                 strata_level %in% input$strata_level,
+                 estimate_type %in% input$estimate_type,
+                 variable_level %in% input$variable_level,
+                 variable_name %in% input$variable_name)
         # %>%
         #   mutate(estimate_value = ifelse(estimate_type == "percentage", round(as.numeric(estimate_value), 2), estimate_value))
       })
-    } else {
+
+      output$summarisedTableGt <- gt::render_gt({
+        dataPP <- as_tibble(selectCols(dataPP()))
+        CohortCharacteristics::tableCharacteristics(result = dataPP, split = input$pivotWide)
+      })
+
+    } else if (id == "lsc") {
       dataPP <- reactive({
-        dataset() %>% filter(cdm_name %in% input$cdm_name,
-                             group_level %in% input$group_level,
-                             strata_name %in% input$strata_name,
-                             variable_name %in% input$variable_name,
-                             variable_level %in% input$variable_level,
-                             table_name %in% input$table_name,
-                             estimate_type %in% input$estimate_type) %>%
-          mutate(estimate_value = ifelse(estimate_type == "percentage", round(as.numeric(estimate_value), 2), estimate_value))
+        dataset()
+        # %>%
+        #   # mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
+        #   filter(cdm_name %in% input$cdm_name,
+        #          result_id %in% input$result_id,
+        #          group_name %in% input$group_name,
+        #          group_level %in% input$group_level,
+        #          strata_name %in% input$strata_name,
+        #          strata_level %in% input$strata_level,
+        #          variable_name %in% input$variable_name,
+        #          variable_level %in% input$variable_level,
+        #          table_name %in% input$table_name,
+        #          estimate_type %in% input$estimate_type
+        #          )
+        # %>%
+        #   mutate(estimate_value = ifelse(estimate_type == "percentage", round(as.numeric(estimate_value), 2), estimate_value))
+      })
+
+      output$summarisedTableGt <- gt::render_gt({
+        dataPP <- as_tibble(selectColsLSC(dataPP())) %>%
+          omopgenerics::newSummarisedResult()
+        CohortCharacteristics::tableLargeScaleCharacteristics(result = dataPP,
+                                                              splitStrata  = TRUE,
+                                                              topConcepts = input$top_n)
       })
     }
 
@@ -245,12 +289,6 @@ characteristicsServer <- function(id, dataset) {
 
     output$summarisedTable <- DT::renderDataTable(server = FALSE, {
       createDataTable(dataPP())
-    })
-
-    output$summarisedTableGt <- gt::render_gt({
-      dataPP <- as_tibble(selectCols(dataPP()))
-      tableCharacteristics(result = dataPP,
-                           split = input$pivotWide)
     })
 
     addObject <- reactiveVal()

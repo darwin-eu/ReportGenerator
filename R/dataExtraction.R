@@ -248,6 +248,15 @@ selectCols <- function(data) {
   return(result)
 }
 
+selectColsLSC <- function(data) {
+  result <- data %>%
+    select(c(result_id, cdm_name, result_type, package_name, package_version,
+             group_name, group_level, strata_name, strata_level, variable_name,
+             variable_level, estimate_name, estimate_type, estimate_value,
+             additional_name, additional_level, table_name))
+  return(result)
+}
+
 #' Writes variablesConfig file in Yaml
 #'
 #' `variablesConfigYaml()` the user can load the column names to the variablesConfig.yaml so ReportGenerator can recognize its data.

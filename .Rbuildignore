@@ -48,3 +48,4 @@ app.R
 ^sankeyDiagram\.html$
 ^TASKS\.R$
 ^log\.txt$
+^reportGeneratorApp$
