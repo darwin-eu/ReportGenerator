@@ -221,23 +221,35 @@ exportResults <- function(resultList,
 
   # write results to disk
   for (i in seq_along(resultList)) {
+    # i <- 11
     workingResult <- resultList[[i]]
     workingName <- names(resultList)[[i]]
+    fileName <- paste0(
+      unique(workingResult$cdm_name), "_",
+      workingName, "_",
+      format(Sys.Date(), format = "%Y_%m_%d"),
+      ".csv")
+
     if (is.null(workingName)) {
       workingName <- paste0("result_", i)
     }
-    utils::write.csv(workingResult,
-                     file = file.path(
-                       tempDir,
-                       paste0(
-                         unique(workingResult$cdm_name), "_",
-                         workingName, "_",
-                         format(Sys.Date(), format = "%Y_%m_%d"),
-                         ".csv"
-                       )
-                     ),
-                     row.names = FALSE
-    )
+
+    if (workingName == "summarised_characteristics" | workingName == "summarised_characteristics" | workingName == "Survival estimate" | workingName == "Survival cumulative incidence") {
+      omopgenerics::exportSummarisedResult(workingResult, fileName = fileName, path = tempDir)
+    } else {
+      utils::write.csv(workingResult,
+                       file = file.path(
+                         tempDir,
+                         paste0(
+                           unique(workingResult$cdm_name), "_",
+                           workingName, "_",
+                           format(Sys.Date(), format = "%Y_%m_%d"),
+                           ".csv"
+                         )
+                       ),
+                       row.names = FALSE
+      )
+    }
   }
 
   zip::zip(
@@ -247,7 +259,6 @@ exportResults <- function(resultList,
   if (tempDirCreated) {
     unlink(tempDir, recursive = TRUE)
   }
-
   invisible(resultList)
 }
 

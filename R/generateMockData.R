@@ -47,20 +47,16 @@ generateMockData <- function(databaseName = c("CHUBX",
 
   for (dbName in databaseName) {
     if (simulatePopulation == TRUE) {
-      if (dbName== "CHUBX") {
-        sampleSize <- 21523
-      } else if (dbName== "CPRD_GOLD") {
-        sampleSize <- 15662
-      } else if (dbName== "IMASIS") {
-        sampleSize <- 10147
-      } else if (dbName== "IPCI") {
-        sampleSize <- 26745
-      } else if (dbName== "SIDIAP") {
-        sampleSize <- 82653
-      }
-    } else {
-      sampleSize <- 50000
-    }
+        sampleSize <- case_when(
+          dbName == "CHUBX" ~ 21523,
+          dbName == "CPRD_GOLD" ~ 15662,
+          dbName == "IMASIS" ~ 10147,
+          dbName == "IPCI" ~ 26745,
+          dbName == "SIDIAP" ~ 82653)
+        } else {
+          sampleSize <- 50000
+        }
+
 
     # Generate data
 
@@ -175,9 +171,13 @@ getIncidencePrevalence <- function(sampleSize) {
 
 getCharacteristicsResult <- function() {
 
+  # Set of mock results generated with the example at:
+  # darwin-eu-dev/CohortCharacteristics
+
   con <- DBI::dbConnect(duckdb::duckdb(),
                         dbdir = CDMConnector::eunomia_dir()
   )
+
   cdm <- CDMConnector::cdm_from_con(con,
                                     cdm_schem = "main",
                                     write_schema = "main",
@@ -192,6 +192,7 @@ getCharacteristicsResult <- function() {
       "warfarin"
     )
   )
+
   cdm <- generateConceptCohortSet(
     cdm = cdm,
     name = "meds",
@@ -225,13 +226,19 @@ getCharacteristicsResult <- function() {
         window = c(0, 0)
       )
     ))
+
   return(chars)
 }
 
 getLargeScaleCharacteristicsResult <- function() {
+
+  # Set of mock results generated with the example at:
+  # darwin-eu-dev/CohortCharacteristics
+
   con <- DBI::dbConnect(duckdb::duckdb(),
                         dbdir = CDMConnector::eunomia_dir()
   )
+
   cdm <- CDMConnector::cdm_from_con(con,
                                     cdm_schem = "main",
                                     write_schema = "main"
@@ -261,6 +268,10 @@ getLargeScaleCharacteristicsResult <- function() {
 
 
 getTreatmentPathways <- function() {
+
+  # Set of mock results generated with the example at:
+  # darwin-eu-dev/TreatmentPatterns
+
   cohortSet <- CDMConnector::readCohortSet(
     path = system.file(package = "TreatmentPatterns",
                        "exampleCohorts")
