@@ -1,13 +1,13 @@
 test_that("Loading 1 zip files whole study", {
-  csvLocation <- file.path(tempdir(), "dataLocation")
-  dir.create(csvLocation)
+  outputDir <- file.path(tempdir(), "dataLocation")
+  dir.create(outputDir)
   fileDataPath <- list.files(testthat::test_path("studies", "zip"),
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
-  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
-                                csvLocation = csvLocation,
-                                logger = logger)
+  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1],
+                                 outputDir = outputDir,
+                                 logger = logger)
   expect_equal(length(uploadedFiles), 4)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -20,7 +20,7 @@ test_that("Loading multiple zip files whole study", {
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
-  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
+  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
                                 csvLocation = csvLocation,
                                 logger = logger)
   expect_equal(length(uploadedFiles), 4)
@@ -38,7 +38,7 @@ test_that("Loading multiple zip files whole study", {
 #                                         "zip"),
 #                              pattern = "zip",
 #                              full.names = TRUE)
-#   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
+#   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
 #                                 csvLocation = csvLocation)
 #   expect_equal(length(uploadedFiles), 3)
 #   expect_type(uploadedFiles, "list")
@@ -56,7 +56,7 @@ test_that("Loading 1 csv files whole study", {
                          pattern = "csv")
   fileName <- tools::file_path_sans_ext(fileName)
   logger <- log4r::logger()
-  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[3],
+  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[3],
                                 fileName = fileName[3],
                                 csvLocation = csvLocation,
                                 logger = logger)
@@ -75,7 +75,7 @@ test_that("Loading multiple csv files whole study", {
                          pattern = "csv")
   fileName <- tools::file_path_sans_ext(fileName)
   logger <- log4r::logger()
-  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath,
+  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
                                 fileName = fileName,
                                 csvLocation = csvLocation,
                                 logger = logger)
@@ -372,7 +372,7 @@ test_that("iterates through fileNames", {
 #                              pattern = "zip",
 #                              full.names = TRUE)
 #   logger <- log4r::logger()
-#   uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
+#   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1],
 #                                 csvLocation = csvLocation,
 #                                 logger = logger)
 #   expect_equal(length(uploadedFiles), 1)

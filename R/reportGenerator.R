@@ -133,7 +133,7 @@ reportGenerator <- function(logger = NULL) {
       csvLocation <- file.path(tempdir(), "dataLocation")
       dir.create(csvLocation)
       # Joins one or several zips into the reactive value
-      uploadedFileDataList <- joinDatabase(fileDataPath = fileDataPath,
+      uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
                                            fileName = fileName,
                                            csvLocation = csvLocation,
                                            logger = logger)

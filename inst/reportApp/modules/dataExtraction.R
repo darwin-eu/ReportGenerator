@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' `joinDatabase()` joins several zip or csv folders into a list of dataframes.
+#' `joinDatabases()` joins several zip or csv folders into a list of dataframes.
 #'
 #' @param fileDataPath File path(s) in character
 #' @param fileName Name of the file in character to process in case the input is only csv
@@ -25,7 +25,7 @@
 #'
 #' @import yaml
 #' @export
-joinDatabase <- function(fileDataPath,
+joinDatabases <- function(fileDataPath,
                          fileName = NULL,
                          csvLocation,
                          logger) {

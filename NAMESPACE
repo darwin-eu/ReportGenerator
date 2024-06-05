@@ -2,7 +2,7 @@
 
 export(exportResults)
 export(generateMockData)
-export(joinDatabase)
+export(joinDatabases)
 export(reportGenerator)
 export(table1Att)
 export(table1Inc)

@@ -19,7 +19,7 @@ test_that("summarised Characteristics and LSC", {
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
-  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
+  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1],
                                 csvLocation = csvLocation,
                                 logger = logger)
   testServer(reportGenerator(), {
