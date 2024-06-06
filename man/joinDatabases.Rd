@@ -4,16 +4,16 @@
 \alias{joinDatabases}
 \title{`joinDatabases()` joins several zip or csv folders into a list of dataframes.}
 \usage{
-joinDatabases(fileDataPath, fileName = NULL, csvLocation, logger)
+joinDatabases(fileDataPath, fileName = NULL, logger)
 }
 \arguments{
-\item{fileDataPath}{File path(s) in character}
+\item{fileDataPath}{List of full file locations}
 
 \item{fileName}{Name of the file in character to process in case the input is only csv}
 
-\item{csvLocation}{Path folder location to uncompress the zip files}
-
 \item{logger}{logger object}
+
+\item{outputDir}{Path folder location to uncompress the zip files}
 }
 \value{
 A list of dataframes

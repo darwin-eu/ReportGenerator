@@ -24,35 +24,46 @@
 #' @return A list of dataframes
 #'
 #' @import yaml
+#' @importFrom cli cli_progress_step
 #' @export
 joinDatabases <- function(fileDataPath,
                           fileName = NULL,
-                          outputDir = NULL,
                           logger) {
 
+  # Check
+  checkmate::assertCharacter(fileDataPath)
+
   # Settings
-  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+  configData <- yaml.load_file(system.file("config",
+                                           "variablesConfig.yaml",
+                                           package = "ReportGenerator"))
   packagesNames <- names(configData)
   fileType <- getFileType(fileDataPath)
   unzipDir <- file.path(tempdir(), "unzipData")
 
   # Check zip
   if (fileType == "zip") {
-    log4r::info(logger, glue::glue("Processing zip file(s), length: {length(fileDataPath)}"))
 
     # `unzipFiles()` Unzip files
     databaseFolders <- unzipFiles(unzipDir = unzipDir,
                                   fileDataPath = fileDataPath,
                                   logger = logger)
 
-    # `extractCsv()` iterates folders for CSV files
-    data <- extractCsv(databaseFolders, configData, logger)
-
+    # `extractCSV()` iterates folders for CSV files
+    result <- extractCSV(databaseFolders = databaseFolders,
+                       configData = configData,
+                       logger = logger)
   } else if (fileType == "csv") {
-    log4r::info(logger, glue::glue("Processing csv file(s), length: {length(fileDataPath)}"))
-    data <- processCSV(data = list(), filesLocation, configData, databaseName, logger)
+    cli::cli_progress_step("Processing {length(fileDataPath)} CSV files", spinner = TRUE)
+    result <- processCSV(data = list(),
+                         filesLocation = fileDataPath,
+                         configData = configData,
+                         logger = logger)
+    cli::cli_process_done()
+
   }
-  return(data)
+  cli::cli_alert("Results processed from {names(result)} package{?s}")
+  return(result)
 }
 
 getFileType <- function(fileDataPath) {
@@ -67,6 +78,8 @@ getFileType <- function(fileDataPath) {
 }
 
 unzipFiles <- function(unzipDir, fileDataPath, logger) {
+
+  cli::cli_progress_step(glue::glue("Unzipping {length(fileDataPath)} file{if (length(fileDataPath) > 1){'s'} else {''}}"), spinner = TRUE)
 
   if (!checkmate::testDirectoryExists(unzipDir)) {
     dir.create(unzipDir)
@@ -83,82 +96,79 @@ unzipFiles <- function(unzipDir, fileDataPath, logger) {
 
 }
 
-#' `extractCsv()`
+#' `extractCSV()` step and iterates every file to `processCSV()`
 #'
 #' @param databaseFolders A list of full name folder locations
 #' @param configData Configuration from yaml file
 #' @param logger A logger object
 #'
 #' @return A list objects with summarisedResults
-#'
-#' @examples
-extractCsv <- function(databaseFolders, configData, logger) {
-
+extractCSV <- function(databaseFolders, configData, logger) {
   data <- list()
-
-  for (filesList in databaseFolders) {
-
+  cli::cli_h2("Processing CSV files from {length(databaseFolders)} folder{?s}")
+  for (i in 1:length(databaseFolders)) {
+    # i <- 1
+    filesList <- databaseFolders[i]
     filesLocation <- list.files(filesList,
                                 pattern = ".csv",
                                 full.names = TRUE,
                                 recursive = TRUE)
-    # Assign the databaseName in case there is a metadata file from TreatmentPatterns
-    metadata <- filesLocation[stringr::str_detect(filesLocation, "metadata")]
-    if (!identical(metadata, character(0))) {
-      databaseName <- readr::read_csv(metadata, show_col_types = FALSE) %>%
-        pull(cdmSourceName) %>%
-        unique()
-    }
     # Iterates every individual csv file
-    data <- processCSV(data, filesLocation, configData, databaseName, logger)
-    # for (fileName in filesLocation) {
-    #   resultsData <- read_csv(fileName, show_col_types = FALSE)
-    #
-    #   resultsColumns <- names(resultsData)
-    #
-    #   if ("estimate_value" %in% resultsColumns) {
-    #     resultsData <- resultsData %>%
-    #       mutate(estimate_value = as.character(estimate_value))
-    #
-    #     checkmate::assertClass(resultsData$estimate_value, "character")
-    #   }
-    #
-    #   # Checks the type of every individual fileName
-    #   data <- loadFileData(data, fileName, configData,
-    #                        resultsData, resultsColumns,
-    #                        databaseName, logger)
-    # }
+    data <- processCSV(data, filesLocation, configData, logger)
   }
   return(data)
 }
 
-processCSV <- function(data = NULL, filesLocation, configData, databaseName, logger) {
+#' `processCSV()` iterates every csv file and uses `loadFileData()` to check what type of result it is and adds it to a list
+#'
+#' @param data
+#' @param filesLocation
+#' @param configData
+#' @param databaseName
+#' @param logger
+#'
+#' @return A list with all the results organized by type
+processCSV <- function(data = NULL, filesLocation, configData, logger) {
 
   if (is.null(data)) {
     data = list()
   }
+
+  # Assign the databaseName if there is a metadata file from TP
+  databaseName <- getDatabaseName(filesLocation)
+
   checkmate::assertList(data)
-  # Iterates every individual csv file
-  for (fileName in filesLocation) {
-    resultsData <- read_csv(fileName, show_col_types = FALSE)
-
+  # Iterates and checks every csv file and adds it
+  for (i in 1:length(filesLocation)) {
+    # i <- 10
+    resultsData <- read_csv(filesLocation[i], show_col_types = FALSE)
+    # vroom::problems(resultsData)
     resultsColumns <- names(resultsData)
-
+    # Change estimate values to character
     if ("estimate_value" %in% resultsColumns) {
       resultsData <- resultsData %>%
         mutate(estimate_value = as.character(estimate_value))
-
       checkmate::assertClass(resultsData$estimate_value, "character")
     }
-
     # Checks the type of every individual fileName
-    data <- loadFileData(data, fileName, configData, resultsData,
+    data <- loadFileData(data, filesLocation[i], configData, resultsData,
                          resultsColumns, databaseName, logger)
   }
   return(data)
 }
 
-#' Load file data and save it in a list.
+getDatabaseName <- function(filesLocation) {
+  # Assign the databaseName in case there is a metadata file from TreatmentPatterns
+  metadata <- filesLocation[stringr::str_detect(filesLocation, "metadata")]
+  if (!identical(metadata, character(0))) {
+    databaseName <- readr::read_csv(metadata, show_col_types = FALSE) %>%
+      pull(cdmSourceName) %>%
+      unique()
+    return(databaseName)
+  }
+}
+
+#' `loadFileData()` checks every csv their result type using columns or summarisedResult class as reference
 #'
 #' @param data named list with data.
 #' @param fileName the file to load
@@ -215,7 +225,6 @@ loadFileData <- function(data,
         configColumns <- unlist(configColumns$names)
         if (val == "incidence_attrition") {
           if (all(configColumns %in% resultsColumns) & grepl("incidence", fileName)) {
-            log4r::info(logger, glue::glue("Match file using config columns: {val}"))
             resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
             resultsData$excluded_records <- as.character(resultsData$excluded_records)
             data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
@@ -223,7 +232,6 @@ loadFileData <- function(data,
           }
           else if (val == "prevalence_attrition") {
             if (all(configColumns %in% resultsColumns) & grepl("prevalence", fileName)) {
-              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
               resultsData$excluded_records <- as.character(resultsData$excluded_records)
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
@@ -234,7 +242,6 @@ loadFileData <- function(data,
               if ("denominator_days_prior_history" %in% resultsColumns) {
                 colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
               }
-              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           }
@@ -243,7 +250,6 @@ loadFileData <- function(data,
               if ("denominator_days_prior_history" %in% resultsColumns) {
                 colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
               }
-              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           }
@@ -252,7 +258,6 @@ loadFileData <- function(data,
               if (!('cdm_name' %in% resultsColumns)) {
                 resultsData <- mutate(resultsData, cdm_name = databaseName)
                 }
-              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           }
@@ -293,7 +298,6 @@ getPackageData <- function(data, package, resultType, resultsColumns, resultsDat
   pkgConfigData <- configData[[package]]
   configColumns <- pkgConfigData[[resultType]][["names"]]
   if (all(configColumns %in% resultsColumns)) {
-    log4r::info(logger, glue::glue("Match file using resultType: {resultType}"))
     resultsDataWithCols <- additionalCols(resultsData)
     if (is.null(data[[package]])) {
       data[[package]] <- list()

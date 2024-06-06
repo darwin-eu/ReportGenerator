@@ -51,7 +51,8 @@ Imports:
     log4r,
     DBI,
     omopgenerics,
-    tibble
+    tibble,
+    ParallelLogger
 Suggests:
     testthat,
     rmarkdown,

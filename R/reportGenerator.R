@@ -30,9 +30,13 @@
 #' @importFrom IncidencePrevalence plotIncidence plotPrevalence
 #' @importFrom DT renderDT DTOutput
 #' @importFrom stringr str_split
+#' @importFrom ParallelLogger addDefaultConsoleLogger
+#' @importFrom cli cli_progress_step
 #' @export
 reportGenerator <- function(logger = NULL) {
 
+  logger <- ParallelLogger::addDefaultConsoleLogger()
+  cli::cli_progress_step("Launching ReportGenerator", spinner = TRUE)
   # set global options
   options(shiny.maxRequestSize = 1000*1024^2, spinner.type = 5, spinner.color = "#0dc5c1",
           page.spinner.type = 5, page.spinner.color = "#0dc5c1")
@@ -109,7 +113,6 @@ reportGenerator <- function(logger = NULL) {
       log_file <- glue::glue("log.txt")
       logger <- log4r::logger(threshold = "INFO", appenders = list(log4r::console_appender(), log4r::file_appender(log_file)))
     }
-    log4r::info(logger, "Start ReportGenerator")
 
     # 1. Load data
     datasetLoadServer("StudyPackage")
@@ -135,7 +138,6 @@ reportGenerator <- function(logger = NULL) {
       # Joins one or several zips into the reactive value
       uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
                                            fileName = fileName,
-                                           csvLocation = csvLocation,
                                            logger = logger)
       if (length(uploadedFileDataList) == 0) {
         show_alert(title = "Data mismatch",
