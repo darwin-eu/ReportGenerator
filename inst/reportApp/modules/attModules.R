@@ -1,17 +1,17 @@
 attritionUI <- function(id, uploadedFiles) {
   ns <- NS(id)
 
-  if (id == "Table - Number of participants") {
+  if (id == "Number of participants - Table") {
     lockName <- "lockTableNumPar"
     analysisChoices <- unique(uploadedFiles$dataIP$incidence_attrition$analysis_id)
     captionText <- table1aAutText(uploadedFiles$dataIP$incidence_attrition, uploadedFiles$dataIP$prevalence_attrition)
     outputTableName <- "previewTableAtt"
-  } else if (id == "Table - Incidence Attrition") {
+  } else if (id == "Incidence Attrition - Table") {
     lockName <- "lockTableIncAtt"
     analysisChoices <- unique(uploadedFiles$dataIP$incidence_attrition$analysis_id)
     captionText <- tableAttrition(uploadedFiles$dataIP$incidence_attrition)
     outputTableName <- "previewTableAttInc"
-  } else if (id == "Table - Prevalence Attrition") {
+  } else if (id == "Prevalence Attrition - Table") {
     lockName <- "lockTablePrevAtt"
     analysisChoices <- unique(uploadedFiles$dataIP$prevalence_attrition$analysis_id)
     captionText <- tableAttrition(uploadedFiles$dataIP$prevalence_attrition)
@@ -95,7 +95,7 @@ attritionServer <- function(id, uploadedFiles) {
 
       addObject <- reactiveVal()
 
-      if (id == "Table - Number of participants") {
+      if (id == "Number of participants - Table") {
         output$previewTableAtt <- renderTable({
           prevalence_attrition <- prevalenceAttritionCommon()
           incidence_attrition <- incidenceAttritionCommon()
@@ -111,7 +111,7 @@ attritionServer <- function(id, uploadedFiles) {
                                                          caption = input$captionTableAtt))
           )
         })
-      } else if (id == "Table - Incidence Attrition") {
+      } else if (id == "Incidence Attrition - Table") {
         attritionDataType <- "incidence"
         output$previewTableAttInc <- renderTable({
           incidence_attrition <- incidenceAttritionCommon()
@@ -127,7 +127,7 @@ attritionServer <- function(id, uploadedFiles) {
                                                       caption = input$captionTableAtt))
           )
         })
-      } else if (id == "Table - Prevalence Attrition") {
+      } else if (id == "Prevalence Attrition - Table") {
         attritionDataType <- "prevalence"
         output$previewTableAttPrev <- renderTable({
             prevalence_attrition <- prevalenceAttritionCommon()

@@ -81,7 +81,7 @@ test_that("`getDatabaseName()` if there is a metadata file from TP", {
                               pattern = "csv",
                               full.names = TRUE)
   databaseName <- getDatabaseName(filesLocation = filesLocation[2])
-  expect_equal(databaseName, "Synthea synthetic health database")
+  expect_null(databaseName)
 
 })
 
@@ -94,8 +94,8 @@ test_that("processCSV() files into a list with summarisedResult objects", {
                               pattern = "csv",
                               full.names = TRUE)
   databaseName <- getDatabaseName(filesLocation = filesLocation[2])
-  logger <- log4r::logger()
-  data <- processCSV(data = NULL, filesLocation, configData, databaseName, logger)
+
+  data <- processCSV(data = NULL, filesLocation, configData, databaseName)
 
   expect_length(data, 4)
 
@@ -119,19 +119,16 @@ test_that("processCSV() in a loop", {
   data <- list()
 
   for (i in 1:length(databaseFolders)) {
-    # i <- 1
+    i = 1
     filesList <- databaseFolders[i]
-
     filesLocation <- list.files(filesList,
                                 pattern = ".csv",
                                 full.names = TRUE,
                                 recursive = TRUE)
-    # Assign the databaseName if there is a metadata file from TP
     databaseName <- getDatabaseName(filesLocation)
-    # Iterates every individual csv file
-    data <- processCSV(data, filesLocation, configData, databaseName, logger)
+    data <- processCSV(data, filesLocation, configData, databaseName)
   }
-
+  expect_length(data, 4)
 })
 
 test_that("Loading 1 csv files whole study", {

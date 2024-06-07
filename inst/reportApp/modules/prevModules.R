@@ -1,6 +1,6 @@
 prevalenceUI <- function(id, uploadedFiles) {
   ns <- NS(id)
-  if (id == "Plot - Prevalence per year") {
+  if (id == "Prevalence per year - Plot") {
 
     # Database
     databaseChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)
@@ -21,7 +21,7 @@ prevalenceUI <- function(id, uploadedFiles) {
 
     # Lock
     lockVariable <- "lockDataPrevalenceYear"
-  } else if (id == "Plot - Prevalence per year by sex") {
+  } else if (id == "Prevalence per year by sex - Plot") {
 
     # Database
     databaseChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)
@@ -42,7 +42,7 @@ prevalenceUI <- function(id, uploadedFiles) {
 
     # Lock
     lockVariable <- "lockDataPrevalenceSex"
-  } else if (id == "Plot - Prevalence per year by age") {
+  } else if (id == "Prevalence per year by age - Plot") {
 
     # Database
     databaseChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)
@@ -244,13 +244,13 @@ prevalenceServer <- function(id, uploadedFiles) {
       expression <- getItemConfig(input = "title",
                                   output = "function",
                                   inputValue = id)
-      if (id == "Plot - Prevalence per year") {
+      if (id == "Prevalence per year - Plot") {
         expression <- expression %>%
           addPreviewItemType(input$facetPrevalence)
-      } else if (id == "Plot - Prevalence per year by sex") {
+      } else if (id == "Prevalence per year by sex - Plot") {
         expression <- expression %>%
           addPreviewItemTypeSex(input$facetPrevalence)
-      } else if (id == "Plot - Prevalence per year by age") {
+      } else if (id == "Prevalence per year by age - Plot") {
         expression <- expression %>%
           addPreviewItemTypeAge(input$facetPrevalence)
       }

@@ -352,13 +352,7 @@ getCohortSurvival <- function() {
                                                                  competingOutcomeCohortTable = "death_cohort",
                                                                  strata = list(c("sex")))
 
-  result <- list("survivalEstimate" = addSettings(singleEvent),
-                 "survivalCumulativeIncidence" = addSettings(competingRisk))
+  result <- list("survivalEstimate" = singleEvent,
+                 "survivalCumulativeIncidence" = competingRisk)
   return(result)
-}
-
-addSettings <- function(data) {
-  data %>%
-    inner_join(settings(data),
-               by = "result_id")
 }

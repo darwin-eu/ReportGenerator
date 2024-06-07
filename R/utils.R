@@ -234,7 +234,7 @@ exportResults <- function(resultList,
       workingName <- paste0("result_", i)
     }
 
-    if (workingName == "summarised_characteristics" | workingName == "summarised_characteristics" | workingName == "Survival estimate" | workingName == "Survival cumulative incidence") {
+    if (workingName == "summarised_characteristics" | workingName == "summarised_large_scale_characteristics" | workingName == "Survival estimate" | workingName == "Survival cumulative incidence") {
       omopgenerics::exportSummarisedResult(workingResult, fileName = fileName, path = tempDir)
     } else {
       utils::write.csv(workingResult,

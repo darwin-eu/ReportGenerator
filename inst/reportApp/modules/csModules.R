@@ -182,7 +182,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$locksurvivalPlot, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`Survival plot` = list(survivalEstimate = getData(),
+          list(`"Single Event - Plot"` = list(survivalEstimate = getData(),
                                       plotOption = "Facet by database, colour by strata_name",
                                       caption = input$captionSurvivalEstimate))
         )

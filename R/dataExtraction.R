@@ -66,17 +66,13 @@ joinDatabases <- function(fileDataPath,
   return(result)
 }
 
-getFileType <- function(fileDataPath) {
-
-  if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
-    resultFileType <- "zip"
-  } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
-    resultFileType <- "csv"
-  }
-  return(resultFileType)
-
-}
-
+#' `unzipFiles()` to a folder per database in a temporary directory for later use in `exctractCSV()`
+#'
+#' @param unzipDir Locations of the folder to unzip files
+#' @param fileDataPath Locations of the files to unzip
+#' @param logger A logger object
+#'
+#' @return The databaseFolders to which the files were unzipped
 unzipFiles <- function(unzipDir, fileDataPath, logger) {
 
   cli::cli_progress_step(glue::glue("Unzipping {length(fileDataPath)} file{if (length(fileDataPath) > 1){'s'} else {''}}"), spinner = TRUE)
@@ -96,7 +92,7 @@ unzipFiles <- function(unzipDir, fileDataPath, logger) {
 
 }
 
-#' `extractCSV()` step and iterates every file to `processCSV()`
+#' `extractCSV()` iterates every file in the databaseFolders to `processCSV()`
 #'
 #' @param databaseFolders A list of full name folder locations
 #' @param configData Configuration from yaml file
@@ -128,7 +124,7 @@ extractCSV <- function(databaseFolders, configData, logger) {
 #' @param logger
 #'
 #' @return A list with all the results organized by type
-processCSV <- function(data = NULL, filesLocation, configData, logger) {
+processCSV <- function(data = NULL, filesLocation, configData, databaseName) {
 
   if (is.null(data)) {
     data = list()
@@ -141,7 +137,8 @@ processCSV <- function(data = NULL, filesLocation, configData, logger) {
   # Iterates and checks every csv file and adds it
   for (i in 1:length(filesLocation)) {
     # i <- 10
-    resultsData <- read_csv(filesLocation[i], show_col_types = FALSE)
+    resultsData <- read_csv(filesLocation[i], show_col_types = FALSE, col_types = c(.default = "c"))
+    resultsData
     # vroom::problems(resultsData)
     resultsColumns <- names(resultsData)
     # Change estimate values to character
@@ -155,6 +152,17 @@ processCSV <- function(data = NULL, filesLocation, configData, logger) {
                          resultsColumns, databaseName, logger)
   }
   return(data)
+}
+
+getFileType <- function(fileDataPath) {
+
+  if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
+    resultFileType <- "zip"
+  } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
+    resultFileType <- "csv"
+  }
+  return(resultFileType)
+
 }
 
 getDatabaseName <- function(filesLocation) {
@@ -187,34 +195,29 @@ loadFileData <- function(data,
                          databaseName,
                          logger) {
 
-  if ("result_type" %in% resultsColumns) {
-    resultType <- unique(resultsData$result_type)
-    package <- unique(resultsData$package_name)
-    if ("summarised_characteristics" %in% resultType | "summarise_table" %in% resultType | "summarised_cohort_intersect" %in% resultType) {
-      resultsData$result_type <- "summarised_characteristics"
-      resultType <- "summarised_characteristics"
-    }
-    else if ("Summarised Large Scale Characteristics" %in% resultType) {
-      resultsData$result_type <- "summarised_large_scale_characteristics"
-      resultType <- "summarised_large_scale_characteristics"
-    }
-    else if ("Survival estimate" %in% resultType) {
-      analysis_type <- unique({ resultsData %>%
-          filter(result_type == "Survival estimate") %>%
-          pull(additional_level) })
-      if (all(grepl("Competing_risk", analysis_type))) {
-        resultType <- "Survival cumulative incidence"
+  if (all(resultsColumns %in% names(omopgenerics::emptySummarisedResult()))) {
+    # TODO: Pack the following in a function and test it
+    resultsData <- omopgenerics::newSummarisedResult(resultsData)
+    resultType <- settings(resultsData) %>% pull(result_type) %>% unique()
+    package_name <- settings(resultsData) %>% pull(package_name) %>% unique()
+    if (resultType == "survival") {
+      if (is.null(data[[package_name]])) {
+        data[[package_name]] <- list()
       }
-      else if (all(grepl("Single_event", analysis_type))) {
-        resultType <- "Survival estimate"
+      analysisType <- settings(resultsData) %>% pull(analysis_type) %>% unique()
+      if (is.null(data[[package_name]][[resultType]][[analysisType]])) {
+        data[[package_name]][[analysisType]] <- omopgenerics::emptySummarisedResult()
       }
-      if (is.null(package)) { package <- "CohortSurvival"}
+      data[[package_name]][[analysisType]] <- omopgenerics::bind(data[[package_name]][[analysisType]], resultsData)
+    } else {
+      if (is.null(data[[package_name]])) {
+        data[[package_name]] <- list()
+      }
+      if (is.null(data[[package_name]][[resultType]])) {
+        data[[package_name]][[resultType]] <- omopgenerics::emptySummarisedResult()
+      }
+      data[[package_name]][[resultType]] <- omopgenerics::bind(data[[package_name]][[resultType]], resultsData)
     }
-    else if ("summarised_characteristics" %in% resultType & length(resultType) >= 2) {
-      resultType <- "summarised_characteristics"
-    }
-
-    data <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData, logger)
     return(data)
   } else {
     for (pkg in names(configData)) {
@@ -294,18 +297,18 @@ additionalCols <- function(data) {
 
 }
 
-getPackageData <- function(data, package, resultType, resultsColumns, resultsData, configData, logger) {
-  pkgConfigData <- configData[[package]]
+getPackageData <- function(data, package_name, resultType, resultsColumns, resultsData, configData, logger) {
+  pkgConfigData <- configData[[package_name]]
   configColumns <- pkgConfigData[[resultType]][["names"]]
   if (all(configColumns %in% resultsColumns)) {
     resultsDataWithCols <- additionalCols(resultsData)
-    if (is.null(data[[package]])) {
-      data[[package]] <- list()
+    if (is.null(data[[package_name]])) {
+      data[[package_name]] <- list()
     }
-    if (is.null(data[[package]][[resultType]])) {
-      data[[package]][[resultType]] <- tibble::tibble()
+    if (is.null(data[[package_name]][[resultType]])) {
+      data[[package_name]][[resultType]] <- tibble::tibble()
     }
-    data[[package]][[resultType]] <- bind_rows(data[[package]][[resultType]], resultsDataWithCols)
+    data[[package_name]][[resultType]] <- bind_rows(data[[package_name]][[resultType]], resultsDataWithCols)
   }
   return(data)
 }

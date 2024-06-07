@@ -137,7 +137,7 @@ reportGenerator <- function(logger = NULL) {
       dir.create(csvLocation)
       # Joins one or several zips into the reactive value
       uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
-                                           fileName = fileName,
+                                           # fileName = fileName,
                                            logger = logger)
       if (length(uploadedFileDataList) == 0) {
         show_alert(title = "Data mismatch",
@@ -172,7 +172,8 @@ reportGenerator <- function(logger = NULL) {
       itemsList$objects <- NULL
       uploadedFiles <- reactiveValues(dataIP = NULL,
                                       dataTP = NULL,
-                                      dataPP = NULL)
+                                      dataPP = NULL,
+                                      dataCS = NULL)
       updateTabsetPanel(session, "mainPanel",
                         selected = "Item selection")
       datasetLoadServer("StudyPackage")
@@ -218,7 +219,7 @@ reportGenerator <- function(logger = NULL) {
 
       # Table w/ attrition data from Inc/Prev
 
-    tableNumPar <- attritionServer(id = "Table - Number of participants",
+    tableNumPar <- attritionServer(id = "Number of participants - Table",
                                    uploadedFiles = reactive(uploadedFiles))
 
     observe({
@@ -231,7 +232,7 @@ reportGenerator <- function(logger = NULL) {
 
     # Attrition Incidence only
 
-    tableAttInc <- attritionServer(id = "Table - Incidence Attrition",
+    tableAttInc <- attritionServer(id = "Incidence Attrition - Table",
                                    uploadedFiles = reactive(uploadedFiles))
 
     observe({
@@ -244,7 +245,7 @@ reportGenerator <- function(logger = NULL) {
 
     # Attrition Prevelence only
 
-    tableAttPrev <- attritionServer(id = "Table - Prevalence Attrition",
+    tableAttPrev <- attritionServer(id = "Prevalence Attrition - Table",
                                     uploadedFiles = reactive(uploadedFiles))
 
     observe({
@@ -273,7 +274,7 @@ reportGenerator <- function(logger = NULL) {
 
       # Year
 
-    dataIncidenceYear <- incidenceServer(id = "Plot - Incidence rate per year",
+    dataIncidenceYear <- incidenceServer(id = "Incidence rate per year - Plot",
                                          reactive(uploadedFiles))
 
     observe({
@@ -286,7 +287,7 @@ reportGenerator <- function(logger = NULL) {
 
     # Sex
 
-    dataIncidenceSex <- incidenceServer(id = "Plot - Incidence rate per year by sex",
+    dataIncidenceSex <- incidenceServer(id = "Incidence rate per year by sex - Plot",
                                         reactive(uploadedFiles))
 
     observe({
@@ -299,7 +300,7 @@ reportGenerator <- function(logger = NULL) {
 
       # Age
 
-    dataIncidenceAge <- incidenceServer(id = "Plot - Incidence rate per year by age",
+    dataIncidenceAge <- incidenceServer(id = "Incidence rate per year by age - Plot",
                                         reactive(uploadedFiles))
 
     observe({
@@ -314,7 +315,7 @@ reportGenerator <- function(logger = NULL) {
 
       # Year
 
-    dataPrevalenceYear <- prevalenceServer(id = "Plot - Prevalence per year",
+    dataPrevalenceYear <- prevalenceServer(id = "Prevalence per year - Plot",
                                            reactive(uploadedFiles))
 
     observe({
@@ -327,7 +328,7 @@ reportGenerator <- function(logger = NULL) {
 
       # Sex
 
-    dataPrevalenceSex <- prevalenceServer(id = "Plot - Prevalence per year by sex",
+    dataPrevalenceSex <- prevalenceServer(id = "Prevalence per year by sex - Plot",
                                           reactive(uploadedFiles))
 
     observe({
@@ -340,7 +341,7 @@ reportGenerator <- function(logger = NULL) {
 
       # Age
 
-    dataPrevalenceAge <- prevalenceServer(id = "Plot - Prevalence per year by age",
+    dataPrevalenceAge <- prevalenceServer(id = "Prevalence per year by age - Plot",
                                           reactive(uploadedFiles))
 
     observe({

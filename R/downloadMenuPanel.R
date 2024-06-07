@@ -1,50 +1,50 @@
 menuSelection <- function(selection, uploadedFiles) {
-  if (selection == "Table - Number of participants") {
+  if (selection == "Number of participants - Table") {
     menuItem(selection
              # ,
              # attritionUI(selection, uploadedFiles)
              )
-  } else if (selection == "Table - Incidence Attrition") {
+  } else if (selection == "Incidence Attrition - Table") {
     menuItem(selection
              # ,
              # attritionUI(selection, uploadedFiles)
              )
-  } else if (selection == "Table - Prevalence Attrition") {
+  } else if (selection == "Prevalence Attrition - Table") {
     menuItem(selection
              # ,
              # attritionUI(selection, uploadedFiles)
              )
-  } else if (selection == "Table - Number of participants by sex and age group") {
+  } else if (selection == "Number of participants by sex and age group - Table") {
     menuItem(selection
              # ,
              # tableUI(selection, uploadedFiles)
              )
-  } else if (selection == "Plot - Incidence rate per year") {
+  } else if (selection == "Incidence rate per year - Plot") {
     menuItem(selection
              # ,
              # incidenceUI(selection, uploadedFiles)
              )
-  } else if (selection == "Plot - Incidence rate per year by sex") {
+  } else if (selection == "Incidence rate per year by sex - Plot") {
     menuItem(selection
              # ,
              # incidenceUI(selection, uploadedFiles)
              )
-  } else if (selection == "Plot - Incidence rate per year by age") {
+  } else if (selection == "Incidence rate per year by age - Plot") {
     menuItem(selection
              # ,
              # incidenceUI(selection, uploadedFiles)
              )
-  } else if (selection == "Plot - Prevalence per year") {
+  } else if (selection == "Prevalence per year - Plot") {
     menuItem(selection
              # ,
              # prevalenceUI(selection, uploadedFiles)
              )
-  } else if (selection == "Plot - Prevalence per year by sex") {
+  } else if (selection == "Prevalence per year by sex - Plot") {
     menuItem(selection
              # ,
              # prevalenceUI(selection, uploadedFiles)
              )
-  } else if (selection == "Plot - Prevalence per year by age") {
+  } else if (selection == "Prevalence per year by age - Plot") {
     menuItem(selection
              # ,
              # prevalenceUI(selection, uploadedFiles)
@@ -54,32 +54,32 @@ menuSelection <- function(selection, uploadedFiles) {
              # ,
              # patternsUI(selection, uploadedFiles)
              )
-  } else if (selection == "summarised_characteristics") {
+  } else if (selection == "Summarised Characteristics - Table") {
     menuItem(selection
              # ,
              # characteristicsUI("characteristics", uploadedFiles)
              )
-  } else if (selection == "Summarised Large Scale Characteristics") {
+  } else if (selection == "Summarised Large Scale Characteristics - Table") {
     menuItem(selection
              # ,
              # characteristicsUI("lsc", uploadedFiles)
              )
-  } else if (selection == "Survival table") {
+  } else if (selection == "Single Event - Table") {
     menuItem(selection
              # ,
              # cohortSurvivalUI("survivalTable", uploadedFiles)
              )
-  } else if (selection == "Survival plot") {
+  } else if (selection == "Single Event - Plot") {
     menuItem(selection
              # ,
              # cohortSurvivalUI("survivalPlot", uploadedFiles)
              )
-  } else if (selection == "Cumulative incidence table") {
+  } else if (selection == "Competing Risk - Table") {
     menuItem(selection
              # ,
              # cohortSurvivalUI("failureTable", uploadedFiles)
              )
-  } else if (selection == "Cumulative incidence plot") {
+  } else if (selection == "Competing Risk - Plot") {
     menuItem(selection
              # ,
              # cohortSurvivalUI("failurePlot", uploadedFiles)
