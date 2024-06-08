@@ -51,7 +51,7 @@ incidenceUI <- function(id, uploadedFiles) {
   }
 
   pickerOptions <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-  startDateChoices <- as.character(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
+  # startDateChoices <- as.character(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
   washoutChoices <- unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)
   washoutSelected <- washoutChoices[1]
   daysPriorHistoryChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)
@@ -150,15 +150,15 @@ incidenceUI <- function(id, uploadedFiles) {
       column(4,
              pickerInput(inputId = ns("timeFromIncidence"),
                          label = "From",
-                         choices = startDateChoices,
-                         selected = min(startDateChoices),
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
+                         selected = min(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)),
                          multiple = FALSE)
       ),
       column(4,
              pickerInput(inputId = ns("timeToIncidence"),
                          label = "To",
-                         choices = startDateChoices,
-                         selected = max(startDateChoices),
+                         choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
+                         selected = max(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)),
                          multiple = FALSE)
       ),
       column(4,
@@ -236,7 +236,7 @@ incidenceServer <- function(id, uploadedFiles) {
 
       # Start Time
       incidence_estimates <- incidence_estimates %>%
-        filter(between(incidence_start_date,
+        filter(between(as.Date(incidence_start_date),
                        as.Date(input$timeFromIncidence),
                        as.Date(input$timeToIncidence)))
       # Interval

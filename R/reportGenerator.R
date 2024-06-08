@@ -137,7 +137,7 @@ reportGenerator <- function(logger = NULL) {
       dir.create(csvLocation)
       # Joins one or several zips into the reactive value
       uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
-                                           # fileName = fileName,
+                                           fileName = fileName,
                                            logger = logger)
       if (length(uploadedFileDataList) == 0) {
         show_alert(title = "Data mismatch",
