@@ -227,7 +227,7 @@ prevalenceServer <- function(id, uploadedFiles) {
 
       # Start Time
       prevalence_estimates <- prevalence_estimates %>%
-        filter(between(prevalence_start_date,
+        filter(between(as.Date(prevalence_start_date),
                        as.Date(input$timeFromPrevalence),
                        as.Date(input$timeToPrevalence)))
       # Interval
@@ -236,6 +236,11 @@ prevalenceServer <- function(id, uploadedFiles) {
       # Repeated events
       prevalence_estimates <- prevalence_estimates %>%
         filter(analysis_type == input$typePrevalence)
+
+      prevalence_estimates <- prevalence_estimates %>%
+        mutate_at(vars(prevalence,
+                       prevalence_95CI_lower,
+                       prevalence_95CI_upper), as.numeric)
 
       return(prevalence_estimates)
     })

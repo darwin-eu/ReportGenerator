@@ -51,7 +51,7 @@ incidenceUI <- function(id, uploadedFiles) {
   }
 
   pickerOptions <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-  # startDateChoices <- as.character(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
+  startDateChoices <- as.Date(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
   washoutChoices <- unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)
   washoutSelected <- washoutChoices[1]
   daysPriorHistoryChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)
@@ -150,15 +150,15 @@ incidenceUI <- function(id, uploadedFiles) {
       column(4,
              pickerInput(inputId = ns("timeFromIncidence"),
                          label = "From",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
-                         selected = min(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)),
+                         choices = startDateChoices,
+                         selected = min(startDateChoices),
                          multiple = FALSE)
       ),
       column(4,
              pickerInput(inputId = ns("timeToIncidence"),
                          label = "To",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date),
-                         selected = max(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date)),
+                         choices = startDateChoices,
+                         selected = max(startDateChoices),
                          multiple = FALSE)
       ),
       column(4,
@@ -245,6 +245,12 @@ incidenceServer <- function(id, uploadedFiles) {
       # Repeated events
       incidence_estimates <- incidence_estimates %>%
         filter(analysis_repeated_events == input$repeatedIncidence)
+
+      incidence_estimates <- incidence_estimates %>%
+        mutate_at(vars(person_years,
+                       incidence_100000_pys,
+                       incidence_100000_pys_95CI_lower,
+                       incidence_100000_pys_95CI_upper), as.numeric)
 
       return(incidence_estimates)
     })
