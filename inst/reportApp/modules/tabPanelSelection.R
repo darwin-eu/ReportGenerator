@@ -27,7 +27,7 @@ tabPanelSelection <- function(selection, uploadedFiles) {
     tabPanel(selection, characteristicsUI("lsc", uploadedFiles))
   } else if (selection == "Survival table") {
     tabPanel(selection, cohortSurvivalUI("survivalTable", uploadedFiles))
-  } else if (selection == ""Single Event - Plot"") {
+  } else if (selection == "Single Event - Plot") {
     tabPanel(selection, cohortSurvivalUI("survivalPlot", uploadedFiles))
   } else if (selection == "Competing Risk - Table") {
     tabPanel(selection, cohortSurvivalUI("failureTable", uploadedFiles))
