@@ -100,7 +100,7 @@ test_that("getItemConfig for getting options", {
 test_that("getItemConfig for getting options", {
   title <- c("Incidence rate per year - Plot")
   itemOptions <- getItemConfig(input = "title",
-                               output = "options",
+                               output = "function",
                                inputValue = title)
   expect_equal(itemOptions, "plotIncidence(incidence_estimates, colour, facet, ribbon, options)")
 })
