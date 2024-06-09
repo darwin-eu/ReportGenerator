@@ -74,7 +74,7 @@ test_that("getItemConfig for getting a function", {
 })
 
 test_that("getItemConfig for getting a function", {
-  title <- c("summarised_characteristics")
+  title <- c("Summarised Characteristics - Table")
   expression <- getItemConfig(input = "title",
                               output = "function",
                               inputValue = title)
@@ -97,13 +97,21 @@ test_that("getItemConfig for getting options", {
   expect_equal(itemOptions, NULL)
 })
 
-# test_that("getItemConfig for getting options ERROR", {
-#   title <- c("Table - Number of Giberish")
-#   itemOptions <- getItemConfig(input = "title",
-#                                output = "options",
-#                                inputValue = title)
-#   expect_equal(itemOptions, NULL)
-# })
+test_that("getItemConfig for getting options", {
+  title <- c("Incidence rate per year - Plot")
+  itemOptions <- getItemConfig(input = "title",
+                               output = "options",
+                               inputValue = title)
+  expect_equal(itemOptions, "plotIncidence(incidence_estimates, colour, facet, ribbon, options)")
+})
+
+test_that("getItemConfig for getting options ERROR", {
+  title <- c("Table - Number of Giberish")
+  itemOptions <- getItemConfig(input = "title",
+                               output = "options",
+                               inputValue = title)
+  expect_equal(itemOptions, NULL)
+})
 
 test_that("getFunctionReport error more than length 1", {
   title <- c("Number of participants - Table", "Incidence Attrition - Table")

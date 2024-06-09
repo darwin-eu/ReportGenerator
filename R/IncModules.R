@@ -293,7 +293,7 @@ incidenceServer <- function(id, uploadedFiles) {
     addObject <- reactiveVal()
     observeEvent(input$lockDataIncidenceYear, {
       addObject(
-        list(`Plot - Incidence rate per year` = list(incidence_estimates = incidenceCommonData(),
+        list(`Incidence rate per year - Plot` = list(incidence_estimates = incidenceCommonData(),
                                                      plotOption = input$facetIncidence,
                                                      caption = input$captionInc,
                                                      ribbon = input$ribbonIncidence,
@@ -303,7 +303,7 @@ incidenceServer <- function(id, uploadedFiles) {
 
     observeEvent(input$lockDataIncidenceSex, {
       addObject(
-        list(`Plot - Incidence rate per year by sex` = list(incidence_estimates = incidenceCommonData(),
+        list(`Incidence rate per year by sex - Plot` = list(incidence_estimates = incidenceCommonData(),
                                                             plotOption = input$facetIncidence,
                                                             caption = input$captionInc,
                                                             ribbon = input$ribbonIncidence,
@@ -313,7 +313,7 @@ incidenceServer <- function(id, uploadedFiles) {
 
     observeEvent(input$lockDataIncidenceAge, {
       addObject(
-        list(`Plot - Incidence rate per year by age` = list(incidence_estimates = incidenceCommonData(),
+        list(`Incidence rate per year by age - Plot` = list(incidence_estimates = incidenceCommonData(),
                                                             plotOption = input$facetIncidence,
                                                             caption = input$captionInc,
                                                             ribbon = input$ribbonIncidence,
