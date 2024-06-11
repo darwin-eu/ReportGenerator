@@ -3,9 +3,9 @@ test_that("Loading 1 zip files whole study", {
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
-  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1],
+  uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath[1],
                                  logger = logger)
-  expect_equal(length(uploadedFiles), 4)
+  expect_equal(length(uploadedFileDataList), 4)
   expect_type(uploadedFiles, "list")
 })
 
@@ -14,9 +14,9 @@ test_that("Loading multiple zip files whole study", {
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
-  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
+  uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
                                  logger = logger)
-  expect_equal(length(uploadedFiles), 4)
+  expect_equal(length(uploadedFileDataList), 4)
   expect_type(uploadedFiles, "list")
 })
 

@@ -62,6 +62,8 @@ reportGenerator <- function(logger = NULL) {
                  fluidRow(
                    box(uiOutput("itemSelectionMenu"),
                        tags$br())
+                   # ,
+                   # verbatimTextOutput("monitorData")
                  )),
         tabPanel("Item preview",
                  fluidRow(
@@ -137,8 +139,8 @@ reportGenerator <- function(logger = NULL) {
       dir.create(csvLocation)
       # Joins one or several zips into the reactive value
       uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
-                                           fileName = fileName,
-                                           logger = logger)
+                                            fileName = fileName,
+                                            logger = logger)
       if (length(uploadedFileDataList) == 0) {
         show_alert(title = "Data mismatch",
                    text = "No valid package files found")
@@ -150,12 +152,20 @@ reportGenerator <- function(logger = NULL) {
       if ("TreatmentPatterns" %in% pkgNames) {
         uploadedFiles$dataTP <- uploadedFileDataList[["TreatmentPatterns"]]
       }
-      if ("PatientProfiles" %in% pkgNames) {
-        uploadedFiles$dataPP <- uploadedFileDataList[["PatientProfiles"]]
+      if ("CohortCharacteristics" %in% pkgNames) {
+        uploadedFiles$dataPP <- uploadedFileDataList[["CohortCharacteristics"]]
       }
       if ("CohortSurvival" %in% pkgNames) {
         uploadedFiles$dataCS <- uploadedFileDataList[["CohortSurvival"]]
       }
+
+      # # Generate verbatim text output dynamically based on user input
+      # output$monitorData <- renderPrint({
+      #   # reactiveValuesToList(uploadedFiles)
+      #   # uploadedFileDataList[["CohortCharacteristics"]]
+      #   uploadedFileDataList
+      #
+      # })
 
       # Get list of items to show in toggle menu
       for (pkgName in pkgNames) {
@@ -368,7 +378,7 @@ reportGenerator <- function(logger = NULL) {
 
     # PatientProfiles Modules
     dataCharacteristics <- characteristicsServer("characteristics",
-                                                 reactive(uploadedFiles$dataPP$summarised_characteristics))
+                                                 reactive(uploadedFiles))
 
     observe({
       for (key in names(dataCharacteristics())) {
@@ -379,7 +389,7 @@ reportGenerator <- function(logger = NULL) {
       bindEvent(dataCharacteristics())
 
     dataLSC <- characteristicsServer(id = "lsc",
-                                     reactive(uploadedFiles$dataPP$summarised_large_scale_characteristics))
+                                     reactive(uploadedFiles))
 
     observe({
       for (key in names(dataLSC())) {

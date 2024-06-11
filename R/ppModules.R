@@ -86,7 +86,8 @@ characteristicsUI <- function(id, uploadedFiles) {
                #                    value = captionText,
                #                    height = "80px")
         ),
-      ),
+      )
+      ,
       fluidRow(createAddItemToReportUI(ns(lockName)),
                column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))),
       tags$br(),
@@ -219,15 +220,17 @@ characteristicsUI <- function(id, uploadedFiles) {
   }
 }
 
-characteristicsServer <- function(id, dataset) {
+characteristicsServer <- function(id, uploadedFiles) {
 
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     if (id == "characteristics") {
-      dataPP <- reactive({
-        dataset() %>%
-          # mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
+      summarised_result <- reactive({
+        uploadedFiles <- uploadedFiles()
+        summarised_result <- uploadedFiles$dataPP$summarised_characteristics
+        summarised_result %>%
+          mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
           filter(cdm_name %in% input$cdm_name,
                  result_id %in% input$result_id,
                  group_name %in% input$group_name,
@@ -242,40 +245,42 @@ characteristicsServer <- function(id, dataset) {
       })
 
       output$summarisedTableGt <- gt::render_gt({
-        dataPP <- as_tibble(selectCols(dataPP()))
-        CohortCharacteristics::tableCharacteristics(result = dataPP, split = input$pivotWide)
+        # summarised_result <- as_tibble(selectCols(summarised_result()))
+        CohortCharacteristics::tableCharacteristics(result = summarised_result(), split = input$pivotWide)
       })
 
     } else if (id == "lsc") {
-      dataPP <- reactive({
-        dataset()
-        # %>%
-        #   # mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
-        #   filter(cdm_name %in% input$cdm_name,
-        #          result_id %in% input$result_id,
-        #          group_name %in% input$group_name,
-        #          group_level %in% input$group_level,
-        #          strata_name %in% input$strata_name,
-        #          strata_level %in% input$strata_level,
-        #          variable_name %in% input$variable_name,
-        #          variable_level %in% input$variable_level,
-        #          table_name %in% input$table_name,
-        #          estimate_type %in% input$estimate_type
-        #          )
-        # %>%
-        #   mutate(estimate_value = ifelse(estimate_type == "percentage", round(as.numeric(estimate_value), 2), estimate_value))
+      summarised_result <- reactive({
+        uploadedFiles <- uploadedFiles()
+        summarised_result <- uploadedFiles$dataPP$summarised_large_scale_characteristics
+        summarised_result %>%
+          mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
+          filter(cdm_name %in% input$cdm_name,
+                 result_id %in% input$result_id,
+                 group_name %in% input$group_name,
+                 group_level %in% input$group_level,
+                 strata_name %in% input$strata_name,
+                 strata_level %in% input$strata_level,
+                 variable_name %in% input$variable_name,
+                 variable_level %in% input$variable_level,
+                 # table_name %in% input$table_name,
+                 estimate_type %in% input$estimate_type
+                 )
+      #   # %>%
+      #   #   mutate(estimate_value = ifelse(estimate_type == "percentage", round(as.numeric(estimate_value), 2), estimate_value))
       })
 
       output$summarisedTableGt <- gt::render_gt({
-        dataPP <- as_tibble(selectColsLSC(dataPP())) %>%
-          omopgenerics::newSummarisedResult()
-        CohortCharacteristics::tableLargeScaleCharacteristics(result = dataPP,
+        # summarised_result <- as_tibble(selectColsLSC(summarised_result())) %>%
+        #   omopgenerics::newSummarisedResult()
+        CohortCharacteristics::tableLargeScaleCharacteristics(result = summarised_result(),
                                                               splitStrata  = TRUE,
                                                               topConcepts = input$top_n)
       })
+
     }
 
-    captionText <- reactive({autoCaptionCharac(dataPP())})
+    captionText <- reactive({autoCaptionCharac(summarised_result())})
 
     output$captionInput <- renderUI({
       createCaptionInput(inputId = ns("captionCharacteristics"),
@@ -288,21 +293,21 @@ characteristicsServer <- function(id, dataset) {
     })
 
     output$summarisedTable <- DT::renderDataTable(server = FALSE, {
-      createDataTable(dataPP())
+      createDataTable(summarised_result())
     })
 
     addObject <- reactiveVal()
 
     observeEvent(input$lockSummary, {
       addObject(
-        list(summarised_characteristics = list(summarisedCharacteristics = dataPP(),
+        list(summarised_characteristics = list(summarisedCharacteristics = summarised_result(),
                                                  caption = input$captionCharacteristics))
       )
     })
 
     observeEvent(input$lockLSC, {
       addObject(
-        list(summarised_large_scale_characteristics = list(summarisedCharacteristics = dataPP(),
+        list(summarised_large_scale_characteristics = list(summarisedCharacteristics = summarised_result(),
                                                              caption = input$captionCharacteristics))
       )
     })
