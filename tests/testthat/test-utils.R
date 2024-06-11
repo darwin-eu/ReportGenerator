@@ -46,6 +46,12 @@ test_that("getItemsList only prevalence", {
   expect_equal(length(menuList), 3)
 })
 
+test_that("getItemsList only summarised_characteristics", {
+  items <- c("summarised_characteristics")
+  menuList <- getItemsList(items)
+  expect_equal(length(menuList), 3)
+})
+
 # TreatmentPatterns
 
 test_that("getItemsList treatmentPatterns", {
