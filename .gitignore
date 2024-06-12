@@ -48,3 +48,5 @@ log.txt
 tests/testthat/log.txt
 tests/testthat/testlog.txt
 reportApp
+renv/
+renv.lock
