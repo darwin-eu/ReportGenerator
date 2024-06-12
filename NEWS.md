@@ -1,3 +1,11 @@
+# ReportGenerator 1.15.0
+
+* Update to use CohortCharacteristics
+
+* Integration with omopgenerics
+
+* Shiny app generation
+
 # ReportGenerator 1.14.0
 
 * User can drop zip folder with results from multiple analytic packages.
