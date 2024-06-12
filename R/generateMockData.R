@@ -23,7 +23,7 @@
 #' @param outputPath A character vector of the path to export mock data.
 #' @param internal interal usage
 #'
-#' @import dplyr tidyr IncidencePrevalence duckdb checkmate CDMConnector PatientProfiles CohortSurvival
+#' @import dplyr tidyr IncidencePrevalence duckdb checkmate CDMConnector PatientProfiles CohortSurvival CohortCharacteristics CodelistGenerator
 #' @importFrom IncidencePrevalence generateDenominatorCohortSet estimateIncidence attrition estimatePointPrevalence estimatePeriodPrevalence
 #' @importFrom utils head write.csv packageVersion
 #' @importFrom stats time
@@ -47,27 +47,23 @@ generateMockData <- function(databaseName = c("CHUBX",
 
   for (dbName in databaseName) {
     if (simulatePopulation == TRUE) {
-      if (dbName== "CHUBX") {
-        sampleSize <- 21523
-      } else if (dbName== "CPRD_GOLD") {
-        sampleSize <- 15662
-      } else if (dbName== "IMASIS") {
-        sampleSize <- 10147
-      } else if (dbName== "IPCI") {
-        sampleSize <- 26745
-      } else if (dbName== "SIDIAP") {
-        sampleSize <- 82653
-      }
-    } else {
-      sampleSize <- 50000
-    }
+        sampleSize <- case_when(
+          dbName == "CHUBX" ~ 21523,
+          dbName == "CPRD_GOLD" ~ 15662,
+          dbName == "IMASIS" ~ 10147,
+          dbName == "IPCI" ~ 26745,
+          dbName == "SIDIAP" ~ 82653)
+        } else {
+          sampleSize <- 50000
+        }
+
 
     # Generate data
 
     incidencePrevalenceData <- getIncidencePrevalence(sampleSize = sampleSize)
     treatmentPathwaysData <- getTreatmentPathways()
-    characteristicsData <- getCharacteristicsResult()
-    largeScaleCharacteristicsData <- getLargeScaleCharacteristicsResult()
+    summarised_characteristics <- getCharacteristicsResult()
+    summarised_large_scale_characteristics <- getLargeScaleCharacteristicsResult()
     cohortSurvivalData <- getCohortSurvival()
 
     # Gather data
@@ -79,10 +75,10 @@ generateMockData <- function(databaseName = c("CHUBX",
                      "treatmentPathways" = treatmentPathwaysData$treatmentPathways,
                      "metadata" = treatmentPathwaysData$metadata,
                      "summaryStatsTherapyDuration" = treatmentPathwaysData$summaryStatsTherapyDuration,
-                     "summarised_characteristics" = characteristicsData,
-                     "summarised_large_scale_characteristics" = largeScaleCharacteristicsData,
-                     "Survival estimate" = cohortSurvivalData$survivalEstimate,
-                     "Survival cumulative incidence" = cohortSurvivalData$survivalCumulativeIncidence)
+                     "summarised_characteristics" = summarised_characteristics,
+                     "summarised_large_scale_characteristics" = summarised_large_scale_characteristics,
+                     "single_event" = cohortSurvivalData$single_event,
+                     "competing_risk" = cohortSurvivalData$competing_risk)
 
     # Insert database name
 
@@ -175,186 +171,107 @@ getIncidencePrevalence <- function(sampleSize) {
 
 getCharacteristicsResult <- function() {
 
-  observation_period <- dplyr::tibble(
-    observation_period_id = c(1, 2, 3),
-    person_id = c(1, 2, 3),
-    observation_period_start_date = as.Date(c(
-      "1985-01-01", "1989-04-29", "1974-12-03"
-    )),
-    observation_period_end_date = as.Date(c(
-      "2011-03-04", "2022-03-14", "2023-07-10"
-    )),
-    period_type_concept_id = 0
-  )
-  dus_cohort <- dplyr::tibble(
-    cohort_definition_id = c(1, 1, 1, 2),
-    subject_id = c(1, 1, 2, 3),
-    cohort_start_date = as.Date(c(
-      "1990-04-19", "1991-04-19", "2010-11-14", "2000-05-25"
-    )),
-    cohort_end_date = as.Date(c(
-      "1990-04-19", "1991-04-19", "2010-11-14", "2000-05-25"
-    ))
-  )
-  comorbidities <- dplyr::tibble(
-    cohort_definition_id = c(1, 2, 2, 1),
-    subject_id = c(1, 1, 3, 3),
-    cohort_start_date = as.Date(c(
-      "1990-01-01", "1990-06-01", "2000-01-01", "2000-06-01"
-    )),
-    cohort_end_date = as.Date(c(
-      "1990-01-01", "1990-06-01", "2000-01-01", "2000-06-01"
-    ))
-  )
-  medication <- dplyr::tibble(
-    cohort_definition_id = c(1, 1, 2, 1),
-    subject_id = c(1, 1, 2, 3),
-    cohort_start_date = as.Date(c(
-      "1990-02-01", "1990-08-01", "2009-01-01", "1995-06-01"
-    )),
-    cohort_end_date = as.Date(c(
-      "1990-02-01", "1990-08-01", "2009-01-01", "1995-06-01"
-    ))
-  )
-  emptyCohort <- dplyr::tibble(
-    cohort_definition_id = numeric(),
-    subject_id = numeric(),
-    cohort_start_date = as.Date(character()),
-    cohort_end_date = as.Date(character())
-  )
-  cdm <- mockPatientProfiles(
-    dus_cohort = dus_cohort, cohort1 = emptyCohort,
-    cohort2 = emptyCohort, observation_period = observation_period,
-    comorbidities = comorbidities, medication = medication
+  # Set of mock results generated with the example at:
+  # darwin-eu-dev/CohortCharacteristics
+
+  con <- DBI::dbConnect(duckdb::duckdb(),
+                        dbdir = CDMConnector::eunomia_dir()
   )
 
-  cdm$dus_cohort <- omopgenerics::newCohortTable(
-    table = cdm$dus_cohort, cohortSetRef = dplyr::tibble(
-      cohort_definition_id = c(1, 2), cohort_name = c("exposed", "unexposed")
+  cdm <- CDMConnector::cdm_from_con(con,
+                                    cdm_schem = "main",
+                                    write_schema = "main",
+                                    cdm_name = "Eunomia"
+  )
+
+  meds_cs <- getDrugIngredientCodes(
+    cdm = cdm,
+    name = c(
+      "acetaminophen",
+      "morphine",
+      "warfarin"
     )
   )
-  cdm$comorbidities <- omopgenerics::newCohortTable(
-    table = cdm$comorbidities, cohortSetRef = dplyr::tibble(
-      cohort_definition_id = c(1, 2), cohort_name = c("covid", "headache")
-    )
+
+  cdm <- generateConceptCohortSet(
+    cdm = cdm,
+    name = "meds",
+    conceptSet = meds_cs,
+    end = "event_end_date",
+    limit = "all",
+    overwrite = TRUE
   )
-  cdm$medication <- omopgenerics::newCohortTable(
-    table = cdm$medication,
-    cohortSetRef = dplyr::tibble(
-      cohort_definition_id = c(1, 2, 3),
-      cohort_name = c("acetaminophen", "ibuprophen", "naloxone")
+
+  cdm <- generateConceptCohortSet(
+    cdm = cdm,
+    name = "injuries",
+    conceptSet = list(
+      "ankle_sprain" = 81151,
+      "ankle_fracture" = 4059173,
+      "forearm_fracture" = 4278672,
+      "hip_fracture" = 4230399
     ),
-    cohortAttritionRef = NULL
+    end = "event_end_date",
+    limit = "all"
   )
-  characteristicsResult <- summariseCharacteristics(
-    cdm$dus_cohort,
-    cohortIntersect = list(
-      "Medications" = list(
-        targetCohortTable = "medication", value = "flag", window = c(-365, 0)
-      ), "Comorbidities" = list(
-        targetCohortTable = "comorbidities", value = "flag", window = c(-Inf, 0)
+
+  chars <- cdm$injuries |>
+    summariseCharacteristics(cohortIntersectFlag = list(
+      "Medications prior to index date" = list(
+        targetCohortTable = "meds",
+        window = c(-Inf, -1)
+      ),
+      "Medications on index date" = list(
+        targetCohortTable = "meds",
+        window = c(0, 0)
       )
-    )
-  )
-  return(addSettings(characteristicsResult))
+    ))
+
+  return(chars)
 }
 
 getLargeScaleCharacteristicsResult <- function() {
-  # Mock data example from PatientProfiles vignette
-  person <- dplyr::tibble(
-    person_id = c(1, 2),
-    gender_concept_id = c(8507, 8532),
-    year_of_birth = c(1990, 1992),
-    month_of_birth = c(1, 1),
-    day_of_birth = c(1, 1),
-    race_concept_id = 0,
-    ethnicity_concept_id = 0
-  )
-  observation_period <- dplyr::tibble(
-    observation_period_id = c(1, 2),
-    person_id = c(1, 2),
-    observation_period_start_date = as.Date(c("2011-10-07", "2000-01-01")),
-    observation_period_end_date = as.Date(c("2031-10-07", "2030-01-01")),
-    period_type_concept_id = 44814724
-  )
-  cohort_interest <- dplyr::tibble(
-    cohort_definition_id = c(1, 1, 1, 2),
-    subject_id = c(1, 1, 2, 2),
-    cohort_start_date = as.Date(c(
-      "2012-10-10", "2015-01-01", "2013-10-10", "2015-01-01"
-    )),
-    cohort_end_date = as.Date(c(
-      "2012-10-10", "2015-01-01", "2013-10-10", "2015-01-01"
-    ))
-  )
-  drug_exposure <- dplyr::tibble(
-    drug_exposure_id = 1:11,
-    person_id = c(rep(1, 8), rep(2, 3)),
-    drug_concept_id = c(
-      rep(1125315, 2), rep(1503328, 5), 1516978, 1125315, 1503328, 1516978
-    ),
-    drug_exposure_start_date = as.Date(c(
-      "2010-10-01", "2012-12-31", "2010-01-01", "2012-09-01", "2013-04-01",
-      "2014-10-31", "2015-05-01", "2015-10-01", "2012-01-01", "2012-10-01",
-      "2014-10-12"
-    )),
-    drug_exposure_end_date = as.Date(c(
-      "2010-12-01", "2013-05-12", "2011-01-01", "2012-10-01", "2013-05-01",
-      "2014-12-31", "2015-05-02", "2016-10-01", "2012-01-01", "2012-10-30",
-      "2015-01-10"
-    )),
-    drug_type_concept_id = 38000177,
-    quantity = 1
-  )
-  condition_occurrence <- dplyr::tibble(
-    condition_occurrence_id = 1:8,
-    person_id = c(rep(1, 4), rep(2, 4)),
-    condition_concept_id = c(
-      317009, 378253, 378253, 4266367, 317009, 317009, 378253, 4266367
-    ),
-    condition_start_date = as.Date(c(
-      "2012-10-01", "2012-01-01", "2014-01-01", "2010-01-01", "2015-02-01",
-      "2012-01-01", "2013-10-01", "2014-10-10"
-    )),
-    condition_end_date = as.Date(c(
-      "2013-01-01", "2012-04-01", "2014-10-12", "2015-01-01", "2015-03-01",
-      "2012-04-01", "2013-12-01", NA
-    )),
-    condition_type_concept_id = 32020
-  )
-  cdm <- PatientProfiles::mockPatientProfiles(
-    person = person, observation_period = observation_period,
-    cohort_interest = cohort_interest, drug_exposure = drug_exposure,
-    condition_occurrence = condition_occurrence
+
+  # Set of mock results generated with the example at:
+  # darwin-eu-dev/CohortCharacteristics
+
+  con <- DBI::dbConnect(duckdb::duckdb(),
+                        dbdir = CDMConnector::eunomia_dir()
   )
 
-  concept <- dplyr::tibble(
-    concept_id = c(1125315, 1503328, 1516978, 317009, 378253, 4266367),
-    domain_id = NA_character_,
-    vocabulary_id = NA_character_,
-    concept_class_id = NA_character_,
-    concept_code = NA_character_,
-    valid_start_date = as.Date("1900-01-01"),
-    valid_end_date = as.Date("2099-01-01")
-  ) %>%
-    dplyr::mutate(concept_name = paste0("concept: ", .data$concept_id))
+  cdm <- CDMConnector::cdm_from_con(con,
+                                    cdm_schem = "main",
+                                    write_schema = "main"
+  )
 
-  cdm <- CDMConnector::insertTable(cdm, "concept", concept)
+  cdm <- generateConceptCohortSet(
+    cdm = cdm,
+    name = "ankle_sprain",
+    conceptSet = list("ankle_sprain" = 81151),
+    end = "event_end_date",
+    limit = "first",
+    overwrite = TRUE
+  )
 
-  largeScaleCharacteristicsResult <- cdm$cohort_interest %>%
-    PatientProfiles::addDemographics(
-      ageGroup = list(c(0, 24), c(25, 150))
-    ) %>%
-    PatientProfiles::summariseLargeScaleCharacteristics(
-      strata = list("age_group", c("age_group", "sex")),
-      episodeInWindow = c("condition_occurrence", "drug_exposure"),
-      minimumFrequency = 0
+  lsc <- cdm$ankle_sprain |>
+    summariseLargeScaleCharacteristics(
+      window = list(c(-Inf, -1), c(0, 0)),
+      eventInWindow = c(
+        "condition_occurrence",
+        "procedure_occurrence"
+      ),
+      episodeInWindow = "drug_exposure",
+      minimumFrequency = 0.1
     )
-  return(addSettings(largeScaleCharacteristicsResult))
+  return(lsc)
 }
 
 
 getTreatmentPathways <- function() {
+
+  # Set of mock results generated with the example at:
+  # darwin-eu-dev/TreatmentPatterns
+
   cohortSet <- CDMConnector::readCohortSet(
     path = system.file(package = "TreatmentPatterns",
                        "exampleCohorts")
@@ -421,7 +338,7 @@ getTreatmentPathways <- function() {
 
 getCohortSurvival <- function() {
   cdmSurvival <- CohortSurvival::mockMGUS2cdm()
-  singleEvent <- CohortSurvival::estimateSingleEventSurvival(cdmSurvival,
+  single_event <- CohortSurvival::estimateSingleEventSurvival(cdmSurvival,
                                                              targetCohortTable = "mgus_diagnosis",
                                                              targetCohortId = 1,
                                                              outcomeCohortTable = "death_cohort",
@@ -429,19 +346,13 @@ getCohortSurvival <- function() {
                                                              strata = list(c("age_group"),
                                                                            c("sex"),
                                                                            c("age_group", "sex")))
-  competingRisk <- CohortSurvival::estimateCompetingRiskSurvival(cdmSurvival,
+  competing_risk <- CohortSurvival::estimateCompetingRiskSurvival(cdmSurvival,
                                                                  targetCohortTable = "mgus_diagnosis",
                                                                  outcomeCohortTable = "progression",
                                                                  competingOutcomeCohortTable = "death_cohort",
                                                                  strata = list(c("sex")))
 
-  result <- list("survivalEstimate" = addSettings(singleEvent),
-                 "survivalCumulativeIncidence" = addSettings(competingRisk))
+  result <- list("single_event" = single_event,
+                 "competing_risk" = competing_risk)
   return(result)
-}
-
-addSettings <- function(data) {
-  data %>%
-    inner_join(settings(data),
-               by = "result_id")
 }

@@ -5,17 +5,17 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
   topN <- NULL
   dlPlot <- NULL
   if (id == "survivalTable") {
-    outResult <- DT::dataTableOutput(ns("cs_data"))
-    dataset <- uploadedFiles$dataCS$`Survival estimate`
+    outResult <- gt::gt_output(ns("cs_data"))
+    dataset <- uploadedFiles$dataCS$single_event
   } else if (id == "survivalPlot") {
     outResult <- plotOutput(ns("cs_plot"))
-    dataset <- uploadedFiles$dataCS$`Survival estimate`
+    dataset <- uploadedFiles$dataCS$single_event
   } else if (id == "failureTable") {
-    outResult <- DT::dataTableOutput(ns("cu_inc_data"))
-    dataset <- uploadedFiles$dataCS$`Survival cumulative incidence`
+    outResult <- gt::gt_output(ns("cu_inc_data"))
+    dataset <- uploadedFiles$dataCS$competing_risk
   } else if (id == "failurePlot") {
     outResult <- plotOutput(ns("cu_inc_plot"))
-    dataset <- uploadedFiles$dataCS$`Survival cumulative incidence`
+    dataset <- uploadedFiles$dataCS$competing_risk
   }
   if (grepl("Plot", id)) {
     dlPlot <- createDownloadPlotUI(ns)
@@ -30,7 +30,9 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
 
   groupLevelOptions <- unique(dataset$group_level)
   strataNameOptions <- unique(dataset$strata_name)
-  pickerOptions <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+  pickerOptions <- list(`actions-box` = TRUE,
+                        size = 10,
+                        `selected-text-format` = "count > 3")
   cdmOptions <- unique(dataset$cdm_name)
 
   tagList(
@@ -50,7 +52,7 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
               inputId = ns("group_level"),
               label = "Group Level",
               choices = groupLevelOptions,
-              selected = groupLevelOptions[1],
+              selected = groupLevelOptions,
               options = pickerOptions,
               multiple = TRUE
              )
@@ -60,7 +62,7 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
                inputId = ns("strata_name"),
                label = "Strata Name",
                choices = strataNameOptions,
-               selected = strataNameOptions[1],
+               selected = strataNameOptions,
                options = pickerOptions,
                multiple = TRUE
              )
@@ -83,9 +85,9 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     getData <- reactive({
       uploadedFiles <- uploadedFiles()
       if (id == "survivalTable"  || id == "survivalPlot") {
-        dataset <- uploadedFiles$dataCS$`Survival estimate`
+        dataset <- uploadedFiles$dataCS$single_event
       } else if (id == "failureTable"  || id == "failurePlot") {
-        dataset <- uploadedFiles$dataCS$`Survival cumulative incidence`
+        dataset <- uploadedFiles$dataCS$competing_risk
       }
       dataset %>%
         filter(cdm_name %in% input$cdm_name,
@@ -93,24 +95,17 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
                strata_name %in% input$strata_name)
     })
 
-    getTableData <- reactive({
-      getData() %>%
-        dplyr::slice_head(n = input$top_n) %>%
-        select(c("cdm_name", "result_type", "group_level", "strata_name",
-                 "strata_level", "estimate_name", "estimate_value"))
-    })
-
     if (id == "survivalTable") {
-      output$cs_data <- DT::renderDataTable(server = FALSE, {
-        createDataTable(getTableData())
+      output$cs_data <- gt::render_gt({
+        CohortSurvival::tableSurvival(getData())
       })
     } else if (id == "survivalPlot") {
       output$cs_plot <- renderPlot({
         previewFigure()
       })
     } else if (id == "failureTable") {
-      output$cu_inc_data <- DT::renderDataTable(server = FALSE, {
-        createDataTable(getTableData())
+      output$cu_inc_data <- gt::render_gt({
+        CohortSurvival::tableSurvival(getData())
       })
     } else if (id == "failurePlot") {
       output$cu_inc_plot <- renderPlot({
@@ -171,7 +166,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$locksurvivalTable, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`Survival table` = list(survivalEstimate = getTableData(),
+          list(`Survival table` = list(survivalEstimate = getData(),
                                        caption = input$captionSurvivalEstimateData))
         )
       }
@@ -180,7 +175,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$locksurvivalPlot, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`Survival plot` = list(survivalEstimate = getData(),
+          list(`"Single Event - Plot"` = list(survivalEstimate = getData(),
                                       plotOption = "Facet by database, colour by strata_name",
                                       caption = input$captionSurvivalEstimate))
         )
@@ -190,7 +185,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$lockfailureTable, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`Cumulative incidence table` = list(cumulativeSurvivalEstimate = getTableData(),
+          list(`Cumulative incidence table` = list(cumulativeSurvivalEstimate = getData(),
                                                    caption = input$captionCumulativeIncidenceData))
         )
       }

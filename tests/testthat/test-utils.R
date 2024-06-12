@@ -7,29 +7,31 @@ test_that("getItemsList all", {
              "prevalence_estimates",
              "treatmentPathways",
              "summarised_characteristics",
-             "summarised_large_scale_characteristics")
+             "summarised_large_scale_characteristics",
+             "single_event",
+             "competing_risk")
   menuList <- getItemsList(items)
-  expect_equal(length(menuList), 13)
+  expect_equal(length(menuList), 17)
 })
 
 test_that("getItemsList attrition both", {
   items <- c("incidence_attrition", "prevalence_attrition")
   menuList <- getItemsList(items)
-  expect_equal(menuList, c("Table - Number of participants",
-                           "Table - Incidence Attrition",
-                           "Table - Prevalence Attrition"))
+  expect_equal(menuList, c("Number of participants - Table",
+                           "Incidence Attrition - Table",
+                           "Prevalence Attrition - Table"))
 })
 
 test_that("getItemsList only incidence_attrition", {
   items <- c("incidence_attrition")
   menuList <- getItemsList(items)
-  expect_equal(menuList, c("Table - Incidence Attrition"))
+  expect_equal(menuList, c("Incidence Attrition - Table"))
 })
 
 test_that("getItemsList only prevalence_attrition", {
   items <- c("prevalence_attrition")
   menuList <- getItemsList(items)
-  expect_equal(menuList, c("Table - Prevalence Attrition"))
+  expect_equal(menuList, c("Prevalence Attrition - Table"))
 })
 
 test_that("getItemsList only incidence_estimate", {
@@ -42,6 +44,13 @@ test_that("getItemsList only prevalence", {
   items <- c("prevalence_estimates")
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 3)
+})
+
+test_that("getItemsList only summarised_characteristics", {
+  items <- c("summarised_characteristics")
+  menuList <- getItemsList(items)
+  expect_equal(length(menuList), 1)
+  expect_equal(menuList, "Summarised Characteristics - Table")
 })
 
 # TreatmentPatterns
@@ -64,7 +73,7 @@ test_that("getItemsList joining to apps", {
 })
 
 test_that("getItemConfig for getting a function", {
-  title <- c("Table - Number of participants")
+  title <- c("Number of participants - Table")
   expression <- getItemConfig(input = "title",
                               output = "function",
                               inputValue = title)
@@ -72,7 +81,7 @@ test_that("getItemConfig for getting a function", {
 })
 
 test_that("getItemConfig for getting a function", {
-  title <- c("summarised_characteristics")
+  title <- c("Summarised Characteristics - Table")
   expression <- getItemConfig(input = "title",
                               output = "function",
                               inputValue = title)
@@ -80,7 +89,7 @@ test_that("getItemConfig for getting a function", {
 })
 
 test_that("getItemConfig for getting options", {
-  title <- c("Table - Number of participants")
+  title <- c("Number of participants - Table")
   itemOptions <- getItemConfig(input = "title",
                                output = "options",
                                inputValue = title)
@@ -88,23 +97,31 @@ test_that("getItemConfig for getting options", {
 })
 
 test_that("getItemConfig for getting options", {
-  title <- c("Table - Number of participants")
+  title <- c("Number of participants - Table")
   itemOptions <- getItemConfig(input = "title",
                                output = "options",
                                inputValue = title)
   expect_equal(itemOptions, NULL)
 })
 
-# test_that("getItemConfig for getting options ERROR", {
-#   title <- c("Table - Number of Giberish")
-#   itemOptions <- getItemConfig(input = "title",
-#                                output = "options",
-#                                inputValue = title)
-#   expect_equal(itemOptions, NULL)
-# })
+test_that("getItemConfig for getting options", {
+  title <- c("Incidence rate per year - Plot")
+  itemOptions <- getItemConfig(input = "title",
+                               output = "function",
+                               inputValue = title)
+  expect_equal(itemOptions, "plotIncidence(incidence_estimates, colour, facet, ribbon, options)")
+})
+
+test_that("getItemConfig for getting options ERROR", {
+  title <- c("Table - Number of Giberish")
+  itemOptions <- getItemConfig(input = "title",
+                               output = "options",
+                               inputValue = title)
+  expect_equal(itemOptions, NULL)
+})
 
 test_that("getFunctionReport error more than length 1", {
-  title <- c("Table - Number of participants", "Table - Incidence Attrition")
+  title <- c("Number of participants - Table", "Incidence Attrition - Table")
   expect_error(getItemConfig(input = "title",
                              output = "function",
                              inputValue = title))
@@ -113,7 +130,7 @@ test_that("getFunctionReport error more than length 1", {
 test_that("addPreviewItemType happy flow", {
   result <- addPreviewItemType(previewItemString = getItemConfig(input = "title",
                                                                  output = "function",
-                                                                 inputValue = "Plot - Incidence rate per year"),
+                                                                 inputValue = "Incidence rate per year - Plot"),
                                previewItemType = "Facet by outcome")
 
   expect_equal(class(result), "character")
@@ -122,7 +139,7 @@ test_that("addPreviewItemType happy flow", {
   # type might be empty, set default
   result <- addPreviewItemType(previewItemString = getItemConfig(input = "title",
                                                                  output = "function",
-                                                                 inputValue = "Plot - Incidence rate per year"),
+                                                                 inputValue = "Incidence rate per year - Plot"),
                                previewItemType = NULL)
 
   expect_equal(class(result), "character")
@@ -151,12 +168,12 @@ test_that("PatientProfiles Both Summaries", {
 test_that("PatientProfiles Summary", {
   items <- c("summarised_characteristics")
   menuList <- getItemsList(items)
-  expect_equal(menuList, "summarised_characteristics")
+  expect_equal(menuList, "Summarised Characteristics - Table")
 })
 
 test_that("PatientProfiles LSC", {
   items <- c("summarised_large_scale_characteristics")
   menuList <- getItemsList(items)
-  expect_equal(menuList, "Summarised Large Scale Characteristics")
+  expect_equal(menuList, "Summarised Large Scale Characteristics - Table")
 })
 

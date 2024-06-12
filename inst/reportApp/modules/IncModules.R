@@ -1,6 +1,6 @@
 incidenceUI <- function(id, uploadedFiles) {
   ns <- NS(id)
-  if (id == "Plot - Incidence rate per year") {
+  if (id == "Incidence rate per year - Plot") {
 
     databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
     databaseSelected <- databaseChoices
@@ -16,7 +16,7 @@ incidenceUI <- function(id, uploadedFiles) {
     captionValue <-"Figure 1. Incidence rate/s of drug/s use over calendar time (per year) overall by database [Add months if relevant]"
 
     lockName <- "lockDataIncidenceYear"
-  } else if (id == "Plot - Incidence rate per year by sex") {
+  } else if (id == "Incidence rate per year by sex - Plot") {
 
     databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
     databaseSelected <- databaseChoices[1]
@@ -32,7 +32,7 @@ incidenceUI <- function(id, uploadedFiles) {
     captionValue <- "Figure 2. Incidence rate/s of drug/s use over calendar time (per year) stratified by sex and database [Add months if relevant]"
 
     lockName <- "lockDataIncidenceSex"
-  } else if (id == "Plot - Incidence rate per year by age") {
+  } else if (id == "Incidence rate per year by age - Plot") {
 
     databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
     databaseSelected <- databaseChoices[1]
@@ -253,13 +253,13 @@ incidenceServer <- function(id, uploadedFiles) {
       expression <- getItemConfig(input = "title",
                                   output = "function",
                                   inputValue = id)
-      if (id == "Plot - Incidence rate per year") {
+      if (id == "Incidence rate per year - Plot") {
         expression <- expression %>%
           addPreviewItemType(input$facetIncidence)
-      } else if (id == "Plot - Incidence rate per year by sex") {
+      } else if (id == "Incidence rate per year by sex - Plot") {
         expression <- expression %>%
           addPreviewItemTypeSex(input$facetIncidence)
-      } else if (id == "Plot - Incidence rate per year by age") {
+      } else if (id == "Incidence rate per year by age - Plot") {
         expression <- expression %>%
           addPreviewItemTypeAge(input$facetIncidence)
       }

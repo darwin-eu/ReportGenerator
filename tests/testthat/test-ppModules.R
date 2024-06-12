@@ -19,8 +19,7 @@ test_that("summarised Characteristics and LSC", {
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
-  uploadedFiles <- joinDatabase(fileDataPath = fileDataPath[1],
-                                csvLocation = csvLocation,
+  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1],
                                 logger = logger)
   testServer(reportGenerator(), {
     expect_s3_class(characteristicsUI("characteristics", uploadedFiles$PatientProfiles$summarised_characteristics), "shiny.tag.list")

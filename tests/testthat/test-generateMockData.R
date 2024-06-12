@@ -3,10 +3,13 @@
 # test_that("generateMockData result output", {
 #   outputPath <- file.path(tempdir(), "dataLocation")
 #   dir.create(outputPath)
-#   generateMockData(databaseName = c("CHUBX"),
-#                    simulatePopulation = TRUE,
+#   databaseName <- c("CHUBX")
+#   simulatePopulation <- TRUE
+#   internal <- FALSE
+#   generateMockData(databaseName = databaseName,
+#                    simulatePopulation = simulatePopulation,
 #                    outputPath = outputPath,
-#                    internal = FALSE)
+#                    internal = internal)
 #   expect_equal(list.files(file.path(outputPath)),"mock_data_CHUBX.zip")
 #   unlink(outputPath, recursive = TRUE)
 # })
@@ -14,7 +17,8 @@
 # test_that("generateMockData result output", {
 #   outputPath <- file.path(tempdir(), "dataLocation")
 #   dir.create(outputPath)
-#   generateMockData(databaseName = c("CHUBX", "CPRD GOLD", "IMASIS"),
+#   databaseName <- c("CHUBX", "CPRD GOLD", "IMASIS")
+#   generateMockData(databaseName = databaseName,
 #                    simulatePopulation = TRUE,
 #                    outputPath = outputPath,
 #                    internal = FALSE)

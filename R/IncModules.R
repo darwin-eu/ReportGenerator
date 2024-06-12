@@ -1,6 +1,6 @@
 incidenceUI <- function(id, uploadedFiles) {
   ns <- NS(id)
-  if (id == "Plot - Incidence rate per year") {
+  if (id == "Incidence rate per year - Plot") {
 
     databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
     databaseSelected <- databaseChoices
@@ -16,7 +16,7 @@ incidenceUI <- function(id, uploadedFiles) {
     captionValue <-"Figure 1. Incidence rate/s of drug/s use over calendar time (per year) overall by database [Add months if relevant]"
 
     lockName <- "lockDataIncidenceYear"
-  } else if (id == "Plot - Incidence rate per year by sex") {
+  } else if (id == "Incidence rate per year by sex - Plot") {
 
     databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
     databaseSelected <- databaseChoices[1]
@@ -32,7 +32,7 @@ incidenceUI <- function(id, uploadedFiles) {
     captionValue <- "Figure 2. Incidence rate/s of drug/s use over calendar time (per year) stratified by sex and database [Add months if relevant]"
 
     lockName <- "lockDataIncidenceSex"
-  } else if (id == "Plot - Incidence rate per year by age") {
+  } else if (id == "Incidence rate per year by age - Plot") {
 
     databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
     databaseSelected <- databaseChoices[1]
@@ -51,7 +51,7 @@ incidenceUI <- function(id, uploadedFiles) {
   }
 
   pickerOptions <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-  startDateChoices <- as.character(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
+  startDateChoices <- as.Date(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
   washoutChoices <- unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)
   washoutSelected <- washoutChoices[1]
   daysPriorHistoryChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)
@@ -236,7 +236,7 @@ incidenceServer <- function(id, uploadedFiles) {
 
       # Start Time
       incidence_estimates <- incidence_estimates %>%
-        filter(between(incidence_start_date,
+        filter(between(as.Date(incidence_start_date),
                        as.Date(input$timeFromIncidence),
                        as.Date(input$timeToIncidence)))
       # Interval
@@ -246,6 +246,12 @@ incidenceServer <- function(id, uploadedFiles) {
       incidence_estimates <- incidence_estimates %>%
         filter(analysis_repeated_events == input$repeatedIncidence)
 
+      incidence_estimates <- incidence_estimates %>%
+        mutate_at(vars(person_years,
+                       incidence_100000_pys,
+                       incidence_100000_pys_95CI_lower,
+                       incidence_100000_pys_95CI_upper), as.numeric)
+
       return(incidence_estimates)
     })
 
@@ -253,13 +259,13 @@ incidenceServer <- function(id, uploadedFiles) {
       expression <- getItemConfig(input = "title",
                                   output = "function",
                                   inputValue = id)
-      if (id == "Plot - Incidence rate per year") {
+      if (id == "Incidence rate per year - Plot") {
         expression <- expression %>%
           addPreviewItemType(input$facetIncidence)
-      } else if (id == "Plot - Incidence rate per year by sex") {
+      } else if (id == "Incidence rate per year by sex - Plot") {
         expression <- expression %>%
           addPreviewItemTypeSex(input$facetIncidence)
-      } else if (id == "Plot - Incidence rate per year by age") {
+      } else if (id == "Incidence rate per year by age - Plot") {
         expression <- expression %>%
           addPreviewItemTypeAge(input$facetIncidence)
       }
@@ -293,7 +299,7 @@ incidenceServer <- function(id, uploadedFiles) {
     addObject <- reactiveVal()
     observeEvent(input$lockDataIncidenceYear, {
       addObject(
-        list(`Plot - Incidence rate per year` = list(incidence_estimates = incidenceCommonData(),
+        list(`Incidence rate per year - Plot` = list(incidence_estimates = incidenceCommonData(),
                                                      plotOption = input$facetIncidence,
                                                      caption = input$captionInc,
                                                      ribbon = input$ribbonIncidence,
@@ -303,7 +309,7 @@ incidenceServer <- function(id, uploadedFiles) {
 
     observeEvent(input$lockDataIncidenceSex, {
       addObject(
-        list(`Plot - Incidence rate per year by sex` = list(incidence_estimates = incidenceCommonData(),
+        list(`Incidence rate per year by sex - Plot` = list(incidence_estimates = incidenceCommonData(),
                                                             plotOption = input$facetIncidence,
                                                             caption = input$captionInc,
                                                             ribbon = input$ribbonIncidence,
@@ -313,7 +319,7 @@ incidenceServer <- function(id, uploadedFiles) {
 
     observeEvent(input$lockDataIncidenceAge, {
       addObject(
-        list(`Plot - Incidence rate per year by age` = list(incidence_estimates = incidenceCommonData(),
+        list(`Incidence rate per year by age - Plot` = list(incidence_estimates = incidenceCommonData(),
                                                             plotOption = input$facetIncidence,
                                                             caption = input$captionInc,
                                                             ribbon = input$ribbonIncidence,

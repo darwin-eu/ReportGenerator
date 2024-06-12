@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' `joinDatabase()` joins several zip or csv folders into a list of dataframes.
+#' `joinDatabases()` joins several zip or csv folders into a list of dataframes.
 #'
 #' @param fileDataPath File path(s) in character
 #' @param fileName Name of the file in character to process in case the input is only csv
@@ -25,7 +25,7 @@
 #'
 #' @import yaml
 #' @export
-joinDatabase <- function(fileDataPath,
+joinDatabases <- function(fileDataPath,
                          fileName = NULL,
                          csvLocation,
                          logger) {
@@ -307,7 +307,7 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     checkmate::expect_character(version)
 
     cdm <- PatientProfiles::mockPatientProfiles(patient_size = 10)
-    summaryPP <- PatientProfiles::summariseCharacteristics(cohort = cdm$cohort1, cdm = cdm)
+    summaryPP <- CohortCharacteristics::summariseCharacteristics(cohort = cdm$cohort1, cdm = cdm)
     columnNamesCharacteristics <- names(summaryPP)
     configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
     configData[[package]][[version]][[unique(summaryPP$result_type)]][["names"]] <- columnNamesCharacteristics
@@ -316,7 +316,7 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     cdm[["cohort1"]] <- cdm[["cohort1"]]%>%
       PatientProfiles::addDemographics()
 
-    lscPP <- PatientProfiles::summariseLargeScaleCharacteristics(cohort = cdm[["cohort1"]],
+    lscPP <- CohortCharacteristics::summariseLargeScaleCharacteristics(cohort = cdm[["cohort1"]],
                                                                  strata = list("age",
                                                                                "sex"),
                                                                  window = list(c(-30, -1),

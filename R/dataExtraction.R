@@ -14,84 +14,167 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' `joinDatabase()` joins several zip or csv folders into a list of dataframes.
+#' `joinDatabases()` joins several zip or csv folders into a list of dataframes.
 #'
-#' @param fileDataPath File path(s) in character
+#' @param fileDataPath List of full file locations
 #' @param fileName Name of the file in character to process in case the input is only csv
-#' @param csvLocation Path folder location to uncompress the zip files
-#' @param logger logger object
+#' @param logger A logger object
 #'
 #' @return A list of dataframes
 #'
 #' @import yaml
+#' @importFrom cli cli_progress_step
 #' @export
-joinDatabase <- function(fileDataPath,
-                         fileName = NULL,
-                         csvLocation,
-                         logger) {
+joinDatabases <- function(fileDataPath,
+                          fileName = NULL,
+                          logger) {
 
-  # Loading yml file
-  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+  # Check
+  checkmate::assertCharacter(fileDataPath)
+
+  # Settings
+  configData <- yaml.load_file(system.file("config",
+                                           "variablesConfig.yaml",
+                                           package = "ReportGenerator"))
   packagesNames <- names(configData)
+  fileType <- getFileType(fileDataPath)
+  unzipDir <- file.path(tempdir(), "unzipData")
 
   # Check zip
-  if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
-    log4r::info(logger, glue::glue("Processing zip file(s), length: {length(fileDataPath)}"))
-    # Empty list to allocate data
-    data <- list()
-    # Folder count to allocate multiple databases
-    folderNumber <- 0
-    # Unzips every zip and puts the files in a separate folder in the temp dir
-    for (fileLocation in fileDataPath) {
-      folderNumber <- folderNumber + 1
-      unzip(zipfile = fileLocation,
-            exdir = file.path(csvLocation, paste0("database", as.character(folderNumber))))
-    }
-    # List of unzipped database directories where files are located
-    databaseFolders <- dir(csvLocation, pattern = "database", full.names = TRUE)
-    # Iterates through each database folder to list the files inside
-    for (filesList in databaseFolders) {
-      filesLocation <- list.files(filesList,
-                                  pattern = ".csv",
-                                  full.names = TRUE,
-                                  recursive = TRUE)
-      # Assign the databaseName in case there is a metadata file from TreatmentPatterns
-      metadata <- filesLocation[stringr::str_detect(filesLocation, "metadata")]
-      if (!identical(metadata, character(0))) {
-        databaseName <- readr::read_csv(metadata, show_col_types = FALSE) %>%
-          pull(cdmSourceName) %>%
-          unique()
-      }
-      # Iterates every individual csv file
-      for (fileName in filesLocation) {
-        resultsData <- read_csv(fileName, show_col_types = FALSE)
+  if (fileType == "zip") {
 
-        resultsColumns <- names(resultsData)
+    # `unzipFiles()` Unzip files
+    databaseFolders <- unzipFiles(unzipDir = unzipDir,
+                                  fileDataPath = fileDataPath,
+                                  logger = logger)
 
-        if ("estimate_value" %in% resultsColumns) {
-          resultsData <- resultsData %>%
-            mutate(estimate_value = as.character(estimate_value))
+    # `extractCSV()` iterates folders for CSV files
+    result <- extractCSV(databaseFolders = databaseFolders,
+                       configData = configData,
+                       logger = logger)
+  } else if (fileType == "csv") {
+    cli::cli_progress_step("Processing {length(fileDataPath)} CSV files", spinner = TRUE)
+    result <- processCSV(data = list(),
+                         filesLocation = fileDataPath,
+                         configData = configData)
+    cli::cli_process_done()
 
-          checkmate::assertClass(resultsData$estimate_value, "character")
-        }
+  }
+  cli::cli_alert("Results processed from {names(result)} package{?s}")
+  return(result)
+}
 
-        # Checks the type of every individual fileName
-        data <- loadFileData(data, fileName, configData, resultsData, resultsColumns, databaseName, logger)
-      }
-    }
-  } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
-    log4r::info(logger, glue::glue("Processing csv file(s), length: {length(fileDataPath)}"))
-    data <- list()
-    for (i in seq(1:length(fileDataPath))) {
-      resultsData <- read_csv(fileDataPath[i], show_col_types = FALSE)
-      resultsColumns <- names(resultsData)
-      data <- loadFileData(data, fileName[i], configData, resultsData, resultsColumns, databaseName = NULL, logger)
-    }
+#' `unzipFiles()` to a folder per database in a temporary directory for later use in `exctractCSV()`
+#'
+#' @param unzipDir Locations of the folder to unzip files
+#' @param fileDataPath Locations of the files to unzip
+#' @param logger A logger object
+#'
+#' @return The databaseFolders to which the files were unzipped
+unzipFiles <- function(unzipDir, fileDataPath, logger) {
+
+  cli::cli_progress_step(glue::glue("Unzipping {length(fileDataPath)} file{if (length(fileDataPath) > 1){'s'} else {''}}"), spinner = TRUE)
+
+  if (!checkmate::testDirectoryExists(unzipDir)) {
+    dir.create(unzipDir)
+  }
+
+  for (fileLocation in fileDataPath) {
+    unzip(zipfile = fileLocation, exdir = unzipDir)
+  }
+
+  databaseFolders <- dir(unzipDir, full.names = TRUE)
+  checkmate::assertDirectoryExists(databaseFolders)
+
+  return(databaseFolders)
+
+}
+
+#' `extractCSV()` iterates every file in the databaseFolders to `processCSV()`
+#'
+#' @param databaseFolders A list of full name folder locations
+#' @param configData Configuration from yaml file
+#' @param logger A logger object
+#'
+#' @return A list objects with summarisedResults
+extractCSV <- function(databaseFolders, configData, logger) {
+  data <- list()
+  cli::cli_h2("Processing CSV files from {length(databaseFolders)} folder{?s}")
+  for (i in 1:length(databaseFolders)) {
+    # i <- 1
+    filesList <- databaseFolders[i]
+    filesLocation <- list.files(filesList,
+                                pattern = ".csv",
+                                full.names = TRUE,
+                                recursive = TRUE)
+    # Iterates every individual csv file
+    data <- processCSV(data, filesLocation, configData, logger)
   }
   return(data)
 }
 
-#' Load file data and save it in a list.
+#' `processCSV()` iterates every csv file and uses `loadFileData()` to check what type of result it is and adds it to a list
+#'
+#' @param data Results
+#' @param filesLocation A path for filelocation
+#' @param configData Data from yaml configuration file
+#' @param databaseName Database name from TreatmentPatterns
+#' @param logger A logger object
+#'
+#' @return A list with all the results organized by type
+processCSV <- function(data = NULL, filesLocation, configData, databaseName, logger) {
+
+  if (is.null(data)) {
+    data = list()
+  }
+
+  # Assign the databaseName if there is a metadata file from TP
+  databaseName <- getDatabaseName(filesLocation)
+
+  checkmate::assertList(data)
+  # Iterates and checks every csv file and adds it
+  for (i in 1:length(filesLocation)) {
+    # i <- 10
+    resultsData <- read_csv(filesLocation[i], show_col_types = FALSE, col_types = c(.default = "c"))
+    resultsData
+    # vroom::problems(resultsData)
+    resultsColumns <- names(resultsData)
+    # Change estimate values to character
+    if ("estimate_value" %in% resultsColumns) {
+      resultsData <- resultsData %>%
+        mutate(estimate_value = as.character(estimate_value))
+      checkmate::assertClass(resultsData$estimate_value, "character")
+    }
+    # Checks the type of every individual fileName
+    data <- loadFileData(data, filesLocation[i], configData, resultsData,
+                         resultsColumns, databaseName, logger)
+  }
+  return(data)
+}
+
+getFileType <- function(fileDataPath) {
+
+  if (grepl(".zip", fileDataPath[1], fixed = TRUE)) {
+    resultFileType <- "zip"
+  } else if (grepl(".csv", fileDataPath[1], fixed = TRUE)) {
+    resultFileType <- "csv"
+  }
+  return(resultFileType)
+
+}
+
+getDatabaseName <- function(filesLocation) {
+  # Assign the databaseName in case there is a metadata file from TreatmentPatterns
+  metadata <- filesLocation[stringr::str_detect(filesLocation, "metadata")]
+  if (!identical(metadata, character(0))) {
+    databaseName <- readr::read_csv(metadata, show_col_types = FALSE) %>%
+      pull(cdmSourceName) %>%
+      unique()
+    return(databaseName)
+  }
+}
+
+#' `loadFileData()` checks every csv their result type using columns or summarisedResult class as reference
 #'
 #' @param data named list with data.
 #' @param fileName the file to load
@@ -110,34 +193,29 @@ loadFileData <- function(data,
                          databaseName,
                          logger) {
 
-  if ("result_type" %in% resultsColumns) {
-    resultType <- unique(resultsData$result_type)
-    package <- unique(resultsData$package_name)
-    if ("summarised_characteristics" %in% resultType | "summarise_table" %in% resultType | "summarised_cohort_intersect" %in% resultType) {
-      resultsData$result_type <- "summarised_characteristics"
-      resultType <- "summarised_characteristics"
-    }
-    else if ("Summarised Large Scale Characteristics" %in% resultType) {
-      resultsData$result_type <- "summarised_large_scale_characteristics"
-      resultType <- "summarised_large_scale_characteristics"
-    }
-    else if ("Survival estimate" %in% resultType) {
-      analysis_type <- unique({ resultsData %>%
-          filter(result_type == "Survival estimate") %>%
-          pull(additional_level) })
-      if (all(grepl("Competing_risk", analysis_type))) {
-        resultType <- "Survival cumulative incidence"
+  if (all(resultsColumns %in% names(omopgenerics::emptySummarisedResult()))) {
+    # TODO: Pack the following in a function and test it
+    resultsData <- omopgenerics::newSummarisedResult(resultsData)
+    resultType <- settings(resultsData) %>% pull(result_type) %>% unique()
+    package_name <- settings(resultsData) %>% pull(package_name) %>% unique()
+    if (resultType == "survival") {
+      if (is.null(data[[package_name]])) {
+        data[[package_name]] <- list()
       }
-      else if (all(grepl("Single_event", analysis_type))) {
-        resultType <- "Survival estimate"
+      analysisType <- settings(resultsData) %>% pull(analysis_type) %>% unique()
+      if (is.null(data[[package_name]][[resultType]][[analysisType]])) {
+        data[[package_name]][[analysisType]] <- omopgenerics::emptySummarisedResult()
       }
-      if (is.null(package)) { package <- "CohortSurvival"}
+      data[[package_name]][[analysisType]] <- omopgenerics::bind(data[[package_name]][[analysisType]], resultsData)
+    } else {
+      if (is.null(data[[package_name]])) {
+        data[[package_name]] <- list()
+      }
+      if (is.null(data[[package_name]][[resultType]])) {
+        data[[package_name]][[resultType]] <- omopgenerics::emptySummarisedResult()
+      }
+      data[[package_name]][[resultType]] <- omopgenerics::bind(data[[package_name]][[resultType]], resultsData)
     }
-    else if ("summarised_characteristics" %in% resultType & length(resultType) >= 2) {
-      resultType <- "summarised_characteristics"
-    }
-
-    data <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData, logger)
     return(data)
   } else {
     for (pkg in names(configData)) {
@@ -148,7 +226,6 @@ loadFileData <- function(data,
         configColumns <- unlist(configColumns$names)
         if (val == "incidence_attrition") {
           if (all(configColumns %in% resultsColumns) & grepl("incidence", fileName)) {
-            log4r::info(logger, glue::glue("Match file using config columns: {val}"))
             resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
             resultsData$excluded_records <- as.character(resultsData$excluded_records)
             data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
@@ -156,7 +233,6 @@ loadFileData <- function(data,
           }
           else if (val == "prevalence_attrition") {
             if (all(configColumns %in% resultsColumns) & grepl("prevalence", fileName)) {
-              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
               resultsData$excluded_records <- as.character(resultsData$excluded_records)
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
@@ -167,7 +243,6 @@ loadFileData <- function(data,
               if ("denominator_days_prior_history" %in% resultsColumns) {
                 colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
               }
-              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           }
@@ -176,7 +251,6 @@ loadFileData <- function(data,
               if ("denominator_days_prior_history" %in% resultsColumns) {
                 colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
               }
-              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           }
@@ -185,7 +259,6 @@ loadFileData <- function(data,
               if (!('cdm_name' %in% resultsColumns)) {
                 resultsData <- mutate(resultsData, cdm_name = databaseName)
                 }
-              log4r::info(logger, glue::glue("Match file using config columns: {val}"))
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           }
@@ -222,19 +295,18 @@ additionalCols <- function(data) {
 
 }
 
-getPackageData <- function(data, package, resultType, resultsColumns, resultsData, configData, logger) {
-  pkgConfigData <- configData[[package]]
+getPackageData <- function(data, package_name, resultType, resultsColumns, resultsData, configData, logger) {
+  pkgConfigData <- configData[[package_name]]
   configColumns <- pkgConfigData[[resultType]][["names"]]
   if (all(configColumns %in% resultsColumns)) {
-    log4r::info(logger, glue::glue("Match file using resultType: {resultType}"))
     resultsDataWithCols <- additionalCols(resultsData)
-    if (is.null(data[[package]])) {
-      data[[package]] <- list()
+    if (is.null(data[[package_name]])) {
+      data[[package_name]] <- list()
     }
-    if (is.null(data[[package]][[resultType]])) {
-      data[[package]][[resultType]] <- tibble::tibble()
+    if (is.null(data[[package_name]][[resultType]])) {
+      data[[package_name]][[resultType]] <- tibble::tibble()
     }
-    data[[package]][[resultType]] <- bind_rows(data[[package]][[resultType]], resultsDataWithCols)
+    data[[package_name]][[resultType]] <- bind_rows(data[[package_name]][[resultType]], resultsDataWithCols)
   }
   return(data)
 }
@@ -245,6 +317,15 @@ selectCols <- function(data) {
              group_name, group_level, strata_name, strata_level, variable_name,
              variable_level, estimate_name, estimate_type, estimate_value,
              additional_name, additional_level))
+  return(result)
+}
+
+selectColsLSC <- function(data) {
+  result <- data %>%
+    select(c(result_id, cdm_name, result_type, package_name, package_version,
+             group_name, group_level, strata_name, strata_level, variable_name,
+             variable_level, estimate_name, estimate_type, estimate_value,
+             additional_name, additional_level, table_name))
   return(result)
 }
 
@@ -266,11 +347,11 @@ variablesConfigYaml <- function(fileDataPath = NULL,
                                 version = NULL) {
 
   if (package == "IncidencePrevalence") {
-    csvLocation <- file.path(tempdir(), "dataLocation")
-    dir.create(csvLocation)
+    outputDir <- file.path(tempdir(), "dataLocation")
+    dir.create(outputDir)
     utils::unzip(zipfile = fileDataPath,
-                 exdir = csvLocation)
-    csvFiles <- list.files(path = csvLocation,
+                 exdir = outputDir)
+    csvFiles <- list.files(path = outputDir,
                            pattern = ".csv",
                            full.names = TRUE,
                            recursive = TRUE)
@@ -297,7 +378,7 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
     write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
 
-    unlink(csvLocation, recursive = TRUE)
+    unlink(outputDir, recursive = TRUE)
 
   } else if (package == "TreatmentPatterns") {
     csvFiles <- fileDataPath
@@ -315,7 +396,7 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     checkmate::expect_character(version)
 
     cdm <- PatientProfiles::mockPatientProfiles(patient_size = 10)
-    summaryPP <- PatientProfiles::summariseCharacteristics(cohort = cdm$cohort1, cdm = cdm)
+    summaryPP <- CohortCharacteristics::summariseCharacteristics(cohort = cdm$cohort1, cdm = cdm)
     columnNamesCharacteristics <- names(summaryPP)
     configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
     configData[[package]][[version]][[unique(summaryPP$result_type)]][["names"]] <- columnNamesCharacteristics
@@ -324,7 +405,7 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     cdm[["cohort1"]] <- cdm[["cohort1"]]%>%
       PatientProfiles::addDemographics()
 
-    lscPP <- PatientProfiles::summariseLargeScaleCharacteristics(cohort = cdm[["cohort1"]],
+    lscPP <- CohortCharacteristics::summariseLargeScaleCharacteristics(cohort = cdm[["cohort1"]],
                                                                  strata = list("age",
                                                                                "sex"),
                                                                  window = list(c(-30, -1),
@@ -442,19 +523,19 @@ dataCleanAttrition <- function(attrition) {
 #'   checkmate::assertFileExists(uploadedFilesPP[1])
 #'   checkmate::assertFileExists(uploadedFilesCS[1])
 #'   checkmate::assertTibble(treatmentPathways_test)
-#'   csvLocation <- file.path(tempdir(), "dataLocation")
-#'   dir.create(csvLocation)
+#'   outputDir <- file.path(tempdir(), "dataLocation")
+#'   dir.create(outputDir)
 #'
 #'   # Extract
-#'   testData <- joinDatabase(fileDataPath  = uploadedFilesIP,
-#'                            csvLocation = csvLocation)$IncidencePrevalence
+#'   testData <- joinDatabases(fileDataPath  = uploadedFilesIP,
+#'                            outputDir = outputDir)$IncidencePrevalence
 #'   testData[["treatmentPathways_test"]] <- treatmentPathways_test
-#'   testDataPP <- joinDatabase(fileDataPath  = uploadedFilesPP,
-#'                              csvLocation = csvLocation)$PatientProfiles
-#'   testDataCS <- joinDatabase(fileDataPath  = uploadedFilesCS,
-#'                              csvLocation = csvLocation)$CohortSurvival
+#'   testDataPP <- joinDatabases(fileDataPath  = uploadedFilesPP,
+#'                              outputDir = outputDir)$PatientProfiles
+#'   testDataCS <- joinDatabases(fileDataPath  = uploadedFilesCS,
+#'                              outputDir = outputDir)$CohortSurvival
 #'
 #'   testData <- c(testData, testDataPP, testDataCS)
-#'   unlink(csvLocation, recursive = TRUE)
+#'   unlink(outputDir, recursive = TRUE)
 #'   return(testData)
 #' }

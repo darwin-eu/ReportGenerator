@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataExtraction.R
 \name{loadFileData}
 \alias{loadFileData}
-\title{Load file data and save it in a list.}
+\title{`loadFileData()` checks every csv their result type using columns or summarisedResult class as reference}
 \usage{
 loadFileData(
   data,
@@ -33,5 +33,5 @@ loadFileData(
 the list with data
 }
 \description{
-Load file data and save it in a list.
+`loadFileData()` checks every csv their result type using columns or summarisedResult class as reference
 }
