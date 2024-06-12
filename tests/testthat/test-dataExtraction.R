@@ -119,7 +119,7 @@ test_that("processCSV() in a loop", {
   data <- list()
 
   for (i in 1:length(databaseFolders)) {
-    i = 1
+    # i = 1
     filesList <- databaseFolders[i]
     filesLocation <- list.files(filesList,
                                 pattern = ".csv",

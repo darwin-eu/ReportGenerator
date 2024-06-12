@@ -15,7 +15,7 @@ test_that("summarised Characteristics and LSC", {
 test_that("summarised Characteristics and LSC", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files("~/darwin-docs/studyPackages/P2C1014PrescriptionsICU/results",
+  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()

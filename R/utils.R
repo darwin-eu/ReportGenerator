@@ -221,7 +221,7 @@ exportResults <- function(resultList,
 
   # write results to disk
   for (i in seq_along(resultList)) {
-    # i <- 10
+    # i <- 12
     workingResult <- resultList[[i]]
     workingName <- names(resultList)[[i]]
     if (workingName == "summarised_large_scale_characteristics") {
