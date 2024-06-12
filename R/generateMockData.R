@@ -62,8 +62,8 @@ generateMockData <- function(databaseName = c("CHUBX",
 
     incidencePrevalenceData <- getIncidencePrevalence(sampleSize = sampleSize)
     treatmentPathwaysData <- getTreatmentPathways()
-    characteristicsData <- getCharacteristicsResult()
-    largeScaleCharacteristicsData <- getLargeScaleCharacteristicsResult()
+    summarised_characteristics <- getCharacteristicsResult()
+    summarised_large_scale_characteristics <- getLargeScaleCharacteristicsResult()
     cohortSurvivalData <- getCohortSurvival()
 
     # Gather data
@@ -75,10 +75,10 @@ generateMockData <- function(databaseName = c("CHUBX",
                      "treatmentPathways" = treatmentPathwaysData$treatmentPathways,
                      "metadata" = treatmentPathwaysData$metadata,
                      "summaryStatsTherapyDuration" = treatmentPathwaysData$summaryStatsTherapyDuration,
-                     "summarised_characteristics" = characteristicsData,
-                     "summarised_large_scale_characteristics" = largeScaleCharacteristicsData,
-                     "Survival estimate" = cohortSurvivalData$survivalEstimate,
-                     "Survival cumulative incidence" = cohortSurvivalData$survivalCumulativeIncidence)
+                     "summarised_characteristics" = summarised_characteristics,
+                     "summarised_large_scale_characteristics" = summarised_large_scale_characteristics,
+                     "single_event" = cohortSurvivalData$single_event,
+                     "competing_risk" = cohortSurvivalData$competing_risk)
 
     # Insert database name
 
@@ -338,7 +338,7 @@ getTreatmentPathways <- function() {
 
 getCohortSurvival <- function() {
   cdmSurvival <- CohortSurvival::mockMGUS2cdm()
-  singleEvent <- CohortSurvival::estimateSingleEventSurvival(cdmSurvival,
+  single_event <- CohortSurvival::estimateSingleEventSurvival(cdmSurvival,
                                                              targetCohortTable = "mgus_diagnosis",
                                                              targetCohortId = 1,
                                                              outcomeCohortTable = "death_cohort",
@@ -346,13 +346,13 @@ getCohortSurvival <- function() {
                                                              strata = list(c("age_group"),
                                                                            c("sex"),
                                                                            c("age_group", "sex")))
-  competingRisk <- CohortSurvival::estimateCompetingRiskSurvival(cdmSurvival,
+  competing_risk <- CohortSurvival::estimateCompetingRiskSurvival(cdmSurvival,
                                                                  targetCohortTable = "mgus_diagnosis",
                                                                  outcomeCohortTable = "progression",
                                                                  competingOutcomeCohortTable = "death_cohort",
                                                                  strata = list(c("sex")))
 
-  result <- list("survivalEstimate" = singleEvent,
-                 "survivalCumulativeIncidence" = competingRisk)
+  result <- list("single_event" = single_event,
+                 "competing_risk" = competing_risk)
   return(result)
 }

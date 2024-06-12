@@ -11,9 +11,7 @@ joinDatabases(fileDataPath, fileName = NULL, logger)
 
 \item{fileName}{Name of the file in character to process in case the input is only csv}
 
-\item{logger}{logger object}
-
-\item{outputDir}{Path folder location to uncompress the zip files}
+\item{logger}{A logger object}
 }
 \value{
 A list of dataframes

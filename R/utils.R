@@ -221,20 +221,28 @@ exportResults <- function(resultList,
 
   # write results to disk
   for (i in seq_along(resultList)) {
-    # i <- 11
+    # i <- 10
     workingResult <- resultList[[i]]
     workingName <- names(resultList)[[i]]
-    fileName <- paste0(
-      unique(workingResult$cdm_name), "_",
-      workingName, "_",
-      format(Sys.Date(), format = "%Y_%m_%d"),
-      ".csv")
+    if (workingName == "summarised_large_scale_characteristics") {
+      fileName <- paste0(
+        unique(workingResult$cdm_name), "_",
+        "large_scale_characteristics", "_",
+        format(Sys.Date(), format = "%Y_%m_%d"),
+        ".csv")
+    } else {
+      fileName <- paste0(
+        unique(workingResult$cdm_name), "_",
+        workingName, "_",
+        format(Sys.Date(), format = "%Y_%m_%d"),
+        ".csv")
+    }
 
     if (is.null(workingName)) {
       workingName <- paste0("result_", i)
     }
 
-    if (workingName == "summarised_characteristics" | workingName == "summarised_large_scale_characteristics" | workingName == "Survival estimate" | workingName == "Survival cumulative incidence") {
+    if (workingName == "summarised_characteristics" | workingName == "summarised_large_scale_characteristics" | workingName == "single_event" | workingName == "competing_risk") {
       omopgenerics::exportSummarisedResult(workingResult, fileName = fileName, path = tempDir)
     } else {
       utils::write.csv(workingResult,

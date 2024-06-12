@@ -20,7 +20,6 @@ test_that("summarised Characteristics and LSC", {
                              full.names = TRUE)
   logger <- log4r::logger()
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1],
-                                csvLocation = csvLocation,
                                 logger = logger)
   testServer(reportGenerator(), {
     expect_s3_class(characteristicsUI("characteristics", uploadedFiles$PatientProfiles$summarised_characteristics), "shiny.tag.list")

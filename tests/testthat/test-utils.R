@@ -49,7 +49,8 @@ test_that("getItemsList only prevalence", {
 test_that("getItemsList only summarised_characteristics", {
   items <- c("summarised_characteristics")
   menuList <- getItemsList(items)
-  expect_equal(length(menuList), 3)
+  expect_equal(length(menuList), 1)
+  expect_equal(menuList, "Summarised Characteristics - Table")
 })
 
 # TreatmentPatterns
@@ -167,12 +168,12 @@ test_that("PatientProfiles Both Summaries", {
 test_that("PatientProfiles Summary", {
   items <- c("summarised_characteristics")
   menuList <- getItemsList(items)
-  expect_equal(menuList, "summarised_characteristics")
+  expect_equal(menuList, "Summarised Characteristics - Table")
 })
 
 test_that("PatientProfiles LSC", {
   items <- c("summarised_large_scale_characteristics")
   menuList <- getItemsList(items)
-  expect_equal(menuList, "Summarised Large Scale Characteristics")
+  expect_equal(menuList, "Summarised Large Scale Characteristics - Table")
 })
 

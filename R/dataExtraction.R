@@ -18,8 +18,7 @@
 #'
 #' @param fileDataPath List of full file locations
 #' @param fileName Name of the file in character to process in case the input is only csv
-#' @param outputDir Path folder location to uncompress the zip files
-#' @param logger logger object
+#' @param logger A logger object
 #'
 #' @return A list of dataframes
 #'
@@ -57,8 +56,7 @@ joinDatabases <- function(fileDataPath,
     cli::cli_progress_step("Processing {length(fileDataPath)} CSV files", spinner = TRUE)
     result <- processCSV(data = list(),
                          filesLocation = fileDataPath,
-                         configData = configData,
-                         logger = logger)
+                         configData = configData)
     cli::cli_process_done()
 
   }
@@ -117,14 +115,14 @@ extractCSV <- function(databaseFolders, configData, logger) {
 
 #' `processCSV()` iterates every csv file and uses `loadFileData()` to check what type of result it is and adds it to a list
 #'
-#' @param data
-#' @param filesLocation
-#' @param configData
-#' @param databaseName
-#' @param logger
+#' @param data Results
+#' @param filesLocation A path for filelocation
+#' @param configData Data from yaml configuration file
+#' @param databaseName Database name from TreatmentPatterns
+#' @param logger A logger object
 #'
 #' @return A list with all the results organized by type
-processCSV <- function(data = NULL, filesLocation, configData, databaseName) {
+processCSV <- function(data = NULL, filesLocation, configData, databaseName, logger) {
 
   if (is.null(data)) {
     data = list()
@@ -398,7 +396,7 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     checkmate::expect_character(version)
 
     cdm <- PatientProfiles::mockPatientProfiles(patient_size = 10)
-    summaryPP <- PatientProfiles::summariseCharacteristics(cohort = cdm$cohort1, cdm = cdm)
+    summaryPP <- CohortCharacteristics::summariseCharacteristics(cohort = cdm$cohort1, cdm = cdm)
     columnNamesCharacteristics <- names(summaryPP)
     configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
     configData[[package]][[version]][[unique(summaryPP$result_type)]][["names"]] <- columnNamesCharacteristics
@@ -407,7 +405,7 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     cdm[["cohort1"]] <- cdm[["cohort1"]]%>%
       PatientProfiles::addDemographics()
 
-    lscPP <- PatientProfiles::summariseLargeScaleCharacteristics(cohort = cdm[["cohort1"]],
+    lscPP <- CohortCharacteristics::summariseLargeScaleCharacteristics(cohort = cdm[["cohort1"]],
                                                                  strata = list("age",
                                                                                "sex"),
                                                                  window = list(c(-30, -1),

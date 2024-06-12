@@ -6,7 +6,7 @@ test_that("Loading 1 zip files whole study", {
   uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath[1],
                                  logger = logger)
   expect_equal(length(uploadedFileDataList), 4)
-  expect_type(uploadedFiles, "list")
+  expect_type(uploadedFileDataList, "list")
 })
 
 test_that("Loading multiple zip files whole study", {
@@ -17,7 +17,7 @@ test_that("Loading multiple zip files whole study", {
   uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
                                  logger = logger)
   expect_equal(length(uploadedFileDataList), 4)
-  expect_type(uploadedFiles, "list")
+  expect_type(uploadedFileDataList, "list")
 })
 
 test_that("getFileType() either zip or csv", {
@@ -143,7 +143,6 @@ test_that("Loading 1 csv files whole study", {
   logger <- log4r::logger()
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[3],
                                 fileName = fileName[3],
-                                csvLocation = csvLocation,
                                 logger = logger)
   expect_equal(length(uploadedFiles), 1)
   expect_type(uploadedFiles, "list")

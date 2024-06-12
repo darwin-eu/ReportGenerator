@@ -93,16 +93,9 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
                strata_name %in% input$strata_name)
     })
 
-    getTableData <- reactive({
-      getData() %>%
-        dplyr::slice_head(n = input$top_n) %>%
-        select(c("cdm_name", "result_type", "group_level", "strata_name",
-                 "strata_level", "estimate_name", "estimate_value"))
-    })
-
     if (id == "survivalTable") {
       output$cs_data <- DT::renderDataTable(server = FALSE, {
-        createDataTable(getTableData())
+        createDataTable(getData())
       })
     } else if (id == "survivalPlot") {
       output$cs_plot <- renderPlot({
@@ -110,7 +103,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
       })
     } else if (id == "failureTable") {
       output$cu_inc_data <- DT::renderDataTable(server = FALSE, {
-        createDataTable(getTableData())
+        createDataTable(getData())
       })
     } else if (id == "failurePlot") {
       output$cu_inc_plot <- renderPlot({
@@ -173,7 +166,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$locksurvivalTable, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`Survival table` = list(survivalEstimate = getTableData(),
+          list(`Survival table` = list(survivalEstimate = getData(),
                                        caption = input$captionSurvivalEstimateData))
         )
       }
@@ -192,7 +185,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$lockfailureTable, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`Cumulative incidence table` = list(cumulativeSurvivalEstimate = getTableData(),
+          list(`Cumulative incidence table` = list(cumulativeSurvivalEstimate = getData(),
                                                    caption = input$captionCumulativeIncidenceData))
         )
       }

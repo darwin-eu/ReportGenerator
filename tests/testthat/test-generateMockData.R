@@ -17,7 +17,8 @@
 # test_that("generateMockData result output", {
 #   outputPath <- file.path(tempdir(), "dataLocation")
 #   dir.create(outputPath)
-#   generateMockData(databaseName = c("CHUBX", "CPRD GOLD", "IMASIS"),
+#   databaseName <- c("CHUBX", "CPRD GOLD", "IMASIS")
+#   generateMockData(databaseName = databaseName,
 #                    simulatePopulation = TRUE,
 #                    outputPath = outputPath,
 #                    internal = FALSE)

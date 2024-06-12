@@ -52,7 +52,10 @@ Imports:
     DBI,
     omopgenerics,
     tibble,
-    ParallelLogger
+    ParallelLogger,
+    CodelistGenerator,
+    CohortCharacteristics,
+    cli
 Suggests:
     testthat,
     rmarkdown,
