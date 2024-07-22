@@ -56,6 +56,9 @@ test_that("extractCSV() correctly", {
                              pattern = "zip",
                              full.names = TRUE)
 
+  fileDataPath <- list.files("C:/Users/cbarboza/Documents/darwin-docs/studyPackages/P2C1014PrescriptionsICU/results",
+                             pattern = "zip",
+                             full.names = TRUE)
   databaseFolders <- unzipFiles(unzipDir = unzipDir,
                                 fileDataPath = fileDataPath,
                                 logger = logger)

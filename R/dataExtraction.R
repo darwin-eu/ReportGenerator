@@ -79,11 +79,21 @@ unzipFiles <- function(unzipDir, fileDataPath, logger) {
     dir.create(unzipDir)
   }
 
+  folderNumber <- 0
+  # Unzipping puts the files in a separate folder
   for (fileLocation in fileDataPath) {
-    unzip(zipfile = fileLocation, exdir = unzipDir)
+    folderNumber <- folderNumber + 1
+    unzip(zipfile = fileLocation,
+          exdir = file.path(unzipDir, paste0("database", as.character(folderNumber))),
+          junkpaths = TRUE)
   }
 
+  # for (fileLocation in fileDataPath) {
+  #   unzip(zipfile = fileLocation, exdir = unzipDir, junkpaths = TRUE)
+  # }
+
   databaseFolders <- dir(unzipDir, full.names = TRUE)
+
   checkmate::assertDirectoryExists(databaseFolders)
 
   return(databaseFolders)
@@ -134,7 +144,7 @@ processCSV <- function(data = NULL, filesLocation, configData, databaseName, log
   checkmate::assertList(data)
   # Iterates and checks every csv file and adds it
   for (i in 1:length(filesLocation)) {
-    # i <- 10
+    # i <- 1
     resultsData <- read_csv(filesLocation[i], show_col_types = FALSE, col_types = c(.default = "c"))
     resultsData
     # vroom::problems(resultsData)
