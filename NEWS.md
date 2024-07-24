@@ -1,3 +1,7 @@
+# ReportGenerator 1.17.0
+
+* Binds results using result_id. 
+
 # ReportGenerator 1.16.0
 
 * Bug fix for test mock utils.
