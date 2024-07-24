@@ -206,25 +206,37 @@ loadFileData <- function(data,
   if (all(resultsColumns %in% names(omopgenerics::emptySummarisedResult()))) {
     # TODO: Pack the following in a function and test it
     resultsData <- omopgenerics::newSummarisedResult(resultsData)
-    resultType <- settings(resultsData) %>% pull(result_type) %>% unique()
-    package_name <- settings(resultsData) %>% pull(package_name) %>% unique()
-    if (resultType == "survival") {
-      if (is.null(data[[package_name]])) {
-        data[[package_name]] <- list()
+    result_ids <- resultsData %>% pull(result_id) %>% unique()
+    for (id in result_ids) {
+      # id <- 2
+      resultsDataId <- resultsData %>%
+        filter(result_id == id)
+      resultType <- settings(resultsDataId) %>%
+        filter(result_id == id) %>%
+        pull(result_type) %>%
+        unique()
+      package_name <- settings(resultsDataId) %>%
+        filter(result_id == id) %>%
+        pull(package_name) %>%
+        unique()
+      if (resultType == "survival") {
+        if (is.null(data[[package_name]])) {
+          data[[package_name]] <- list()
+        }
+        analysisType <- settings(resultsDataId) %>% pull(analysis_type) %>% unique()
+        if (is.null(data[[package_name]][[resultType]][[analysisType]])) {
+          data[[package_name]][[analysisType]] <- omopgenerics::emptySummarisedResult()
+        }
+        data[[package_name]][[analysisType]] <- omopgenerics::bind(data[[package_name]][[analysisType]], resultsDataId)
+      } else {
+        if (is.null(data[[package_name]])) {
+          data[[package_name]] <- list()
+        }
+        if (is.null(data[[package_name]][[resultType]])) {
+          data[[package_name]][[resultType]] <- omopgenerics::emptySummarisedResult()
+        }
+        data[[package_name]][[resultType]] <- omopgenerics::bind(data[[package_name]][[resultType]], resultsDataId)
       }
-      analysisType <- settings(resultsData) %>% pull(analysis_type) %>% unique()
-      if (is.null(data[[package_name]][[resultType]][[analysisType]])) {
-        data[[package_name]][[analysisType]] <- omopgenerics::emptySummarisedResult()
-      }
-      data[[package_name]][[analysisType]] <- omopgenerics::bind(data[[package_name]][[analysisType]], resultsData)
-    } else {
-      if (is.null(data[[package_name]])) {
-        data[[package_name]] <- list()
-      }
-      if (is.null(data[[package_name]][[resultType]])) {
-        data[[package_name]][[resultType]] <- omopgenerics::emptySummarisedResult()
-      }
-      data[[package_name]][[resultType]] <- omopgenerics::bind(data[[package_name]][[resultType]], resultsData)
     }
     return(data)
   } else {
