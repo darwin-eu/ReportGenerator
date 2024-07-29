@@ -5,8 +5,8 @@ tabPanelSelection <- function(selection, uploadedFiles) {
     tabPanel(selection, attritionUI(selection, uploadedFiles))
   } else if (selection == "Prevalence Attrition - Table") {
     tabPanel(selection, attritionUI(selection, uploadedFiles))
-  } else if (selection == "Number of participants by sex and age group - Table") {
-    tabPanel(selection, tableUI(selection, uploadedFiles))
+  # } else if (selection == "Number of participants by sex and age group - Table") {
+  #   tabPanel(selection, tableUI(selection, uploadedFiles))
   } else if (selection == "Incidence rate per year - Plot") {
     tabPanel(selection, incidenceUI(selection, uploadedFiles))
   } else if (selection == "Incidence rate per year by sex - Plot") {
