@@ -227,7 +227,7 @@ prevalenceServer <- function(id, uploadedFiles) {
 
       # Start Time
       prevalence_estimates <- prevalence_estimates %>%
-        filter(between(prevalence_start_date,
+        filter(between(as.Date(prevalence_start_date),
                        as.Date(input$timeFromPrevalence),
                        as.Date(input$timeToPrevalence)))
       # Interval
@@ -236,6 +236,11 @@ prevalenceServer <- function(id, uploadedFiles) {
       # Repeated events
       prevalence_estimates <- prevalence_estimates %>%
         filter(analysis_type == input$typePrevalence)
+
+      prevalence_estimates <- prevalence_estimates %>%
+        mutate_at(vars(prevalence,
+                       prevalence_95CI_lower,
+                       prevalence_95CI_upper), as.numeric)
 
       return(prevalence_estimates)
     })
@@ -284,7 +289,7 @@ prevalenceServer <- function(id, uploadedFiles) {
     addObject <- reactiveVal()
     observeEvent(input$lockDataPrevalenceYear, {
       addObject(
-        list(`Plot - Prevalence per year` = list(prevalence_estimates = prevalenceCommonData(),
+        list(`Prevalence per year - Plot` = list(prevalence_estimates = prevalenceCommonData(),
                                                  plotOption = input$facetPrevalence,
                                                  caption = input$captionInc,
                                                  ribbon = input$ribbonPrevalence,
@@ -294,7 +299,7 @@ prevalenceServer <- function(id, uploadedFiles) {
 
     observeEvent(input$lockDataPrevalenceSex, {
       addObject(
-        list(`Plot - Prevalence per year by sex` = list(prevalence_estimates = prevalenceCommonData(),
+        list(`Prevalence per year by sex - Plot` = list(prevalence_estimates = prevalenceCommonData(),
                                                         plotOption = input$facetPrevalence,
                                                         caption = input$captionInc,
                                                         ribbon = input$ribbonPrevalence,
@@ -304,7 +309,7 @@ prevalenceServer <- function(id, uploadedFiles) {
 
     observeEvent(input$lockDataPrevalenceAge, {
       addObject(
-        list(`Plot - Prevalence per year by age` = list(prevalence_estimates = prevalenceCommonData(),
+        list(`Prevalence per year by age - Plot` = list(prevalence_estimates = prevalenceCommonData(),
                                                         plotOption = input$facetPrevalence,
                                                         caption = input$captionInc,
                                                         ribbon = input$ribbonPrevalence,

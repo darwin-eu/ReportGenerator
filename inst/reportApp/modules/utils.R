@@ -23,7 +23,7 @@
 #'
 #' @return a dataframe with the properties of the items
 getItemsList <- function(items) {
-  menuData <- yaml.load_file(file.path(getwd(), "config", "menuConfig.yaml"))
+  menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
   menuList <- lapply(menuData, function(menuData, itemsList) {
     if (all(menuData[["type"]] %in% itemsList)) {
       menuData[["title"]]
@@ -60,7 +60,7 @@ getItemConfig <- function(input = NULL,
   checkmate::assertCharacter(output)
   checkmate::assertCharacter(inputValue)
 
-  menuData <- yaml.load_file(file.path(getwd(), "config", "menuConfig.yaml"))
+  menuData <- yaml.load_file(here::here("config", "menuConfig.yaml"))
   functionText <- lapply(menuData, function(menuData, title) {
     if (menuData[[input]] == inputValue) {
       menuData[[output]]
@@ -221,23 +221,43 @@ exportResults <- function(resultList,
 
   # write results to disk
   for (i in seq_along(resultList)) {
+    # i <- 12
     workingResult <- resultList[[i]]
     workingName <- names(resultList)[[i]]
+    if (workingName == "summarised_large_scale_characteristics") {
+      fileName <- paste0(
+        unique(workingResult$cdm_name), "_",
+        "large_scale_characteristics", "_",
+        format(Sys.Date(), format = "%Y_%m_%d"),
+        ".csv")
+    } else {
+      fileName <- paste0(
+        unique(workingResult$cdm_name), "_",
+        workingName, "_",
+        format(Sys.Date(), format = "%Y_%m_%d"),
+        ".csv")
+    }
+
     if (is.null(workingName)) {
       workingName <- paste0("result_", i)
     }
-    utils::write.csv(workingResult,
-                     file = file.path(
-                       tempDir,
-                       paste0(
-                         unique(workingResult$cdm_name), "_",
-                         workingName, "_",
-                         format(Sys.Date(), format = "%Y_%m_%d"),
-                         ".csv"
-                       )
-                     ),
-                     row.names = FALSE
-    )
+
+    if (workingName == "summarised_characteristics" | workingName == "summarised_large_scale_characteristics" | workingName == "single_event" | workingName == "competing_risk") {
+      omopgenerics::exportSummarisedResult(workingResult, fileName = fileName, path = tempDir)
+    } else {
+      utils::write.csv(workingResult,
+                       file = file.path(
+                         tempDir,
+                         paste0(
+                           unique(workingResult$cdm_name), "_",
+                           workingName, "_",
+                           format(Sys.Date(), format = "%Y_%m_%d"),
+                           ".csv"
+                         )
+                       ),
+                       row.names = FALSE
+      )
+    }
   }
 
   zip::zip(
@@ -247,7 +267,6 @@ exportResults <- function(resultList,
   if (tempDirCreated) {
     unlink(tempDir, recursive = TRUE)
   }
-
   invisible(resultList)
 }
 

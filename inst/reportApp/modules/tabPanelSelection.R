@@ -5,8 +5,8 @@ tabPanelSelection <- function(selection, uploadedFiles) {
     tabPanel(selection, attritionUI(selection, uploadedFiles))
   } else if (selection == "Prevalence Attrition - Table") {
     tabPanel(selection, attritionUI(selection, uploadedFiles))
-  } else if (selection == "Table - Number of participants by sex and age group") {
-    tabPanel(selection, tableUI(selection, uploadedFiles))
+  # } else if (selection == "Number of participants by sex and age group - Table") {
+  #   tabPanel(selection, tableUI(selection, uploadedFiles))
   } else if (selection == "Incidence rate per year - Plot") {
     tabPanel(selection, incidenceUI(selection, uploadedFiles))
   } else if (selection == "Incidence rate per year by sex - Plot") {
@@ -25,7 +25,7 @@ tabPanelSelection <- function(selection, uploadedFiles) {
     tabPanel(selection, characteristicsUI("characteristics", uploadedFiles))
   } else if (selection == "Summarised Large Scale Characteristics - Table") {
     tabPanel(selection, characteristicsUI("lsc", uploadedFiles))
-  } else if (selection == "Survival table") {
+  } else if (selection == "Single Event - Table") {
     tabPanel(selection, cohortSurvivalUI("survivalTable", uploadedFiles))
   } else if (selection == "Single Event - Plot") {
     tabPanel(selection, cohortSurvivalUI("survivalPlot", uploadedFiles))

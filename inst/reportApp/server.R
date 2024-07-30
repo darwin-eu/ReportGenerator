@@ -22,7 +22,7 @@ function(input, output, session) {
   sessionItems <- readRDS(here::here("results", "session.rds"))
   itemsList <- sessionItems$items
   uploadedFiles <- readRDS(here::here("results", "uploadedFiles.rds"))$uploadedFiles
-  dataReport <- reactiveValues()
+  dataReport <- reactiveValues(objects = NULL)
   dataReport$objects <- sessionItems$reportItems
 
   # Item preview
@@ -189,7 +189,7 @@ function(input, output, session) {
 
   # PatientProfiles Modules
   dataCharacteristics <- characteristicsServer("characteristics",
-                                               reactive(uploadedFiles$dataPP$summarised_characteristics))
+                                               reactive(uploadedFiles))
 
   observe({
     for (key in names(dataCharacteristics())) {
@@ -200,7 +200,7 @@ function(input, output, session) {
     bindEvent(dataCharacteristics())
 
   dataLSC <- characteristicsServer(id = "lsc",
-                                   reactive(uploadedFiles$dataPP$summarised_large_scale_characteristics))
+                                   reactive(uploadedFiles))
 
   observe({
     for (key in names(dataLSC())) {

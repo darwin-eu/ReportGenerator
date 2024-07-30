@@ -1,6 +1,6 @@
 #' Generic to create automatic text paragraph for the caption for table from summarised_characteristics object.
 #'
-#' @param uploadedFiles Data frame with summarised_characteristics data
+#' @param summarisedCharacteristics Data frame with summarised_characteristics data
 #'
 #' @return Automatic text as a character string
 #'
