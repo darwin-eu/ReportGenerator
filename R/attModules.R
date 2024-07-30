@@ -106,7 +106,7 @@ attritionServer <- function(id, uploadedFiles) {
 
         observeEvent(input$lockTableNumPar, {
           addObject(
-            list(`Table - Number of participants` = list(prevalence_attrition = prevalenceAttritionCommon(),
+            list(`Number of participants - Table` = list(prevalence_attrition = prevalenceAttritionCommon(),
                                                          incidence_attrition = incidenceAttritionCommon(),
                                                          caption = input$captionTableAtt))
           )
@@ -122,7 +122,7 @@ attritionServer <- function(id, uploadedFiles) {
 
         observeEvent(input$lockTableIncAtt, {
           addObject(
-            list(`Table - Incidence Attrition` = list(incidence_attrition = incidenceAttritionCommon(),
+            list(`Incidence Attrition - Table` = list(incidence_attrition = incidenceAttritionCommon(),
                                                       attritionDataType = attritionDataType,
                                                       caption = input$captionTableAtt))
           )
@@ -138,7 +138,7 @@ attritionServer <- function(id, uploadedFiles) {
 
         observeEvent(input$lockTablePrevAtt, {
           addObject(
-            list(`Table - Prevalence Attrition` = list(prevalence_attrition = prevalenceAttritionCommon(),
+            list(`Incidence Attrition - Table` = list(prevalence_attrition = prevalenceAttritionCommon(),
                                                        attritionDataType = attritionDataType,
                                                        caption = input$captionTableAtt))
             )

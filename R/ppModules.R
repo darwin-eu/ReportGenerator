@@ -299,16 +299,16 @@ characteristicsServer <- function(id, uploadedFiles) {
     addObject <- reactiveVal()
 
     observeEvent(input$lockSummary, {
-      dataPP <- as_tibble(selectCols(dataPP()))
+      # dataPP <- as_tibble(selectCols(dataPP()))
       addObject(
-        list(summarised_characteristics = list(summarisedCharacteristics = summarised_result(),
+        list(`Summarised Characteristics - Table` = list(summarisedCharacteristics = summarised_result(),
                                                caption = input$captionCharacteristics))
       )
     })
 
     observeEvent(input$lockLSC, {
       addObject(
-        list(summarised_large_scale_characteristics = list(summarisedCharacteristics = summarised_result(),
+        list(`Summarised Large Scale Characteristics - Table` = list(summarisedCharacteristics = summarised_result(),
                                                              caption = input$captionCharacteristics))
       )
     })

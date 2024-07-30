@@ -166,7 +166,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$locksurvivalTable, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`Survival table` = list(survivalEstimate = getData(),
+          list(`Single Event - Table` = list(survivalEstimate = getData(),
                                        caption = input$captionSurvivalEstimateData))
         )
       }
@@ -175,7 +175,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$locksurvivalPlot, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`"Single Event - Plot"` = list(survivalEstimate = getData(),
+          list(`Single Event - Plot` = list(survivalEstimate = getData(),
                                       plotOption = "Facet by database, colour by strata_name",
                                       caption = input$captionSurvivalEstimate))
         )
@@ -185,7 +185,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$lockfailureTable, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`Cumulative incidence table` = list(cumulativeSurvivalEstimate = getData(),
+          list(`Competing Risk - Table` = list(cumulativeSurvivalEstimate = getData(),
                                                    caption = input$captionCumulativeIncidenceData))
         )
       }
@@ -194,7 +194,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$lockfailurePlot, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`Cumulative incidence plot` = list(cumulativeSurvivalEstimate = getData(),
+          list(`Competing Risk - Plot` = list(cumulativeSurvivalEstimate = getData(),
                                                   plotOption = "Facet by database, colour by strata_name",
                                                   caption = input$captionCumulativeIncidence))
         )
