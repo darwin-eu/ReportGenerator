@@ -51,12 +51,15 @@ incidenceUI <- function(id, uploadedFiles) {
   }
 
   pickerOptions <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+  analysisInterval <- unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval)
   startDateChoices <- as.Date(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
   washoutChoices <- unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)
   washoutSelected <- washoutChoices[1]
   daysPriorHistoryChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)
   daysPriorHistorySelected <- daysPriorHistoryChoices[1]
   outcomeChoices <- unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)
+  denominatorTargetCohortName <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_target_cohort_name)
+  analysisRepeatedEvents <- unique(uploadedFiles$dataIP$incidence_estimates$analysis_repeated_events)
   dbPickerOptions <- list()
   if (length(databaseChoices) > 1) {
     dbPickerOptions <- pickerOptions
@@ -131,7 +134,7 @@ incidenceUI <- function(id, uploadedFiles) {
       column(4,
              pickerInput(inputId = ns("intervalIncidence"),
                          label = "Interval",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval),
+                         choices = analysisInterval,
                          multiple = FALSE),
       )
     ),
@@ -155,7 +158,7 @@ incidenceUI <- function(id, uploadedFiles) {
       column(4,
              pickerInput(inputId = ns("repeatedIncidence"),
                          label = "Repeated Events",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_repeated_events),
+                         choices = analysisRepeatedEvents,
                          multiple = FALSE),
       )
     ),
@@ -196,6 +199,12 @@ incidenceUI <- function(id, uploadedFiles) {
                          choices = c(TRUE, FALSE),
                          selected = FALSE,
                          multiple = FALSE)
+      ),
+      column(4,
+             pickerInput(inputId = ns("denomTargetNameIncidence"),
+                         label = "Denominator Target Name",
+                         choices = denominatorTargetCohortName,
+                         selected = FALSE)
       )
     ),
     fluidRow(
@@ -258,6 +267,9 @@ incidenceServer <- function(id, uploadedFiles) {
       # Repeated events
       incidence_estimates <- incidence_estimates %>%
         filter(analysis_repeated_events == input$repeatedIncidence)
+      # Denominator Target Name
+      incidence_estimates <- incidence_estimates %>%
+        filter(denominator_target_cohort_name == input$denomTargetNameIncidence)
 
       incidence_estimates <- incidence_estimates %>%
         mutate_at(vars(person_years,
