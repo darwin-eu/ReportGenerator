@@ -88,19 +88,29 @@ characteristicsUI <- function(id, uploadedFiles) {
         ),
       )
       ,
-      fluidRow(createAddItemToReportUI(ns(lockName)),
-               column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))),
+      # fluidRow(createAddItemToReportUI(ns(lockName)),
+      #          column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))),
       tags$br(),
       fluidRow(
         column(12,
         tabsetPanel(type = "tabs",
                     tabPanel("Table",
                              br(),
-                             pickerInput(inputId = ns("pivotWide"),
-                                         label = "Arrange by",
-                                         choices = c("group", "strata"),
-                                         selected = c("group", "strata"),
-                                         multiple = TRUE),
+                             fluidRow(
+                               column(6,
+                                      pickerInput(inputId = ns("pivotWide"),
+                                                  label = "Arrange by",
+                                                  choices = c("group", "strata"),
+                                                  selected = c("group", "strata"),
+                                                  multiple = TRUE)
+                               ),
+                               column(6,
+                                      pickerInput(inputId = ns("header"),
+                                                  label = "Header",
+                                                  choices = c( "cdm_name", "group", "strata", "additional", "variable", "estimate", "settings"),
+                                                  selected = c("cdm_name", "group", "estimate"),
+                                                  multiple = TRUE)),
+                             ),
                              column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
                     )
@@ -211,11 +221,21 @@ characteristicsUI <- function(id, uploadedFiles) {
         tabsetPanel(type = "tabs",
                     tabPanel("Table",
                              br(),
-                             pickerInput(inputId = ns("pivotWide"),
-                                         label = "Arrange by",
-                                         choices = c("group", "strata"),
-                                         selected = c("group", "strata"),
-                                         multiple = TRUE),
+                             fluidRow(
+                               column(6,
+                                 pickerInput(inputId = ns("pivotWide"),
+                                             label = "Arrange by",
+                                             choices = c("group", "strata"),
+                                             selected = c("group", "strata"),
+                                             multiple = TRUE)
+                               ),
+                               column(6,
+                                 pickerInput(inputId = ns("header"),
+                                             label = "Header",
+                                             choices = c("cdm name", "cohort name", "strata", "window name"),
+                                             selected = c("cdm name", "cohort name", "strata", "window name"),
+                                             multiple = TRUE)),
+                             ),
                              column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
                     )
@@ -251,7 +271,9 @@ characteristicsServer <- function(id, uploadedFiles) {
 
       output$summarisedTableGt <- gt::render_gt({
         # summarised_result <- as_tibble(selectCols(summarised_result()))
-        CohortCharacteristics::tableCharacteristics(result = summarised_result(), split = input$pivotWide)
+        CohortCharacteristics::tableCharacteristics(result = summarised_result(),
+                                                    split = input$pivotWide,
+                                                    header = input$header)
       })
 
     } else if (id == "lsc") {
@@ -292,7 +314,8 @@ characteristicsServer <- function(id, uploadedFiles) {
         #   omopgenerics::newSummarisedResult()
         CohortCharacteristics::tableLargeScaleCharacteristics(result = summarised_result(),
                                                               splitStrata  = TRUE,
-                                                              topConcepts = input$top_n)
+                                                              topConcepts = input$top_n,
+                                                              header = input$header)
       })
 
     }
