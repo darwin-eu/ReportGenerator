@@ -92,6 +92,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))),
       tags$br(),
       fluidRow(
+        column(12,
         tabsetPanel(type = "tabs",
                     tabPanel("Table",
                              br(),
@@ -102,6 +103,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                                          multiple = TRUE),
                              column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
+                    )
         )
       )
     )
@@ -205,6 +207,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))),
       tags$br(),
       fluidRow(
+        column(12,
         tabsetPanel(type = "tabs",
                     tabPanel("Table",
                              br(),
@@ -215,6 +218,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                                          multiple = TRUE),
                              column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
+                    )
         )
       )
     )
