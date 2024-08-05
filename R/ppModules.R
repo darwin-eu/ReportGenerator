@@ -108,6 +108,8 @@ characteristicsUI <- function(id, uploadedFiles) {
   } else {
     lockName <- "lockLSC"
     captionText <- "Table 2. Baseline characteristics of new user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
+    settingsLSC <- settings(uploadedFiles$dataPP$summarised_large_scale_characteristics)
+    result_id_table_name <- paste(settingsLSC$result_id, settingsLSC$table_name, sep = " - ")
     tagList(
       fluidRow(
         column(4,
@@ -121,8 +123,8 @@ characteristicsUI <- function(id, uploadedFiles) {
         column(4,
                pickerInput(inputId = ns("result_id"),
                            label = "Result Id",
-                           choices = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$result_id),
-                           selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$result_id),
+                           choices = result_id_table_name,
+                           # selected = unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$result_id),
                            multiple = FALSE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
@@ -176,14 +178,13 @@ characteristicsUI <- function(id, uploadedFiles) {
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
-        column(4,
-               pickerInput(inputId = ns("table_name"),
-                           label = "Table Name",
-                           choices = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$table_name)),
-                           selected = sort(unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$table_name)),
-                           multiple = TRUE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        ),
+        # column(4,
+        #        pickerInput(inputId = ns("table_name"),
+        #                    label = "Table Name",
+        #                    choices = settingsLSC$table_name,
+        #                    multiple = FALSE,
+        #                    list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        # ),
         column(4,
                pickerInput(inputId = ns("estimate_type"),
                            label = "Estimate Type",
@@ -250,13 +251,25 @@ characteristicsServer <- function(id, uploadedFiles) {
       })
 
     } else if (id == "lsc") {
+
+      # observeEvent(input$result_id, {
+      #   uploadedFiles <- uploadedFiles()
+      #   settingsLSC <- settings(uploadedFiles$dataPP$summarised_large_scale_characteristics)
+      #   selected_result_id <- input$result_id
+      #   updateSelectInput(session, "table_name", choices = unique(settingsLSC$table_name[settingsLSC$result_id == selected_result_id]))
+      # })
+
       summarised_result <- reactive({
+        result_id_table_name <- input$result_id
+        split_text <- strsplit(result_id_table_name, " - ")
+        result_id_table <- do.call(rbind, split_text)
+        result_id_table <- as.data.frame(result_id_table, stringsAsFactors = FALSE)
         uploadedFiles <- uploadedFiles()
         summarised_result <- uploadedFiles$dataPP$summarised_large_scale_characteristics
         summarised_result %>%
           mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
           filter(cdm_name %in% input$cdm_name,
-                 result_id %in% input$result_id,
+                 result_id %in% result_id_table$V1,
                  group_name %in% input$group_name,
                  group_level %in% input$group_level,
                  strata_name %in% input$strata_name,

@@ -205,29 +205,28 @@ loadFileData <- function(data,
 
   if (all(resultsColumns %in% names(omopgenerics::emptySummarisedResult()))) {
     # TODO: Pack the following in a function and test it
-    resultsData <- omopgenerics::newSummarisedResult(resultsData)
+
     result_ids <- resultsData %>% pull(result_id) %>% unique()
     for (id in result_ids) {
-      # id <- 2
+      # id <- 1
       resultsDataId <- resultsData %>%
         filter(result_id == id)
-      resultType <- settings(resultsDataId) %>%
-        filter(result_id == id) %>%
+      resultsDataSummarised <- omopgenerics::newSummarisedResult(resultsDataId)
+      resultType <- settings(resultsDataSummarised) %>%
         pull(result_type) %>%
         unique()
-      package_name <- settings(resultsDataId) %>%
-        filter(result_id == id) %>%
+      package_name <- settings(resultsDataSummarised) %>%
         pull(package_name) %>%
         unique()
       if (resultType == "survival") {
         if (is.null(data[[package_name]])) {
           data[[package_name]] <- list()
         }
-        analysisType <- settings(resultsDataId) %>% pull(analysis_type) %>% unique()
+        analysisType <- settings(resultsDataSummarised) %>% pull(analysis_type) %>% unique()
         if (is.null(data[[package_name]][[resultType]][[analysisType]])) {
           data[[package_name]][[analysisType]] <- omopgenerics::emptySummarisedResult()
         }
-        data[[package_name]][[analysisType]] <- omopgenerics::bind(data[[package_name]][[analysisType]], resultsDataId)
+        data[[package_name]][[analysisType]] <- omopgenerics::bind(data[[package_name]][[analysisType]], resultsDataSummarised)
       } else {
         if (is.null(data[[package_name]])) {
           data[[package_name]] <- list()
@@ -235,7 +234,7 @@ loadFileData <- function(data,
         if (is.null(data[[package_name]][[resultType]])) {
           data[[package_name]][[resultType]] <- omopgenerics::emptySummarisedResult()
         }
-        data[[package_name]][[resultType]] <- omopgenerics::bind(data[[package_name]][[resultType]], resultsDataId)
+        data[[package_name]][[resultType]] <- omopgenerics::bind(data[[package_name]][[resultType]], resultsDataSummarised)
       }
     }
     return(data)
