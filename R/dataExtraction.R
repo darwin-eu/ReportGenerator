@@ -223,7 +223,7 @@ loadFileData <- function(data,
           data[[package_name]] <- list()
         }
         analysisType <- settings(resultsDataSummarised) %>% pull(analysis_type) %>% unique()
-        if (is.null(data[[package_name]][[resultType]][[analysisType]])) {
+        if (is.null(data[[package_name]][[analysisType]])) {
           data[[package_name]][[analysisType]] <- omopgenerics::emptySummarisedResult()
         }
         data[[package_name]][[analysisType]] <- omopgenerics::bind(data[[package_name]][[analysisType]], resultsDataSummarised)

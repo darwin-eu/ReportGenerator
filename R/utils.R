@@ -299,6 +299,11 @@ createAddItemToReportUI <- function(id) {
                     shiny::br(), actionButton(id, "Add item to report")))
 }
 
+createDownloadTableUI <- function(ns) {
+  tagList(column(2, tagList(shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
+                            shiny::br(), downloadButton(ns("downloadSurvivalTable"), "Download Plot"))))
+}
+
 createDownloadPlotUI <- function(ns) {
   tagList(column(2, div("height:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
                  div(style = "display: inline-block;margin-top:5px", textInput(ns("plotHeight"), "", 10, width = "50px"))),
