@@ -80,17 +80,17 @@ incidenceUI <- function(id, uploadedFiles) {
 
 
   tagList(
-    tabsetPanel(type = "tabs",
-                tabPanel("By Year",
-                         br()
-                ),
-                tabPanel("By Sex",
-                         br()
-                ),
-                tabPanel("By Age",
-                         br()
-                )
-    ),
+    # tabsetPanel(type = "tabs",
+    #             tabPanel("By Year",
+    #                      br()
+    #             ),
+    #             tabPanel("By Sex",
+    #                      br()
+    #             ),
+    #             tabPanel("By Age",
+    #                      br()
+    #             )
+    # ),
     fluidRow(
       column(4,
              pickerInput(inputId = ns("facetIncidence"),
