@@ -21,7 +21,7 @@ function(input, output, session) {
   # ReactiveValues
   sessionItems <- readRDS(here::here("results", "session.rds"))
   itemsList <- sessionItems$items
-  uploadedFiles <- readRDS(here::here("results", "uploadedFiles.rds"))$uploadedFiles
+  uploadedFiles <- readRDS(here::here("results", "uploadedFiles.rds"))
   dataReport <- reactiveValues(objects = NULL)
   dataReport$objects <- sessionItems$reportItems
 

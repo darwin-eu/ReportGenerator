@@ -47,12 +47,18 @@ reportGenerator <- function(logger = NULL) {
       sidebarMenu(
         menuItem("StudyPackage", datasetLoadUI("StudyPackage"),
                  startExpanded = TRUE),
-        tags$br(),
-        actionButton('resetData', 'Reset data'),
-        tags$br(), tags$br(), tags$br(),
-        shinyjs::useShinyjs(),
-        tags$head(tags$style(".dlStudyDataBtn{ margin-left:15px;margin-right:15px; color:#444 !important; }")),
-        downloadButton("downloadStudyData", "Sample dataset", class = "dlStudyDataBtn")
+        # Conditional panel to download data
+        conditionalPanel(
+          condition = "output.checkFileUploadedOut",
+          tags$br(),
+          actionButton('resetData', 'Reset data'),
+          tags$br(), tags$br(), tags$br(),
+          shinyjs::useShinyjs(),
+          tags$head(tags$style(".dlStudyDataBtn{ margin-left:15px;margin-right:15px; color:#444 !important; }")),
+          downloadButton("downloadStudyData", "Download dataset", class = "dlStudyDataBtn"),
+        )
+        # ,
+        # verbatimTextOutput("checkFileUploadedOut")
       )
     ),
     dashboardBody(
@@ -190,6 +196,17 @@ reportGenerator <- function(logger = NULL) {
       dataReport$objects <- NULL
       shinyjs::html("reportOutput", "")
     })
+
+    checkFileUploaded <- reactive({
+      # return(!is.null(input$datasetLoad))
+      return(!is.null(itemsList$objects))
+    })
+
+    output$checkFileUploadedOut <- reactive({
+      checkFileUploaded()
+    })
+
+    outputOptions(output, "checkFileUploadedOut", suspendWhenHidden = FALSE)
 
     # 1. Interactive menu
 
@@ -497,29 +514,41 @@ reportGenerator <- function(logger = NULL) {
     )
 
     # download sample study data
-    output$downloadStudyData <- downloadHandler(
-      filename = function() { "StudyResults.zip" },
-      content = function(file) {
-        file.copy(system.file("extdata/examples/StudyResults.zip", package = "ReportGenerator"), file)
-      },
-      contentType = "application/zip"
-    )
+    # output$downloadStudyData <- downloadHandler(
+    #   filename = function() { "StudyResults.zip" },
+    #   content = function(file) {
+    #     file.copy(system.file("extdata/examples/StudyResults.zip", package = "ReportGenerator"), file)
+    #   },
+    #   contentType = "application/zip"
+    # )
 
     # save report
-    output$saveReportData <- downloadHandler(
-      filename = "reportItems.rds",
+
+    # save report
+    output$downloadStudyData <- downloadHandler(
+      filename = "uploadedFiles.rds",
       content = function(file) {
-        if (!is.null(dataReport$objects)) {
-          shinyjs::html("reportOutput", "<br>Saving report items to rds file", add = TRUE)
-          shinyjs::disable("saveReportData")
-          saveRDS(list("reportItems" = reactiveValuesToList(do.call(reactiveValues, dataReport$objects)),
-                       "uploadedFiles" = reactiveValuesToList(uploadedFiles),
-                       "itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects))),
+        if (!is.null(uploadedFiles)) {
+          saveRDS(reactiveValuesToList(uploadedFiles),
                   file)
-          shinyjs::enable("saveReportData")
         }
       }
     )
+
+    # output$downloadStudyData <- downloadHandler(
+    #   filename = "reportItems.rds",
+    #   content = function(file) {
+    #     if (!is.null(dataReport$objects)) {
+    #       shinyjs::html("reportOutput", "<br>Saving report items to rds file", add = TRUE)
+    #       shinyjs::disable("saveReportData")
+    #       saveRDS(list("reportItems" = reactiveValuesToList(do.call(reactiveValues, dataReport$objects)),
+    #                    "uploadedFiles" = reactiveValuesToList(uploadedFiles),
+    #                    "itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects))),
+    #               file)
+    #       shinyjs::enable("saveReportData")
+    #     }
+    #   }
+    # )
     # Check input data
     observeEvent(input$loadReportItems, {
       inFile <- input$loadReportItems
@@ -579,7 +608,7 @@ reportGenerator <- function(logger = NULL) {
 
           # Insert results from app
           log4r::info(logger, "Add uploadedFiles and session results")
-          saveRDS(list("uploadedFiles" = uploadedFilesList),
+          saveRDS(uploadedFilesList,
                   file.path(targetPathResults, "uploadedFiles.rds"))
 
           # session files
