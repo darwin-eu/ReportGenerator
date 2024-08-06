@@ -6,16 +6,16 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
   dlPlot <- NULL
   if (id == "survivalTable") {
     outResult <- gt::gt_output(ns("cs_data"))
-    dataset <- uploadedFiles$dataCS$single_event
+    dataset <- uploadedFiles$CohortSurvival$single_event
   } else if (id == "survivalPlot") {
     outResult <- plotOutput(ns("cs_plot"))
-    dataset <- uploadedFiles$dataCS$single_event
+    dataset <- uploadedFiles$CohortSurvival$single_event
   } else if (id == "failureTable") {
     outResult <- gt::gt_output(ns("cu_inc_data"))
-    dataset <- uploadedFiles$dataCS$competing_risk
+    dataset <- uploadedFiles$CohortSurvival$competing_risk
   } else if (id == "failurePlot") {
     outResult <- plotOutput(ns("cu_inc_plot"))
-    dataset <- uploadedFiles$dataCS$competing_risk
+    dataset <- uploadedFiles$CohortSurvival$competing_risk
   }
   if (grepl("Plot", id)) {
     dlPlot <- createDownloadPlotUI(ns)
@@ -100,9 +100,9 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     getData <- reactive({
       uploadedFiles <- uploadedFiles()
       if (id == "survivalTable"  || id == "survivalPlot") {
-        dataset <- uploadedFiles$dataCS$single_event
+        dataset <- uploadedFiles$CohortSurvival$single_event
       } else if (id == "failureTable"  || id == "failurePlot") {
-        dataset <- uploadedFiles$dataCS$competing_risk
+        dataset <- uploadedFiles$CohortSurvival$competing_risk
       }
       dataset %>%
         filter(cdm_name %in% input$cdm_name,

@@ -3,16 +3,16 @@ prevalenceUI <- function(id, uploadedFiles) {
   if (id == "Prevalence per year - Plot") {
 
     # Database
-    databaseChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)
+    databaseChoices <- unique(uploadedFiles$IncidencePrevalence$prevalence_estimates$cdm_name)
     databaseSelected <- databaseChoices
 
     # Sex
-    sexChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_sex)
+    sexChoices <- unique(uploadedFiles$IncidencePrevalence$prevalence_estimates$denominator_sex)
     sexSelected <-  sexChoices[1]
     sexMultiple <- FALSE
 
     # Age
-    ageChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)
+    ageChoices <- unique(uploadedFiles$IncidencePrevalence$prevalence_estimates$denominator_age_group)
     ageSelected <- ageChoices[1]
     ageMultiple <- FALSE
 
@@ -24,7 +24,7 @@ prevalenceUI <- function(id, uploadedFiles) {
   } else if (id == "Prevalence per year by sex - Plot") {
 
     # Database
-    databaseChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)
+    databaseChoices <- unique(uploadedFiles$IncidencePrevalence$prevalence_estimates$cdm_name)
     databaseSelected <- databaseChoices[1]
 
     # Sex
@@ -33,7 +33,7 @@ prevalenceUI <- function(id, uploadedFiles) {
     sexMultiple <- TRUE
 
     # Age
-    ageChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)
+    ageChoices <- unique(uploadedFiles$IncidencePrevalence$prevalence_estimates$denominator_age_group)
     ageSelected <- ageChoices[1]
     ageMultiple <- FALSE
 
@@ -45,16 +45,16 @@ prevalenceUI <- function(id, uploadedFiles) {
   } else if (id == "Prevalence per year by age - Plot") {
 
     # Database
-    databaseChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$cdm_name)
+    databaseChoices <- unique(uploadedFiles$IncidencePrevalence$prevalence_estimates$cdm_name)
     databaseSelected <- databaseChoices[1]
 
     # Sex
-    sexChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_sex)
+    sexChoices <- unique(uploadedFiles$IncidencePrevalence$prevalence_estimates$denominator_sex)
     sexSelected <-  sexChoices[1]
     sexMultiple <- FALSE
 
     # Age
-    ageChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$denominator_age_group)
+    ageChoices <- unique(uploadedFiles$IncidencePrevalence$prevalence_estimates$denominator_age_group)
     ageSelected <- ageChoices
     ageMultiple <- TRUE
 
@@ -66,8 +66,8 @@ prevalenceUI <- function(id, uploadedFiles) {
   }
 
   pickerOptions <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-  outcomeChoices <- unique(uploadedFiles$dataIP$prevalence_estimates$outcome_cohort_name)
-  startDateChoices <- as.character(unique(uploadedFiles$dataIP$prevalence_estimates$prevalence_start_date))
+  outcomeChoices <- unique(uploadedFiles$IncidencePrevalence$prevalence_estimates$outcome_cohort_name)
+  startDateChoices <- as.character(unique(uploadedFiles$IncidencePrevalence$prevalence_estimates$prevalence_start_date))
   dbPickerOptions <- list()
   if (length(databaseChoices) > 1) {
     dbPickerOptions <- pickerOptions
@@ -131,7 +131,7 @@ prevalenceUI <- function(id, uploadedFiles) {
       column(4,
              pickerInput(inputId = ns("typePrevalence"),
                          label = "Type",
-                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_type),
+                         choices = unique(uploadedFiles$IncidencePrevalence$prevalence_estimates$analysis_type),
                          multiple = FALSE),
       )
     ),
@@ -139,7 +139,7 @@ prevalenceUI <- function(id, uploadedFiles) {
       column(4,
              pickerInput(inputId = ns("intervalPrevalence"),
                          label = "Interval",
-                         choices = unique(uploadedFiles$dataIP$prevalence_estimates$analysis_interval),
+                         choices = unique(uploadedFiles$IncidencePrevalence$prevalence_estimates$analysis_interval),
                          multiple = FALSE),
       ),
       column(4,
@@ -205,7 +205,7 @@ prevalenceServer <- function(id, uploadedFiles) {
     # Figure 1
     prevalenceCommonData <- reactive({
       uploadedFiles <- uploadedFiles()
-      prevalence_estimates <- uploadedFiles$dataIP$prevalence_estimates
+      prevalence_estimates <- uploadedFiles$IncidencePrevalence$prevalence_estimates
       class(prevalence_estimates) <- c("IncidencePrevalenceResult",
                                        "PrevalenceResult", "tbl_df", "tbl", "data.frame")
       prevalence_estimate <- prevalence_estimates %>%

@@ -48,7 +48,7 @@ test_that("settings for LSC filter", {
 
   settingsLSC <- settings(data$CohortCharacteristics$summarised_large_scale_characteristics)
 
-  unique(uploadedFiles$dataPP$summarised_large_scale_characteristics$result_id)
+  unique(uploadedFiles$CohortCharacteristics$summarised_large_scale_characteristics$result_id)
 
   settingsLSC %>% select(result_id, )
 
@@ -61,7 +61,7 @@ test_that("settings for LSC filter", {
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
-  uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath[1],
+  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1],
                                         logger = logger)
 
 

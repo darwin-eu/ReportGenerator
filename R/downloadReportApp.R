@@ -78,10 +78,10 @@ downloadReportApp <- function(reportItems, logger = NULL) {
     uploadedFiles <- reportItems$uploadedFiles
     itemsList <- reactiveValues(objects = NULL)
 
-    # uploadedFiles <- reactiveValues(dataIP = NULL,
-    #                                 dataTP = NULL,
-    #                                 dataPP = NULL,
-    #                                 dataCS = NULL)
+    # uploadedFiles <- reactiveValues(IncidencePrevalence = NULL,
+    #                                 TreatmentPatterns = NULL,
+    #                                 CohortCharacteristics = NULL,
+    #                                 CohortSurvival = NULL)
     # itemsList <- reactiveValues(objects = NULL)
 
     # # Check input data
@@ -96,31 +96,31 @@ downloadReportApp <- function(reportItems, logger = NULL) {
     #   csvLocation <- file.path(tempdir(), "dataLocation")
     #   dir.create(csvLocation)
     #   # Joins one or several zips into the reactive value
-    #   uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
+    #   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
     #                                        fileName = fileName,
     #                                        csvLocation = csvLocation,
     #                                        logger = logger)
-    #   if (length(uploadedFileDataList) == 0) {
+    #   if (length(uploadedFiles) == 0) {
     #     show_alert(title = "Data mismatch",
     #                text = "No valid package files found")
     #   }
-    #   pkgNames <- names(uploadedFileDataList)
+    #   pkgNames <- names(uploadedFiles)
     #   if ("IncidencePrevalence" %in% pkgNames) {
-    #     uploadedFiles$dataIP <- uploadedFileDataList[["IncidencePrevalence"]]
+    #     uploadedFiles$IncidencePrevalence <- uploadedFiles[["IncidencePrevalence"]]
     #   }
     #   if ("TreatmentPatterns" %in% pkgNames) {
-    #     uploadedFiles$dataTP <- uploadedFileDataList[["TreatmentPatterns"]]
+    #     uploadedFiles$TreatmentPatterns <- uploadedFiles[["TreatmentPatterns"]]
     #   }
     #   if ("PatientProfiles" %in% pkgNames) {
-    #     uploadedFiles$dataPP <- uploadedFileDataList[["PatientProfiles"]]
+    #     uploadedFiles$CohortCharacteristics <- uploadedFiles[["PatientProfiles"]]
     #   }
     #   if ("CohortSurvival" %in% pkgNames) {
-    #     uploadedFiles$dataCS <- uploadedFileDataList[["CohortSurvival"]]
+    #     uploadedFiles$CohortSurvival <- uploadedFiles[["CohortSurvival"]]
     #   }
     #
     #   # Get list of items to show in toggle menu
     #   for (pkgName in pkgNames) {
-    #     pkgDataList <- uploadedFileDataList[[pkgName]]
+    #     pkgDataList <- uploadedFiles[[pkgName]]
     #     items <- names(pkgDataList)
     #     itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], getItemsList(items))
     #   }
@@ -131,9 +131,9 @@ downloadReportApp <- function(reportItems, logger = NULL) {
     # # Reset and back to initial tab
     # observeEvent(input$resetData, {
     #   itemsList$objects <- NULL
-    #   uploadedFiles <- reactiveValues(dataIP = NULL,
-    #                                   dataTP = NULL,
-    #                                   dataPP = NULL)
+    #   uploadedFiles <- reactiveValues(IncidencePrevalence = NULL,
+    #                                   TreatmentPatterns = NULL,
+    #                                   CohortCharacteristics = NULL)
     #   updateTabsetPanel(session, "mainPanel",
     #                     selected = "Item selection")
     #   datasetLoadServer("StudyPackage")
@@ -330,7 +330,7 @@ downloadReportApp <- function(reportItems, logger = NULL) {
 
     # PatientProfiles Modules
     dataCharacteristics <- characteristicsServer("characteristics",
-                                                 reactive(uploadedFiles$dataPP$summarised_characteristics))
+                                                 reactive(uploadedFiles$CohortCharacteristics$summarised_characteristics))
 
     observe({
       for (key in names(dataCharacteristics())) {
@@ -341,7 +341,7 @@ downloadReportApp <- function(reportItems, logger = NULL) {
       bindEvent(dataCharacteristics())
 
     dataLSC <- characteristicsServer(id = "lsc",
-                                     reactive(uploadedFiles$dataPP$summarised_large_scale_characteristics))
+                                     reactive(uploadedFiles$CohortCharacteristics$summarised_large_scale_characteristics))
 
     observe({
       for (key in names(dataLSC())) {
@@ -480,10 +480,10 @@ downloadReportApp <- function(reportItems, logger = NULL) {
       dataReport$objects <- reportData$reportItems
       itemsList$objects <- reportData$itemsList
       upFiles <- reportData$uploadedFiles
-      uploadedFiles$dataCS <- upFiles$dataCS
-      uploadedFiles$dataIP <- upFiles$dataIP
-      uploadedFiles$dataPP <- upFiles$dataPP
-      uploadedFiles$dataTP <- upFiles$dataTP
+      uploadedFiles$CohortSurvival <- upFiles$CohortSurvival
+      uploadedFiles$IncidencePrevalence <- upFiles$IncidencePrevalence
+      uploadedFiles$CohortCharacteristics <- upFiles$CohortCharacteristics
+      uploadedFiles$TreatmentPatterns <- upFiles$TreatmentPatterns
       shinyjs::html("reportOutput", "<br>Loaded report items from rds file", add = TRUE)
     })
 

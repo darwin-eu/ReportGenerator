@@ -2,14 +2,14 @@ incidenceUI <- function(id, uploadedFiles) {
   ns <- NS(id)
   if (id == "Incidence rate per year - Plot") {
 
-    databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
+    databaseChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_estimates$cdm_name)
     databaseSelected <- databaseChoices
 
-    sexChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)
+    sexChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_estimates$denominator_sex)
     sexSelected <-  sexChoices[1]
     sexMultiple <- FALSE
 
-    ageChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)
+    ageChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_estimates$denominator_age_group)
     ageSelected <- ageChoices[1]
     ageMultiple <- FALSE
 
@@ -18,14 +18,14 @@ incidenceUI <- function(id, uploadedFiles) {
     lockName <- "lockDataIncidenceYear"
   } else if (id == "Incidence rate per year by sex - Plot") {
 
-    databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
+    databaseChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_estimates$cdm_name)
     databaseSelected <- databaseChoices[1]
 
     sexChoices <- c("Male", "Female")
     sexSelected <- sexChoices
     sexMultiple <- TRUE
 
-    ageChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)
+    ageChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_estimates$denominator_age_group)
     ageSelected <- ageChoices[1]
     ageMultiple <- FALSE
 
@@ -34,14 +34,14 @@ incidenceUI <- function(id, uploadedFiles) {
     lockName <- "lockDataIncidenceSex"
   } else if (id == "Incidence rate per year by age - Plot") {
 
-    databaseChoices <- unique(uploadedFiles$dataIP$incidence_estimates$cdm_name)
+    databaseChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_estimates$cdm_name)
     databaseSelected <- databaseChoices[1]
 
-    sexChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_sex)
+    sexChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_estimates$denominator_sex)
     sexSelected <-  sexChoices[1]
     sexMultiple <- FALSE
 
-    ageChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_age_group)
+    ageChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_estimates$denominator_age_group)
     ageSelected <- ageChoices
     ageMultiple <- TRUE
 
@@ -51,12 +51,12 @@ incidenceUI <- function(id, uploadedFiles) {
   }
 
   pickerOptions <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-  startDateChoices <- as.Date(unique(uploadedFiles$dataIP$incidence_estimates$incidence_start_date))
-  washoutChoices <- unique(uploadedFiles$dataIP$incidence_estimates$analysis_outcome_washout)
+  startDateChoices <- as.Date(unique(uploadedFiles$IncidencePrevalence$incidence_estimates$incidence_start_date))
+  washoutChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_estimates$analysis_outcome_washout)
   washoutSelected <- washoutChoices[1]
-  daysPriorHistoryChoices <- unique(uploadedFiles$dataIP$incidence_estimates$denominator_days_prior_observation)
+  daysPriorHistoryChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_estimates$denominator_days_prior_observation)
   daysPriorHistorySelected <- daysPriorHistoryChoices[1]
-  outcomeChoices <- unique(uploadedFiles$dataIP$incidence_estimates$outcome_cohort_name)
+  outcomeChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_estimates$outcome_cohort_name)
   dbPickerOptions <- list()
   if (length(databaseChoices) > 1) {
     dbPickerOptions <- pickerOptions
@@ -131,7 +131,7 @@ incidenceUI <- function(id, uploadedFiles) {
       column(4,
              pickerInput(inputId = ns("intervalIncidence"),
                          label = "Interval",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_interval),
+                         choices = unique(uploadedFiles$IncidencePrevalence$incidence_estimates$analysis_interval),
                          multiple = FALSE),
       )
     ),
@@ -155,7 +155,7 @@ incidenceUI <- function(id, uploadedFiles) {
       column(4,
              pickerInput(inputId = ns("repeatedIncidence"),
                          label = "Repeated Events",
-                         choices = unique(uploadedFiles$dataIP$incidence_estimates$analysis_repeated_events),
+                         choices = unique(uploadedFiles$IncidencePrevalence$incidence_estimates$analysis_repeated_events),
                          multiple = FALSE),
       )
     ),
@@ -223,7 +223,7 @@ incidenceServer <- function(id, uploadedFiles) {
     # Figure 1
     incidenceCommonData <- reactive({
       uploadedFiles <- uploadedFiles()
-      incidence_estimates <- uploadedFiles$dataIP$incidence_estimates
+      incidence_estimates <- uploadedFiles$IncidencePrevalence$incidence_estimates
       class(incidence_estimates) <- c("IncidencePrevalenceResult", "IncidenceResult", "tbl_df", "tbl", "data.frame")
       incidence_estimates <- incidence_estimates %>%
         mutate_if(is.numeric, list(~replace_na(., 0)))

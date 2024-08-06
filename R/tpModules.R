@@ -1,10 +1,10 @@
 patternsUI <- function(id, uploadedFiles) {
   ns <- NS(id)
 
-  cdmChoices <- unique(uploadedFiles$dataTP$treatmentPathways$cdm_name)
-  sexChoices <- unique(uploadedFiles$dataTP$treatmentPathways$sex)
-  ageChoices <- unique(uploadedFiles$dataTP$treatmentPathways$age)
-  yearChoices <- unique(uploadedFiles$dataTP$treatmentPathways$indexYear)
+  cdmChoices <- unique(uploadedFiles$TreatmentPatterns$treatmentPathways$cdm_name)
+  sexChoices <- unique(uploadedFiles$TreatmentPatterns$treatmentPathways$sex)
+  ageChoices <- unique(uploadedFiles$TreatmentPatterns$treatmentPathways$age)
+  yearChoices <- unique(uploadedFiles$TreatmentPatterns$treatmentPathways$indexYear)
 
   tagList(
     fluidRow(
@@ -57,7 +57,7 @@ patternsServer <- function(id, uploadedFiles) {
 
     pathwaysData <- reactive({
       uploadedFiles <- uploadedFiles()
-      treatmentPathways <- uploadedFiles$dataTP$treatmentPathways
+      treatmentPathways <- uploadedFiles$TreatmentPatterns$treatmentPathways
       treatmentPathways %>%
         filter(cdm_name == input$cdmPatterns,
                sex == input$sexPatterns,

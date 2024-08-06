@@ -3,10 +3,10 @@ test_that("Loading 1 zip files whole study", {
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
-  uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath[1],
+  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1],
                                  logger = logger)
-  expect_equal(length(uploadedFileDataList), 4)
-  expect_type(uploadedFileDataList, "list")
+  expect_equal(length(uploadedFiles), 4)
+  expect_type(uploadedFiles, "list")
 })
 
 test_that("Loading multiple zip files whole study", {
@@ -14,10 +14,10 @@ test_that("Loading multiple zip files whole study", {
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
-  uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
+  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
                                  logger = logger)
-  expect_equal(length(uploadedFileDataList), 4)
-  expect_type(uploadedFileDataList, "list")
+  expect_equal(length(uploadedFiles), 4)
+  expect_type(uploadedFiles, "list")
 })
 
 test_that("getFileType() either zip or csv", {
@@ -194,7 +194,7 @@ test_that("loadFileData iteration per result id", {
   CohortCharacteristicsData <- data$CohortCharacteristics
   expect_equal(names(CohortCharacteristicsData), c("summarised_characteristics", "summarised_large_scale_characteristics"))
   expect_equal(CohortCharacteristicsData$summarised_characteristics %>% pull(result_id) %>% unique(), 1)
-  expect_equal(CohortCharacteristicsData$summarised_large_scale_characteristics %>% pull(result_id) %>% unique(), c(2,3))
+  expect_equal(CohortCharacteristicsData$summarised_large_scale_characteristics %>% pull(result_id) %>% unique(), c(1,2))
 
 })
 

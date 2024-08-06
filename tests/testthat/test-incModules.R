@@ -1,7 +1,7 @@
 test_that("Incidence rate per year module", {
   testServer(reportGenerator(), {
     uploadedFiles <- list()
-    uploadedFiles[["dataIP"]][["incidence_estimates"]] <- testData$incidence_estimates
+    uploadedFiles[["IncidencePrevalence"]][["incidence_estimates"]] <- testData$incidence_estimates
     selection <- "Incidence rate per year - Plot"
     expect_s3_class(incidenceUI(selection, uploadedFiles), "shiny.tag.list")
     dataIncidenceYear <- incidenceServer(id = "Incidence rate per year - Plot",
@@ -13,7 +13,7 @@ test_that("Incidence rate per year module", {
 test_that("Incidence rate per year by sex module", {
   testServer(reportGenerator(), {
     uploadedFiles <- list()
-    uploadedFiles[["dataIP"]][["incidence_estimates"]] <- testData$incidence_estimates
+    uploadedFiles[["IncidencePrevalence"]][["incidence_estimates"]] <- testData$incidence_estimates
     selection <- "Incidence rate per year by sex - Plot"
     expect_s3_class(incidenceUI(selection, uploadedFiles), "shiny.tag.list")
     dataIncidenceSex <- incidenceServer(id = "Incidence rate per year by sex - Plot",
@@ -25,7 +25,7 @@ test_that("Incidence rate per year by sex module", {
 test_that("Incidence rate per year by age module", {
   testServer(reportGenerator(), {
     uploadedFiles <- list()
-    uploadedFiles[["dataIP"]][["incidence_estimates"]] <- testData$incidence_estimates
+    uploadedFiles[["IncidencePrevalence"]][["incidence_estimates"]] <- testData$incidence_estimates
     selection <- "Incidence rate per year by age - Plot"
     expect_s3_class(incidenceUI(selection, uploadedFiles), "shiny.tag.list")
     dataIncidenceAge <- incidenceServer(id = "Incidence rate per year by age - Plot",
