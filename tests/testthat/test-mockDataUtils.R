@@ -22,7 +22,9 @@ test_that("treatmentPathwaysData works", {
                                                "summaryStatsTherapyDuration",
                                                "treatmentPathways"))
   expect_equal(class(treatmentPathwaysData), "list")
-  unlink(eunomia_temp_folder, recursive = TRUE)
+  if (exists("eunomia_temp_folder")) {
+    unlink(eunomia_temp_folder, recursive = TRUE)
+  }
 })
 
 ### The following tests break because of the new version of dbplyr
