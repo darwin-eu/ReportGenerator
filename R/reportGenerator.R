@@ -52,10 +52,15 @@ reportGenerator <- function(logger = NULL) {
           condition = "output.checkFileUploadedOut",
           tags$br(),
           actionButton('resetData', 'Reset data'),
-          tags$br(), tags$br(), tags$br(),
+          tags$br(),
+          tags$br(),
           shinyjs::useShinyjs(),
           tags$head(tags$style(".dlStudyDataBtn{ margin-left:15px;margin-right:15px; color:#444 !important; }")),
           downloadButton("downloadStudyData", "Download dataset", class = "dlStudyDataBtn"),
+          tags$br(),
+          tags$br(),
+          downloadButton("createReportApp", "Download Shiny App", class = "dlReportBtn"),
+          checkboxInput("enableReporting", "Add reporting option", value = TRUE)
         )
         # ,
         # verbatimTextOutput("checkFileUploadedOut")
@@ -82,7 +87,7 @@ reportGenerator <- function(logger = NULL) {
         tabPanel("Generate report",
                  fluidRow(
                    column(width = 6,
-                          h2("Report items"),
+                          h2("2. Report Items"),
                           DTOutput("dataReportMenu"),
                           tags$br(),
                           tags$head(tags$style(".dlReportBtn{ margin-left:15px;margin-right:15px; margin-top:25px; color:#444 !important; }")),
@@ -99,13 +104,13 @@ reportGenerator <- function(logger = NULL) {
                  ),
                  fluidRow(
                    column(width = 4,
-                          h2("Create report application"),
+                          # h2("Create report application"),
                           tags$head(tags$style(".dlAppBtn{ margin-left:15px;margin-right:15px; margin-top:25px; color:#444 !important; }
                                                 .dlCheck { margin-left:15px;margin-right:15px; margin-top:30px; color:#444 !important; }")),
-                          splitLayout(
-                            downloadButton("createReportApp", "Download Shiny App", class = "dlReportBtn"),
-                            div(checkboxInput("enableReporting", "Add reporting option", value = TRUE), class = "dlCheck")
-                          ),
+                          # splitLayout(
+                          #   downloadButton("createReportApp", "Download Shiny App", class = "dlReportBtn"),
+                          #   div(checkboxInput("enableReporting", "Add reporting option", value = TRUE), class = "dlCheck")
+                          # ),
                           div(id = "createAppOutput")
                    )
                  )
@@ -641,9 +646,11 @@ reportGenerator <- function(logger = NULL) {
           # }
           cli::cli_alert("Zipping file")
           zip::zip(zipfile = file, files = "reportApp", recurse = TRUE, root = targetPath)
+          cli::cli_alert("Cleaning temp folders")
+          unlink(reportAppPath, recursive = TRUE)
           log4r::info(logger, glue::glue("Shiny app has been created in {targetPath}"))
           cli::cli_alert("Shiny app has been created and ready for download")
-          shinyjs::html("createAppOutput", glue::glue("<br>Shiny app created in {targetPath}"), add = TRUE)
+          # shinyjs::html("createAppOutput", glue::glue("<br>Shiny app created in {targetPath}"), add = TRUE)
         } else {
           log4r::info(logger, "No files have been uploaded, app not created.")
           shinyjs::html("createAppOutput", glue::glue("<br>Please upload files before generating the app"), add = TRUE)
