@@ -101,7 +101,6 @@ extractCSV <- function(databaseFolders, configData, logger) {
   data <- list()
   cli::cli_h2("Processing CSV files from {length(databaseFolders)} folder{?s}")
   for (i in 1:length(databaseFolders)) {
-    # i <- 1
     filesList <- databaseFolders[i]
     filesLocation <- list.files(filesList,
                                 pattern = ".csv",
@@ -134,10 +133,7 @@ processCSV <- function(data = NULL, filesLocation, configData, databaseName, log
   checkmate::assertList(data)
   # Iterates and checks every csv file and adds it
   for (i in 1:length(filesLocation)) {
-    # i <- 10
     resultsData <- read_csv(filesLocation[i], show_col_types = FALSE, col_types = c(.default = "c"))
-    resultsData
-    # vroom::problems(resultsData)
     resultsColumns <- names(resultsData)
     # Change estimate values to character
     if ("estimate_value" %in% resultsColumns) {
@@ -192,7 +188,7 @@ loadFileData <- function(data,
                          resultsColumns,
                          databaseName,
                          logger) {
-
+  cli::cli_h2("Processing file {basename(fileName)}")
   if (all(resultsColumns %in% names(omopgenerics::emptySummarisedResult()))) {
     # TODO: Pack the following in a function and test it
     resultsData <- omopgenerics::newSummarisedResult(resultsData)
