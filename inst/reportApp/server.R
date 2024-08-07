@@ -21,17 +21,18 @@ function(input, output, session) {
   # ReactiveValues
   uploadedFiles <- readRDS(here::here("results", "uploadedFiles.rds"))
   dataReport <- reactiveValues(objects = NULL)
-  dataReport$objects <- sessionItems$reportItems
+  # dataReport$objects <- sessionItems$reportItems
 
   # Item preview
-  pkgNames <- names(uploadedFileDataList)
+  pkgNames <- names(uploadedFiles)
+  itemsList <- list()
   for (pkgName in pkgNames) {
-    pkgDataList <- uploadedFileDataList[[pkgName]]
+    pkgDataList <- uploadedFiles[[pkgName]]
     items <- names(pkgDataList)
     itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], getItemsList(items))
   }
 
-  objectSelection <- itemsList$items
+  objectSelection <- itemsList$objects[["items"]]
 
   # Renders the objectSelection into the main dashboard space
   output$navPanelPreview <- renderUI({

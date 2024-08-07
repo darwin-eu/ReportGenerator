@@ -55,7 +55,9 @@ Imports:
     ParallelLogger,
     CodelistGenerator,
     CohortCharacteristics,
-    cli
+    cli,
+    fs,
+    purrr
 Suggests:
     testthat,
     rmarkdown,
