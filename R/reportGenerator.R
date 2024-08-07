@@ -108,6 +108,8 @@ reportGenerator <- function(logger = NULL) {
     )
   )
 
+  globalValues <- reactiveValues(count = 0)
+
   server <- function(input, output, session) {
 
     # create logger
@@ -135,11 +137,13 @@ reportGenerator <- function(logger = NULL) {
       fileDataPath <- inFile$datapath
       fileName <- inFile$name
       # Temp directory to unzip files
-      csvLocation <- file.path(tempdir(), "dataLocation")
+      globalValues$count <- globalValues$count + 1
+      csvLocation <- file.path(tempdir(), glue::glue("dataLocation{globalValues$count}"))
       dir.create(csvLocation)
       # Joins one or several zips into the reactive value
       uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
                                             fileName = fileName,
+                                            unzipDir = csvLocation,
                                             logger = logger)
       if (length(uploadedFileDataList) == 0) {
         show_alert(title = "Data mismatch",

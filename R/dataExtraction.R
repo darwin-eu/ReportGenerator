@@ -18,6 +18,7 @@
 #'
 #' @param fileDataPath List of full file locations
 #' @param fileName Name of the file in character to process in case the input is only csv
+#' @param unzipDir Directory where results will be unzipped
 #' @param logger A logger object
 #'
 #' @return A list of dataframes
@@ -27,6 +28,7 @@
 #' @export
 joinDatabases <- function(fileDataPath,
                           fileName = NULL,
+                          unzipDir,
                           logger) {
 
   # Check
@@ -38,7 +40,6 @@ joinDatabases <- function(fileDataPath,
                                            package = "ReportGenerator"))
   packagesNames <- names(configData)
   fileType <- getFileType(fileDataPath)
-  unzipDir <- file.path(tempdir(), "unzipData")
 
   # Check zip
   if (fileType == "zip") {
@@ -84,6 +85,7 @@ unzipFiles <- function(unzipDir, fileDataPath, logger) {
   }
 
   databaseFolders <- dir(unzipDir, full.names = TRUE)
+  databaseFolders <- databaseFolders[!startsWith(basename(databaseFolders), "__")]
   checkmate::assertDirectoryExists(databaseFolders)
 
   return(databaseFolders)
