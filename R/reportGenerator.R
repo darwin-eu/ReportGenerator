@@ -504,17 +504,6 @@ reportGenerator <- function(logger = NULL) {
       }
     )
 
-    # download sample study data
-    # output$downloadStudyData <- downloadHandler(
-    #   filename = function() { "StudyResults.zip" },
-    #   content = function(file) {
-    #     file.copy(system.file("extdata/examples/StudyResults.zip", package = "ReportGenerator"), file)
-    #   },
-    #   contentType = "application/zip"
-    # )
-
-    # save report
-
     # save report
     output$downloadStudyData <- downloadHandler(
       filename = "uploadedFiles.rds",
