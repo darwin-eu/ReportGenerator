@@ -84,6 +84,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                uiOutput(outputId = ns("captionInput"))
         ),
       ),
+      fluidRow(createAddItemToReportUI(ns(lockName))),
       tags$br(),
       fluidRow(
         column(12,

@@ -60,7 +60,7 @@ reportGenerator <- function(logger = NULL) {
           tags$br(),
           tags$br(),
           downloadButton("createReportApp", "Download Shiny App", class = "dlReportBtn"),
-          checkboxInput("enableReporting", "Add reporting option", value = TRUE)
+          checkboxInput("enableReporting", "Add reporting option", value = FALSE)
         )
         # ,
         # verbatimTextOutput("checkFileUploadedOut")
@@ -101,18 +101,6 @@ reportGenerator <- function(logger = NULL) {
                           ),
                           div(id = "reportOutput")
                    )
-                 ),
-                 fluidRow(
-                   column(width = 4,
-                          # h2("Create report application"),
-                          tags$head(tags$style(".dlAppBtn{ margin-left:15px;margin-right:15px; margin-top:25px; color:#444 !important; }
-                                                .dlCheck { margin-left:15px;margin-right:15px; margin-top:30px; color:#444 !important; }")),
-                          # splitLayout(
-                          #   downloadButton("createReportApp", "Download Shiny App", class = "dlReportBtn"),
-                          #   div(checkboxInput("enableReporting", "Add reporting option", value = TRUE), class = "dlCheck")
-                          # ),
-                          div(id = "createAppOutput")
-                   )
                  )
         )
       )
@@ -130,7 +118,7 @@ reportGenerator <- function(logger = NULL) {
     # 1. Load data
     datasetLoadServer("StudyPackage")
 
-    # ReactiveValues
+    # ReactiveValues for data and items menu
     uploadedFiles <- reactiveValues(IncidencePrevalence = NULL,
                                     TreatmentPatterns = NULL,
                                     CohortCharacteristics = NULL,
@@ -145,9 +133,6 @@ reportGenerator <- function(logger = NULL) {
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
       fileName <- inFile$name
-      # Temp directory to unzip files
-      csvLocation <- file.path(tempdir(), "dataLocation")
-      dir.create(csvLocation)
       # Joins one or several zips into the reactive value
       uploadedFilesList <- joinDatabases(fileDataPath = fileDataPath,
                                          fileName = fileName,
@@ -184,7 +169,6 @@ reportGenerator <- function(logger = NULL) {
         items <- names(pkgDataList)
         itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], getItemsList(items))
       }
-      unlink(csvLocation, recursive = TRUE)
       shinycssloaders::hidePageSpinner()
     })
 
@@ -499,6 +483,7 @@ reportGenerator <- function(logger = NULL) {
         "generatedReport.docx"
       },
       content = function(file) {
+        shinycssloaders::showPageSpinner()
         shinyjs::disable("generateReport")
         # Load template and generate report
         shinyjs::html("reportOutput", "<br>Generating report", add = TRUE)
@@ -515,6 +500,7 @@ reportGenerator <- function(logger = NULL) {
                        file,
                        logger)
         shinyjs::enable("generateReport")
+        shinycssloaders::hidePageSpinner()
       }
     )
 
@@ -533,27 +519,32 @@ reportGenerator <- function(logger = NULL) {
     output$downloadStudyData <- downloadHandler(
       filename = "uploadedFiles.rds",
       content = function(file) {
+        shinycssloaders::showPageSpinner()
         if (!is.null(uploadedFiles)) {
           saveRDS(reactiveValuesToList(uploadedFiles),
                   file)
         }
+        shinycssloaders::hidePageSpinner()
       }
     )
 
-    # output$downloadStudyData <- downloadHandler(
-    #   filename = "reportItems.rds",
-    #   content = function(file) {
-    #     if (!is.null(dataReport$objects)) {
-    #       shinyjs::html("reportOutput", "<br>Saving report items to rds file", add = TRUE)
-    #       shinyjs::disable("saveReportData")
-    #       saveRDS(list("reportItems" = reactiveValuesToList(do.call(reactiveValues, dataReport$objects)),
-    #                    "uploadedFiles" = reactiveValuesToList(uploadedFiles),
-    #                    "itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects))),
-    #               file)
-    #       shinyjs::enable("saveReportData")
-    #     }
-    #   }
-    # )
+    output$saveReportData <- downloadHandler(
+      filename = "reportItems.rds",
+      content = function(file) {
+        if (!is.null(dataReport$objects)) {
+          shinycssloaders::showPageSpinner()
+          shinyjs::html("reportOutput", "<br>Saving report items to rds file", add = TRUE)
+          shinyjs::disable("saveReportData")
+          saveRDS(list("reportItems" = reactiveValuesToList(do.call(reactiveValues, dataReport$objects)),
+                       "uploadedFiles" = reactiveValuesToList(uploadedFiles),
+                       "itemsList" = reactiveValuesToList(do.call(reactiveValues, itemsList$objects))),
+                  file)
+          shinyjs::enable("saveReportData")
+          shinycssloaders::hidePageSpinner()
+        }
+      }
+    )
+
     # Check input data
     observeEvent(input$loadReportItems, {
       inFile <- input$loadReportItems
@@ -573,6 +564,7 @@ reportGenerator <- function(logger = NULL) {
     output$createReportApp <- downloadHandler(
       filename = "reportApp.zip",
       content = function(file) {
+        shinycssloaders::showPageSpinner()
         # log4r::info(logger, paste("Create shiny application, reportingEnabled = ", input$enableReporting))
         cli::cli_h2("Creating Shiny App")
         uploadedFiles <- reactiveValuesToList(uploadedFiles)
@@ -655,6 +647,7 @@ reportGenerator <- function(logger = NULL) {
           log4r::info(logger, "No files have been uploaded, app not created.")
           shinyjs::html("createAppOutput", glue::glue("<br>Please upload files before generating the app"), add = TRUE)
         }
+        shinycssloaders::hidePageSpinner()
       },
       contentType = "application/zip"
     )
