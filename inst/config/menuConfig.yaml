@@ -17,12 +17,12 @@ table1PrevAtt:
   type:
     - prevalence_attrition
   options: NULL
-table1Inc:
-  title: "Number of participants by sex and age group - Table"
-  function: table1Inc(incidence_estimates)
-  type:
-    - incidence_estimates
-  options: NULL
+# table1Inc:
+#   title: "Number of participants by sex and age group - Table"
+#   function: table1Inc(incidence_estimates)
+#   type:
+#     - incidence_estimates
+#   options: NULL
 plotIncidenceYear:
   title: "Incidence rate per year - Plot"
   function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)

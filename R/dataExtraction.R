@@ -51,8 +51,8 @@ joinDatabases <- function(fileDataPath,
 
     # `extractCSV()` iterates folders for CSV files
     result <- extractCSV(databaseFolders = databaseFolders,
-                       configData = configData,
-                       logger = logger)
+                         configData = configData,
+                         logger = logger)
   } else if (fileType == "csv") {
     cli::cli_progress_step("Processing {length(fileDataPath)} CSV files", spinner = TRUE)
     result <- processCSV(data = list(),
@@ -80,8 +80,13 @@ unzipFiles <- function(unzipDir, fileDataPath, logger) {
     dir.create(unzipDir)
   }
 
+  folderNumber <- 0
+  # Unzipping puts the files in a separate folder
   for (fileLocation in fileDataPath) {
-    unzip(zipfile = fileLocation, exdir = unzipDir)
+    folderNumber <- folderNumber + 1
+    unzip(zipfile = fileLocation,
+          exdir = file.path(unzipDir, paste0("database", as.character(folderNumber))),
+          junkpaths = TRUE)
   }
 
   databaseFolders <- dir(unzipDir, full.names = TRUE)
@@ -193,26 +198,37 @@ loadFileData <- function(data,
   cli::cli_h2("Processing file {basename(fileName)}")
   if (all(resultsColumns %in% names(omopgenerics::emptySummarisedResult()))) {
     # TODO: Pack the following in a function and test it
-    resultsData <- omopgenerics::newSummarisedResult(resultsData)
-    resultType <- settings(resultsData) %>% pull(result_type) %>% unique()
-    package_name <- settings(resultsData) %>% pull(package_name) %>% unique()
-    if (resultType == "survival") {
-      if (is.null(data[[package_name]])) {
-        data[[package_name]] <- list()
+
+    result_ids <- resultsData %>% pull(result_id) %>% unique()
+    for (id in result_ids) {
+      # id <- 1
+      resultsDataId <- resultsData %>%
+        filter(result_id == id)
+      resultsDataSummarised <- omopgenerics::newSummarisedResult(resultsDataId)
+      resultType <- settings(resultsDataSummarised) %>%
+        pull(result_type) %>%
+        unique()
+      package_name <- settings(resultsDataSummarised) %>%
+        pull(package_name) %>%
+        unique()
+      if (resultType == "survival") {
+        if (is.null(data[[package_name]])) {
+          data[[package_name]] <- list()
+        }
+        analysisType <- settings(resultsDataSummarised) %>% pull(analysis_type) %>% unique()
+        if (is.null(data[[package_name]][[analysisType]])) {
+          data[[package_name]][[analysisType]] <- omopgenerics::emptySummarisedResult()
+        }
+        data[[package_name]][[analysisType]] <- omopgenerics::bind(data[[package_name]][[analysisType]], resultsDataSummarised)
+      } else {
+        if (is.null(data[[package_name]])) {
+          data[[package_name]] <- list()
+        }
+        if (is.null(data[[package_name]][[resultType]])) {
+          data[[package_name]][[resultType]] <- omopgenerics::emptySummarisedResult()
+        }
+        data[[package_name]][[resultType]] <- omopgenerics::bind(data[[package_name]][[resultType]], resultsDataSummarised)
       }
-      analysisType <- settings(resultsData) %>% pull(analysis_type) %>% unique()
-      if (is.null(data[[package_name]][[resultType]][[analysisType]])) {
-        data[[package_name]][[analysisType]] <- omopgenerics::emptySummarisedResult()
-      }
-      data[[package_name]][[analysisType]] <- omopgenerics::bind(data[[package_name]][[analysisType]], resultsData)
-    } else {
-      if (is.null(data[[package_name]])) {
-        data[[package_name]] <- list()
-      }
-      if (is.null(data[[package_name]][[resultType]])) {
-        data[[package_name]][[resultType]] <- omopgenerics::emptySummarisedResult()
-      }
-      data[[package_name]][[resultType]] <- omopgenerics::bind(data[[package_name]][[resultType]], resultsData)
     }
     return(data)
   } else {

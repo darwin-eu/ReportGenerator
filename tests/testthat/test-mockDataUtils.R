@@ -14,6 +14,22 @@ test_that("treatmentPathwaysData works", {
     eunomia_temp_folder <- file.path(tempdir(), "eunomia_data_folder")
     dir.create(eunomia_temp_folder)
     Sys.setenv(EUNOMIA_DATA_FOLDER = eunomia_temp_folder)
+    treatmentPathwaysData <- getTreatmentPathways()
+    expect_equal(length(treatmentPathwaysData), 6)
+    expect_equal(names(treatmentPathwaysData), c("countsAge", "countsSex",
+                                                 "countsYear", "metadata",
+                                                 "summaryStatsTherapyDuration",
+                                                 "treatmentPathways"))
+    expect_equal(class(treatmentPathwaysData), "list")
+    unlink(eunomia_temp_folder, recursive = TRUE)
+  } else {
+    treatmentPathwaysData <- getTreatmentPathways()
+    expect_equal(length(treatmentPathwaysData), 6)
+    expect_equal(names(treatmentPathwaysData), c("countsAge", "countsSex",
+                                                 "countsYear", "metadata",
+                                                 "summaryStatsTherapyDuration",
+                                                 "treatmentPathways"))
+    expect_equal(class(treatmentPathwaysData), "list")
   }
   treatmentPathwaysData <- getTreatmentPathways()
   expect_equal(length(treatmentPathwaysData), 6)

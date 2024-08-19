@@ -1,13 +1,17 @@
 test_that("summarised Characteristics and LSC", {
   testServer(reportGenerator(), {
+    uploadedFiles <- list()
+    uploadedFiles[["CohortCharacteristics"]][["summarised_characteristics"]] <- testData$summarised_characteristics
+    uploadedFiles[["CohortCharacteristics"]][["summarised_large_scale_characteristics"]] <- testData$summarised_large_scale_characteristics
+
     expect_s3_class(characteristicsUI("characteristics",
-                                      testData$summarised_characteristics), "shiny.tag.list")
+                                      uploadedFiles), "shiny.tag.list")
     expect_s3_class(characteristicsServer("characteristics",
-                                          testData$summarised_characteristics), "reactiveVal")
+                                          uploadedFiles), "reactiveVal")
     expect_s3_class(characteristicsUI("lsc",
-                                      testData$summarised_large_scale_characteristics), "shiny.tag.list")
+                                      uploadedFiles), "shiny.tag.list")
     expect_s3_class(characteristicsServer("lsc",
-                                          testData$summarised_large_scale_characteristics), "reactiveVal")
+                                          uploadedFiles), "reactiveVal")
   })
 })
 
@@ -24,8 +28,31 @@ test_that("summarised Characteristics and LSC", {
                                  unzipDir = unzipDir,
                                  logger = logger)
   testServer(reportGenerator(), {
-    expect_s3_class(characteristicsUI("characteristics", uploadedFiles$PatientProfiles$summarised_characteristics), "shiny.tag.list")
-    expect_s3_class(characteristicsServer("characteristics", uploadedFiles$PatientProfiles$summarised_characteristics), "reactiveVal")
+    expect_s3_class(characteristicsUI("characteristics", uploadedFiles$CohortCharacteristics$summarised_characteristics), "shiny.tag.list")
+    expect_s3_class(characteristicsServer("characteristics", uploadedFiles$CohortCharacteristics$summarised_characteristics), "reactiveVal")
+  })
+})
+
+test_that("settings for LSC filter", {
+  data <- list()
+  filesLocation <- testthat::test_path("studies", "misc", "ls_chr_results.csv")
+  configData <- yaml.load_file(system.file("config",
+                                           "variablesConfig.yaml",
+                                           package = "ReportGenerator"))
+  resultsData <- read_csv(filesLocation, show_col_types = FALSE, col_types = c(.default = "c"))
+  resultsColumns <- names(resultsData)
+
+  data <- loadFileData(data,
+                       fileName,
+                       configData,
+                       resultsData,
+                       resultsColumns,
+                       databaseName,
+                       logger)
+
+  testServer(reportGenerator(), {
+    expect_s3_class(characteristicsUI("characteristics", data$CohortCharacteristics$summarised_characteristics), "shiny.tag.list")
+    expect_s3_class(characteristicsServer("characteristics", data$CohortCharacteristics$summarised_characteristics), "reactiveVal")
   })
   unlink(unzipDir, recursive = TRUE)
 })

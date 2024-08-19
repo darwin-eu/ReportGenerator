@@ -62,6 +62,9 @@ test_that("extractCSV() correctly", {
                              pattern = "zip",
                              full.names = TRUE)
 
+  fileDataPath <- list.files("C:/Users/cbarboza/Documents/darwin-docs/studyPackages/P2C1014PrescriptionsICU/results",
+                             pattern = "zip",
+                             full.names = TRUE)
   databaseFolders <- unzipFiles(unzipDir = unzipDir,
                                 fileDataPath = fileDataPath,
                                 logger = logger)
@@ -99,7 +102,10 @@ test_that("processCSV() files into a list with summarisedResult objects", {
   filesLocation <- list.files(testthat::test_path("studies", "csv"),
                               pattern = "csv",
                               full.names = TRUE)
+
   databaseName <- getDatabaseName(filesLocation = filesLocation[2])
+
+  # databaseName <- getDatabaseName(filesLocation = filesLocation)
 
   data <- processCSV(data = NULL, filesLocation, configData, databaseName)
 
@@ -173,6 +179,100 @@ test_that("Loading multiple csv files whole study", {
   expect_equal(length(uploadedFiles), 4)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
+})
+
+test_that("loadFileData iteration per result id", {
+  data <- list()
+  filesLocation <- testthat::test_path("studies", "misc", "ls_chr_results.csv")
+  configData <- yaml.load_file(system.file("config",
+                                           "variablesConfig.yaml",
+                                           package = "ReportGenerator"))
+  resultsData <- read_csv(filesLocation, show_col_types = FALSE, col_types = c(.default = "c"))
+  resultsColumns <- names(resultsData)
+
+  data <- loadFileData(data,
+                       fileName,
+                       configData,
+                       resultsData,
+                       resultsColumns,
+                       databaseName,
+                       logger)
+
+  expect_equal(names(data), "CohortCharacteristics")
+  CohortCharacteristicsData <- data$CohortCharacteristics
+  expect_equal(names(CohortCharacteristicsData), c("summarised_characteristics", "summarised_large_scale_characteristics"))
+  expect_equal(CohortCharacteristicsData$summarised_characteristics %>% pull(result_id) %>% unique(), 1)
+  expect_equal(CohortCharacteristicsData$summarised_large_scale_characteristics %>% pull(result_id) %>% unique(), c(1,2))
+
+})
+
+test_that("loadFileData iteration per result id two databases", {
+
+  data <- list()
+  filesLocation <- testthat::test_path("studies", "misc", "chr_results.csv")
+  configData <- yaml.load_file(system.file("config",
+                                           "variablesConfig.yaml",
+                                           package = "ReportGenerator"))
+  resultsData <- read_csv(filesLocation, show_col_types = FALSE, col_types = c(.default = "c"))
+  resultsColumns <- names(resultsData)
+
+
+  data <- loadFileData(data,
+                       fileName,
+                       configData,
+                       resultsData,
+                       resultsColumns,
+                       databaseName,
+                       logger)
+
+  filesLocation <- testthat::test_path("studies", "misc", "chr_results_other_db.csv")
+  resultsData <- read_csv(filesLocation, show_col_types = FALSE, col_types = c(.default = "c"))
+  resultsColumns <- names(resultsData)
+
+  data <- loadFileData(data,
+                       fileName,
+                       configData,
+                       resultsData,
+                       resultsColumns,
+                       databaseName,
+                       logger)
+
+  expect_equal(names(data), "CohortCharacteristics")
+  CohortCharacteristicsData <- data$CohortCharacteristics
+  expect_equal(names(CohortCharacteristicsData), c("summarised_characteristics"))
+  expect_equal(CohortCharacteristicsData$summarised_characteristics %>% pull(result_id) %>% unique(), 1)
+  expect_equal(CohortCharacteristicsData$summarised_characteristics %>% pull(cdm_name) %>% unique(), c("IPCI-20240430", "BORDEAUX"))
+})
+
+test_that("loadFileData iteration per result id error same files 'checkGroupCount()'", {
+  data <- list()
+  filesLocation <- testthat::test_path("studies", "misc", "chr_results.csv")
+  configData <- yaml.load_file(system.file("config",
+                                           "variablesConfig.yaml",
+                                           package = "ReportGenerator"))
+  resultsData <- read_csv(filesLocation, show_col_types = FALSE, col_types = c(.default = "c"))
+  resultsColumns <- names(resultsData)
+
+
+  data <- loadFileData(data,
+                       fileName,
+                       configData,
+                       resultsData,
+                       resultsColumns,
+                       databaseName,
+                       logger)
+
+  filesLocation <- testthat::test_path("studies", "misc", "chr_results.csv")
+  resultsData <- read_csv(filesLocation, show_col_types = FALSE, col_types = c(.default = "c"))
+  resultsColumns <- names(resultsData)
+
+  expect_error(data <- loadFileData(data,
+                                    fileName,
+                                    configData,
+                                    resultsData,
+                                    resultsColumns,
+                                    databaseName,
+                                    logger))
 })
 
 test_that("additional columns summary_characteristics", {

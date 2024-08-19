@@ -25,7 +25,7 @@ tableServer <- function(id, uploadedFiles) {
 
     getData <- reactive({
       uploadedFiles <- uploadedFiles()
-      uploadedFiles$dataIP$incidence_estimates
+      uploadedFiles$IncidencePrevalence$incidence_estimates
     })
 
     getTopData <- reactive({

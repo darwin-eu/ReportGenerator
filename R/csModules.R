@@ -2,25 +2,25 @@
 cohortSurvivalUI <- function(id, uploadedFiles) {
   ns <- NS(id)
   outResult <- NULL
-  topN <- NULL
+  dlTable <- NULL
   dlPlot <- NULL
   if (id == "survivalTable") {
     outResult <- gt::gt_output(ns("cs_data"))
-    dataset <- uploadedFiles$dataCS$single_event
+    dataset <- uploadedFiles$CohortSurvival$single_event
   } else if (id == "survivalPlot") {
     outResult <- plotOutput(ns("cs_plot"))
-    dataset <- uploadedFiles$dataCS$single_event
+    dataset <- uploadedFiles$CohortSurvival$single_event
   } else if (id == "failureTable") {
     outResult <- gt::gt_output(ns("cu_inc_data"))
-    dataset <- uploadedFiles$dataCS$competing_risk
+    dataset <- uploadedFiles$CohortSurvival$competing_risk
   } else if (id == "failurePlot") {
     outResult <- plotOutput(ns("cu_inc_plot"))
-    dataset <- uploadedFiles$dataCS$competing_risk
+    dataset <- uploadedFiles$CohortSurvival$competing_risk
   }
   if (grepl("Plot", id)) {
     dlPlot <- createDownloadPlotUI(ns)
-  } else {
-    topN <- column(2, numericInput(ns("top_n"), "Top n", 10, min = 1, max = 100))
+  } else if (grepl("Table", id)) {
+    dlTable <- createDownloadTableUI(ns)
   }
   captionUI <- fluidRow(
     column(12,
@@ -52,7 +52,7 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
               inputId = ns("group_level"),
               label = "Group Level",
               choices = groupLevelOptions,
-              selected = groupLevelOptions,
+              selected = groupLevelOptions[1],
               options = pickerOptions,
               multiple = TRUE
              )
@@ -68,9 +68,24 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
              )
       )
     ),
+    fluidRow(
+      column(6,
+             pickerInput(inputId = ns("pivotWide"),
+                         label = "Arrange by",
+                         choices = c("group", "strata"),
+                         selected = c("group", "strata"),
+                         multiple = TRUE)
+      ),
+      column(6,
+             pickerInput(inputId = ns("header"),
+                         label = "Header",
+                         choices = c("cdm_name", "cohort_name", "strata", "window name"),
+                         selected = c("cdm_name"),
+                         multiple = TRUE)),
+    ),
     captionUI,
     fluidRow(createAddItemToReportUI(ns(paste0("lock", id))),
-             topN,
+             dlTable,
              dlPlot),
     tags$br(),
     fluidRow(column(12, outResult))
@@ -85,9 +100,9 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     getData <- reactive({
       uploadedFiles <- uploadedFiles()
       if (id == "survivalTable"  || id == "survivalPlot") {
-        dataset <- uploadedFiles$dataCS$single_event
+        dataset <- uploadedFiles$CohortSurvival$single_event
       } else if (id == "failureTable"  || id == "failurePlot") {
-        dataset <- uploadedFiles$dataCS$competing_risk
+        dataset <- uploadedFiles$CohortSurvival$competing_risk
       }
       dataset %>%
         filter(cdm_name %in% input$cdm_name,
@@ -95,9 +110,14 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
                strata_name %in% input$strata_name)
     })
 
+    survival_gt_table <- reactive({
+      CohortSurvival::tableSurvival(getData(),
+                                    header = input$header)
+    })
+
     if (id == "survivalTable") {
       output$cs_data <- gt::render_gt({
-        CohortSurvival::tableSurvival(getData())
+        survival_gt_table()
       })
     } else if (id == "survivalPlot") {
       output$cs_plot <- renderPlot({
@@ -105,13 +125,22 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
       })
     } else if (id == "failureTable") {
       output$cu_inc_data <- gt::render_gt({
-        CohortSurvival::tableSurvival(getData())
+        survival_gt_table()
       })
     } else if (id == "failurePlot") {
       output$cu_inc_plot <- renderPlot({
         previewFigure()
       })
     }
+
+    output$downloadSurvivalTable <- downloadHandler(
+      filename = function() {
+        paste("survivalTable", ".docx", sep = "")
+      },
+      content = function(file) {
+        gt::gtsave(survival_gt_table(), file)
+      }
+    )
 
     previewFigure <- reactive({
       plot <- NULL
@@ -166,7 +195,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$locksurvivalTable, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`Survival table` = list(survivalEstimate = getData(),
+          list(`Single Event - Table` = list(survivalEstimate = getData(),
                                        caption = input$captionSurvivalEstimateData))
         )
       }
@@ -175,7 +204,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$locksurvivalPlot, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`"Single Event - Plot"` = list(survivalEstimate = getData(),
+          list(`Single Event - Plot` = list(survivalEstimate = getData(),
                                       plotOption = "Facet by database, colour by strata_name",
                                       caption = input$captionSurvivalEstimate))
         )
@@ -185,7 +214,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$lockfailureTable, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`Cumulative incidence table` = list(cumulativeSurvivalEstimate = getData(),
+          list(`Competing Risk - Table` = list(cumulativeSurvivalEstimate = getData(),
                                                    caption = input$captionCumulativeIncidenceData))
         )
       }
@@ -194,13 +223,12 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     observeEvent(input$lockfailurePlot, {
       if (nrow(getData()) > 0) {
         addObject(
-          list(`Cumulative incidence plot` = list(cumulativeSurvivalEstimate = getData(),
+          list(`Competing Risk - Plot` = list(cumulativeSurvivalEstimate = getData(),
                                                   plotOption = "Facet by database, colour by strata_name",
                                                   caption = input$captionCumulativeIncidence))
         )
       }
     })
-
     return(addObject)
   })
 }

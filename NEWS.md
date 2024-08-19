@@ -1,3 +1,11 @@
+# ReportGenerator 1.17.0
+
+* Binds results using result_id. 
+
+# ReportGenerator 1.16.0
+
+* Bug fix for test mock utils.
+
 # ReportGenerator 1.15.0
 
 * Update to use CohortCharacteristics

@@ -29,6 +29,8 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
   checkmate::assertPathForOutput(fileName, add = errorMessage)
   checkmate::reportAssertions(collection = errorMessage)
 
+  cli::cli_h2("Generating report for {} data")
+
   if (length(dataReportList) > 0) {
     # Loop through ever object selected in the menu
     log4r::info(logger, glue::glue("Start generating report, number of items: {length(dataReportList)}"))

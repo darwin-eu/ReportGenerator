@@ -3,18 +3,18 @@ attritionUI <- function(id, uploadedFiles) {
 
   if (id == "Number of participants - Table") {
     lockName <- "lockTableNumPar"
-    analysisChoices <- unique(uploadedFiles$dataIP$incidence_attrition$analysis_id)
-    captionText <- table1aAutText(uploadedFiles$dataIP$incidence_attrition, uploadedFiles$dataIP$prevalence_attrition)
+    analysisChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_attrition$analysis_id)
+    captionText <- table1aAutText(uploadedFiles$IncidencePrevalence$incidence_attrition, uploadedFiles$IncidencePrevalence$prevalence_attrition)
     outputTableName <- "previewTableAtt"
   } else if (id == "Incidence Attrition - Table") {
     lockName <- "lockTableIncAtt"
-    analysisChoices <- unique(uploadedFiles$dataIP$incidence_attrition$analysis_id)
-    captionText <- tableAttrition(uploadedFiles$dataIP$incidence_attrition)
+    analysisChoices <- unique(uploadedFiles$IncidencePrevalence$incidence_attrition$analysis_id)
+    captionText <- tableAttrition(uploadedFiles$IncidencePrevalence$incidence_attrition)
     outputTableName <- "previewTableAttInc"
   } else if (id == "Prevalence Attrition - Table") {
     lockName <- "lockTablePrevAtt"
-    analysisChoices <- unique(uploadedFiles$dataIP$prevalence_attrition$analysis_id)
-    captionText <- tableAttrition(uploadedFiles$dataIP$prevalence_attrition)
+    analysisChoices <- unique(uploadedFiles$IncidencePrevalence$prevalence_attrition$analysis_id)
+    captionText <- tableAttrition(uploadedFiles$IncidencePrevalence$prevalence_attrition)
     outputTableName <- "previewTableAttPrev"
   }
 
@@ -49,8 +49,8 @@ attritionServer <- function(id, uploadedFiles) {
 
       prevalenceAttritionCommon <- reactive({
         uploadedFiles <- uploadedFiles()
-        if (!is.null(uploadedFiles$dataIP$prevalence_attrition)) {
-          commonData <- uploadedFiles$dataIP$prevalence_attrition
+        if (!is.null(uploadedFiles$IncidencePrevalence$prevalence_attrition)) {
+          commonData <- uploadedFiles$IncidencePrevalence$prevalence_attrition
           if (inherits(commonData$excluded_records, "character")) {
             commonData$excluded_records <- as.numeric(commonData$excluded_records)
           }
@@ -73,8 +73,8 @@ attritionServer <- function(id, uploadedFiles) {
 
       incidenceAttritionCommon <- reactive({
         uploadedFiles <- uploadedFiles()
-        if (!is.null(uploadedFiles$dataIP$incidence_attrition)) {
-          commonData <- uploadedFiles$dataIP$incidence_attrition
+        if (!is.null(uploadedFiles$IncidencePrevalence$incidence_attrition)) {
+          commonData <- uploadedFiles$IncidencePrevalence$incidence_attrition
           if (inherits(commonData$excluded_records, "character")) {
             commonData$excluded_records <- as.numeric(commonData$excluded_records)
           }
@@ -106,7 +106,7 @@ attritionServer <- function(id, uploadedFiles) {
 
         observeEvent(input$lockTableNumPar, {
           addObject(
-            list(`Table - Number of participants` = list(prevalence_attrition = prevalenceAttritionCommon(),
+            list(`Number of participants - Table` = list(prevalence_attrition = prevalenceAttritionCommon(),
                                                          incidence_attrition = incidenceAttritionCommon(),
                                                          caption = input$captionTableAtt))
           )
@@ -122,7 +122,7 @@ attritionServer <- function(id, uploadedFiles) {
 
         observeEvent(input$lockTableIncAtt, {
           addObject(
-            list(`Table - Incidence Attrition` = list(incidence_attrition = incidenceAttritionCommon(),
+            list(`Incidence Attrition - Table` = list(incidence_attrition = incidenceAttritionCommon(),
                                                       attritionDataType = attritionDataType,
                                                       caption = input$captionTableAtt))
           )
@@ -138,7 +138,7 @@ attritionServer <- function(id, uploadedFiles) {
 
         observeEvent(input$lockTablePrevAtt, {
           addObject(
-            list(`Table - Prevalence Attrition` = list(prevalence_attrition = prevalenceAttritionCommon(),
+            list(`Incidence Attrition - Table` = list(prevalence_attrition = prevalenceAttritionCommon(),
                                                        attritionDataType = attritionDataType,
                                                        caption = input$captionTableAtt))
             )

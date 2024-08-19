@@ -13,6 +13,7 @@ library(huxtable)
 library(IncidencePrevalence)
 library(DT)
 library(dplyr)
+library(ReportGenerator)
 
 sourceFiles <- list.files(path = "modules", full.names = T)
 sapply(sourceFiles, source)

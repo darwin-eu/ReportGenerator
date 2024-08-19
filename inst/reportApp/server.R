@@ -19,14 +19,20 @@ function(input, output, session) {
 
   # 1. Load data
   # ReactiveValues
-  sessionItems <- readRDS(here::here("results", "session.rds"))
-  itemsList <- sessionItems$items
-  uploadedFiles <- readRDS(here::here("results", "uploadedFiles.rds"))$uploadedFiles
-  dataReport <- reactiveValues()
-  dataReport$objects <- sessionItems$reportItems
+  uploadedFiles <- readRDS(here::here("results", "uploadedFiles.rds"))
+  dataReport <- reactiveValues(objects = NULL)
+  # dataReport$objects <- sessionItems$reportItems
 
   # Item preview
-  objectSelection <- itemsList$items
+  pkgNames <- names(uploadedFiles)
+  itemsList <- list()
+  for (pkgName in pkgNames) {
+    pkgDataList <- uploadedFiles[[pkgName]]
+    items <- names(pkgDataList)
+    itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], getItemsList(items))
+  }
+
+  objectSelection <- itemsList$objects[["items"]]
 
   # Renders the objectSelection into the main dashboard space
   output$navPanelPreview <- renderUI({
@@ -189,7 +195,7 @@ function(input, output, session) {
 
   # PatientProfiles Modules
   dataCharacteristics <- characteristicsServer("characteristics",
-                                               reactive(uploadedFiles$dataPP$summarised_characteristics))
+                                               reactive(uploadedFiles))
 
   observe({
     for (key in names(dataCharacteristics())) {
@@ -200,7 +206,7 @@ function(input, output, session) {
     bindEvent(dataCharacteristics())
 
   dataLSC <- characteristicsServer(id = "lsc",
-                                   reactive(uploadedFiles$dataPP$summarised_large_scale_characteristics))
+                                   reactive(uploadedFiles))
 
   observe({
     for (key in names(dataLSC())) {
