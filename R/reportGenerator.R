@@ -140,11 +140,11 @@ reportGenerator <- function(logger = NULL) {
       csvLocation <- file.path(tempdir(), glue::glue("dataLocation{globalValues$count}"))
       dir.create(csvLocation)
       # Joins one or several zips into the reactive value
-      uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
-                                            fileName = fileName,
-                                            unzipDir = csvLocation,
-                                            logger = logger)
-      if (length(uploadedFileDataList) == 0) {
+      uploadedFilesList <- joinDatabases(fileDataPath = fileDataPath,
+                                         fileName = fileName,
+                                         unzipDir = csvLocation,
+                                         logger = logger)
+      if (length(uploadedFilesList) == 0) {
         show_alert(title = "Data mismatch",
                    text = "No valid package files found")
       }
