@@ -191,7 +191,7 @@ test_that("loadFileData iteration per result id", {
   resultsColumns <- names(resultsData)
 
   data <- loadFileData(data,
-                       fileName,
+                       filesLocation,
                        configData,
                        resultsData,
                        resultsColumns,
@@ -218,7 +218,7 @@ test_that("loadFileData iteration per result id two databases", {
 
 
   data <- loadFileData(data,
-                       fileName,
+                       filesLocation,
                        configData,
                        resultsData,
                        resultsColumns,
@@ -230,7 +230,7 @@ test_that("loadFileData iteration per result id two databases", {
   resultsColumns <- names(resultsData)
 
   data <- loadFileData(data,
-                       fileName,
+                       filesLocation,
                        configData,
                        resultsData,
                        resultsColumns,
@@ -255,7 +255,7 @@ test_that("loadFileData iteration per result id error same files 'checkGroupCoun
 
 
   data <- loadFileData(data,
-                       fileName,
+                       filesLocation,
                        configData,
                        resultsData,
                        resultsColumns,
@@ -267,7 +267,7 @@ test_that("loadFileData iteration per result id error same files 'checkGroupCoun
   resultsColumns <- names(resultsData)
 
   expect_error(data <- loadFileData(data,
-                                    fileName,
+                                    filesLocation,
                                     configData,
                                     resultsData,
                                     resultsColumns,

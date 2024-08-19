@@ -43,7 +43,7 @@ test_that("settings for LSC filter", {
   resultsColumns <- names(resultsData)
 
   data <- loadFileData(data,
-                       fileName,
+                       filesLocation,
                        configData,
                        resultsData,
                        resultsColumns,
@@ -54,5 +54,4 @@ test_that("settings for LSC filter", {
     expect_s3_class(characteristicsUI("characteristics", data$CohortCharacteristics$summarised_characteristics), "shiny.tag.list")
     expect_s3_class(characteristicsServer("characteristics", data$CohortCharacteristics$summarised_characteristics), "reactiveVal")
   })
-  unlink(unzipDir, recursive = TRUE)
 })
