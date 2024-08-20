@@ -31,6 +31,16 @@ test_that("treatmentPathwaysData works", {
                                                  "treatmentPathways"))
     expect_equal(class(treatmentPathwaysData), "list")
   }
+  treatmentPathwaysData <- getTreatmentPathways()
+  expect_equal(length(treatmentPathwaysData), 6)
+  expect_equal(names(treatmentPathwaysData), c("countsAge", "countsSex",
+                                               "countsYear", "metadata",
+                                               "summaryStatsTherapyDuration",
+                                               "treatmentPathways"))
+  expect_equal(class(treatmentPathwaysData), "list")
+  if (exists("eunomia_temp_folder")) {
+    unlink(eunomia_temp_folder, recursive = TRUE)
+  }
 })
 
 ### The following tests break because of the new version of dbplyr

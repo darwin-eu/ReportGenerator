@@ -3,10 +3,13 @@ test_that("Loading 1 zip files whole study", {
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
-  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1],
-                                 logger = logger)
-  expect_equal(length(uploadedFiles), 4)
-  expect_type(uploadedFiles, "list")
+  unzipDir <- file.path(tempdir(), "single")
+  uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath[1],
+                                        unzipDir = unzipDir,
+                                        logger = logger)
+  expect_equal(length(uploadedFileDataList), 4)
+  expect_type(uploadedFileDataList, "list")
+  unlink(unzipDir, recursive = TRUE)
 })
 
 test_that("Loading multiple zip files whole study", {
@@ -14,10 +17,13 @@ test_that("Loading multiple zip files whole study", {
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
-  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
-                                 logger = logger)
-  expect_equal(length(uploadedFiles), 4)
-  expect_type(uploadedFiles, "list")
+  unzipDir <- file.path(tempdir(), "multi")
+  uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
+                                        unzipDir = unzipDir,
+                                        logger = logger)
+  expect_equal(length(uploadedFileDataList), 4)
+  expect_type(uploadedFileDataList, "list")
+  unlink(unzipDir, recursive = TRUE)
 })
 
 test_that("getFileType() either zip or csv", {
@@ -148,8 +154,9 @@ test_that("Loading 1 csv files whole study", {
   fileName <- tools::file_path_sans_ext(fileName)
   logger <- log4r::logger()
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[3],
-                                fileName = fileName[3],
-                                logger = logger)
+                                 fileName = fileName[3],
+                                 unzipDir = tempdir(),
+                                 logger = logger)
   expect_equal(length(uploadedFiles), 1)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -166,8 +173,9 @@ test_that("Loading multiple csv files whole study", {
   fileName <- tools::file_path_sans_ext(fileName)
   logger <- log4r::logger()
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
-                                fileName = fileName,
-                                logger = logger)
+                                 fileName = fileName,
+                                 unzipDir = tempdir(),
+                                 logger = logger)
   expect_equal(length(uploadedFiles), 4)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -183,7 +191,7 @@ test_that("loadFileData iteration per result id", {
   resultsColumns <- names(resultsData)
 
   data <- loadFileData(data,
-                       fileName,
+                       filesLocation,
                        configData,
                        resultsData,
                        resultsColumns,
@@ -210,7 +218,7 @@ test_that("loadFileData iteration per result id two databases", {
 
 
   data <- loadFileData(data,
-                       fileName,
+                       filesLocation,
                        configData,
                        resultsData,
                        resultsColumns,
@@ -222,7 +230,7 @@ test_that("loadFileData iteration per result id two databases", {
   resultsColumns <- names(resultsData)
 
   data <- loadFileData(data,
-                       fileName,
+                       filesLocation,
                        configData,
                        resultsData,
                        resultsColumns,
@@ -247,7 +255,7 @@ test_that("loadFileData iteration per result id error same files 'checkGroupCoun
 
 
   data <- loadFileData(data,
-                       fileName,
+                       filesLocation,
                        configData,
                        resultsData,
                        resultsColumns,
@@ -259,7 +267,7 @@ test_that("loadFileData iteration per result id error same files 'checkGroupCoun
   resultsColumns <- names(resultsData)
 
   expect_error(data <- loadFileData(data,
-                                    fileName,
+                                    filesLocation,
                                     configData,
                                     resultsData,
                                     resultsColumns,

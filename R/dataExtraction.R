@@ -18,6 +18,7 @@
 #'
 #' @param fileDataPath List of full file locations
 #' @param fileName Name of the file in character to process in case the input is only csv
+#' @param unzipDir Directory where results will be unzipped
 #' @param logger A logger object
 #'
 #' @return A list of dataframes
@@ -27,6 +28,7 @@
 #' @export
 joinDatabases <- function(fileDataPath,
                           fileName = NULL,
+                          unzipDir,
                           logger) {
 
   # Check
@@ -38,7 +40,6 @@ joinDatabases <- function(fileDataPath,
                                            package = "ReportGenerator"))
   packagesNames <- names(configData)
   fileType <- getFileType(fileDataPath)
-  unzipDir <- file.path(tempdir(), "unzipData")
 
   # Check zip
   if (fileType == "zip") {
@@ -50,8 +51,8 @@ joinDatabases <- function(fileDataPath,
 
     # `extractCSV()` iterates folders for CSV files
     result <- extractCSV(databaseFolders = databaseFolders,
-                       configData = configData,
-                       logger = logger)
+                         configData = configData,
+                         logger = logger)
   } else if (fileType == "csv") {
     cli::cli_progress_step("Processing {length(fileDataPath)} CSV files", spinner = TRUE)
     result <- processCSV(data = list(),
@@ -88,12 +89,8 @@ unzipFiles <- function(unzipDir, fileDataPath, logger) {
           junkpaths = TRUE)
   }
 
-  # for (fileLocation in fileDataPath) {
-  #   unzip(zipfile = fileLocation, exdir = unzipDir, junkpaths = TRUE)
-  # }
-
   databaseFolders <- dir(unzipDir, full.names = TRUE)
-
+  databaseFolders <- databaseFolders[!startsWith(basename(databaseFolders), "__")]
   checkmate::assertDirectoryExists(databaseFolders)
 
   return(databaseFolders)
@@ -111,7 +108,6 @@ extractCSV <- function(databaseFolders, configData, logger) {
   data <- list()
   cli::cli_h2("Processing CSV files from {length(databaseFolders)} folder{?s}")
   for (i in 1:length(databaseFolders)) {
-    # i <- 1
     filesList <- databaseFolders[i]
     filesLocation <- list.files(filesList,
                                 pattern = ".csv",
@@ -144,10 +140,7 @@ processCSV <- function(data = NULL, filesLocation, configData, databaseName, log
   checkmate::assertList(data)
   # Iterates and checks every csv file and adds it
   for (i in 1:length(filesLocation)) {
-    # i <- 1
     resultsData <- read_csv(filesLocation[i], show_col_types = FALSE, col_types = c(.default = "c"))
-    resultsData
-    # vroom::problems(resultsData)
     resultsColumns <- names(resultsData)
     # Change estimate values to character
     if ("estimate_value" %in% resultsColumns) {
@@ -202,7 +195,7 @@ loadFileData <- function(data,
                          resultsColumns,
                          databaseName,
                          logger) {
-
+  cli::cli_h2("Processing file {basename(fileName)}")
   if (all(resultsColumns %in% names(omopgenerics::emptySummarisedResult()))) {
     # TODO: Pack the following in a function and test it
 
