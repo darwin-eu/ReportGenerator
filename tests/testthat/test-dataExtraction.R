@@ -21,6 +21,8 @@ test_that("Attrition", {
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
                                  unzipDir = unzipDir,
                                  logger = logger)
+
+  saveRDS(uploadedFiles, file = "C:\\Users\\cbarboza\\Documents\\darwin-docs\\studyPackages\\P3C1003Chondrosarcoma\\inst\\shiny\\results\\uploadedFiles2.rds")
   expect_equal(length(uploadedFileDataList), 4)
   expect_type(uploadedFileDataList, "list")
   unlink(unzipDir, recursive = TRUE)
