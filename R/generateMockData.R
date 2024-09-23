@@ -59,7 +59,7 @@ generateMockData <- function(databaseName = c("CHUBX",
 
 
     # Generate data
-
+    cohortAttritionData <- getAttritionResult()
     incidencePrevalenceData <- getIncidencePrevalence(sampleSize = sampleSize)
     treatmentPathwaysData <- getTreatmentPathways()
     summarised_characteristics <- getCharacteristicsResult()
@@ -68,7 +68,8 @@ generateMockData <- function(databaseName = c("CHUBX",
 
     # Gather data
 
-    dataList <- list("incidence_estimates" = incidencePrevalenceData$incidence_estimates,
+    dataList <- list("cohortAttrition" = cohortAttritionData,
+                     "incidence_estimates" = incidencePrevalenceData$incidence_estimates,
                      "prevalence_estimates" = incidencePrevalenceData$prevalence_estimates,
                      "incidence_attrition" = incidencePrevalenceData$incidence_attrition,
                      "prevalence_attrition" = incidencePrevalenceData$incidence_attrition,
@@ -103,6 +104,35 @@ generateMockData <- function(databaseName = c("CHUBX",
   return(dataList)
 }
 
+getAttritionResult <- function() {
+
+  con <- DBI::dbConnect(duckdb::duckdb(),
+                        dbdir = CDMConnector::eunomia_dir()
+  )
+
+  cdm <- CDMConnector::cdm_from_con(con,
+                                    cdm_schem = "main",
+                                    write_schema = "main",
+                                    cdm_name = "Eunomia"
+  )
+
+  cdm <- CDMConnector::generateConceptCohortSet(
+    cdm = cdm,
+    name = "injuries",
+    conceptSet = list(
+      "ankle_sprain" = 81151,
+      "ankle_fracture" = 4059173,
+      "forearm_fracture" = 4278672,
+      "hip_fracture" = 4230399
+    ),
+    end = "event_end_date",
+    limit = "all"
+  )
+
+  result <- CDMConnector::attrition(cdm$injuries)
+  return(result)
+}
+
 getIncidencePrevalence <- function(sampleSize) {
 
   checkmate::assert_class(sampleSize, "numeric")
@@ -129,8 +159,7 @@ getIncidencePrevalence <- function(sampleSize) {
                                                                 completeDatabaseIntervals = TRUE,
                                                                 outcomeWashout = 180,
                                                                 repeatedEvents = FALSE,
-                                                                minCellCount = 5,
-                                                                returnParticipants = FALSE)
+                                                                minCellCount = 5)
 
   # Attrition data
   incidence_attrition <- IncidencePrevalence::attrition(incidence_estimates)
