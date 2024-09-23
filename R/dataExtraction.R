@@ -108,6 +108,7 @@ extractCSV <- function(databaseFolders, configData, logger) {
   data <- list()
   cli::cli_h2("Processing CSV files from {length(databaseFolders)} folder{?s}")
   for (i in 1:length(databaseFolders)) {
+    # i <- 1
     filesList <- databaseFolders[i]
     filesLocation <- list.files(filesList,
                                 pattern = ".csv",
@@ -140,6 +141,7 @@ processCSV <- function(data = NULL, filesLocation, configData, databaseName, log
   checkmate::assertList(data)
   # Iterates and checks every csv file and adds it
   for (i in 1:length(filesLocation)) {
+    # i <- 1
     resultsData <- read_csv(filesLocation[i], show_col_types = FALSE, col_types = c(.default = "c"))
     resultsColumns <- names(resultsData)
     # Change estimate values to character
@@ -233,9 +235,11 @@ loadFileData <- function(data,
     return(data)
   } else {
     for (pkg in names(configData)) {
+      # pkg <- "cohortAttrition"
       pkgConfigData <- configData[[pkg]]
 
       for (val in names(pkgConfigData)) {
+        # val <- "cohortAttrition"
         configColumns <- pkgConfigData[[val]]
         configColumns <- unlist(configColumns$names)
         if (val == "incidence_attrition") {
@@ -244,7 +248,14 @@ loadFileData <- function(data,
             resultsData$excluded_records <- as.character(resultsData$excluded_records)
             data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
+        }
+        else if (val == "cohortAttrition") {
+          if (all(configColumns %in% resultsColumns)) {
+            resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
+            resultsData$excluded_records <- as.character(resultsData$excluded_records)
+            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
           }
+        }
           else if (val == "prevalence_attrition") {
             if (all(configColumns %in% resultsColumns) & grepl("prevalence", fileName)) {
               resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)

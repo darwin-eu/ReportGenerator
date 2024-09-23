@@ -12,6 +12,20 @@ test_that("Loading 1 zip files whole study", {
   unlink(unzipDir, recursive = TRUE)
 })
 
+test_that("Attrition", {
+  fileDataPath <- list.files("C:\\Users\\cbarboza\\Documents\\darwin-docs\\studyPackages\\P3C1003Chondrosarcoma\\results",
+                             pattern = "zip",
+                             full.names = TRUE)
+  logger <- log4r::logger()
+  unzipDir <- file.path(tempdir(), "attrition")
+  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
+                                 unzipDir = unzipDir,
+                                 logger = logger)
+  expect_equal(length(uploadedFileDataList), 4)
+  expect_type(uploadedFileDataList, "list")
+  unlink(unzipDir, recursive = TRUE)
+})
+
 test_that("Loading multiple zip files whole study", {
   fileDataPath <- list.files(testthat::test_path("studies", "zip"),
                              pattern = "zip",

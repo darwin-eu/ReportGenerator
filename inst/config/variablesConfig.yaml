@@ -111,3 +111,16 @@ CohortSurvival:
     - estimate_value
     - additional_name
     - additional_level
+cohortAttrition:
+  cohortAttrition:
+    names:
+    - cohort_definition_id
+    - number_records
+    - number_subjects
+    - reason_id
+    - reason
+    - excluded_records
+    - excluded_subjects
+
+
+
