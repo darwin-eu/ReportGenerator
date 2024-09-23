@@ -1,18 +1,20 @@
 tabPanelSelection <- function(selection, uploadedFiles) {
-  if (selection == "Number of participants - Table") {
+  if (selection == "Cohort Attrition - Table") {
     tabPanel(selection, attritionUI(selection, uploadedFiles))
+  } else if (selection == "Number of participants - Table") {
+    tabPanel(selection, attritionIncPrevUI(selection, uploadedFiles))
   } else if (selection == "Incidence Attrition - Table") {
-    tabPanel(selection, attritionUI(selection, uploadedFiles))
+    tabPanel(selection, attritionIncPrevUI(selection, uploadedFiles))
   } else if (selection == "Prevalence Attrition - Table") {
-    tabPanel(selection, attritionUI(selection, uploadedFiles))
+    tabPanel(selection, attritionIncPrevUI(selection, uploadedFiles))
   # } else if (selection == "Number of participants by sex and age group - Table") {
   #   tabPanel(selection, tableUI(selection, uploadedFiles))
   } else if (selection == "Incidence rate per year - Plot") {
-    tabPanel(selection, incidenceUI(selection, uploadedFiles))
+    tabPanel(selection, incidenceSumUI(selection, uploadedFiles))
   } else if (selection == "Incidence rate per year by sex - Plot") {
-    tabPanel(selection, incidenceUI(selection, uploadedFiles))
+    tabPanel(selection, incidenceSumUI(selection, uploadedFiles))
   } else if (selection == "Incidence rate per year by age - Plot") {
-    tabPanel(selection, incidenceUI(selection, uploadedFiles))
+    tabPanel(selection, incidenceSumUI(selection, uploadedFiles))
   } else if (selection == "Prevalence per year - Plot") {
     tabPanel(selection, prevalenceUI(selection, uploadedFiles))
   } else if (selection == "Prevalence per year by sex - Plot") {

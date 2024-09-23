@@ -49,9 +49,14 @@ joinDatabases <- function(fileDataPath,
                                   logger = logger)
 
     # `extractCSV()` iterates folders for CSV files
-    result <- extractCSV(databaseFolders = databaseFolders,
-                       configData = configData,
-                       logger = logger)
+    csv_files <- extractCSV(databaseFolders = databaseFolders,
+                            configData = configData,
+                            logger = logger)
+
+    csv_list <- processCSV(csv_files)
+
+    summarised_result <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list)
+
   } else if (fileType == "csv") {
     cli::cli_progress_step("Processing {length(fileDataPath)} CSV files", spinner = TRUE)
     result <- processCSV(data = list(),
@@ -60,8 +65,8 @@ joinDatabases <- function(fileDataPath,
     cli::cli_process_done()
 
   }
-  cli::cli_alert("Results processed from {names(result)} package{?s}")
-  return(result)
+  # cli::cli_alert("Results processed from {names(result)} package{?s}")
+  return(summarised_result)
 }
 
 #' `unzipFiles()` to a folder per database in a temporary directory for later use in `exctractCSV()`
@@ -108,21 +113,22 @@ unzipFiles <- function(unzipDir, fileDataPath, logger) {
 #'
 #' @return A list objects with summarisedResults
 extractCSV <- function(databaseFolders, configData, logger) {
-  data <- list()
   cli::cli_h2("Processing CSV files from {length(databaseFolders)} folder{?s}")
+  result <- list()
   for (i in 1:length(databaseFolders)) {
     # i <- 1
-    filesList <- databaseFolders[i]
-    filesLocation <- list.files(filesList,
-                                pattern = ".csv",
-                                full.names = TRUE,
-                                recursive = TRUE)
+    filesDir <- databaseFolders[i]
+    filesList <- list.files(filesDir,
+                            pattern = ".csv",
+                            full.names = TRUE,
+                            recursive = TRUE)
+    result <- c(result, filesList) %>%
+      unlist()
     # Iterates every individual csv file
-    data <- processCSV(data, filesLocation, configData, logger)
+    # data <- processCSV(data, filesLocation, configData, logger)
   }
-  return(data)
+  return(result)
 }
-
 #' `processCSV()` iterates every csv file and uses `loadFileData()` to check what type of result it is and adds it to a list
 #'
 #' @param data Results
@@ -132,7 +138,31 @@ extractCSV <- function(databaseFolders, configData, logger) {
 #' @param logger A logger object
 #'
 #' @return A list with all the results organized by type
-processCSV <- function(data = NULL, filesLocation, configData, databaseName, logger) {
+processCSV <- function(csv_files) {
+
+  summarised_result_list <- list()
+  other_result_list <- list()
+
+  for (i in 1:length(csv_files)) {
+    col_names <- names(data.table::fread(csv_files[i], nrows = 0))
+    if (setequal(sort(col_names), sort(omopgenerics::resultColumns()))) {
+      summarised_result_list <- c(summarised_result_list, csv_files[i]) %>%
+        unlist()
+    } else {
+      other_result_list <- c(other_result_list, csv_files[i]) %>%
+        unlist()
+    }
+  }
+
+  result <- list("summarised_result_list" = summarised_result_list,
+                 "other_result_list" = other_result_list)
+  return(result)
+
+}
+
+importOtherResult <- function(filesLocation) {
+
+  filesLocation <- csv_list$other_result_list
 
   if (is.null(data)) {
     data = list()
@@ -144,9 +174,9 @@ processCSV <- function(data = NULL, filesLocation, configData, databaseName, log
   checkmate::assertList(data)
   # Iterates and checks every csv file and adds it
   for (i in 1:length(filesLocation)) {
-    # i <- 1
+    # i <- 3
     resultsData <- read_csv(filesLocation[i], show_col_types = FALSE, col_types = c(.default = "c"))
-    resultsData
+    # resultsData
     # vroom::problems(resultsData)
     resultsColumns <- names(resultsData)
     # Change estimate values to character
@@ -159,7 +189,7 @@ processCSV <- function(data = NULL, filesLocation, configData, databaseName, log
     data <- loadFileData(data, filesLocation[i], configData, resultsData,
                          resultsColumns, databaseName, logger)
   }
-  return(data)
+  # return(data)
 }
 
 getFileType <- function(fileDataPath) {
@@ -240,6 +270,7 @@ loadFileData <- function(data,
     return(data)
   } else {
     for (pkg in names(configData)) {
+      # pkg <- "cohortAttrition"
       pkgConfigData <- configData[[pkg]]
 
       for (val in names(pkgConfigData)) {
@@ -280,6 +311,10 @@ loadFileData <- function(data,
               if (!('cdm_name' %in% resultsColumns)) {
                 resultsData <- mutate(resultsData, cdm_name = databaseName)
                 }
+              data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+            }
+          } else if (val == "cohortAttrition") {
+            if (all(configColumns %in% resultsColumns)) {
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           }
@@ -456,6 +491,46 @@ variablesConfigYaml <- function(fileDataPath = NULL,
     configData[[package]][[version]][[unique(MGUS_death$result_type)]][["names"]] <- columnSurvival
     write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
   }
+}
+
+#' `variablesConfigAttrition()` extracts to variablesConfig file the columns to identify Cohort Attrition
+#'
+#' @param path To a cohort attrition CSV file
+#'
+#' @return Updates the yaml config file
+variablesConfigAttrition <- function(path) {
+  outputDir <- file.path(tempdir(), "dataLocation")
+  dir.create(outputDir)
+  utils::unzip(zipfile = fileDataPath,
+               exdir = outputDir)
+  csvFiles <- list.files(path = outputDir,
+                         pattern = ".csv",
+                         full.names = TRUE,
+                         recursive = TRUE)
+
+  incidenceEstimatesPath <- csvFiles[stringr::str_detect(csvFiles, "incidence_estimates")]
+  incidenceEstimates <- read_csv(incidenceEstimatesPath, show_col_types = FALSE)
+  columnNamesIncidence <- names(incidenceEstimates)[grepl("incidence", names(incidenceEstimates))]
+  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+  configData[[package]][[version]][["incidence_estimates"]][["names"]] <- columnNamesIncidence
+  write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+  prevalenceEstimatesPath <- csvFiles[stringr::str_detect(csvFiles, "prevalence_estimates")]
+  prevalenceEstimates <- read_csv(prevalenceEstimatesPath, show_col_types = FALSE)
+  columnNamesPrevalence <- names(prevalenceEstimates)[grepl("prevalence", names(prevalenceEstimates))]
+  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+  configData[[package]][[version]][["prevalence_estimates"]][["names"]] <- columnNamesPrevalence
+  write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+  incidenceAttritionPath <- csvFiles[stringr::str_detect(csvFiles, "incidence_attrition")]
+  incidenceAttrition <- read_csv(incidenceAttritionPath, show_col_types = FALSE)
+  columnNamesIncidenceAttrition <- setdiff(names(incidenceAttrition), names(incidenceEstimates))
+  configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+  configData[[package]][[version]][["incidence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
+  configData[[package]][[version]][["prevalence_attrition"]][["names"]] <- columnNamesIncidenceAttrition
+  write_yaml(configData, system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
+
+  unlink(outputDir, recursive = TRUE)
 }
 
 #' Clean attrition data

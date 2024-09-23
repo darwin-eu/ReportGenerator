@@ -1,7 +1,22 @@
 # IncidencePrevalence
+test_that("Analysis Names", {
+
+
+
+})
 
 test_that("getItemsList all", {
-  items <- c("incidence_attrition",
+  items <- c("incidence", "summarised_large_scale_characteristics", "point_prevalence",
+             "period_prevalence", "summarised_characteristics", "competing_risk",
+             "single_event")
+  menuList <- getItemsList(items)
+  expect_equal(length(menuList), 17)
+})
+
+
+test_that("getItemsList all", {
+  items <- c("cohortAttrition",
+            "incidence_attrition",
              "prevalence_attrition",
              "incidence_estimates",
              "prevalence_estimates",
@@ -11,7 +26,13 @@ test_that("getItemsList all", {
              "single_event",
              "competing_risk")
   menuList <- getItemsList(items)
-  expect_equal(length(menuList), 16)
+  expect_equal(length(menuList), 17)
+})
+
+test_that("getItemsList cohort attrition", {
+  items <- "cohortAttrition"
+  menuList <- getItemsList(items)
+  expect_equal(menuList, "Cohort Attrition - Table")
 })
 
 test_that("getItemsList attrition both", {

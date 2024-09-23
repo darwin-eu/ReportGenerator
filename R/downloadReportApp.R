@@ -5,7 +5,7 @@ downloadReportApp <- function(reportItems, logger = NULL) {
           page.spinner.type = 5, page.spinner.color = "#0dc5c1")
 
   ui <- dashboardPage(
-    dashboardHeader(title = "ReportGenerator"),
+    dashboardHeader(title = glue::glue("ReportGenerator {packageVersion('ReportGenerator')}")),
     dashboardSidebar(
       sidebarMenu(
         # uiOutput("navPanelPreview")

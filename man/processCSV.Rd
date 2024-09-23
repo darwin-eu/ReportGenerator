@@ -4,7 +4,7 @@
 \alias{processCSV}
 \title{`processCSV()` iterates every csv file and uses `loadFileData()` to check what type of result it is and adds it to a list}
 \usage{
-processCSV(data = NULL, filesLocation, configData, databaseName, logger)
+processCSV(csv_files)
 }
 \arguments{
 \item{data}{Results}

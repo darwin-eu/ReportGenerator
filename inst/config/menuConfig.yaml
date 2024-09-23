@@ -1,3 +1,9 @@
+cohortAttritionTable:
+  title: "Cohort Attrition - Table"
+  function: cohortAttritionTable(incidence_attrition, prevalence_attrition)
+  type:
+    - cohortAttrition
+  options: NULL
 table1NumPar:
   title: "Number of participants - Table"
   function: table1NumPar(incidence_attrition, prevalence_attrition)
@@ -27,37 +33,40 @@ plotIncidenceYear:
   title: "Incidence rate per year - Plot"
   function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)
   type:
-    - incidence_estimates
+    - incidence
   options: Facet by outcome, Facet by database, Ribbon, Options
 plotIncidenceSex:
   title: "Incidence rate per year by sex - Plot"
   function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)
   type:
-    - incidence_estimates
+    - incidence
   options: Facet by outcome, Facet by database, Ribbon, Options
 plotIncidenceAge:
   title: "Incidence rate per year by age - Plot"
   function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)
   type:
-    - incidence_estimates
+    - incidence
   options: Facet by outcome, Facet by database, Ribbon, Options
 plotPrevalenceYear:
   title: "Prevalence per year - Plot"
   function: plotPrevalence(prevalence_estimates, colour, facet, ribbon, options)
   type:
-    - prevalence_estimates
+    - point_prevalence
+    - period_prevalence
   options: Facet by outcome, Facet by database, Ribbon, Options
 plotPrevalenceSex:
   title: "Prevalence per year by sex - Plot"
   function: plotPrevalence(prevalence_estimates, colour, facet, ribbon, options)
   type:
-    - prevalence_estimates
+    - point_prevalence
+    - period_prevalence
   options: Facet by outcome, Facet by database, Ribbon, Options
 plotPrevalenceAge:
   title: "Prevalence per year by age - Plot"
   function: plotPrevalence(prevalence_estimates, colour, facet, ribbon, options)
   type:
-    - prevalence_estimates
+    - point_prevalence
+    - period_prevalence
   options: Facet by outcome, Facet by database, Ribbon, Options
 treatmentPathways:
   title: "Treatment Pathways Interactive Plots"

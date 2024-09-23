@@ -37,7 +37,7 @@ generateMockData <- function(databaseName = c("CHUBX",
                                               "SIDIAP"),
                              simulatePopulation = TRUE,
                              outputPath = testthat::test_path("studies", "zip"),
-                             internal = FALSE) {
+                             internal = TRUE) {
 
   if (!dir.exists(outputPath)) {
     dir.create(outputPath, recursive = TRUE)
@@ -46,6 +46,7 @@ generateMockData <- function(databaseName = c("CHUBX",
   result <- list()
 
   for (dbName in databaseName) {
+    # dbName <- "CPRD_GOLD"
     if (simulatePopulation == TRUE) {
         sampleSize <- case_when(
           dbName == "CHUBX" ~ 21523,
@@ -68,37 +69,73 @@ generateMockData <- function(databaseName = c("CHUBX",
 
     # Gather data
 
-    dataList <- list("incidence_estimates" = incidencePrevalenceData$incidence_estimates,
-                     "prevalence_estimates" = incidencePrevalenceData$prevalence_estimates,
-                     "incidence_attrition" = incidencePrevalenceData$incidence_attrition,
-                     "prevalence_attrition" = incidencePrevalenceData$incidence_attrition,
-                     "treatmentPathways" = treatmentPathwaysData$treatmentPathways,
-                     "metadata" = treatmentPathwaysData$metadata,
-                     "summaryStatsTherapyDuration" = treatmentPathwaysData$summaryStatsTherapyDuration,
-                     "summarised_characteristics" = summarised_characteristics,
-                     "summarised_large_scale_characteristics" = summarised_large_scale_characteristics,
-                     "single_event" = cohortSurvivalData$single_event,
-                     "competing_risk" = cohortSurvivalData$competing_risk)
+    dataList <- list("IncidencePrevalence" = list("incidence_estimates" = incidencePrevalenceData$incidence_estimates,
+                                                  "prevalence_estimates" = incidencePrevalenceData$prevalence_estimates,
+                                                  "incidence_attrition" = incidencePrevalenceData$incidence_attrition,
+                                                  "prevalence_point_attrition" = incidencePrevalenceData$prevalence_point_attrition,
+                                                  "prevalence_period_attrition" = incidencePrevalenceData$prevalence_period_attrition),
+                     "CohortCharacteristics" = list("summarised_characteristics" = summarised_characteristics,
+                                                    "summarised_large_scale_characteristics" = summarised_large_scale_characteristics),
+                     "CohortSurvival" = list("single_event" = cohortSurvivalData$single_event,
+                                             "competing_risk" = cohortSurvivalData$competing_risk),
+                     "TreatmentPatterns" = list("treatmentPathways" = treatmentPathwaysData$treatmentPathways,
+                                                "metadata" = treatmentPathwaysData$metadata,
+                                                "summaryStatsTherapyDuration" = treatmentPathwaysData$summaryStatsTherapyDuration)
+    )
 
     # Insert database name
 
-    dataList <- lapply(dataList, mutate, cdm_name = dbName)
+    resultListIP <- lapply(dataList$IncidencePrevalence, mutate, cdm_name = dbName)
+    resultListCC <- lapply(dataList$CohortCharacteristics, mutate, cdm_name = dbName)
+    resultListCS <- lapply(dataList$CohortSurvival, mutate, cdm_name = dbName)
+    resultListTP <- lapply(dataList$TreatmentPatterns, mutate, cdm_name = dbName)
 
-    dataList[["treatmentPathways"]] <- treatmentPathwaysData$treatmentPathways
-    dataList[["metadata"]] <- treatmentPathwaysData$metadata
-    dataList[["summaryStatsTherapyDuration"]] <- treatmentPathwaysData$summaryStatsTherapyDuration
+    dataList[["IncidencePrevalence"]][["incidence_estimates"]] <- resultListIP$incidence_estimates
+    dataList[["IncidencePrevalence"]][["prevalence_estimates"]] <- resultListIP$prevalence_estimates
+    dataList[["IncidencePrevalence"]][["incidence_attrition"]] <- resultListIP$incidence_attrition
+    dataList[["IncidencePrevalence"]][["prevalence_point_attrition"]] <- resultListIP$prevalence_point_attrition
+    dataList[["IncidencePrevalence"]][["prevalence_period_attrition"]] <- resultListIP$prevalence_period_attrition
+    dataList[["CohortCharacteristics"]][["summarised_characteristics"]] <- resultListCC$summarised_characteristics
+    dataList[["CohortCharacteristics"]][["summarised_large_scale_characteristics"]] <- resultListCC$summarised_large_scale_characteristics
+    dataList[["CohortSurvival"]][["single_event"]] <- resultListCS$single_event
+    dataList[["CohortSurvival"]][["competing_risk"]] <- resultListCS$competing_risk
+    dataList[["TreatmentPatterns"]][["treatmentPathways"]] <- resultListTP$treatmentPathways
+    dataList[["TreatmentPatterns"]][["metadata"]] <- resultListTP$metadata
+    dataList[["TreatmentPatterns"]][["summaryStatsTherapyDuration"]] <- resultListTP$summaryStatsTherapyDuration
 
     exportResults(resultList = dataList,
                   zipName = paste0("mock_data_", dbName),
                   outputFolder = outputPath)
+
+    if (internal) {
+      if (identical(result, list())) {
+        result <- dataList
+      } else {
+        result[["IncidencePrevalence"]][["incidence_estimates"]] <- dplyr::bind_rows(result[["IncidencePrevalence"]][["incidence_estimates"]], dataList[["IncidencePrevalence"]][["incidence_estimates"]])
+        result[["IncidencePrevalence"]][["prevalence_estimates"]] <- dplyr::bind_rows(result[["IncidencePrevalence"]][["prevalence_estimates"]], dataList[["IncidencePrevalence"]][["prevalence_estimates"]])
+        result[["IncidencePrevalence"]][["incidence_attrition"]] <- dplyr::bind_rows(result[["IncidencePrevalence"]][["incidence_attrition"]], dataList[["IncidencePrevalence"]][["incidence_attrition"]])
+        result[["IncidencePrevalence"]][["prevalence_attrition"]] <- dplyr::bind_rows(result[["IncidencePrevalence"]][["prevalence_attrition"]], dataList[["IncidencePrevalence"]][["prevalence_attrition"]])
+        result[["CohortCharacteristics"]][["summarised_characteristics"]] <- omopgenerics::bind(result[["CohortCharacteristics"]][["summarised_characteristics"]] , dataList[["CohortCharacteristics"]][["summarised_characteristics"]] )
+        result[["CohortCharacteristics"]][["summarised_large_scale_characteristics"]] <- omopgenerics::bind(result[["CohortCharacteristics"]][["summarised_large_scale_characteristics"]], dataList[["CohortCharacteristics"]][["summarised_large_scale_characteristics"]])
+        result[["CohortSurvival"]][["single_event"]] <- omopgenerics::bind(result[["CohortSurvival"]][["single_event"]] , dataList[["CohortSurvival"]][["single_event"]])
+        result[["CohortSurvival"]][["competing_risk"]] <- omopgenerics::bind(result[["CohortSurvival"]][["competing_risk"]], dataList[["CohortSurvival"]][["competing_risk"]])
+        result[["TreatmentPatterns"]][["treatmentPathways"]] <- dplyr::bind_rows(result[["TreatmentPatterns"]][["treatmentPathways"]], dataList[["TreatmentPatterns"]][["treatmentPathways"]])
+        result[["TreatmentPatterns"]][["metadata"]] <- dplyr::bind_rows(result[["TreatmentPatterns"]][["metadata"]], dataList[["TreatmentPatterns"]][["metadata"]])
+        result[["TreatmentPatterns"]][["summaryStatsTherapyDuration"]] <- dplyr::bind_rows(result[["TreatmentPatterns"]][["summaryStatsTherapyDuration"]], dataList[["TreatmentPatterns"]][["summaryStatsTherapyDuration"]])
+      }
+
+
+    }
   }
 
   if (internal) {
-    testData <- dataList
+    testData <- result
     usethis::use_data(testData,
                       internal = TRUE,
                       overwrite = TRUE)
   }
+
+
   duckdb::duckdb_shutdown(duckdb::duckdb())
   return(dataList)
 }
@@ -107,63 +144,73 @@ getIncidencePrevalence <- function(sampleSize) {
 
   checkmate::assert_class(sampleSize, "numeric")
 
-  cdm <- IncidencePrevalence::mockIncidencePrevalenceRef(
-    sampleSize = sampleSize,
-    outPre = 0.5)
+  cdm <- IncidencePrevalence::mockIncidencePrevalenceRef(sampleSize = sampleSize,
+                                                         outPre = 0.3,
+                                                         minOutcomeDays = 365,
+                                                         maxOutcomeDays = 3650)
 
   # Denominator data
-  cdm <- IncidencePrevalence::generateDenominatorCohortSet(cdm = cdm,
-                                                           name = "denominator",
-                                                           cohortDateRange = c(as.Date("2008-01-01"),
-                                                                               as.Date("2012-01-01")),
-                                                           ageGroup  = list(c(18, 39),
-                                                                            c(40, 59),
-                                                                            c(18, 99)),
-                                                           sex  = c("Female", "Male", "Both"),
-                                                           daysPriorObservation = 365)
+  cdm <- IncidencePrevalence::generateDenominatorCohortSet(
+    cdm = cdm,
+    name = "denominator",
+    cohortDateRange = c(as.Date("2008-01-01"), as.Date("2018-01-01")),
+    ageGroup = list(
+      c(0, 64),
+      c(65, 100)
+    ),
+    sex = c("Male", "Female", "Both"),
+    daysPriorObservation = 180
+  )
   # Incidence data
-  incidence_estimates <- IncidencePrevalence::estimateIncidence(cdm = cdm,
-                                                                denominatorTable = "denominator",
-                                                                outcomeTable = "outcome",
-                                                                interval = c("years", "overall"),
-                                                                completeDatabaseIntervals = TRUE,
-                                                                outcomeWashout = 180,
-                                                                repeatedEvents = FALSE,
-                                                                minCellCount = 5,
-                                                                returnParticipants = FALSE)
+  incidence_estimates <- IncidencePrevalence::estimateIncidence(
+    cdm = cdm,
+    denominatorTable = "denominator",
+    outcomeTable = "outcome",
+    interval = "years",
+    repeatedEvents = TRUE,
+    outcomeWashout = 180,
+    completeDatabaseIntervals = TRUE,
+    minCellCount = 5
+  )
 
   # Attrition data
   incidence_attrition <- IncidencePrevalence::attrition(incidence_estimates)
 
   # Period prevalence
-  prevalencePeriod <- IncidencePrevalence::estimatePeriodPrevalence(cdm = cdm,
-                                                                    denominatorTable = "denominator",
-                                                                    outcomeTable = "outcome")
+  prevalencePeriod <- IncidencePrevalence::estimatePeriodPrevalence(
+    cdm = cdm,
+    denominatorTable = "denominator",
+    outcomeTable = "outcome",
+    interval = "years",
+    completeDatabaseIntervals = TRUE,
+    fullContribution = TRUE,
+    minCellCount = 5
+  )
 
   # Attrition data
   prevalence_period_attrition <- IncidencePrevalence::attrition(prevalencePeriod)
 
   # Point prevalence
-  prevalencePoint <- IncidencePrevalence::estimatePointPrevalence(cdm = cdm,
-                                                                  denominatorTable = "denominator",
-                                                                  outcomeTable = "outcome",
-                                                                  interval = "years",
-                                                                  timePoint = "start")
+  prevalencePoint <- IncidencePrevalence::estimatePointPrevalence(
+    cdm = cdm,
+    denominatorTable = "denominator",
+    outcomeTable = "outcome",
+    interval = "years",
+    timePoint = "start",
+    minCellCount = 5
+  )
   # Attrition data
   prevalence_point_attrition <- IncidencePrevalence::attrition(prevalencePoint)
 
-
-
   # Join data
-  prevalence_estimates <- rbind(prevalencePoint,
-                                prevalencePeriod)
-  prevalence_attrition <- rbind(prevalence_point_attrition,
-                                prevalence_period_attrition)
+  prevalence_estimates <- omopgenerics::bind(prevalencePoint, prevalencePeriod)
+  prevalence_attrition <- rbind(prevalence_point_attrition, prevalence_period_attrition)
 
   result <- list("incidence_estimates" = incidence_estimates,
                  "incidence_attrition" = incidence_attrition,
                  "prevalence_estimates" = prevalence_estimates,
-                 "prevalence_attrition" = prevalence_attrition)
+                 "prevalence_point_attrition" = prevalence_point_attrition,
+                 "prevalence_period_attrition" = prevalence_period_attrition)
 
   duckdb::duckdb_shutdown(duckdb::duckdb())
   return(result)

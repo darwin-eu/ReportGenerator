@@ -221,9 +221,12 @@ exportResults <- function(resultList,
 
   # write results to disk
   for (i in seq_along(resultList)) {
-    # i <- 12
-    workingResult <- resultList[[i]]
-    workingName <- names(resultList)[[i]]
+    # i <- 1
+    for (k in seq_along(resultList[[i]])) {
+      # k <- 1
+    workingResult <- resultList[[i]][[k]]
+    classWorkingResult <- class(workingResult)
+    workingName <- names(resultList[[i]])[[k]]
     if (workingName == "summarised_large_scale_characteristics") {
       fileName <- paste0(
         unique(workingResult$cdm_name), "_",
@@ -242,9 +245,9 @@ exportResults <- function(resultList,
       workingName <- paste0("result_", i)
     }
 
-    if (workingName == "summarised_characteristics" | workingName == "summarised_large_scale_characteristics" | workingName == "single_event" | workingName == "competing_risk") {
+    if ("summarised_result" %in% classWorkingResult) {
       omopgenerics::exportSummarisedResult(workingResult, fileName = fileName, path = tempDir)
-    } else {
+    } else if (workingName == "treatmentPathways" | workingName == "metadata" | workingName == "summaryStatsTherapyDuration" | workingName == "incidence_attrition" | workingName == "prevalence_point_attrition" | workingName == "prevalence_period_attrition") {
       utils::write.csv(workingResult,
                        file = file.path(
                          tempDir,
@@ -259,7 +262,7 @@ exportResults <- function(resultList,
       )
     }
   }
-
+}
   zip::zip(
     zipfile = file.path(outputFolder, paste0(zipName, ".zip")),
     files = list.files(tempDir, full.names = TRUE)
@@ -335,4 +338,21 @@ createDataTable <- function(data, tableName = "result") {
                                    text = "Download"
                                  ))),
                 class = "display")
+}
+
+analysisNames <- function(settingsData) {
+  # settingsData <- settings(uploadedFilesList)
+  analysisNames <- settingsData %>%
+    pull(result_type) %>%
+    unique()
+
+  if ("survival" %in% analysisNames) {
+    survivalAnalysisType <- settingsData %>%
+      filter(result_type == "survival") %>%
+      pull(analysis_type) %>%
+      unique()
+    analysisNames <- analysisNames[-which(analysisNames == "survival")]
+    analysisNames <- c(analysisNames, survivalAnalysisType)
+  }
+  return(analysisNames)
 }

@@ -1,13 +1,13 @@
 test_that("summarised Characteristics and LSC", {
   testServer(reportGenerator(), {
     expect_s3_class(characteristicsUI("characteristics",
-                                      testData$summarised_characteristics), "shiny.tag.list")
+                                      uploadedFiles = testData), "shiny.tag.list")
     expect_s3_class(characteristicsServer("characteristics",
-                                          testData$summarised_characteristics), "reactiveVal")
+                                          uploadedFiles = testData), "reactiveVal")
     expect_s3_class(characteristicsUI("lsc",
-                                      testData$summarised_large_scale_characteristics), "shiny.tag.list")
+                                      uploadedFiles = testData), "shiny.tag.list")
     expect_s3_class(characteristicsServer("lsc",
-                                          testData$summarised_large_scale_characteristics), "reactiveVal")
+                                          uploadedFiles = testData), "reactiveVal")
   })
 })
 
@@ -22,8 +22,8 @@ test_that("summarised Characteristics and LSC", {
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1],
                                 logger = logger)
   testServer(reportGenerator(), {
-    expect_s3_class(characteristicsUI("characteristics", uploadedFiles$PatientProfiles$summarised_characteristics), "shiny.tag.list")
-    expect_s3_class(characteristicsServer("characteristics", uploadedFiles$PatientProfiles$summarised_characteristics), "reactiveVal")
+    expect_s3_class(characteristicsUI("characteristics", uploadedFiles), "shiny.tag.list")
+    expect_s3_class(characteristicsServer("characteristics", uploadedFiles), "reactiveVal")
   })
 })
 
@@ -48,11 +48,7 @@ test_that("settings for LSC filter", {
 
   settingsLSC <- settings(data$CohortCharacteristics$summarised_large_scale_characteristics)
 
-  unique(uploadedFiles$CohortCharacteristics$summarised_large_scale_characteristics$result_id)
-
   settingsLSC %>% select(result_id, )
-
-
 
   settings(data$CohortCharacteristics$summarised_characteristics)
 
@@ -75,7 +71,7 @@ test_that("settings for LSC filter", {
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1],
                                  logger = logger)
   testServer(reportGenerator(), {
-    expect_s3_class(characteristicsUI("characteristics", uploadedFiles$PatientProfiles$summarised_characteristics), "shiny.tag.list")
-    expect_s3_class(characteristicsServer("characteristics", uploadedFiles$PatientProfiles$summarised_characteristics), "reactiveVal")
+    expect_s3_class(characteristicsUI("characteristics", uploadedFiles), "shiny.tag.list")
+    expect_s3_class(characteristicsServer("characteristics", uploadedFiles), "reactiveVal")
   })
 })
