@@ -141,7 +141,7 @@ processCSV <- function(data = NULL, filesLocation, configData, databaseName, log
   checkmate::assertList(data)
   # Iterates and checks every csv file and adds it
   for (i in 1:length(filesLocation)) {
-    # i <- 1
+    # i <- 7
     resultsData <- read_csv(filesLocation[i], show_col_types = FALSE, col_types = c(.default = "c"))
     resultsColumns <- names(resultsData)
     # Change estimate values to character
