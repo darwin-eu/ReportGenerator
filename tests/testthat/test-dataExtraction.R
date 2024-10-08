@@ -1,3 +1,50 @@
+test_that("Complete sequence of functions inside joinDatabases ZIP", {
+
+  # fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  #                            pattern = "zip",
+  #                            full.names = TRUE)
+  fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\010\\p3-c1-010-results-ipci\\p3-c1-010-results-ipci\\results_IPCI.zip"
+  checkmate::assertCharacter(fileDataPath)
+
+  # Configuration
+  configData <- yaml.load_file(system.file("config",
+                                           "variablesConfig.yaml",
+                                           package = "ReportGenerator"))
+  packagesNames <- names(configData)
+  fileType <- getFileType(fileDataPath)
+  unzipDir <- unzipDir()
+
+  # `unzipFiles()` Unzip files
+  databaseFolders <- unzipFiles(unzipDir = unzipDir,
+                                fileDataPath = fileDataPath,
+                                logger = logger)
+
+  # `extractCSV()` iterates folders for CSV files
+  csv_files <- extractCSV(databaseFolders = databaseFolders,
+                          configData = configData,
+                          logger = logger)
+
+
+  # grep("incidence", csv_files, value = TRUE)
+  #
+  # acne_suicide_incidence_results <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list[2])
+  # glimpse(settings(acne_suicide_incidence_results))
+  #
+  # overall_suicide_incidence_results <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list[4])
+  # glimpse(settings(overall_suicide_incidence_results))
+  #
+  # psoriasis_suicide_incidence_results <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list[2])
+  # glimpse(settings(psoriasis_suicide_incidence_results))
+
+  # Get list of csv files
+  csv_list <- processCSV(csv_files)
+
+  csv_list$summarised_result_list
+
+  summarised_result <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list)
+
+})
+
 test_that("Loading 1 zip files whole study", {
   fileDataPath <- list.files(testthat::test_path("studies", "zip"),
                              pattern = "zip",

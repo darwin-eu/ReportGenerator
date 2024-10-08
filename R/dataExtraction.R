@@ -38,7 +38,7 @@ joinDatabases <- function(fileDataPath,
                                            package = "ReportGenerator"))
   packagesNames <- names(configData)
   fileType <- getFileType(fileDataPath)
-  unzipDir <- file.path(tempdir(), "unzipData")
+  unzipDir <- unzipDir()
 
   # Check zip
   if (fileType == "zip") {
@@ -84,6 +84,8 @@ unzipFiles <- function(unzipDir, fileDataPath, logger) {
     dir.create(unzipDir)
   }
 
+  checkmate::assert_directory_exists(unzipDir)
+
   folderNumber <- 0
   # Unzipping puts the files in a separate folder
   for (fileLocation in fileDataPath) {
@@ -113,7 +115,7 @@ unzipFiles <- function(unzipDir, fileDataPath, logger) {
 #'
 #' @return A list objects with summarisedResults
 extractCSV <- function(databaseFolders, configData, logger) {
-  cli::cli_h2("Processing CSV files from {length(databaseFolders)} folder{?s}")
+  cli::cli_alert("Extracting CSV files from {length(databaseFolders)} folder{?s}")
   result <- list()
   for (i in 1:length(databaseFolders)) {
     # i <- 1
@@ -139,7 +141,7 @@ extractCSV <- function(databaseFolders, configData, logger) {
 #'
 #' @return A list with all the results organized by type
 processCSV <- function(csv_files) {
-
+  cli::cli_alert("Processing CSV files")
   summarised_result_list <- list()
   other_result_list <- list()
 
@@ -385,6 +387,12 @@ selectColsLSC <- function(data) {
   return(result)
 }
 
+unzipDir <- function() {
+  directory <- file.path(tempdir(), getRandomId())
+  return(directory)
+}
+
+
 #' Writes variablesConfig file in Yaml
 #'
 #' `variablesConfigYaml()` the user can load the column names to the variablesConfig.yaml so ReportGenerator can recognize its data.
@@ -583,6 +591,8 @@ dataCleanAttrition <- function(attrition) {
     return(attrition)
   }
 }
+
+
 
 #' #' `testData()` extracts data from zip results and saves it in .rda format
 #' #' @param testFilesIP testthat dir location of the test files with version number of folder (internal use).
