@@ -122,11 +122,11 @@ reportGenerator <- function(logger = NULL) {
     datasetLoadServer("StudyPackage")
 
     # ReactiveValues for data and items menu
-    # uploadedFiles <- reactiveValues(cohortAttrition = NULL,
-    #                                 IncidencePrevalence = NULL,
-    #                                 TreatmentPatterns = NULL,
-    #                                 CohortCharacteristics = NULL,
-    #                                 CohortSurvival = NULL)
+    uploadedFiles <- reactiveValues(cohortAttrition = NULL,
+                                    incidence = NULL,
+                                    TreatmentPatterns = NULL,
+                                    CohortCharacteristics = NULL,
+                                    CohortSurvival = NULL)
     itemsList <- reactiveValues(objects = NULL)
 
     # Check input data
@@ -138,22 +138,20 @@ reportGenerator <- function(logger = NULL) {
       fileDataPath <- inFile$datapath
       fileName <- inFile$name
       # Joins one or several zips into the reactive value
-      uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
-                                         fileName = fileName,
-                                         logger = logger)
-      if (length(uploadedFiles) == 0) {
+      uploadedData <- joinDatabases(fileDataPath = fileDataPath)
+      if (length(uploadedData) == 0) {
         show_alert(title = "Data mismatch",
                    text = "No valid package files found")
       }
 
-      settingsData <- settings(uploadedFiles)
+      settingsData <- settings(uploadedData)
       items <- analysisNames(settingsData = settingsData)
       itemsList$objects[["items"]] <- getItemsList(items)
 
-
-      # if ("IncidencePrevalence" %in% pkgNames) {
-      #   uploadedFiles$IncidencePrevalence <- uploadedFilesList[["IncidencePrevalence"]]
-      # }
+      if ("incidence" %in% items) {
+        uploadedFiles$incidence <- getIncidencePrevalence(uploadedData = uploadedData,
+                                                                    type = "incidence")
+      }
       # if ("TreatmentPatterns" %in% pkgNames) {
       #   uploadedFiles$TreatmentPatterns <- uploadedFilesList[["TreatmentPatterns"]]
       # }
@@ -189,7 +187,7 @@ reportGenerator <- function(logger = NULL) {
     observeEvent(input$resetData, {
       itemsList$objects <- NULL
       uploadedFiles <- reactiveValues(cohortAttrition = NULL,
-                                      IncidencePrevalence = NULL,
+                                      incidence = NULL,
                                       TreatmentPatterns = NULL,
                                       CohortCharacteristics = NULL,
                                       CohortSurvival = NULL)
@@ -319,7 +317,7 @@ reportGenerator <- function(logger = NULL) {
       # Year
 
     dataIncidenceYear <- incidenceSumServer(id = "Incidence rate per year - Plot",
-                                         reactive(uploadedFiles))
+                                         reactive(uploadedFiles$incidence))
 
     observe({
       for (key in names(dataIncidenceYear())) {

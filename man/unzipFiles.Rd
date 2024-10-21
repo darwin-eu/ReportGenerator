@@ -4,14 +4,12 @@
 \alias{unzipFiles}
 \title{`unzipFiles()` to a folder per database in a temporary directory for later use in `exctractCSV()`}
 \usage{
-unzipFiles(unzipDir, fileDataPath, logger)
+unzipFiles(unzipDir, fileDataPath)
 }
 \arguments{
 \item{unzipDir}{Locations of the folder to unzip files}
 
 \item{fileDataPath}{Locations of the files to unzip}
-
-\item{logger}{A logger object}
 }
 \value{
 The databaseFolders to which the files were unzipped

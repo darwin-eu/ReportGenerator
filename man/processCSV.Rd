@@ -14,8 +14,6 @@ processCSV(csv_files)
 \item{configData}{Data from yaml configuration file}
 
 \item{databaseName}{Database name from TreatmentPatterns}
-
-\item{logger}{A logger object}
 }
 \value{
 A list with all the results organized by type

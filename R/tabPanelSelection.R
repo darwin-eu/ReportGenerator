@@ -10,7 +10,7 @@ tabPanelSelection <- function(selection, uploadedFiles) {
   # } else if (selection == "Number of participants by sex and age group - Table") {
   #   tabPanel(selection, tableUI(selection, uploadedFiles))
   } else if (selection == "Incidence rate per year - Plot") {
-    tabPanel(selection, incidenceSumUI(selection, uploadedFiles))
+    tabPanel(selection, incidenceSumUI(selection, uploadedFiles = uploadedFiles$incidence))
   } else if (selection == "Incidence rate per year by sex - Plot") {
     tabPanel(selection, incidenceSumUI(selection, uploadedFiles))
   } else if (selection == "Incidence rate per year by age - Plot") {

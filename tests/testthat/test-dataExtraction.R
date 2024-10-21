@@ -16,13 +16,11 @@ test_that("Complete sequence of functions inside joinDatabases ZIP", {
 
   # `unzipFiles()` Unzip files
   databaseFolders <- unzipFiles(unzipDir = unzipDir,
-                                fileDataPath = fileDataPath,
-                                logger = logger)
+                                fileDataPath = fileDataPath)
 
   # `extractCSV()` iterates folders for CSV files
   csv_files <- extractCSV(databaseFolders = databaseFolders,
-                          configData = configData,
-                          logger = logger)
+                          configData = configData)
 
 
   # grep("incidence", csv_files, value = TRUE)
@@ -42,6 +40,8 @@ test_that("Complete sequence of functions inside joinDatabases ZIP", {
   csv_list$summarised_result_list
 
   summarised_result <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list)
+
+  uploadedFiles <- summarised_result
 
 })
 

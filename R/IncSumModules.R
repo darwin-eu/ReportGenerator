@@ -12,7 +12,6 @@ incidenceSumUI <- function(id, uploadedFiles) {
   uploadedFiles <- uploadedFiles %>%
     filter(result_id %in% result_ids)
 
-
   ns <- NS(id)
     lockName <- "lockIncidence"
     tagList(
@@ -119,7 +118,6 @@ incidenceSumUI <- function(id, uploadedFiles) {
         column(12,
                tabsetPanel(type = "tabs",
                            tabPanel("Table",
-                                    br(),
                                     fluidRow(
                                       column(6,
                                              pickerInput(inputId = ns("pivotWide"),
@@ -136,8 +134,12 @@ incidenceSumUI <- function(id, uploadedFiles) {
                                                          multiple = TRUE)),
                                     ),
                                     fluidRow(column(6, downloadButton(ns("downloadIncidenceTable"), "Download Table"))),
-                                    column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
-                           tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
+                                    fluidRow(column(12, gt::gt_output(ns("summarisedTableGt"))))),
+                           tabPanel("Plot",
+                                    fluidRow(column(6, downloadButton(ns("downloadIncidencePlot"), "Download Plot"))),
+                                    fluidRow(column(12, plotOutput(ns("summarisedIncidencePlot"))))),
+                           tabPanel("Data",
+                                    fluidRow(column(12, DT::dataTableOutput(ns("summarisedTable")))))
                )
         )
       )
@@ -150,25 +152,10 @@ incidenceSumServer <- function(id, uploadedFiles) {
     ns <- session$ns
 
       summarised_result <- reactive({
-        uploadedFiles <- uploadedFiles()
-
-        result_ids <- settings(uploadedFiles) %>%
-          filter(result_type == "incidence",
-                 denominator_age_group == input$denominator_age_group,
-                 denominator_sex == input$denominator_sex) %>%
-          pull(result_id)
-
-        summarised_result <- uploadedFiles %>%
-          filter(result_id %in% result_ids)
+        summarised_result <- uploadedFiles()
 
         attr(summarised_result, "settings") <- settings(summarised_result) %>%
-          filter(result_id %in% result_ids)
-
-        class(summarised_result) <- c("IncidencePrevalenceResult", "IncidenceResult", "summarised_result",
-          "omop_result", "tbl_df", "tbl", "data.frame")
-
-        assertClass(summarised_result, c("IncidencePrevalenceResult", "IncidenceResult", "summarised_result",
-                                        "omop_result", "tbl_df", "tbl", "data.frame"))
+          filter(result_id %in% input$result_id)
 
         summarised_result <- summarised_result %>%
           mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
@@ -182,14 +169,10 @@ incidenceSumServer <- function(id, uploadedFiles) {
                  variable_level %in% input$variable_level,
                  variable_name %in% input$variable_name)
 
-        class(summarised_result) <- c("IncidencePrevalenceResult", "IncidenceResult", "summarised_result",
-                                      "omop_result", "tbl_df", "tbl", "data.frame")
-
-        assertClass(summarised_result, c("IncidencePrevalenceResult", "IncidenceResult", "summarised_result",
-                                         "omop_result", "tbl_df", "tbl", "data.frame"))
-
         summarised_result
       })
+
+      # Table
 
       summarisedIncidence_gt_table <- reactive({
         IncidencePrevalence::tableIncidence(result = summarised_result())
@@ -197,6 +180,16 @@ incidenceSumServer <- function(id, uploadedFiles) {
 
       output$summarisedTableGt <- gt::render_gt({
         summarisedIncidence_gt_table()
+      })
+
+      # Plot
+
+      summarisedIncidence_plot <- reactive({
+        IncidencePrevalence::plotIncidence(result = summarised_result())
+      })
+
+      output$summarisedIncidencePlot <- renderPlot({
+        summarisedIncidence_plot()
       })
 
       output$downloadIncidenceTable <- downloadHandler(

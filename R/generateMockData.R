@@ -61,7 +61,7 @@ generateMockData <- function(databaseName = c("CHUBX",
 
     # Generate data
 
-    incidencePrevalenceData <- getIncidencePrevalence(sampleSize = sampleSize)
+    incidencePrevalenceData <- getIncidencePrevalenceMock(sampleSize = sampleSize)
     treatmentPathwaysData <- getTreatmentPathways()
     summarised_characteristics <- getCharacteristicsResult()
     summarised_large_scale_characteristics <- getLargeScaleCharacteristicsResult()
@@ -140,9 +140,11 @@ generateMockData <- function(databaseName = c("CHUBX",
   return(dataList)
 }
 
-getIncidencePrevalence <- function(sampleSize) {
+getIncidencePrevalenceMock <- function(sampleSize) {
 
   checkmate::assert_class(sampleSize, "numeric")
+
+  sampleSize <- 1000
 
   cdm <- IncidencePrevalence::mockIncidencePrevalenceRef(sampleSize = sampleSize,
                                                          outPre = 0.3,
@@ -172,6 +174,12 @@ getIncidencePrevalence <- function(sampleSize) {
     completeDatabaseIntervals = TRUE,
     minCellCount = 5
   )
+
+
+  incidence_estimates <- incidence_estimates |>
+    visOmopResults::filterSettings(result_type == "incidence_attrition") |>
+    dplyr::glimpse()
+
 
   # Attrition data
   incidence_attrition <- IncidencePrevalence::attrition(incidence_estimates)

@@ -18,16 +18,13 @@
 #'
 #' @param fileDataPath List of full file locations
 #' @param fileName Name of the file in character to process in case the input is only csv
-#' @param logger A logger object
 #'
 #' @return A list of dataframes
 #'
 #' @import yaml
 #' @importFrom cli cli_progress_step
 #' @export
-joinDatabases <- function(fileDataPath,
-                          fileName = NULL,
-                          logger) {
+joinDatabases <- function(fileDataPath) {
 
   # Check
   checkmate::assertCharacter(fileDataPath)
@@ -45,13 +42,11 @@ joinDatabases <- function(fileDataPath,
 
     # `unzipFiles()` Unzip files
     databaseFolders <- unzipFiles(unzipDir = unzipDir,
-                                  fileDataPath = fileDataPath,
-                                  logger = logger)
+                                  fileDataPath = fileDataPath)
 
     # `extractCSV()` iterates folders for CSV files
     csv_files <- extractCSV(databaseFolders = databaseFolders,
-                            configData = configData,
-                            logger = logger)
+                            configData = configData)
 
     csv_list <- processCSV(csv_files)
 
@@ -73,10 +68,10 @@ joinDatabases <- function(fileDataPath,
 #'
 #' @param unzipDir Locations of the folder to unzip files
 #' @param fileDataPath Locations of the files to unzip
-#' @param logger A logger object
 #'
 #' @return The databaseFolders to which the files were unzipped
-unzipFiles <- function(unzipDir, fileDataPath, logger) {
+unzipFiles <- function(unzipDir,
+                       fileDataPath) {
 
   cli::cli_progress_step(glue::glue("Unzipping {length(fileDataPath)} file{if (length(fileDataPath) > 1){'s'} else {''}}"), spinner = TRUE)
 
@@ -111,14 +106,12 @@ unzipFiles <- function(unzipDir, fileDataPath, logger) {
 #'
 #' @param databaseFolders A list of full name folder locations
 #' @param configData Configuration from yaml file
-#' @param logger A logger object
 #'
 #' @return A list objects with summarisedResults
-extractCSV <- function(databaseFolders, configData, logger) {
+extractCSV <- function(databaseFolders, configData) {
   cli::cli_alert("Extracting CSV files from {length(databaseFolders)} folder{?s}")
   result <- list()
   for (i in 1:length(databaseFolders)) {
-    # i <- 1
     filesDir <- databaseFolders[i]
     filesList <- list.files(filesDir,
                             pattern = ".csv",
@@ -126,8 +119,6 @@ extractCSV <- function(databaseFolders, configData, logger) {
                             recursive = TRUE)
     result <- c(result, filesList) %>%
       unlist()
-    # Iterates every individual csv file
-    # data <- processCSV(data, filesLocation, configData, logger)
   }
   return(result)
 }
@@ -137,7 +128,6 @@ extractCSV <- function(databaseFolders, configData, logger) {
 #' @param filesLocation A path for filelocation
 #' @param configData Data from yaml configuration file
 #' @param databaseName Database name from TreatmentPatterns
-#' @param logger A logger object
 #'
 #' @return A list with all the results organized by type
 processCSV <- function(csv_files) {
@@ -189,7 +179,7 @@ importOtherResult <- function(filesLocation) {
     }
     # Checks the type of every individual fileName
     data <- loadFileData(data, filesLocation[i], configData, resultsData,
-                         resultsColumns, databaseName, logger)
+                         resultsColumns, databaseName)
   }
   # return(data)
 }
@@ -224,7 +214,6 @@ getDatabaseName <- function(filesLocation) {
 #' @param resultsData the loaded file data
 #' @param resultsColumns the loaded file columns
 #' @param databaseName db name
-#' @param logger logger object
 #'
 #' @return the list with data
 loadFileData <- function(data,
@@ -232,8 +221,7 @@ loadFileData <- function(data,
                          configData,
                          resultsData,
                          resultsColumns,
-                         databaseName,
-                         logger) {
+                         databaseName) {
 
   if (all(resultsColumns %in% names(omopgenerics::emptySummarisedResult()))) {
     # TODO: Pack the following in a function and test it
@@ -353,7 +341,7 @@ additionalCols <- function(data) {
 
 }
 
-getPackageData <- function(data, package_name, resultType, resultsColumns, resultsData, configData, logger) {
+getPackageData <- function(data, package_name, resultType, resultsColumns, resultsData, configData) {
   pkgConfigData <- configData[[package_name]]
   configColumns <- pkgConfigData[[resultType]][["names"]]
   if (all(configColumns %in% resultsColumns)) {

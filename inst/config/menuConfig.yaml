@@ -29,6 +29,12 @@ table1PrevAtt:
 #   type:
 #     - incidence_estimates
 #   options: NULL
+tableIncidence:
+  title: "Incidence - Table"
+  function: tableIncidence(incidence, type = "gt", .options = list())
+  type:
+    - incidence
+  options: NULL
 plotIncidenceYear:
   title: "Incidence rate per year - Plot"
   function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)
@@ -47,6 +53,12 @@ plotIncidenceAge:
   type:
     - incidence
   options: Facet by outcome, Facet by database, Ribbon, Options
+tablePrevalence:
+  title: "Prevalence - Table"
+  function: tablePrevalence(prevalence, type = "gt", .options = list())
+  type:
+    - prevalence
+  options: NULL
 plotPrevalenceYear:
   title: "Prevalence per year - Plot"
   function: plotPrevalence(prevalence_estimates, colour, facet, ribbon, options)
@@ -99,7 +111,7 @@ Survival table:
   function: cohortSurvivalTable(survivalEstimate)
   type:
     - single_event
-"Single Event - Plot":
+Survival plot:
   title: "Single Event - Plot"
   function: CohortSurvival::plotSurvival(survivalEstimate, facet, colour)
   type:

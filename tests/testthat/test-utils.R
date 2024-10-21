@@ -1,7 +1,8 @@
 # IncidencePrevalence
-test_that("Analysis Names", {
-
-
+test_that("getIncidencePrevalence", {
+  fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\010\\p3-c1-010-results-ipci\\p3-c1-010-results-ipci\\results_IPCI.zip"
+  uploadedData <- joinDatabases(fileDataPath)
+  incidence_result <- getIncidencePrevalence(uploadedData, type = "incidence")
 
 })
 
