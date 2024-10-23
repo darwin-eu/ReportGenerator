@@ -46,63 +46,7 @@ function(input, output, session) {
   # Inc/Prev Table Modules
   # Table w/ attrition data from Inc/Prev
 
-  tableNumPar <- attritionServer(id = "Number of participants - Table",
-                                 uploadedFiles = reactive(uploadedFiles))
-
-  observe({
-    for (key in names(tableNumPar())) {
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- tableNumPar()
-    }
-  }) %>%
-    bindEvent(tableNumPar())
-
-  # Attrition Incidence only
-
-  tableAttInc <- attritionServer(id = "Incidence Attrition - Table",
-                                 uploadedFiles = reactive(uploadedFiles))
-
-  observe({
-    for (key in names(tableAttInc())) {
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- tableAttInc()
-    }
-  }) %>%
-    bindEvent(tableAttInc())
-
-  # Attrition Prevelence only
-
-  tableAttPrev <- attritionServer(id = "Prevalence Attrition - Table",
-                                  uploadedFiles = reactive(uploadedFiles))
-
-  observe({
-    for (key in names(tableAttPrev())) {
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- tableAttPrev()
-    }
-  }) %>%
-    bindEvent(tableAttPrev())
-
-  # Table Sex/Age
-
-  tableSexAge <- tableServer(id = "Table - Number of participants by sex and age group",
-                             reactive(uploadedFiles))
-
-  observe({
-    for (key in names(tableSexAge())) {
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- tableSexAge()
-    }
-  }) %>%
-    bindEvent(tableSexAge())
-
-
-  # Incidence Modules
-
-  # Year
-
-  dataIncidenceYear <- incidenceServer(id = "Incidence rate per year - Plot",
-                                       reactive(uploadedFiles))
+  dataIncidenceYear <- incidenceSumServer(id = "Incidence", reactive(uploadedFiles$incidence))
 
   observe({
     for (key in names(dataIncidenceYear())) {
@@ -111,73 +55,6 @@ function(input, output, session) {
     }
   }) %>%
     bindEvent(dataIncidenceYear())
-
-  # Sex
-
-  dataIncidenceSex <- incidenceServer(id = "Incidence rate per year by sex - Plot",
-                                      reactive(uploadedFiles))
-
-  observe({
-    for (key in names(dataIncidenceSex())) {
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- dataIncidenceSex()
-    }
-  }) %>%
-    bindEvent(dataIncidenceSex())
-
-  # Age
-
-  dataIncidenceAge <- incidenceServer(id = "Incidence rate per year by age - Plot",
-                                      reactive(uploadedFiles))
-
-  observe({
-    for (key in names(dataIncidenceAge())) {
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- dataIncidenceAge()
-    }
-  }) %>%
-    bindEvent(dataIncidenceAge())
-
-  # Prevalence Modules
-
-  # Year
-
-  dataPrevalenceYear <- prevalenceServer(id = "Prevalence per year - Plot",
-                                         reactive(uploadedFiles))
-
-  observe({
-    for (key in names(dataPrevalenceYear())) {
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- dataPrevalenceYear()
-    }
-  }) %>%
-    bindEvent(dataPrevalenceYear())
-
-  # Sex
-
-  dataPrevalenceSex <- prevalenceServer(id = "Prevalence per year by sex - Plot",
-                                        reactive(uploadedFiles))
-
-  observe({
-    for (key in names(dataPrevalenceSex())) {
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- dataPrevalenceSex()
-    }
-  }) %>%
-    bindEvent(dataPrevalenceSex())
-
-  # Age
-
-  dataPrevalenceAge <- prevalenceServer(id = "Prevalence per year by age - Plot",
-                                        reactive(uploadedFiles))
-
-  observe({
-    for (key in names(dataPrevalenceAge())) {
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- dataPrevalenceAge()
-    }
-  }) %>%
-    bindEvent(dataPrevalenceAge())
 
   # Treatment Patterns Interactive Plots
 
@@ -195,7 +72,7 @@ function(input, output, session) {
 
   # PatientProfiles Modules
   dataCharacteristics <- characteristicsServer("characteristics",
-                                               reactive(uploadedFiles))
+                                               reactive(uploadedFiles$summarised_characteristics))
 
   observe({
     for (key in names(dataCharacteristics())) {
@@ -257,7 +134,6 @@ function(input, output, session) {
     }
   }) %>%
     bindEvent(dataFailurePlot())
-
 
   # Data Report Preview
   objectsListPreview <- reactive({

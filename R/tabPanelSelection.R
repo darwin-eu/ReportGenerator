@@ -1,30 +1,20 @@
 tabPanelSelection <- function(selection, uploadedFiles) {
-  if (selection == "Cohort Attrition - Table") {
+  if (selection == "Incidence Attrition") {
     tabPanel(selection, attritionUI(selection, uploadedFiles))
-  } else if (selection == "Number of participants - Table") {
-    tabPanel(selection, attritionIncPrevUI(selection, uploadedFiles))
-  } else if (selection == "Incidence Attrition - Table") {
-    tabPanel(selection, attritionIncPrevUI(selection, uploadedFiles))
-  } else if (selection == "Prevalence Attrition - Table") {
-    tabPanel(selection, attritionIncPrevUI(selection, uploadedFiles))
+  } else if (selection == "Incidence Attrition") {
+    tabPanel(selection, attritionIncPrevUI(selection, uploadedFiles$attrition))
+  } else if (selection == "Attrition") {
+    # tabPanel(selection, attritionIncPrevUI(selection, uploadedFiles))
   # } else if (selection == "Number of participants by sex and age group - Table") {
   #   tabPanel(selection, tableUI(selection, uploadedFiles))
-  } else if (selection == "Incidence rate per year - Plot") {
+  } else if (selection == "Incidence") {
     tabPanel(selection, incidenceSumUI(selection, uploadedFiles = uploadedFiles$incidence))
-  } else if (selection == "Incidence rate per year by sex - Plot") {
-    tabPanel(selection, incidenceSumUI(selection, uploadedFiles))
-  } else if (selection == "Incidence rate per year by age - Plot") {
-    tabPanel(selection, incidenceSumUI(selection, uploadedFiles))
-  } else if (selection == "Prevalence per year - Plot") {
-    tabPanel(selection, prevalenceUI(selection, uploadedFiles))
-  } else if (selection == "Prevalence per year by sex - Plot") {
-    tabPanel(selection, prevalenceUI(selection, uploadedFiles))
-  } else if (selection == "Prevalence per year by age - Plot") {
-    tabPanel(selection, prevalenceUI(selection, uploadedFiles))
+  } else if (selection == "Prevalence") {
+    tabPanel(selection, prevalenceSumUI(selection, uploadedFiles = uploadedFiles$prevalence))
   } else if (selection == "Treatment Pathways Interactive Plots") {
     tabPanel(selection, patternsUI(selection, uploadedFiles))
-  } else if (selection == "Summarised Characteristics - Table") {
-    tabPanel(selection, characteristicsUI("characteristics", uploadedFiles))
+  } else if (selection == "Summarised Characteristics") {
+    tabPanel(selection, characteristicsUI("characteristics", uploadedFiles$summarised_characteristics))
   } else if (selection == "Summarised Large Scale Characteristics - Table") {
     tabPanel(selection, characteristicsUI("lsc", uploadedFiles))
   } else if (selection == "Single Event - Table") {

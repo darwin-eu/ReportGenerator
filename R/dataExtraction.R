@@ -47,21 +47,26 @@ joinDatabases <- function(fileDataPath) {
     # `extractCSV()` iterates folders for CSV files
     csv_files <- extractCSV(databaseFolders = databaseFolders,
                             configData = configData)
-
     csv_list <- processCSV(csv_files)
-
     summarised_result <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list)
+    other_result <- importOtherResult(csv_list = csv_list$other_result_list,
+                                      configData = configData)
 
   } else if (fileType == "csv") {
     cli::cli_progress_step("Processing {length(fileDataPath)} CSV files", spinner = TRUE)
-    result <- processCSV(data = list(),
-                         filesLocation = fileDataPath,
-                         configData = configData)
+    # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\latest\\p3-c1-010-results 2\\p3-c1-010-results-cprd"
+    # fileDataPath <- list.files(fileDataPath, full.names = TRUE)
+    csv_list <- processCSV(csv_files = fileDataPath)
+    summarised_result <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list)
+    other_result <- importOtherResult(csv_list = csv_list$other_result_list,
+                                      configData = configData)
     cli::cli_process_done()
 
   }
+  result <- list("summarised_result" = summarised_result,
+                 "other_result" = other_result)
   # cli::cli_alert("Results processed from {names(result)} package{?s}")
-  return(summarised_result)
+  return(result)
 }
 
 #' `unzipFiles()` to a folder per database in a temporary directory for later use in `exctractCSV()`
@@ -82,6 +87,7 @@ unzipFiles <- function(unzipDir,
   checkmate::assert_directory_exists(unzipDir)
 
   folderNumber <- 0
+
   # Unzipping puts the files in a separate folder
   for (fileLocation in fileDataPath) {
     folderNumber <- folderNumber + 1
@@ -89,10 +95,6 @@ unzipFiles <- function(unzipDir,
           exdir = file.path(unzipDir, paste0("database", as.character(folderNumber))),
           junkpaths = TRUE)
   }
-
-  # for (fileLocation in fileDataPath) {
-  #   unzip(zipfile = fileLocation, exdir = unzipDir, junkpaths = TRUE)
-  # }
 
   databaseFolders <- dir(unzipDir, full.names = TRUE)
 
@@ -136,7 +138,7 @@ processCSV <- function(csv_files) {
   other_result_list <- list()
 
   for (i in 1:length(csv_files)) {
-    col_names <- names(data.table::fread(csv_files[i], nrows = 0))
+    col_names <- names(data.table::fread(csv_files[i], nrows = 0, fill = TRUE))
     if (setequal(sort(col_names), sort(omopgenerics::resultColumns()))) {
       summarised_result_list <- c(summarised_result_list, csv_files[i]) %>%
         unlist()
@@ -152,22 +154,18 @@ processCSV <- function(csv_files) {
 
 }
 
-importOtherResult <- function(filesLocation) {
+importOtherResult <- function(csv_list,
+                              configData) {
 
-  filesLocation <- csv_list$other_result_list
-
-  if (is.null(data)) {
-    data = list()
-  }
-
+  data  <- list()
   # Assign the databaseName if there is a metadata file from TP
-  databaseName <- getDatabaseName(filesLocation)
+  databaseName <- getDatabaseName(csv_list)
 
   checkmate::assertList(data)
   # Iterates and checks every csv file and adds it
-  for (i in 1:length(filesLocation)) {
-    # i <- 3
-    resultsData <- read_csv(filesLocation[i], show_col_types = FALSE, col_types = c(.default = "c"))
+  for (i in 1:length(csv_list)) {
+    # i <- 2
+    resultsData <- read_csv(csv_list[i], show_col_types = FALSE, col_types = c(.default = "c"))
     # resultsData
     # vroom::problems(resultsData)
     resultsColumns <- names(resultsData)
@@ -178,10 +176,14 @@ importOtherResult <- function(filesLocation) {
       checkmate::assertClass(resultsData$estimate_value, "character")
     }
     # Checks the type of every individual fileName
-    data <- loadFileData(data, filesLocation[i], configData, resultsData,
-                         resultsColumns, databaseName)
+    data <- loadFileData(data,
+                         fileName = csv_list[i],
+                         configData,
+                         resultsData,
+                         resultsColumns,
+                         databaseName)
   }
-  # return(data)
+  return(data)
 }
 
 getFileType <- function(fileDataPath) {
@@ -223,77 +225,16 @@ loadFileData <- function(data,
                          resultsColumns,
                          databaseName) {
 
-  if (all(resultsColumns %in% names(omopgenerics::emptySummarisedResult()))) {
-    # TODO: Pack the following in a function and test it
-
-    result_ids <- resultsData %>% pull(result_id) %>% unique()
-    for (id in result_ids) {
-      # id <- 1
-      resultsDataId <- resultsData %>%
-        filter(result_id == id)
-      resultsDataSummarised <- omopgenerics::newSummarisedResult(resultsDataId)
-      resultType <- settings(resultsDataSummarised) %>%
-        pull(result_type) %>%
-        unique()
-      package_name <- settings(resultsDataSummarised) %>%
-        pull(package_name) %>%
-        unique()
-      if (resultType == "survival") {
-        if (is.null(data[[package_name]])) {
-          data[[package_name]] <- list()
-        }
-        analysisType <- settings(resultsDataSummarised) %>% pull(analysis_type) %>% unique()
-        if (is.null(data[[package_name]][[analysisType]])) {
-          data[[package_name]][[analysisType]] <- omopgenerics::emptySummarisedResult()
-        }
-        data[[package_name]][[analysisType]] <- omopgenerics::bind(data[[package_name]][[analysisType]], resultsDataSummarised)
-      } else {
-        if (is.null(data[[package_name]])) {
-          data[[package_name]] <- list()
-        }
-        if (is.null(data[[package_name]][[resultType]])) {
-          data[[package_name]][[resultType]] <- omopgenerics::emptySummarisedResult()
-        }
-        data[[package_name]][[resultType]] <- omopgenerics::bind(data[[package_name]][[resultType]], resultsDataSummarised)
-      }
-    }
-    return(data)
-  } else {
     for (pkg in names(configData)) {
-      # pkg <- "cohortAttrition"
+      # pkg <- "IncidencePrevalence"
       pkgConfigData <- configData[[pkg]]
-
       for (val in names(pkgConfigData)) {
+        # val <- "attrition"
         configColumns <- pkgConfigData[[val]]
         configColumns <- unlist(configColumns$names)
-        if (val == "incidence_attrition") {
-          if (all(configColumns %in% resultsColumns) & grepl("incidence", fileName)) {
-            resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
-            resultsData$excluded_records <- as.character(resultsData$excluded_records)
+        if (val == "attrition") {
+          if (all(configColumns == resultsColumns) & grepl("attrition", fileName)) {
             data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-            }
-          }
-          else if (val == "prevalence_attrition") {
-            if (all(configColumns %in% resultsColumns) & grepl("prevalence", fileName)) {
-              resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
-              resultsData$excluded_records <- as.character(resultsData$excluded_records)
-              data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-            }
-          }
-          else if (val == "incidence_estimates") {
-            if (all(configColumns %in% resultsColumns)) {
-              if ("denominator_days_prior_history" %in% resultsColumns) {
-                colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
-              }
-              data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-            }
-          }
-          else if (val == "prevalence_estimates") {
-            if (all(configColumns %in% resultsColumns)) {
-              if ("denominator_days_prior_history" %in% resultsColumns) {
-                colnames(resultsData)[colnames(resultsData) == "denominator_days_prior_history"] <- "denominator_days_prior_observation"
-              }
-              data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           }
           else if (val == "treatmentPathways") {
@@ -304,14 +245,13 @@ loadFileData <- function(data,
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           } else if (val == "cohortAttrition") {
-            if (all(configColumns %in% resultsColumns)) {
+            if (all(configColumns == resultsColumns)) {
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           }
       }
     }
     return(data)
-    }
 }
 
 additionalCols <- function(data) {

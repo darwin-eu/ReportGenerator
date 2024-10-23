@@ -357,13 +357,11 @@ analysisNames <- function(settingsData) {
   return(analysisNames)
 }
 
-getIncidencePrevalence <- function(uploadedData, type = "incidence") {
+getSummarisedData <- function(uploadedData, type = "incidence") {
 
   result_ids <- settings(uploadedData) %>%
     filter(result_type == type) %>%
     pull(result_id)
-
-  # result_ids <- 2
 
   summarised_result <- uploadedData %>%
     filter(result_id %in% result_ids)

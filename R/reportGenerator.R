@@ -111,7 +111,6 @@ reportGenerator <- function(logger = NULL) {
   )
 
   server <- function(input, output, session) {
-
     # create logger
     if (is.null(logger)) {
       log_file <- glue::glue("log.txt")
@@ -122,12 +121,14 @@ reportGenerator <- function(logger = NULL) {
     datasetLoadServer("StudyPackage")
 
     # ReactiveValues for data and items menu
-    uploadedFiles <- reactiveValues(cohortAttrition = NULL,
+    uploadedFiles <- reactiveValues(attrition = NULL,
                                     incidence = NULL,
                                     TreatmentPatterns = NULL,
                                     CohortCharacteristics = NULL,
                                     CohortSurvival = NULL)
     itemsList <- reactiveValues(objects = NULL)
+    uploadedData <- reactiveVal(NULL)
+    settingsData <- reactiveVal(NULL)
 
     # Check input data
     observeEvent(input$datasetLoad, {
@@ -137,20 +138,50 @@ reportGenerator <- function(logger = NULL) {
       inFile <- input$datasetLoad
       fileDataPath <- inFile$datapath
       fileName <- inFile$name
+
       # Joins one or several zips into the reactive value
-      uploadedData <- joinDatabases(fileDataPath = fileDataPath)
-      if (length(uploadedData) == 0) {
-        show_alert(title = "Data mismatch",
-                   text = "No valid package files found")
+      # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\latest\\p3-c1-010-results 2"
+      # fileDataPath <- list.files(fileDataPath, full.names = TRUE, pattern = ".zip")
+      tryCatch({
+        data_joined <- joinDatabases(fileDataPath = fileDataPath)
+        uploadedData(data_joined)
+        # Now access and store the settings data if uploadedData is not NULL
+        if (!is.null(data_joined$summarised_result)) {
+          settingsData(settings(data_joined$summarised_result))  # Set the settingsData reactive value
+        } else {
+          settingsData(NULL)  # Ensure settingsData is reset if summarised_result is NULL
+        }
+      }, error = function(e) {
+        shinyalert::shinyalert("Error",
+                               glue::glue("An error occurred: {e$message}"),type = "error")
+        uploadedData(NULL)  # Set uploadedData to NULL in case of error
+        settingsData(NULL)   # Reset settingsData in case of error
+      })
+      if (is.null(uploadedData()) || length(uploadedData()) == 0) {
+        shinyalert::shinyalert("Data mismatch",
+                   "No valid package files found", type = "warning")
+        shinycssloaders::hidePageSpinner()
+        return()  # Exit the observeEvent if no valid data is found
       }
 
-      settingsData <- settings(uploadedData)
-      items <- analysisNames(settingsData = settingsData)
+      req(settingsData())
+      items <- analysisNames(settingsData = settingsData())
+      # itemsList <- list()
       itemsList$objects[["items"]] <- getItemsList(items)
 
+      if ("incidence_attrition" %in% items) {
+        # uploadedFiles <- list()
+        uploadedFiles$attrition <- uploadedData()$other_result$IncidencePrevalence$attrition
+      }
       if ("incidence" %in% items) {
-        uploadedFiles$incidence <- getIncidencePrevalence(uploadedData = uploadedData,
-                                                                    type = "incidence")
+        # uploadedFiles <- list()
+        uploadedFiles$incidence <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
+                                                     type = "incidence")
+      }
+      if ("summarised_characteristics" %in% items) {
+        # uploadedFiles <- list()
+        uploadedFiles$summarised_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
+                                                                      type = "summarised_characteristics")
       }
       # if ("TreatmentPatterns" %in% pkgNames) {
       #   uploadedFiles$TreatmentPatterns <- uploadedFilesList[["TreatmentPatterns"]]
@@ -224,9 +255,7 @@ reportGenerator <- function(logger = NULL) {
                          add_rank_list(text = "to here",
                                        labels = NULL,
                                        input_id = "objectSelection",
-                                       options = sortable_options(multiDrag = TRUE))
-             )
-      )
+                                       options = sortable_options(multiDrag = TRUE))))
     })
 
     # Item preview
@@ -245,154 +274,103 @@ reportGenerator <- function(logger = NULL) {
 
     # Attrition table
 
-    attritionTable <- attritionServer(id = "Cohort Attrition - Table",
-                                      uploadedFiles = reactive(uploadedFiles))
-
-    observe({
-      for (key in names(attritionTable())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- attritionTable()
-      }
-    }) %>%
-      bindEvent(attritionTable())
+    # attritionTable <- attritionServer(id = "Incidence Attrition",
+    #                                   uploadedFiles = reactive(uploadedFiles$attrition))
+    #
+    # observe({
+    #   for (key in names(attritionTable())) {
+    #     randomId <- getRandomId()
+    #     dataReport[["objects"]][[randomId]] <- attritionTable()
+    #   }
+    # }) %>%
+    #   bindEvent(attritionTable())
 
 
     # Inc/Prev Table Modules
 
-      # Table w/ attrition data from Inc/Prev
-
-    tableNumPar <- attritionIncPrevServer(id = "Number of participants - Table",
-                                          uploadedFiles = reactive(uploadedFiles))
-
-    observe({
-      for (key in names(tableNumPar())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- tableNumPar()
-      }
-    }) %>%
-      bindEvent(tableNumPar())
-
-    # Attrition Incidence only
-
-    tableAttInc <- attritionIncPrevServer(id = "Incidence Attrition - Table",
-                                          uploadedFiles = reactive(uploadedFiles))
-
-    observe({
-      for (key in names(tableAttInc())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- tableAttInc()
-      }
-    }) %>%
-      bindEvent(tableAttInc())
+    # tableNumPar <- attritionIncPrevServer(id = "Incidence Attrition",
+    #                                       uploadedFiles = reactive(uploadedFiles$attrition))
+    #
+    # observe({
+    #   for (key in names(tableNumPar())) {
+    #     randomId <- getRandomId()
+    #     dataReport[["objects"]][[randomId]] <- tableNumPar()
+    #   }
+    # }) %>%
+    #   bindEvent(tableNumPar())
+    #
+    # # Attrition Incidence only
+    #
+    # tableAttInc <- attritionIncPrevServer(id = "Incidence Attrition - Table",
+    #                                       uploadedFiles = reactive(uploadedFiles))
+    #
+    # observe({
+    #   for (key in names(tableAttInc())) {
+    #     randomId <- getRandomId()
+    #     dataReport[["objects"]][[randomId]] <- tableAttInc()
+    #   }
+    # }) %>%
+    #   bindEvent(tableAttInc())
 
     # Attrition Prevelence only
 
-    tableAttPrev <- attritionIncPrevServer(id = "Prevalence Attrition - Table",
-                                           uploadedFiles = reactive(uploadedFiles))
-
-    observe({
-      for (key in names(tableAttPrev())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- tableAttPrev()
-      }
-    }) %>%
-      bindEvent(tableAttPrev())
+    # tableAttPrev <- attritionIncPrevServer(id = "Prevalence Attrition - Table",
+    #                                        uploadedFiles = reactive(uploadedFiles))
+    #
+    # observe({
+    #   for (key in names(tableAttPrev())) {
+    #     randomId <- getRandomId()
+    #     dataReport[["objects"]][[randomId]] <- tableAttPrev()
+    #   }
+    # }) %>%
+    #   bindEvent(tableAttPrev())
 
     # Table Sex/Age
 
-    tableSexAge <- tableServer(id = "Table - Number of participants by sex and age group",
-                               reactive(uploadedFiles))
-
-    observe({
-      for (key in names(tableSexAge())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- tableSexAge()
-      }
-    }) %>%
-      bindEvent(tableSexAge())
+    # tableSexAge <- tableServer(id = "Table - Number of participants by sex and age group",
+    #                            reactive(uploadedFiles))
+    #
+    # observe({
+    #   for (key in names(tableSexAge())) {
+    #     randomId <- getRandomId()
+    #     dataReport[["objects"]][[randomId]] <- tableSexAge()
+    #   }
+    # }) %>%
+    #   bindEvent(tableSexAge())
 
 
     # Incidence Modules
 
-      # Year
+      # Incidence
 
-    dataIncidenceYear <- incidenceSumServer(id = "Incidence rate per year - Plot",
-                                         reactive(uploadedFiles$incidence))
+    incidenceSumServer(id = "Incidence", reactive(uploadedFiles$incidence))
 
-    observe({
-      for (key in names(dataIncidenceYear())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- dataIncidenceYear()
-      }
-    }) %>%
-      bindEvent(dataIncidenceYear())
+    # dataIncidenceYear <- incidenceSumServer(id = "Incidence rate per year - Plot",
+    #                                      reactive(uploadedFiles$incidence))
 
-    # Sex
-
-    dataIncidenceSex <- incidenceSumServer(id = "Incidence rate per year by sex - Plot",
-                                        reactive(uploadedFiles))
-
-    observe({
-      for (key in names(dataIncidenceSex())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- dataIncidenceSex()
-      }
-    }) %>%
-      bindEvent(dataIncidenceSex())
-
-      # Age
-
-    dataIncidenceAge <- incidenceSumServer(id = "Incidence rate per year by age - Plot",
-                                        reactive(uploadedFiles))
-
-    observe({
-      for (key in names(dataIncidenceAge())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- dataIncidenceAge()
-      }
-    }) %>%
-      bindEvent(dataIncidenceAge())
+    # observe({
+    #   for (key in names(dataIncidenceYear())) {
+    #     randomId <- getRandomId()
+    #     dataReport[["objects"]][[randomId]] <- dataIncidenceYear()
+    #   }
+    # }) %>%
+    #   bindEvent(dataIncidenceYear())
 
     # Prevalence Modules
 
       # Year
 
-    dataPrevalenceYear <- prevalenceServer(id = "Prevalence per year - Plot",
-                                           reactive(uploadedFiles))
+    # dataPrevalenceYear <- prevalenceServer(id = "Prevalence per year - Plot",
+    #                                        reactive(uploadedFiles))
+    #
+    # observe({
+    #   for (key in names(dataPrevalenceYear())) {
+    #     randomId <- getRandomId()
+    #     dataReport[["objects"]][[randomId]] <- dataPrevalenceYear()
+    #   }
+    # }) %>%
+    #   bindEvent(dataPrevalenceYear())
 
-    observe({
-      for (key in names(dataPrevalenceYear())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- dataPrevalenceYear()
-      }
-    }) %>%
-      bindEvent(dataPrevalenceYear())
-
-      # Sex
-
-    dataPrevalenceSex <- prevalenceServer(id = "Prevalence per year by sex - Plot",
-                                          reactive(uploadedFiles))
-
-    observe({
-      for (key in names(dataPrevalenceSex())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- dataPrevalenceSex()
-      }
-    }) %>%
-      bindEvent(dataPrevalenceSex())
-
-      # Age
-
-    dataPrevalenceAge <- prevalenceServer(id = "Prevalence per year by age - Plot",
-                                          reactive(uploadedFiles))
-
-    observe({
-      for (key in names(dataPrevalenceAge())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- dataPrevalenceAge()
-      }
-    }) %>%
-      bindEvent(dataPrevalenceAge())
 
     # Treatment Patterns Interactive Plots
 
@@ -410,7 +388,7 @@ reportGenerator <- function(logger = NULL) {
 
     # PatientProfiles Modules
     dataCharacteristics <- characteristicsServer("characteristics",
-                                                 reactive(uploadedFiles))
+                                                 reactive(uploadedFiles$summarised_characteristics))
 
     observe({
       for (key in names(dataCharacteristics())) {
@@ -607,7 +585,7 @@ reportGenerator <- function(logger = NULL) {
           reportAppModulesPath <- file.path(reportAppPath, "modules")
           modulesFilesLocation <- system.file("R", package = "ReportGenerator")
           modulesFiles <- list.files(modulesFilesLocation, full.names = TRUE)
-          modules <- grep("IncModules|attModules|automaticText|createSunburstPlot|csModules|dataExtraction|generateReport|ppModules|prevModules|standardTables|tabPanelSelection|tableModules|tpModules|utils", modulesFiles, value = TRUE)
+          modules <- modulesFiles
           dir.create(reportAppModulesPath)
           file.copy(modules, reportAppModulesPath)
 
@@ -666,71 +644,6 @@ reportGenerator <- function(logger = NULL) {
       },
       contentType = "application/zip"
     )
-
-    # observeEvent(input$createReportApp, {
-    #   log4r::info(logger, paste("Create shiny application, reportingEnabled = ", input$enableReporting))
-    #
-    #   uploadedFiles <- reactiveValuesToList(uploadedFiles)
-    #   uploadedFilesValues <- unlist(lapply(names(uploadedFiles), FUN = function(name) {uploadedFiles[[name]]}))
-    #   if (!is.null(uploadedFilesValues)) {
-    #     # Specify source directory
-    #     reportAppDir <- "reportApp"
-    #     packagePath <- system.file(reportAppDir, package = "ReportGenerator")
-    #
-    #     # Copy files
-    #     targetPath <- getwd()
-    #     file.copy(packagePath, targetPath, recursive = T)
-    #     reportAppPath <- file.path(targetPath, reportAppDir)
-    #     reportAppConfigPath <- file.path(reportAppPath, "config")
-    #     dir.create(reportAppConfigPath)
-    #
-    #     # Copy template
-    #     if (input$enableReporting) {
-    #       reportTemplateFile <- "DARWIN_EU_Study_Report.docx"
-    #       reportTemplate <- system.file("templates",
-    #                                     "word",
-    #                                     reportTemplateFile,
-    #                                     package = "ReportGenerator")
-    #       file.copy(reportTemplate, file.path(reportAppConfigPath, reportTemplateFile))
-    #       menuConfigFile <- "menuConfig.yaml"
-    #       menuConfig <- system.file("config", menuConfigFile, package = "ReportGenerator")
-    #       file.copy(menuConfig, file.path(reportAppConfigPath, menuConfigFile))
-    #
-    #       # update ui
-    #       file.remove(file.path(reportAppPath, "ui.R"))
-    #       file.rename(file.path(reportAppPath, "ui_total.R"), file.path(reportAppPath, "ui.R"))
-    #     } else {
-    #       file.remove(file.path(reportAppPath, "ui_total.R"))
-    #     }
-    #     # Create results dir
-    #     targetPathResults <- file.path(reportAppPath, "results")
-    #     dir.create(targetPathResults)
-    #
-    #     # Insert results from app
-    #     log4r::info(logger, "Add uploadedFiles and session results")
-    #     saveRDS(list("uploadedFiles" = uploadedFiles),
-    #             file.path(targetPathResults, "uploadedFiles.rds"))
-    #
-    #     # session files
-    #     itemsListObjects <- reactiveValuesToList(do.call(reactiveValues, itemsList$objects))
-    #     if (!is.null(dataReport$objects)) {
-    #       dataReportObjects <- reactiveValuesToList(do.call(reactiveValues, dataReport$objects))
-    #       saveRDS(list("itemsList" = itemsListObjects,
-    #                    "reportItems" = dataReportObjects),
-    #               file.path(targetPathResults, "session.rds"))
-    #     } else {
-    #       saveRDS(list("itemsList" = itemsListObjects,
-    #                    "reportItems" = NULL),
-    #               file.path(targetPathResults, "session.rds"))
-    #     }
-    #
-    #     log4r::info(logger, glue::glue("Shiny app has been created in {targetPath}"))
-    #     shinyjs::html("createAppOutput", glue::glue("<br>Shiny app created in {targetPath}"), add = TRUE)
-    #   } else {
-    #     log4r::info(logger, "No files have been uploaded, app not created.")
-    #     shinyjs::html("createAppOutput", glue::glue("<br>Please upload files before generating the app"), add = TRUE)
-    #   }
-    # })
 
   }
   shinyApp(ui, server)

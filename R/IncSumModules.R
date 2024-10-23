@@ -1,16 +1,16 @@
 incidenceSumUI <- function(id, uploadedFiles) {
 
-  settings_incidence <- settings(uploadedFiles)
-
-  result_ids <- settings_incidence %>%
-    filter(result_type == "incidence") %>%
-    pull(result_id)
-
-  setttings_denominator_sex <- settings_incidence$denominator_sex
-  setttings_denominator_age_group <- settings_incidence$denominator_age_group
-
-  uploadedFiles <- uploadedFiles %>%
-    filter(result_id %in% result_ids)
+  # settings_incidence <- settings(uploadedFiles)
+  #
+  # result_ids <- settings_incidence %>%
+  #   filter(result_type == "incidence") %>%
+  #   pull(result_id)
+  #
+  # setttings_denominator_sex <- settings_incidence$denominator_sex
+  # setttings_denominator_age_group <- settings_incidence$denominator_age_group
+  #
+  # uploadedFiles <- uploadedFiles %>%
+  #   filter(result_id %in% result_ids)
 
   ns <- NS(id)
     lockName <- "lockIncidence"
@@ -28,84 +28,85 @@ incidenceSumUI <- function(id, uploadedFiles) {
                pickerInput(inputId = ns("result_id"),
                            label = "Result Id",
                            choices = unique(uploadedFiles$result_id),
-                           selected = unique(uploadedFiles$result_id),
+                           selected = unique(uploadedFiles$result_id)[1],
                            multiple = FALSE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        ),
-        column(4,
-               pickerInput(inputId = ns("group_name"),
-                           label = "Group Name",
-                           choices = unique(uploadedFiles$group_name),
-                           selected = unique(uploadedFiles$group_name),
-                           multiple = FALSE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        ),
-        column(4,
-               pickerInput(inputId = ns("group_level"),
-                           label = "Group Level",
-                           choices = unique(uploadedFiles$group_level),
-                           selected = unique(uploadedFiles$group_level)[1],
-                           multiple = TRUE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        ),
-        column(4,
-               pickerInput(inputId = ns("strata_name"),
-                           label = "Strata Name",
-                           choices = unique(uploadedFiles$strata_name),
-                           selected = unique(uploadedFiles$strata_name),
-                           multiple = TRUE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        ),
-        column(4,
-               pickerInput(inputId = ns("strata_level"),
-                           label = "Strata Level",
-                           choices = unique(uploadedFiles$strata_level),
-                           selected = unique(uploadedFiles$strata_level),
-                           multiple = TRUE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        ),
-        column(4,
-               pickerInput(inputId = ns("denominator_sex"),
-                           label = "Denominator Sex",
-                           choices = unique(setttings_denominator_sex),
-                           selected = unique(setttings_denominator_sex),
-                           multiple = TRUE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        ),
-        column(4,
-               pickerInput(inputId = ns("denominator_age_group"),
-                           label = "Denominator Age Group",
-                           choices = unique(setttings_denominator_age_group),
-                           selected = unique(setttings_denominator_age_group),
-                           multiple = TRUE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
-      ),
-      fluidRow(
-        column(4,
-               pickerInput(inputId = ns("variable_name"),
-                           label = "Variable",
-                           choices = sort(unique(uploadedFiles$variable_name)),
-                           selected = unique(uploadedFiles$variable_name),
-                           multiple = TRUE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        ),
-        column(4,
-               pickerInput(inputId = ns("variable_level"),
-                           label = "Variable Level",
-                           choices = c("NA", sort(unique(uploadedFiles$variable_level))),
-                           selected = c("NA", unique(uploadedFiles$variable_level)),
-                           multiple = TRUE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        ),
-        column(4,
-               pickerInput(inputId = ns("estimate_type"),
-                           label = "Estimate Type",
-                           choices = sort(unique(uploadedFiles$estimate_type)),
-                           selected = sort(unique(uploadedFiles$estimate_type)),
-                           multiple = TRUE,
-                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        )
+        # ,
+      #   column(4,
+      #          pickerInput(inputId = ns("group_name"),
+      #                      label = "Group Name",
+      #                      choices = unique(uploadedFiles$group_name),
+      #                      selected = unique(uploadedFiles$group_name),
+      #                      multiple = TRUE,
+      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      #   ),
+      #   column(4,
+      #          pickerInput(inputId = ns("group_level"),
+      #                      label = "Group Level",
+      #                      choices = unique(uploadedFiles$group_level),
+      #                      selected = unique(uploadedFiles$group_level)[1],
+      #                      multiple = TRUE,
+      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      #   ),
+      #   column(4,
+      #          pickerInput(inputId = ns("strata_name"),
+      #                      label = "Strata Name",
+      #                      choices = unique(uploadedFiles$strata_name),
+      #                      selected = unique(uploadedFiles$strata_name),
+      #                      multiple = TRUE,
+      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      #   ),
+      #   column(4,
+      #          pickerInput(inputId = ns("strata_level"),
+      #                      label = "Strata Level",
+      #                      choices = unique(uploadedFiles$strata_level),
+      #                      selected = unique(uploadedFiles$strata_level),
+      #                      multiple = TRUE,
+      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      #   ),
+      #   column(4,
+      #          pickerInput(inputId = ns("denominator_sex"),
+      #                      label = "Denominator Sex",
+      #                      choices = unique(setttings_denominator_sex),
+      #                      selected = unique(setttings_denominator_sex),
+      #                      multiple = TRUE,
+      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      #   ),
+      #   column(4,
+      #          pickerInput(inputId = ns("denominator_age_group"),
+      #                      label = "Denominator Age Group",
+      #                      choices = unique(setttings_denominator_age_group),
+      #                      selected = unique(setttings_denominator_age_group),
+      #                      multiple = TRUE,
+      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      #   )
+      # ),
+      # fluidRow(
+      #   column(4,
+      #          pickerInput(inputId = ns("variable_name"),
+      #                      label = "Variable",
+      #                      choices = sort(unique(uploadedFiles$variable_name)),
+      #                      selected = unique(uploadedFiles$variable_name),
+      #                      multiple = TRUE,
+      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      #   ),
+      #   column(4,
+      #          pickerInput(inputId = ns("variable_level"),
+      #                      label = "Variable Level",
+      #                      choices = c("NA", sort(unique(uploadedFiles$variable_level))),
+      #                      selected = c("NA", unique(uploadedFiles$variable_level)),
+      #                      multiple = TRUE,
+      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      #   ),
+      #   column(4,
+      #          pickerInput(inputId = ns("estimate_type"),
+      #                      label = "Estimate Type",
+      #                      choices = sort(unique(uploadedFiles$estimate_type)),
+      #                      selected = sort(unique(uploadedFiles$estimate_type)),
+      #                      multiple = TRUE,
+      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      #   )
       ),
       fluidRow(
         column(12,
@@ -158,16 +159,18 @@ incidenceSumServer <- function(id, uploadedFiles) {
           filter(result_id %in% input$result_id)
 
         summarised_result <- summarised_result %>%
-          mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
+          # mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
           filter(cdm_name %in% input$cdm_name,
-                 result_id %in% input$result_id,
-                 group_name %in% input$group_name,
-                 group_level %in% input$group_level,
-                 strata_name %in% input$strata_name,
-                 strata_level %in% input$strata_level,
-                 estimate_type %in% input$estimate_type,
-                 variable_level %in% input$variable_level,
-                 variable_name %in% input$variable_name)
+                 result_id %in% input$result_id
+                 # ,
+                 # group_name %in% input$group_name,
+                 # group_level %in% input$group_level,
+                 # strata_name %in% input$strata_name,
+                 # strata_level %in% input$strata_level,
+                 # estimate_type %in% input$estimate_type,
+                 # variable_level %in% input$variable_level,
+                 # variable_name %in% input$variable_name
+                 )
 
         summarised_result
       })

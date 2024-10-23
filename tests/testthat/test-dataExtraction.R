@@ -3,7 +3,7 @@ test_that("Complete sequence of functions inside joinDatabases ZIP", {
   # fileDataPath <- list.files(testthat::test_path("studies", "zip"),
   #                            pattern = "zip",
   #                            full.names = TRUE)
-  fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\010\\p3-c1-010-results-ipci\\p3-c1-010-results-ipci\\results_IPCI.zip"
+  fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\result_\\p3-c1-010-results-ipci\\p3-c1-010-results-ipci\\results_IPCI.zip"
   checkmate::assertCharacter(fileDataPath)
 
   # Configuration

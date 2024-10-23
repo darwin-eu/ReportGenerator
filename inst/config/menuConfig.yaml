@@ -4,127 +4,52 @@ cohortAttritionTable:
   type:
     - cohortAttrition
   options: NULL
-table1NumPar:
-  title: "Number of participants - Table"
-  function: table1NumPar(incidence_attrition, prevalence_attrition)
-  type:
-    - incidence_attrition
-    - prevalence_attrition
-  options: NULL
 table1IncAtt:
-  title: "Incidence Attrition - Table"
+  title: "Incidence Attrition"
   function: table1Att(incidence_attrition, attritionDataType)
   type:
     - incidence_attrition
   options: NULL
 table1PrevAtt:
-  title: "Prevalence Attrition - Table"
+  title: "Prevalence Attrition"
   function: table1Att(prevalence_attrition, attritionDataType)
   type:
     - prevalence_attrition
   options: NULL
-# table1Inc:
-#   title: "Number of participants by sex and age group - Table"
-#   function: table1Inc(incidence_estimates)
-#   type:
-#     - incidence_estimates
-#   options: NULL
 tableIncidence:
-  title: "Incidence - Table"
+  title: "Incidence"
   function: tableIncidence(incidence, type = "gt", .options = list())
   type:
     - incidence
   options: NULL
-plotIncidenceYear:
-  title: "Incidence rate per year - Plot"
-  function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)
-  type:
-    - incidence
-  options: Facet by outcome, Facet by database, Ribbon, Options
-plotIncidenceSex:
-  title: "Incidence rate per year by sex - Plot"
-  function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)
-  type:
-    - incidence
-  options: Facet by outcome, Facet by database, Ribbon, Options
-plotIncidenceAge:
-  title: "Incidence rate per year by age - Plot"
-  function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)
-  type:
-    - incidence
-  options: Facet by outcome, Facet by database, Ribbon, Options
 tablePrevalence:
-  title: "Prevalence - Table"
+  title: "Prevalence"
   function: tablePrevalence(prevalence, type = "gt", .options = list())
   type:
     - prevalence
   options: NULL
-plotPrevalenceYear:
-  title: "Prevalence per year - Plot"
-  function: plotPrevalence(prevalence_estimates, colour, facet, ribbon, options)
-  type:
-    - point_prevalence
-    - period_prevalence
-  options: Facet by outcome, Facet by database, Ribbon, Options
-plotPrevalenceSex:
-  title: "Prevalence per year by sex - Plot"
-  function: plotPrevalence(prevalence_estimates, colour, facet, ribbon, options)
-  type:
-    - point_prevalence
-    - period_prevalence
-  options: Facet by outcome, Facet by database, Ribbon, Options
-plotPrevalenceAge:
-  title: "Prevalence per year by age - Plot"
-  function: plotPrevalence(prevalence_estimates, colour, facet, ribbon, options)
-  type:
-    - point_prevalence
-    - period_prevalence
-  options: Facet by outcome, Facet by database, Ribbon, Options
 treatmentPathways:
   title: "Treatment Pathways Interactive Plots"
   type:
     - treatmentPathways
-# createSunburstPlot:
-#   title: "Sunburst Plot - TreatmentPatterns"
-#   function: createSunburstPlot(treatmentPathways, groupCombinations)
-#   options: TRUE, FALSE
-#   type:
-#     - plot
-# createSankeyDiagram:
-#   title: "Sankey Diagram - TreatmentPatterns"
-#   function: createSankeyDiagram(treatmentPathways, groupCombinations)
-#   options: TRUE, FALSE
-#   type:
-#     - diagram
 summaryCharacteristics:
-  title: "Summarised Characteristics - Table"
+  title: "Summarised Characteristics"
   function: tableCharacteristics(summarisedCharacteristics)
   type:
     - summarised_characteristics
 summarised_large_scale_characteristics:
-  title: "Summarised Large Scale Characteristics - Table"
+  title: "Summarised Large Scale Characteristics"
   function: tableCharacteristics(summarisedCharacteristics)
   type:
     - summarised_large_scale_characteristics
 Survival table:
-  title: "Single Event - Table"
+  title: "Survival - Single Event"
   function: cohortSurvivalTable(survivalEstimate)
   type:
     - single_event
 Survival plot:
-  title: "Single Event - Plot"
+  title: "Survival - Competing Risk "
   function: CohortSurvival::plotSurvival(survivalEstimate, facet, colour)
   type:
     - single_event
-  options: Facet by database, colour by strata_name
-Cumulative incidence table:
-  title: "Competing Risk - Table"
-  function: cohortSurvivalTable(cumulativeSurvivalEstimate)
-  type:
-    - competing_risk
-Cumulative incidence plot:
-  title: "Competing Risk - Plot"
-  function: CohortSurvival::plotSurvival(cumulativeSurvivalEstimate, facet, colour, cumulativeFailure = TRUE)
-  type:
-    - competing_risk
   options: Facet by database, colour by strata_name
