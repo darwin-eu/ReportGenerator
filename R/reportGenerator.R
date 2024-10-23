@@ -148,7 +148,7 @@ reportGenerator <- function(logger = NULL) {
         show_alert(title = "Data mismatch",
                    text = "No valid package files found")
       }
-      pkgNames <- names(uploadedFiles)
+      pkgNames <- names(uploadedFilesList)
       if ("IncidencePrevalence" %in% pkgNames) {
         uploadedFiles$IncidencePrevalence <- uploadedFilesList[["IncidencePrevalence"]]
       }
@@ -172,6 +172,7 @@ reportGenerator <- function(logger = NULL) {
 
       # Get list of items to show in toggle menu
       for (pkgName in pkgNames) {
+        # pkgName <- "IncidencePrevalence"
         pkgDataList <- uploadedFiles[[pkgName]]
         items <- names(pkgDataList)
         itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], getItemsList(items))

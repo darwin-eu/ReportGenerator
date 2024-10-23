@@ -33,19 +33,19 @@ plotIncidenceYear:
   title: "Incidence rate per year - Plot"
   function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)
   type:
-    - incidence
+    - incidence_estimates
   options: Facet by outcome, Facet by database, Ribbon, Options
 plotIncidenceSex:
   title: "Incidence rate per year by sex - Plot"
   function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)
   type:
-    - incidence
+    - incidence_estimates
   options: Facet by outcome, Facet by database, Ribbon, Options
 plotIncidenceAge:
   title: "Incidence rate per year by age - Plot"
   function: plotIncidence(incidence_estimates, colour, facet, ribbon, options)
   type:
-    - incidence
+    - incidence_estimates
   options: Facet by outcome, Facet by database, Ribbon, Options
 plotPrevalenceYear:
   title: "Prevalence per year - Plot"
