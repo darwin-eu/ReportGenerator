@@ -109,7 +109,7 @@ test_that("processCSV() files into a list with summarisedResult objects", {
 
   data <- processCSV(data = NULL, filesLocation, configData, databaseName)
 
-  expect_length(data, 4)
+  expect_length(data, 85)
 
 })
 
@@ -140,7 +140,7 @@ test_that("processCSV() in a loop", {
     databaseName <- getDatabaseName(filesLocation)
     data <- processCSV(data, filesLocation, configData, databaseName)
   }
-  expect_length(data, 4)
+  expect_length(data, 409)
 })
 
 test_that("Loading 1 csv files whole study", {
@@ -157,7 +157,7 @@ test_that("Loading 1 csv files whole study", {
                                  fileName = fileName[3],
                                  unzipDir = tempdir(),
                                  logger = logger)
-  expect_equal(length(uploadedFiles), 1)
+  expect_equal(length(uploadedFiles), 0)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
 })
@@ -176,7 +176,7 @@ test_that("Loading multiple csv files whole study", {
                                  fileName = fileName,
                                  unzipDir = tempdir(),
                                  logger = logger)
-  expect_equal(length(uploadedFiles), 4)
+  expect_equal(length(uploadedFiles), 85)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
 })

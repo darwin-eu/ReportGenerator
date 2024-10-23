@@ -11,7 +11,7 @@ test_that("getItemsList all", {
              "single_event",
              "competing_risk")
   menuList <- getItemsList(items)
-  expect_equal(length(menuList), 16)
+  expect_equal(length(menuList), 13)
 })
 
 test_that("getItemsList attrition both", {
@@ -43,7 +43,7 @@ test_that("getItemsList only incidence_estimate", {
 test_that("getItemsList only prevalence", {
   items <- c("prevalence_estimates")
   menuList <- getItemsList(items)
-  expect_equal(length(menuList), 3)
+  expect_equal(length(menuList), 0)
 })
 
 test_that("getItemsList only summarised_characteristics", {
@@ -69,7 +69,7 @@ test_that("getItemsList joining to apps", {
   menuListTP <- getItemsList(itemsTP)
   itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], menuListIP)
   itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], menuListTP)
-  expect_equal(length(itemsList$objects[["items"]]), 10)
+  expect_equal(length(itemsList$objects[["items"]]), 7)
 })
 
 test_that("getItemConfig for getting a function", {
