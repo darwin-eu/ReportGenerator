@@ -165,6 +165,7 @@ importOtherResult <- function(csv_list,
   # Iterates and checks every csv file and adds it
   for (i in 1:length(csv_list)) {
     # i <- 2
+    cli::cli_text("Reading non-summarised result {csv_list[i]}")
     resultsData <- read_csv(csv_list[i], show_col_types = FALSE, col_types = c(.default = "c"))
     # resultsData
     # vroom::problems(resultsData)
@@ -233,7 +234,7 @@ loadFileData <- function(data,
         configColumns <- pkgConfigData[[val]]
         configColumns <- unlist(configColumns$names)
         if (val == "attrition") {
-          if (all(configColumns == resultsColumns) & grepl("attrition", fileName)) {
+          if (all(configColumns %in% resultsColumns) & grepl("attrition", fileName)) {
             data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           }
@@ -245,7 +246,7 @@ loadFileData <- function(data,
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           } else if (val == "cohortAttrition") {
-            if (all(configColumns == resultsColumns)) {
+            if (all(configColumns %in% resultsColumns)) {
               data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
             }
           }

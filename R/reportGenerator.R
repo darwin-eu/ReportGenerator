@@ -144,6 +144,10 @@ reportGenerator <- function(logger = NULL) {
       # fileDataPath <- list.files(fileDataPath, full.names = TRUE, pattern = ".zip")
       # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ild"
       # fileDataPath <- list.files(fileDataPath, full.names = TRUE, pattern = ".zip")
+
+      # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ild\\survival\\cdw_survival_results.csv"
+      # fileDataPath <- list.files(fileDataPath, full.names = TRUE, pattern = ".zip")
+
       tryCatch({
         data_joined <- joinDatabases(fileDataPath = fileDataPath)
         uploadedData(data_joined)
@@ -168,30 +172,24 @@ reportGenerator <- function(logger = NULL) {
 
       req(settingsData())
       items <- analysisNames(settingsData = settingsData())
-      # itemsList <- list()
       itemsList$objects[["items"]] <- getItemsList(items)
 
       if ("incidence_attrition" %in% items) {
-        # uploadedFiles <- list()
         uploadedFiles$attrition <- uploadedData()$other_result$IncidencePrevalence$attrition
       }
       if ("incidence" %in% items) {
-        # uploadedFiles <- list()
         uploadedFiles$incidence <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
                                                      analysis_type = "incidence")
       }
       if ("summarised_characteristics" %in% items) {
-        # uploadedFiles <- list()
         uploadedFiles$summarised_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
                                                                       analysis_type = "summarised_characteristics")
       }
       if ("summarised_large_scale_characteristics" %in% items) {
-        # uploadedFiles <- list()
         uploadedFiles$summarised_large_scale_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
                                                                                   analysis_type = "summarised_large_scale_characteristics")
       }
       if ("single_event" %in% items) {
-        # uploadedFiles <- list()
         uploadedFiles$single_event <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
                                                         analysis_type = "survival")
       }
