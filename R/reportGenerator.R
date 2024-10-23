@@ -123,9 +123,9 @@ reportGenerator <- function(logger = NULL) {
     # ReactiveValues for data and items menu
     uploadedFiles <- reactiveValues(attrition = NULL,
                                     incidence = NULL,
-                                    TreatmentPatterns = NULL,
-                                    CohortCharacteristics = NULL,
-                                    CohortSurvival = NULL)
+                                    summarised_characteristics = NULL,
+                                    summarised_large_scale_characteristics = NULL,
+                                    single_event = NULL)
     itemsList <- reactiveValues(objects = NULL)
     uploadedData <- reactiveVal(NULL)
     settingsData <- reactiveVal(NULL)
@@ -141,6 +141,8 @@ reportGenerator <- function(logger = NULL) {
 
       # Joins one or several zips into the reactive value
       # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\latest\\p3-c1-010-results 2"
+      # fileDataPath <- list.files(fileDataPath, full.names = TRUE, pattern = ".zip")
+      # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ild"
       # fileDataPath <- list.files(fileDataPath, full.names = TRUE, pattern = ".zip")
       tryCatch({
         data_joined <- joinDatabases(fileDataPath = fileDataPath)
@@ -176,18 +178,25 @@ reportGenerator <- function(logger = NULL) {
       if ("incidence" %in% items) {
         # uploadedFiles <- list()
         uploadedFiles$incidence <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                                     type = "incidence")
+                                                     analysis_type = "incidence")
       }
       if ("summarised_characteristics" %in% items) {
         # uploadedFiles <- list()
         uploadedFiles$summarised_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                                                      type = "summarised_characteristics")
+                                                                      analysis_type = "summarised_characteristics")
+      }
+      if ("summarised_large_scale_characteristics" %in% items) {
+        # uploadedFiles <- list()
+        uploadedFiles$summarised_large_scale_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
+                                                                                  analysis_type = "summarised_large_scale_characteristics")
+      }
+      if ("single_event" %in% items) {
+        # uploadedFiles <- list()
+        uploadedFiles$single_event <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
+                                                        analysis_type = "survival")
       }
       # if ("TreatmentPatterns" %in% pkgNames) {
       #   uploadedFiles$TreatmentPatterns <- uploadedFilesList[["TreatmentPatterns"]]
-      # }
-      # if ("CohortCharacteristics" %in% pkgNames) {
-      #   uploadedFiles$CohortCharacteristics <- uploadedFilesList[["CohortCharacteristics"]]
       # }
       # if ("CohortSurvival" %in% pkgNames) {
       #   uploadedFiles$CohortSurvival <- uploadedFilesList[["CohortSurvival"]]
@@ -217,11 +226,11 @@ reportGenerator <- function(logger = NULL) {
     # Reset and back to initial tab
     observeEvent(input$resetData, {
       itemsList$objects <- NULL
-      uploadedFiles <- reactiveValues(cohortAttrition = NULL,
+      uploadedFiles <- reactiveValues(attrition = NULL,
                                       incidence = NULL,
-                                      TreatmentPatterns = NULL,
-                                      CohortCharacteristics = NULL,
-                                      CohortSurvival = NULL)
+                                      summarised_characteristics = NULL,
+                                      summarised_large_scale_characteristics = NULL,
+                                      single_event = NULL)
       updateTabsetPanel(session, "mainPanel",
                         selected = "Item selection")
       datasetLoadServer("StudyPackage")
@@ -411,7 +420,7 @@ reportGenerator <- function(logger = NULL) {
 
     # Cohort Survival Modules
 
-    dataSurvivalTable <- cohortSurvivalServer("survivalTable", reactive(uploadedFiles))
+    dataSurvivalTable <- cohortSurvivalServer("survivalTable", reactive(uploadedFiles$single_event))
 
     observe({
       for (key in names(dataSurvivalTable())) {
@@ -421,7 +430,7 @@ reportGenerator <- function(logger = NULL) {
     }) %>%
       bindEvent(dataSurvivalTable())
 
-    dataSurvivalPlot <- cohortSurvivalServer("survivalPlot", reactive(uploadedFiles))
+    dataSurvivalPlot <- cohortSurvivalServer("survivalPlot", reactive(uploadedFiles$single_event))
 
     observe({
       for (key in names(dataSurvivalPlot())) {
