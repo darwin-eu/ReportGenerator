@@ -1,3 +1,7 @@
+# ReportGenerator 1.18.0
+
+* omopgenerics integrations for IncidencePrevalence
+
 # ReportGenerator 1.17.0
 
 * Binds results using result_id. 
