@@ -31,32 +31,31 @@ incidenceSumUI <- function(id, uploadedFiles) {
                            selected = unique(uploadedFiles$result_id)[1],
                            multiple = FALSE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        )
-        # ,
-      #   column(4,
-      #          pickerInput(inputId = ns("group_name"),
-      #                      label = "Group Name",
-      #                      choices = unique(uploadedFiles$group_name),
-      #                      selected = unique(uploadedFiles$group_name),
-      #                      multiple = TRUE,
-      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      #   ),
-      #   column(4,
-      #          pickerInput(inputId = ns("group_level"),
-      #                      label = "Group Level",
-      #                      choices = unique(uploadedFiles$group_level),
-      #                      selected = unique(uploadedFiles$group_level)[1],
-      #                      multiple = TRUE,
-      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      #   ),
-      #   column(4,
-      #          pickerInput(inputId = ns("strata_name"),
-      #                      label = "Strata Name",
-      #                      choices = unique(uploadedFiles$strata_name),
-      #                      selected = unique(uploadedFiles$strata_name),
-      #                      multiple = TRUE,
-      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      #   ),
+        ),
+        column(4,
+               pickerInput(inputId = ns("group_name"),
+                           label = "Group Name",
+                           choices = unique(uploadedFiles$group_name),
+                           selected = unique(uploadedFiles$group_name)[1],
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("group_level"),
+                           label = "Group Level",
+                           choices = unique(uploadedFiles$group_level),
+                           selected = unique(uploadedFiles$group_level)[1],
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("strata_name"),
+                           label = "Strata Name",
+                           choices = unique(uploadedFiles$strata_name),
+                           selected = unique(uploadedFiles$strata_name),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
       #   column(4,
       #          pickerInput(inputId = ns("strata_level"),
       #                      label = "Strata Level",
@@ -153,6 +152,7 @@ incidenceSumServer <- function(id, uploadedFiles) {
     ns <- session$ns
 
       summarised_result <- reactive({
+        req(input$result_id)
         summarised_result <- uploadedFiles()
 
         attr(summarised_result, "settings") <- settings(summarised_result) %>%
@@ -161,11 +161,10 @@ incidenceSumServer <- function(id, uploadedFiles) {
         summarised_result <- summarised_result %>%
           # mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
           filter(cdm_name %in% input$cdm_name,
-                 result_id %in% input$result_id
-                 # ,
+                 result_id %in% input$result_id,
                  # group_name %in% input$group_name,
-                 # group_level %in% input$group_level,
-                 # strata_name %in% input$strata_name,
+                 # group_level %in% input$group_level#,
+                 strata_name %in% input$strata_name#,
                  # strata_level %in% input$strata_level,
                  # estimate_type %in% input$estimate_type,
                  # variable_level %in% input$variable_level,
@@ -175,10 +174,34 @@ incidenceSumServer <- function(id, uploadedFiles) {
         summarised_result
       })
 
+      observe({
+        req(summarised_result())
+        updatePickerInput(session,
+                          "group_level",
+                          choices = unique(summarised_result()$group_level),
+                          selected = unique(summarised_result()$group_level)[1],)
+      })
+
+      # Final Summarised Result
+
+      final_summarised_result <- reactive({
+        req(summarised_result())
+        summarised_result <- summarised_result()
+
+        attr(summarised_result, "settings") <- settings(summarised_result) %>%
+          filter(result_id %in% input$result_id)
+
+        # if (!is.null(input$group_level) && input$group_level != "") {
+          summarised_result <- summarised_result %>% filter(group_level == input$group_level)
+        # }
+
+        summarised_result
+      })
+
       # Table
 
       summarisedIncidence_gt_table <- reactive({
-        IncidencePrevalence::tableIncidence(result = summarised_result())
+        IncidencePrevalence::tableIncidence(result = final_summarised_result())
       })
 
       output$summarisedTableGt <- gt::render_gt({
