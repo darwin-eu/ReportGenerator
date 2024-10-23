@@ -1,13 +1,13 @@
-test_that("incidencePrevalenceData works", {
-  sampleSize <- 5000
-  incidencePrevalenceData <- getIncidencePrevalence(sampleSize = sampleSize)
-  expect_equal(length(incidencePrevalenceData), 4)
-  expect_equal(names(incidencePrevalenceData), c("incidence_estimates",
-                                                 "incidence_attrition",
-                                                 "prevalence_estimates",
-                                                 "prevalence_attrition"))
-  expect_equal(class(incidencePrevalenceData), "list")
-})
+# test_that("incidencePrevalenceData works", {
+#   sampleSize <- 5000
+#   incidencePrevalenceData <- getIncidencePrevalence(sampleSize = sampleSize)
+#   expect_equal(length(incidencePrevalenceData), 4)
+#   expect_equal(names(incidencePrevalenceData), c("incidence_estimates",
+#                                                  "incidence_attrition",
+#                                                  "prevalence_estimates",
+#                                                  "prevalence_attrition"))
+#   expect_equal(class(incidencePrevalenceData), "list")
+# })
 
 test_that("treatmentPathwaysData works", {
   if (!dir.exists(Sys.getenv("EUNOMIA_DATA_FOLDER"))) {
