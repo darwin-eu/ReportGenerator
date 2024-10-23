@@ -1,3 +1,7 @@
+# ReportGenerator 1.17.1
+
+* Fixed tests.
+
 # ReportGenerator 1.17.0
 
 * Binds results using result_id. 
