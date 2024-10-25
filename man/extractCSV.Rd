@@ -4,14 +4,12 @@
 \alias{extractCSV}
 \title{`extractCSV()` iterates every file in the databaseFolders to `processCSV()`}
 \usage{
-extractCSV(databaseFolders, configData, logger)
+extractCSV(databaseFolders, configData)
 }
 \arguments{
 \item{databaseFolders}{A list of full name folder locations}
 
 \item{configData}{Configuration from yaml file}
-
-\item{logger}{A logger object}
 }
 \value{
 A list objects with summarisedResults

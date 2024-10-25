@@ -14,7 +14,7 @@ test_that("Generate Report", {
                                            dataReportList,
                                            fileName,
                                            logger))
-  unlink(fileName)
+  unlink(testdir, recursive = TRUE)
 })
 
 test_that("Generate Report tablenumpar ild", {
@@ -33,5 +33,5 @@ test_that("Generate Report tablenumpar ild", {
                                            dataReportList,
                                            fileName,
                                            logger))
-  unlink(fileName)
+  unlink(testdir, recursive = TRUE)
 })

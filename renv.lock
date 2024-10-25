@@ -211,7 +211,7 @@
     },
     "IncidencePrevalence": {
       "Package": "IncidencePrevalence",
-      "Version": "0.7.4",
+      "Version": "0.8.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -224,7 +224,6 @@
         "dbplyr",
         "dplyr",
         "glue",
-        "lifecycle",
         "lubridate",
         "magrittr",
         "omopgenerics",
@@ -234,7 +233,7 @@
         "tidyr",
         "visOmopResults"
       ],
-      "Hash": "644352fe1c48cab082e268f0c5a04002"
+      "Hash": "b6375a4490f80ab019e24b194a29456a"
     },
     "MASS": {
       "Package": "MASS",
@@ -309,7 +308,7 @@
     },
     "PatientProfiles": {
       "Package": "PatientProfiles",
-      "Version": "1.2.0",
+      "Version": "1.2.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -326,7 +325,7 @@
         "tidyr",
         "visOmopResults"
       ],
-      "Hash": "7923f16a151c8d02eefbf31489219764"
+      "Hash": "bf97970a94e0d39281f3744c15785892"
     },
     "R6": {
       "Package": "R6",
@@ -2515,6 +2514,19 @@
         "shiny"
       ],
       "Hash": "c6acc72327e63668bbc7bd258ee54132"
+    },
+    "shinyalert": {
+      "Package": "shinyalert",
+      "Version": "3.1.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "htmltools",
+        "shiny",
+        "uuid"
+      ],
+      "Hash": "45f99f3173e5513e2dec78dc4d63f9f0"
     },
     "shinycssloaders": {
       "Package": "shinycssloaders",
