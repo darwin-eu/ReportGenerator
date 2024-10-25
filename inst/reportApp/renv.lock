@@ -399,7 +399,8 @@
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "ReportGenerator",
-      "RemoteUsername": "darwin-eu"
+      "RemoteUsername": "darwin-eu",
+      "RemoteRef": "v1.17.2"
     },
     "SparseM": {
       "Package": "SparseM",
