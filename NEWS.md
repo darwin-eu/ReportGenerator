@@ -1,4 +1,7 @@
-<<<<<<< HEAD
+# ReportGenerator 1.18.0
+
+* omopgenerics integrations for IncidencePrevalence and data extraction. 
+
 # ReportGenerator 1.17.3
 
 * Update to renv.lock
@@ -6,11 +9,6 @@
 # ReportGenerator 1.17.1
 
 * Fixed tests.
-=======
-# ReportGenerator 1.18.0
-
-* omopgenerics integrations for IncidencePrevalence and data extraction. 
->>>>>>> develop
 
 # ReportGenerator 1.17.0
 

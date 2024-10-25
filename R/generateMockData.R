@@ -60,13 +60,8 @@ generateMockData <- function(databaseName = c("CHUBX",
 
 
     # Generate data
-<<<<<<< HEAD
-    cohortAttritionData <- getAttritionResult()
-    incidencePrevalenceData <- getIncidencePrevalence(sampleSize = sampleSize)
-=======
 
     incidencePrevalenceData <- getIncidencePrevalenceMock(sampleSize = sampleSize)
->>>>>>> omop_version
     treatmentPathwaysData <- getTreatmentPathways()
     summarised_characteristics <- getCharacteristicsResult()
     summarised_large_scale_characteristics <- getLargeScaleCharacteristicsResult()
@@ -74,20 +69,6 @@ generateMockData <- function(databaseName = c("CHUBX",
 
     # Gather data
 
-<<<<<<< HEAD
-    dataList <- list("cohortAttrition" = cohortAttritionData,
-                     "incidence_estimates" = incidencePrevalenceData$incidence_estimates,
-                     "prevalence_estimates" = incidencePrevalenceData$prevalence_estimates,
-                     "incidence_attrition" = incidencePrevalenceData$incidence_attrition,
-                     "prevalence_attrition" = incidencePrevalenceData$incidence_attrition,
-                     "treatmentPathways" = treatmentPathwaysData$treatmentPathways,
-                     "metadata" = treatmentPathwaysData$metadata,
-                     "summaryStatsTherapyDuration" = treatmentPathwaysData$summaryStatsTherapyDuration,
-                     "summarised_characteristics" = summarised_characteristics,
-                     "summarised_large_scale_characteristics" = summarised_large_scale_characteristics,
-                     "single_event" = cohortSurvivalData$single_event,
-                     "competing_risk" = cohortSurvivalData$competing_risk)
-=======
     dataList <- list("IncidencePrevalence" = list("incidence_estimates" = incidencePrevalenceData$incidence_estimates,
                                                   "prevalence_estimates" = incidencePrevalenceData$prevalence_estimates,
                                                   "incidence_attrition" = incidencePrevalenceData$incidence_attrition,
@@ -101,7 +82,6 @@ generateMockData <- function(databaseName = c("CHUBX",
                                                 "metadata" = treatmentPathwaysData$metadata,
                                                 "summaryStatsTherapyDuration" = treatmentPathwaysData$summaryStatsTherapyDuration)
     )
->>>>>>> omop_version
 
     # Insert database name
 
@@ -160,41 +140,7 @@ generateMockData <- function(databaseName = c("CHUBX",
   return(dataList)
 }
 
-<<<<<<< HEAD
-getAttritionResult <- function() {
-
-  con <- DBI::dbConnect(duckdb::duckdb(),
-                        dbdir = CDMConnector::eunomia_dir()
-  )
-
-  cdm <- CDMConnector::cdm_from_con(con,
-                                    cdm_schem = "main",
-                                    write_schema = "main",
-                                    cdm_name = "Eunomia"
-  )
-
-  cdm <- CDMConnector::generateConceptCohortSet(
-    cdm = cdm,
-    name = "injuries",
-    conceptSet = list(
-      "ankle_sprain" = 81151,
-      "ankle_fracture" = 4059173,
-      "forearm_fracture" = 4278672,
-      "hip_fracture" = 4230399
-    ),
-    end = "event_end_date",
-    limit = "all"
-  )
-
-  result <- CDMConnector::attrition(cdm$injuries)
-  return(result)
-}
-
-getIncidencePrevalence <- function(sampleSize) {
-=======
 getIncidencePrevalenceMock <- function(sampleSize) {
->>>>>>> omop_version
-
   checkmate::assert_class(sampleSize, "numeric")
 
   sampleSize <- 1000
@@ -217,16 +163,6 @@ getIncidencePrevalenceMock <- function(sampleSize) {
     daysPriorObservation = 180
   )
   # Incidence data
-<<<<<<< HEAD
-  incidence_estimates <- IncidencePrevalence::estimateIncidence(cdm = cdm,
-                                                                denominatorTable = "denominator",
-                                                                outcomeTable = "outcome",
-                                                                interval = c("years", "overall"),
-                                                                completeDatabaseIntervals = TRUE,
-                                                                outcomeWashout = 180,
-                                                                repeatedEvents = FALSE,
-                                                                minCellCount = 5)
-=======
   incidence_estimates <- IncidencePrevalence::estimateIncidence(
     cdm = cdm,
     denominatorTable = "denominator",
@@ -242,8 +178,6 @@ getIncidencePrevalenceMock <- function(sampleSize) {
   incidence_estimates <- incidence_estimates |>
     visOmopResults::filterSettings(result_type == "incidence_attrition") |>
     dplyr::glimpse()
-
->>>>>>> omop_version
 
   # Attrition data
   incidence_attrition <- IncidencePrevalence::attrition(incidence_estimates)

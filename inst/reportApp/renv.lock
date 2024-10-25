@@ -399,19 +399,6 @@
       ],
       "Hash": "df49e3306f232ec28f1604e36a202847"
     },
-<<<<<<< HEAD
-    "ReportGenerator": {
-      "Package": "ReportGenerator",
-      "Version": "1.17.3",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "ReportGenerator",
-      "RemoteUsername": "darwin-eu",
-      "RemoteRef": "v1.17.3"
-    },
-=======
->>>>>>> develop
     "SparseM": {
       "Package": "SparseM",
       "Version": "1.83",
