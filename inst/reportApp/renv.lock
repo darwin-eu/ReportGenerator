@@ -394,13 +394,13 @@
     },
     "ReportGenerator": {
       "Package": "ReportGenerator",
-      "Version": "1.17.2",
+      "Version": "1.17.3",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "ReportGenerator",
       "RemoteUsername": "darwin-eu",
-      "RemoteRef": "v1.17.2"
+      "RemoteRef": "v1.17.3"
     },
     "SparseM": {
       "Package": "SparseM",
