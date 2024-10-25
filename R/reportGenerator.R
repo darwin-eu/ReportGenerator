@@ -144,7 +144,6 @@ reportGenerator <- function(logger = NULL) {
       # fileDataPath <- list.files(fileDataPath, full.names = TRUE, pattern = ".zip")
       # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ild"
       # fileDataPath <- list.files(fileDataPath, full.names = TRUE, pattern = ".zip")
-
       # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ild\\survival\\cdw_survival_results.csv"
       # fileDataPath <- list.files(fileDataPath, full.names = TRUE, pattern = ".zip")
 
@@ -591,8 +590,8 @@ reportGenerator <- function(logger = NULL) {
           cli::cli_alert("Copying modules file")
           reportAppModulesPath <- file.path(reportAppPath, "modules")
           modulesFilesLocation <- system.file("R", package = "ReportGenerator")
-          modulesFiles <- list.files(modulesFilesLocation, full.names = TRUE)
-          modules <- modulesFiles
+          modulesFiles <- list.files(modulesFilesLocation, full.names = TRUE, pattern = "^(?!sysdata.rda).*$")
+          modules <- modulesFiles[!grepl("sysdata\\.rda$", modulesFiles)]
           dir.create(reportAppModulesPath)
           file.copy(modules, reportAppModulesPath)
 
