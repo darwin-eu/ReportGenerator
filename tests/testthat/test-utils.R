@@ -27,9 +27,6 @@ test_that("getItemsList all", {
              "single_event",
              "competing_risk")
   menuList <- getItemsList(items)
-<<<<<<< HEAD
-  expect_equal(length(menuList), 13)
-=======
   expect_equal(length(menuList), 17)
 })
 
@@ -37,7 +34,6 @@ test_that("getItemsList cohort attrition", {
   items <- "cohortAttrition"
   menuList <- getItemsList(items)
   expect_equal(menuList, "Cohort Attrition - Table")
->>>>>>> develop
 })
 
 test_that("getItemsList attrition both", {
