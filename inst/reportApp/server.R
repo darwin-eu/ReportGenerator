@@ -24,19 +24,19 @@ function(input, output, session) {
   # dataReport$objects <- sessionItems$reportItems
 
   # Item preview
-  pkgNames <- names(uploadedFiles)
+  # Item preview
   itemsList <- list()
-  for (pkgName in pkgNames) {
-    pkgDataList <- uploadedFiles[[pkgName]]
-    items <- names(pkgDataList)
-    itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], getItemsList(items))
+  for (i in 1:length(uploadedFiles)) {
+    # i <- 1
+    if (!is.null(uploadedFiles[[i]])) {
+      item <- names(uploadedFiles[i])
+      itemsList <- c(itemsList, getItemsList(item)) %>% unlist()
+    }
   }
-
-  objectSelection <- itemsList$objects[["items"]]
 
   # Renders the objectSelection into the main dashboard space
   output$navPanelPreview <- renderUI({
-    previewPanels <- lapply(objectSelection,
+    previewPanels <- lapply(itemsList,
                             tabPanelSelection,
                             uploadedFiles = uploadedFiles)
     do.call(navlistPanel, c(previewPanels, list(widths = c(3, 9))))
