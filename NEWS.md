@@ -1,3 +1,7 @@
+# ReportGenerator 1.17.3
+
+* Update to renv.lock
+
 # ReportGenerator 1.17.1
 
 * Fixed tests.
