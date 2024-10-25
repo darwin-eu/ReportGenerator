@@ -190,12 +190,12 @@ test_that("PatientProfiles Both Summaries", {
 test_that("PatientProfiles Summary", {
   items <- c("summarised_characteristics")
   menuList <- getItemsList(items)
-  expect_equal(menuList, "Summarised Characteristics - Table")
+  expect_equal(menuList, "Summarised Characteristics")
 })
 
 test_that("PatientProfiles LSC", {
   items <- c("summarised_large_scale_characteristics")
   menuList <- getItemsList(items)
-  expect_equal(menuList, "Summarised Large Scale Characteristics - Table")
+  expect_equal(menuList, "Summarised Large Scale Characteristics")
 })
 

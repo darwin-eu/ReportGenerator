@@ -52,8 +52,7 @@ test_that("Loading 1 zip files whole study", {
   logger <- log4r::logger()
   unzipDir <- file.path(tempdir(), "single")
   uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath[1],
-                                        unzipDir = unzipDir,
-                                        logger = logger)
+                                        unzipDir = unzipDir)
   expect_equal(length(uploadedFileDataList), 85)
   expect_type(uploadedFileDataList, "list")
   unlink(unzipDir, recursive = TRUE)
@@ -66,8 +65,7 @@ test_that("Loading multiple zip files whole study", {
   logger <- log4r::logger()
   unzipDir <- file.path(tempdir(), "multi")
   uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
-                                        unzipDir = unzipDir,
-                                        logger = logger)
+                                        unzipDir = unzipDir)
   expect_equal(length(uploadedFileDataList), 409)
   expect_type(uploadedFileDataList, "list")
   unlink(unzipDir, recursive = TRUE)
@@ -95,8 +93,7 @@ test_that("unzipFiles() correctly", {
 
   # `unzipFiles()` Unzip files
   databaseFolders <- unzipFiles(unzipDir = unzipDir,
-                                fileDataPath = fileDataPath,
-                                logger = logger)
+                                fileDataPath = fileDataPath)
   expect_length(databaseFolders, 3)
 })
 
@@ -151,7 +148,7 @@ test_that("processCSV() files into a list with summarisedResult objects", {
 
   # databaseName <- getDatabaseName(filesLocation = filesLocation)
 
-  data <- processCSV(data = NULL, filesLocation, configData, databaseName)
+  data <- processCSV(filesLocation)
 
   expect_length(data, 85)
 
@@ -172,7 +169,7 @@ test_that("processCSV() summarised result", {
 
   filesLocation <- filesLocation[3]
 
-  data <- processCSV(data = NULL, filesLocation, configData, databaseName)
+  data <- processCSV(filesLocation)
   expect_length(data, 4)
 })
 
@@ -189,8 +186,7 @@ test_that("processCSV() in a loop", {
                              full.names = TRUE)
 
   databaseFolders <- unzipFiles(unzipDir = unzipDir,
-                                fileDataPath = fileDataPath,
-                                logger = logger)
+                                fileDataPath = fileDataPath)
 
   data <- list()
 
@@ -219,8 +215,7 @@ test_that("Loading 1 csv files whole study", {
   logger <- log4r::logger()
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[3],
                                  fileName = fileName[3],
-                                 unzipDir = tempdir(),
-                                 logger = logger)
+                                 unzipDir = tempdir())
   expect_equal(length(uploadedFiles), 0)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -238,8 +233,7 @@ test_that("Loading multiple csv files whole study", {
   logger <- log4r::logger()
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
                                  fileName = fileName,
-                                 unzipDir = tempdir(),
-                                 logger = logger)
+                                 unzipDir = tempdir())
   expect_equal(length(uploadedFiles), 85)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
@@ -260,8 +254,7 @@ test_that("loadFileData iteration per result id", {
                        configData,
                        resultsData,
                        resultsColumns,
-                       databaseName,
-                       logger)
+                       databaseName)
 
   expect_equal(names(data), "CohortCharacteristics")
   CohortCharacteristicsData <- data$CohortCharacteristics
@@ -287,8 +280,7 @@ test_that("loadFileData iteration per result id two databases", {
                        configData,
                        resultsData,
                        resultsColumns,
-                       databaseName,
-                       logger)
+                       databaseName)
 
   filesLocation <- testthat::test_path("studies", "misc", "chr_results_other_db.csv")
   resultsData <- read_csv(filesLocation, show_col_types = FALSE, col_types = c(.default = "c"))
@@ -299,8 +291,7 @@ test_that("loadFileData iteration per result id two databases", {
                        configData,
                        resultsData,
                        resultsColumns,
-                       databaseName,
-                       logger)
+                       databaseName)
 
   expect_equal(names(data), "CohortCharacteristics")
   CohortCharacteristicsData <- data$CohortCharacteristics
@@ -359,7 +350,7 @@ test_that("getPackageData returns data for summarised_characteristics", {
   resultsColumns <- names(resultsData)
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
   logger <- log4r::logger()
-  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData, logger = logger)
+  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
   expect_equal(class(result), "list")
   expect_equal(names(result), "PatientProfiles")
   expect_equal(names(result$PatientProfiles$summarised_characteristics),
@@ -385,7 +376,7 @@ test_that("getPackageData returns data for summarised_large_scale_characteristic
   resultsColumns <- names(resultsData)
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
   logger <- log4r::logger()
-  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData, logger = logger)
+  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
   expect_equal(class(result), "list")
   expect_equal(names(result), "PatientProfiles")
   expect_equal(names(result$PatientProfiles$summarised_large_scale_characteristics),
@@ -413,7 +404,7 @@ test_that("getPackageData returns data from `Survival Estimate`", {
   resultsColumns <- names(resultsData)
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
   logger <- log4r::logger()
-  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData, logger = logger)
+  result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
   expect_equal(class(result), "list")
   expect_equal(names(result), "CohortSurvival")
   expect_equal(names(result$CohortSurvival$`survival`),
@@ -437,12 +428,10 @@ test_that("Cohort Attrition", {
                              full.names = TRUE)
 
   databaseFolders <- unzipFiles(unzipDir = unzipDir,
-                                fileDataPath = fileDataPath,
-                                logger = logger)
+                                fileDataPath = fileDataPath)
 
   data <- extractCSV(databaseFolders = databaseFolders,
-                     configData = configData,
-                     logger = logger)
+                     configData = configData)
   expect_list(data)
 
 })
