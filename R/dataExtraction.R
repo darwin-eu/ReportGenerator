@@ -1,3 +1,4 @@
+
 # Copyright 2023 DARWIN EU®
 #
 # This file is part of ReportGenerator
@@ -97,7 +98,7 @@ unzipFiles <- function(unzipDir,
   }
 
   databaseFolders <- dir(unzipDir, full.names = TRUE)
-  databaseFolders <- databaseFolders[!startsWith(basename(databaseFolders), "__")]
+
   checkmate::assertDirectoryExists(databaseFolders)
 
   return(databaseFolders)
@@ -226,39 +227,33 @@ loadFileData <- function(data,
                          resultsColumns,
                          databaseName) {
 
-    for (pkg in names(configData)) {
-      # pkg <- "IncidencePrevalence"
-      pkgConfigData <- configData[[pkg]]
-      for (val in names(pkgConfigData)) {
-        # val <- "attrition"
-        configColumns <- pkgConfigData[[val]]
-        configColumns <- unlist(configColumns$names)
-        if (val == "attrition") {
-          if (all(configColumns %in% resultsColumns) & grepl("attrition", fileName)) {
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-            }
+  for (pkg in names(configData)) {
+    # pkg <- "IncidencePrevalence"
+    pkgConfigData <- configData[[pkg]]
+    for (val in names(pkgConfigData)) {
+      # val <- "attrition"
+      configColumns <- pkgConfigData[[val]]
+      configColumns <- unlist(configColumns$names)
+      if (val == "attrition") {
+        if (all(configColumns %in% resultsColumns) & grepl("attrition", fileName)) {
+          data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
         }
-        else if (val == "cohortAttrition") {
-          if (all(configColumns %in% resultsColumns)) {
-            resultsData$excluded_subjects <- as.character(resultsData$excluded_subjects)
-            resultsData$excluded_records <- as.character(resultsData$excluded_records)
-            data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+      }
+      else if (val == "treatmentPathways") {
+        if (all(configColumns %in% resultsColumns)) {
+          if (!('cdm_name' %in% resultsColumns)) {
+            resultsData <- mutate(resultsData, cdm_name = databaseName)
           }
-          else if (val == "treatmentPathways") {
-            if (all(configColumns %in% resultsColumns)) {
-              if (!('cdm_name' %in% resultsColumns)) {
-                resultsData <- mutate(resultsData, cdm_name = databaseName)
-                }
-              data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-            }
-          } else if (val == "cohortAttrition") {
-            if (all(configColumns %in% resultsColumns)) {
-              data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
-            }
-          }
+          data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+        }
+      } else if (val == "cohortAttrition") {
+        if (all(configColumns %in% resultsColumns)) {
+          data[[pkg]][[val]] <- bind_rows(data[[pkg]][[val]], resultsData)
+        }
       }
     }
-    return(data)
+  }
+  return(data)
 }
 
 additionalCols <- function(data) {
@@ -405,15 +400,15 @@ variablesConfigYaml <- function(fileDataPath = NULL,
       PatientProfiles::addDemographics()
 
     lscPP <- CohortCharacteristics::summariseLargeScaleCharacteristics(cohort = cdm[["cohort1"]],
-                                                                 strata = list("age",
-                                                                               "sex"),
-                                                                 window = list(c(-30, -1),
-                                                                               c(0, 0),
-                                                                               c(1, 30),
-                                                                               c(31, 365)),
-                                                                 eventInWindow = "condition_occurrence",
-                                                                 episodeInWindow = "condition_occurrence",
-                                                                 cdm = attr(cdm[["cohort1"]], "cdm_reference"))
+                                                                       strata = list("age",
+                                                                                     "sex"),
+                                                                       window = list(c(-30, -1),
+                                                                                     c(0, 0),
+                                                                                     c(1, 30),
+                                                                                     c(31, 365)),
+                                                                       eventInWindow = "condition_occurrence",
+                                                                       episodeInWindow = "condition_occurrence",
+                                                                       cdm = attr(cdm[["cohort1"]], "cdm_reference"))
     lscPP <- read.csv(lsc_csv)
     columnNamesLSC <- names(lscPP)
     configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
@@ -486,7 +481,7 @@ variablesConfigAttrition <- function(path) {
 dataCleanAttrition <- function(attrition) {
   if (!is.null(attrition)) {
     attrition$reason <- gsub("Prior history requirement not fullfilled during study period",
-                                        "Prior history requirement not fulfilled during study period ",
+                             "Prior history requirement not fulfilled during study period ",
                              attrition$reason)
     if (!("reason_id" %in% names(attrition))) {
       attrition <- attrition %>%
