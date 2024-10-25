@@ -1,6 +1,6 @@
 # ReportGenerator 1.18.0
 
-* omopgenerics integrations for IncidencePrevalence
+* omopgenerics integrations for IncidencePrevalence and data extraction. 
 
 # ReportGenerator 1.17.0
 

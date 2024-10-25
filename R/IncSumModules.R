@@ -56,22 +56,24 @@ incidenceSumUI <- function(id, uploadedFiles) {
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
-      #   column(4,
-      #          pickerInput(inputId = ns("strata_level"),
-      #                      label = "Strata Level",
-      #                      choices = unique(uploadedFiles$strata_level),
-      #                      selected = unique(uploadedFiles$strata_level),
-      #                      multiple = TRUE,
-      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      #   ),
-      #   column(4,
-      #          pickerInput(inputId = ns("denominator_sex"),
-      #                      label = "Denominator Sex",
-      #                      choices = unique(setttings_denominator_sex),
-      #                      selected = unique(setttings_denominator_sex),
-      #                      multiple = TRUE,
-      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      #   ),
+        column(4,
+               pickerInput(inputId = ns("strata_level"),
+                           label = "Strata Level",
+                           choices = unique(uploadedFiles$strata_level),
+                           selected = unique(uploadedFiles$strata_level),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        # ,
+        # column(4,
+        #        pickerInput(inputId = ns("denominator_sex"),
+        #                    label = "Denominator Sex",
+        #                    choices = unique(setttings_denominator_sex),
+        #                    selected = unique(setttings_denominator_sex),
+        #                    multiple = TRUE,
+        #                    list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        # )
+      # ,
       #   column(4,
       #          pickerInput(inputId = ns("denominator_age_group"),
       #                      label = "Denominator Age Group",
@@ -81,31 +83,30 @@ incidenceSumUI <- function(id, uploadedFiles) {
       #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
       #   )
       # ),
-      # fluidRow(
-      #   column(4,
-      #          pickerInput(inputId = ns("variable_name"),
-      #                      label = "Variable",
-      #                      choices = sort(unique(uploadedFiles$variable_name)),
-      #                      selected = unique(uploadedFiles$variable_name),
-      #                      multiple = TRUE,
-      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      #   ),
-      #   column(4,
-      #          pickerInput(inputId = ns("variable_level"),
-      #                      label = "Variable Level",
-      #                      choices = c("NA", sort(unique(uploadedFiles$variable_level))),
-      #                      selected = c("NA", unique(uploadedFiles$variable_level)),
-      #                      multiple = TRUE,
-      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      #   ),
-      #   column(4,
-      #          pickerInput(inputId = ns("estimate_type"),
-      #                      label = "Estimate Type",
-      #                      choices = sort(unique(uploadedFiles$estimate_type)),
-      #                      selected = sort(unique(uploadedFiles$estimate_type)),
-      #                      multiple = TRUE,
-      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      #   )
+        column(4,
+               pickerInput(inputId = ns("variable_name"),
+                           label = "Variable",
+                           choices = sort(unique(uploadedFiles$variable_name)),
+                           selected = unique(uploadedFiles$variable_name),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("variable_level"),
+                           label = "Variable Level",
+                           choices = c("NA", sort(unique(uploadedFiles$variable_level))),
+                           selected = c("NA", unique(uploadedFiles$variable_level)),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("estimate_type"),
+                           label = "Estimate Type",
+                           choices = sort(unique(uploadedFiles$estimate_type)),
+                           selected = sort(unique(uploadedFiles$estimate_type)),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        )
       ),
       fluidRow(
         column(12,
@@ -164,7 +165,7 @@ incidenceSumServer <- function(id, uploadedFiles) {
                  result_id %in% input$result_id,
                  # group_name %in% input$group_name,
                  # group_level %in% input$group_level#,
-                 strata_name %in% input$strata_name#,
+                 # strata_name %in% input$strata_name#,
                  # strata_level %in% input$strata_level,
                  # estimate_type %in% input$estimate_type,
                  # variable_level %in% input$variable_level,
@@ -179,7 +180,31 @@ incidenceSumServer <- function(id, uploadedFiles) {
         updatePickerInput(session,
                           "group_level",
                           choices = unique(summarised_result()$group_level),
-                          selected = unique(summarised_result()$group_level)[1],)
+                          selected = unique(summarised_result()$group_level)[1])
+        updatePickerInput(session,
+                          "group_name",
+                          choices = unique(summarised_result()$group_name),
+                          selected = unique(summarised_result()$group_name)[1])
+        updatePickerInput(session,
+                          "strata_name",
+                          choices = unique(summarised_result()$strata_name),
+                          selected = unique(summarised_result()$strata_name))
+        updatePickerInput(session,
+                          "strata_level",
+                          choices = unique(summarised_result()$strata_level),
+                          selected = unique(summarised_result()$strata_level))
+        updatePickerInput(session,
+                          "estimate_type",
+                          choices = unique(summarised_result()$estimate_type),
+                          selected = unique(summarised_result()$estimate_type))
+        updatePickerInput(session,
+                          "variable_level",
+                          choices = unique(summarised_result()$variable_level),
+                          selected = unique(summarised_result()$variable_level))
+        updatePickerInput(session,
+                          "variable_name",
+                          choices = unique(summarised_result()$variable_name),
+                          selected = unique(summarised_result()$variable_name))
       })
 
       # Final Summarised Result
@@ -192,7 +217,13 @@ incidenceSumServer <- function(id, uploadedFiles) {
           filter(result_id %in% input$result_id)
 
         # if (!is.null(input$group_level) && input$group_level != "") {
-          summarised_result <- summarised_result %>% filter(group_level == input$group_level)
+          summarised_result <- summarised_result %>% filter(group_name %in% input$group_name,
+                                                            group_level == input$group_level,
+                                                            strata_name %in% input$strata_name,
+                                                            strata_level %in% input$strata_level,
+                                                            estimate_type %in% input$estimate_type,
+                                                            variable_level %in% input$variable_level,
+                                                            variable_name %in% input$variable_name)
         # }
 
         summarised_result
