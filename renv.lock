@@ -308,7 +308,7 @@
     },
     "PatientProfiles": {
       "Package": "PatientProfiles",
-      "Version": "1.2.0",
+      "Version": "1.2.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -325,7 +325,7 @@
         "tidyr",
         "visOmopResults"
       ],
-      "Hash": "7923f16a151c8d02eefbf31489219764"
+      "Hash": "bf97970a94e0d39281f3744c15785892"
     },
     "R6": {
       "Package": "R6",
