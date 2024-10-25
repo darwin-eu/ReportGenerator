@@ -3114,6 +3114,6 @@
       "RemoteRepo": "ReportGenerator",
       "RemoteUsername": "darwin-eu",
       "RemoteRef": "v1.18.0"
-    },
+    }
   }
 }

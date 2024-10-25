@@ -590,7 +590,7 @@ reportGenerator <- function(logger = NULL) {
           cli::cli_alert("Copying modules file")
           reportAppModulesPath <- file.path(reportAppPath, "modules")
           modulesFilesLocation <- system.file("R", package = "ReportGenerator")
-          modulesFiles <- list.files(modulesFilesLocation, full.names = TRUE, pattern = "^(?!sysdata.rda).*$")
+          modulesFiles <- list.files(modulesFilesLocation, full.names = TRUE)
           modules <- modulesFiles[!grepl("sysdata\\.rda$", modulesFiles)]
           dir.create(reportAppModulesPath)
           file.copy(modules, reportAppModulesPath)
