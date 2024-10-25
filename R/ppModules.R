@@ -24,8 +24,8 @@ characteristicsUI <- function(id, uploadedFiles) {
                pickerInput(inputId = ns("group_name"),
                            label = "Group Name",
                            choices = unique(uploadedFiles$group_name),
-                           selected = unique(uploadedFiles$group_name),
-                           multiple = FALSE,
+                           selected = unique(uploadedFiles$group_name)[1],
+                           multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
@@ -258,7 +258,7 @@ characteristicsServer <- function(id, uploadedFiles) {
 
       summarisedCharacteristics_gt_table <- reactive({
         CohortCharacteristics::tableCharacteristics(result = summarised_result(),
-                                                    split = input$pivotWide,
+                                                    # split = input$pivotWide,
                                                     header = input$header)
       })
 
