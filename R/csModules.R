@@ -6,16 +6,20 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
   dlPlot <- NULL
   if (id == "survivalTable") {
     outResult <- gt::gt_output(ns("cs_data"))
-    dataset <- uploadedFiles$CohortSurvival$single_event
+    dataset <- uploadedFiles$CohortSurvival$single_event %>%
+      visOmopResults::splitAdditional()
   } else if (id == "survivalPlot") {
     outResult <- plotOutput(ns("cs_plot"))
-    dataset <- uploadedFiles$CohortSurvival$single_event
+    dataset <- uploadedFiles$CohortSurvival$single_event %>%
+      visOmopResults::splitAdditional()
   } else if (id == "failureTable") {
     outResult <- gt::gt_output(ns("cu_inc_data"))
-    dataset <- uploadedFiles$CohortSurvival$competing_risk
+    dataset <- uploadedFiles$CohortSurvival$competing_risk %>%
+      visOmopResults::splitAdditional()
   } else if (id == "failurePlot") {
     outResult <- plotOutput(ns("cu_inc_plot"))
-    dataset <- uploadedFiles$CohortSurvival$competing_risk
+    dataset <- uploadedFiles$CohortSurvival$competing_risk %>%
+      visOmopResults::splitAdditional()
   }
   if (grepl("Plot", id)) {
     dlPlot <- createDownloadPlotUI(ns)
@@ -27,9 +31,18 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
            uiOutput(outputId = ns("caption"))
     ),
   )
-
+  cdmOptions <- unique(dataset$cdm_name)
+  resultIdOptions <- unique(dataset$result_id)
   groupLevelOptions <- unique(dataset$group_level)
+  groupNameOptions <- unique(dataset$group_name)
   strataNameOptions <- unique(dataset$strata_name)
+  strataLevelOptions <- unique(dataset$strata_level)
+  variableNameOptions <- unique(dataset$variable_name)
+  variableLevelOptions <- unique(dataset$variable_level)
+  estimateTypeOptions <- unique(dataset$estimate_type)
+  timeOptions <- unique(dataset$estimate_type)
+  outcomeOptions <- unique(dataset$outcome)
+  eventgapOptions <- unique(dataset$eventgap)
   pickerOptions <- list(`actions-box` = TRUE,
                         size = 10,
                         `selected-text-format` = "count > 3")
@@ -42,7 +55,27 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
                inputId = ns("cdm_name"),
                label = "Database",
                choices = cdmOptions,
-               selected = cdmOptions,
+               selected = cdmOptions[1],
+               options = pickerOptions,
+               multiple = TRUE
+             )
+      ),
+      column(4,
+             pickerInput(
+               inputId = ns("result_id"),
+               label = "Result Id",
+               choices = resultIdOptions,
+               selected = resultIdOptions,
+               options = pickerOptions,
+               multiple = TRUE
+             )
+      ),
+      column(4,
+             pickerInput(
+               inputId = ns("group_name"),
+               label = "Group Name",
+               choices = groupNameOptions,
+               selected = groupNameOptions[1],
                options = pickerOptions,
                multiple = TRUE
              )
@@ -62,7 +95,77 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
                inputId = ns("strata_name"),
                label = "Strata Name",
                choices = strataNameOptions,
-               selected = strataNameOptions,
+               selected = strataNameOptions[1],
+               options = pickerOptions,
+               multiple = TRUE
+             )
+      ),
+      column(4,
+             pickerInput(
+               inputId = ns("strata_level"),
+               label = "Strata Level",
+               choices = strataLevelOptions,
+               selected = strataLevelOptions[1],
+               options = pickerOptions,
+               multiple = TRUE
+             )
+      ),
+      column(4,
+             pickerInput(
+               inputId = ns("variable_name"),
+               label = "Variable Name",
+               choices = variableNameOptions,
+               selected = variableNameOptions[1],
+               options = pickerOptions,
+               multiple = TRUE
+             )
+      ),
+      column(4,
+             pickerInput(
+               inputId = ns("variable_level"),
+               label = "Variable Level",
+               choices = variableLevelOptions,
+               selected = variableLevelOptions,
+               options = pickerOptions,
+               multiple = TRUE
+             )
+      ),
+      column(4,
+             pickerInput(
+               inputId = ns("estimate_type"),
+               label = "Estimate Level",
+               choices = estimateTypeOptions,
+               selected = estimateTypeOptions,
+               options = pickerOptions,
+               multiple = TRUE
+             )
+      ),
+      column(4,
+             pickerInput(
+               inputId = ns("time"),
+               label = "Estimate Level",
+               choices = timeOptions,
+               selected = timeOptions,
+               options = pickerOptions,
+               multiple = TRUE
+             )
+      ),
+      column(4,
+             pickerInput(
+               inputId = ns("outcome"),
+               label = "Outcome",
+               choices = outcomeOptions,
+               selected = outcomeOptions,
+               options = pickerOptions,
+               multiple = TRUE
+             )
+      ),
+      column(4,
+             pickerInput(
+               inputId = ns("eventgap"),
+               label = "Event Gap",
+               choices = eventgapOptions,
+               selected = eventgapOptions[1],
                options = pickerOptions,
                multiple = TRUE
              )
@@ -79,8 +182,9 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
       column(6,
              pickerInput(inputId = ns("header"),
                          label = "Header",
-                         choices = c("cdm_name", "cohort_name", "strata", "window name"),
-                         selected = c("cdm_name"),
+                         choices = c("cdm_name", "group", "strata",
+                                     "additional", "variable", "estimate", "settings"),
+                         selected = c("cdm_name", "estimate"),
                          multiple = TRUE)),
     ),
     captionUI,
@@ -104,10 +208,14 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
       } else if (id == "failureTable"  || id == "failurePlot") {
         dataset <- uploadedFiles$CohortSurvival$competing_risk
       }
-      dataset %>%
+      dataset_split <- dataset %>% visOmopResults::splitAdditional()
+
+      dataset_split %>%
         filter(cdm_name %in% input$cdm_name,
                group_level %in% input$group_level,
-               strata_name %in% input$strata_name)
+               strata_name %in% input$strata_name) %>%
+        visOmopResults::uniteAdditional()
+
     })
 
     survival_gt_table <- reactive({

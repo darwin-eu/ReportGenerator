@@ -8,7 +8,7 @@ generateMockData(
   databaseName = c("CHUBX", "CPRD_GOLD", "IMASIS", "IPCI", "SIDIAP"),
   simulatePopulation = TRUE,
   outputPath = testthat::test_path("studies", "zip"),
-  internal = FALSE
+  internal = TRUE
 )
 }
 \arguments{

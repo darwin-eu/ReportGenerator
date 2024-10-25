@@ -1,36 +1,15 @@
 IncidencePrevalence:
-  incidence_estimates:
+  attrition:
     names:
-    - incidence_start_date
-    - incidence_end_date
-    - incidence_100000_pys
-    - incidence_100000_pys_95CI_lower
-    - incidence_100000_pys_95CI_upper
-  prevalence_estimates:
-    names:
-    - prevalence_start_date
-    - prevalence_end_date
-    - prevalence
-    - prevalence_95CI_lower
-    - prevalence_95CI_upper
-  incidence_attrition:
-    names:
+    - cohort_definition_id
     - number_records
     - number_subjects
     - reason_id
     - reason
     - excluded_records
     - excluded_subjects
-    - denominator_cohort_name
-  prevalence_attrition:
-    names:
-    - number_records
-    - number_subjects
-    - reason_id
-    - reason
-    - excluded_records
-    - excluded_subjects
-    - denominator_cohort_name
+    - group_name
+    - cdm_name
 TreatmentPatterns:
   treatmentPathways:
     names:
@@ -39,78 +18,6 @@ TreatmentPatterns:
     - sex
     - age
     - indexYear
-PatientProfiles:
-  summarised_characteristics:
-    names:
-    - result_id
-    - cdm_name
-    - result_type
-    - package_name
-    - package_version
-    - group_name
-    - group_level
-    - strata_name
-    - strata_level
-    - variable_name
-    - variable_level
-    - estimate_name
-    - estimate_type
-    - estimate_value
-    - additional_name
-    - additional_level
-  summarised_large_scale_characteristics:
-    names:
-    - result_id
-    - cdm_name
-    - result_type
-    - package_name
-    - package_version
-    - group_name
-    - group_level
-    - strata_name
-    - strata_level
-    - variable_name
-    - variable_level
-    - estimate_name
-    - estimate_type
-    - estimate_value
-    - additional_name
-    - additional_level
-CohortSurvival:
-  Survival estimate:
-    names:
-    - cdm_name
-    - result_type
-    - package_name
-    - package_version
-    - group_name
-    - group_level
-    - strata_name
-    - strata_level
-    - variable_name
-    - variable_level
-    - estimate_name
-    - estimate_type
-    - estimate_value
-    - additional_name
-    - additional_level
-  Survival cumulative incidence:
-    names:
-    - cdm_name
-    - result_type
-    - package_name
-    - package_version
-    - group_name
-    - group_level
-    - strata_name
-    - strata_level
-    - variable_name
-    - variable_level
-    - estimate_name
-    - estimate_type
-    - estimate_value
-    - additional_name
-    - additional_level
 cohortAttrition:
   cohortAttrition:
     names:

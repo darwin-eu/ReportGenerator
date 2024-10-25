@@ -1,3 +1,50 @@
+test_that("Complete sequence of functions inside joinDatabases ZIP", {
+
+  # fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  #                            pattern = "zip",
+  #                            full.names = TRUE)
+  fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\result_\\p3-c1-010-results-ipci\\p3-c1-010-results-ipci\\results_IPCI.zip"
+  checkmate::assertCharacter(fileDataPath)
+
+  # Configuration
+  configData <- yaml.load_file(system.file("config",
+                                           "variablesConfig.yaml",
+                                           package = "ReportGenerator"))
+  packagesNames <- names(configData)
+  fileType <- getFileType(fileDataPath)
+  unzipDir <- unzipDir()
+
+  # `unzipFiles()` Unzip files
+  databaseFolders <- unzipFiles(unzipDir = unzipDir,
+                                fileDataPath = fileDataPath)
+
+  # `extractCSV()` iterates folders for CSV files
+  csv_files <- extractCSV(databaseFolders = databaseFolders,
+                          configData = configData)
+
+
+  # grep("incidence", csv_files, value = TRUE)
+  #
+  # acne_suicide_incidence_results <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list[2])
+  # glimpse(settings(acne_suicide_incidence_results))
+  #
+  # overall_suicide_incidence_results <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list[4])
+  # glimpse(settings(overall_suicide_incidence_results))
+  #
+  # psoriasis_suicide_incidence_results <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list[2])
+  # glimpse(settings(psoriasis_suicide_incidence_results))
+
+  # Get list of csv files
+  csv_list <- processCSV(csv_files)
+
+  csv_list$summarised_result_list
+
+  summarised_result <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list)
+
+  uploadedFiles <- summarised_result
+
+})
+
 test_that("Loading 1 zip files whole study", {
   fileDataPath <- list.files(testthat::test_path("studies", "zip"),
                              pattern = "zip",
@@ -50,7 +97,7 @@ test_that("unzipFiles() correctly", {
   databaseFolders <- unzipFiles(unzipDir = unzipDir,
                                 fileDataPath = fileDataPath,
                                 logger = logger)
-  expect_length(databaseFolders, 5)
+  expect_length(databaseFolders, 3)
 })
 
 test_that("extractCSV() correctly", {
@@ -62,9 +109,6 @@ test_that("extractCSV() correctly", {
                              pattern = "zip",
                              full.names = TRUE)
 
-  # fileDataPath <- list.files("C:/Users/cbarboza/Documents/darwin-docs/studyPackages/P2C1014PrescriptionsICU/results",
-  #                            pattern = "zip",
-  #                            full.names = TRUE)
   databaseFolders <- unzipFiles(unzipDir = unzipDir,
                                 fileDataPath = fileDataPath,
                                 logger = logger)
@@ -112,6 +156,26 @@ test_that("processCSV() files into a list with summarisedResult objects", {
   expect_length(data, 85)
 
 })
+
+test_that("processCSV() summarised result", {
+
+  configData <- yaml.load_file(system.file("config",
+                                           "variablesConfig.yaml",
+                                           package = "ReportGenerator"))
+
+  filesLocation <- list.files(testthat::test_path("studies",
+                                                  "summarised_result_csv"),
+                              pattern = "csv",
+                              full.names = TRUE)
+
+  databaseName <- getDatabaseName(filesLocation = filesLocation)
+
+  filesLocation <- filesLocation[3]
+
+  data <- processCSV(data = NULL, filesLocation, configData, databaseName)
+  expect_length(data, 4)
+})
+
 
 
 test_that("processCSV() in a loop", {
@@ -183,12 +247,13 @@ test_that("Loading multiple csv files whole study", {
 
 test_that("loadFileData iteration per result id", {
   data <- list()
-  filesLocation <- testthat::test_path("studies", "misc", "ls_chr_results.csv")
+  filesLocation <- testthat::test_path("studies", "summarised_result_csv", "CHUBX_incidence_estimates_2024_09_16.csv")
   configData <- yaml.load_file(system.file("config",
                                            "variablesConfig.yaml",
                                            package = "ReportGenerator"))
   resultsData <- read_csv(filesLocation, show_col_types = FALSE, col_types = c(.default = "c"))
   resultsColumns <- names(resultsData)
+  fileName <- NULL
 
   data <- loadFileData(data,
                        filesLocation,
@@ -355,4 +420,29 @@ test_that("getPackageData returns data from `Survival Estimate`", {
                c("result_id", "cdm_name", "group_name", "group_level", "strata_name", "strata_level", "variable_name",
                  "variable_level", "estimate_name", "estimate_type", "estimate_value",
                  "additional_name", "additional_level", "result_type", "package_name", "package_version", "analysis_type"))
+})
+
+
+test_that("Cohort Attrition", {
+
+
+  configData <- yaml.load_file(system.file("config",
+                                           "variablesConfig.yaml",
+                                           package = "ReportGenerator"))
+  unzipDir <- file.path(tempdir(), "unzipData")
+  fileDataPath <- list.files(testthat::test_path("studies",
+                                                 "misc",
+                                                 "chondrosarcoma"),
+                             pattern = "zip",
+                             full.names = TRUE)
+
+  databaseFolders <- unzipFiles(unzipDir = unzipDir,
+                                fileDataPath = fileDataPath,
+                                logger = logger)
+
+  data <- extractCSV(databaseFolders = databaseFolders,
+                     configData = configData,
+                     logger = logger)
+  expect_list(data)
+
 })

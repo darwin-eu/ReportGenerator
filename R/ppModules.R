@@ -7,48 +7,48 @@ characteristicsUI <- function(id, uploadedFiles) {
         column(4,
                pickerInput(inputId = ns("cdm_name"),
                            label = "Database",
-                           choices = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$cdm_name),
-                           selected = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$cdm_name),
+                           choices = unique(uploadedFiles$cdm_name),
+                           selected = unique(uploadedFiles$cdm_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("result_id"),
                            label = "Result Id",
-                           choices = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$result_id),
-                           selected = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$result_id),
+                           choices = unique(uploadedFiles$result_id),
+                           selected = unique(uploadedFiles$result_id),
                            multiple = FALSE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("group_name"),
                            label = "Group Name",
-                           choices = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$group_name),
-                           selected = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$group_name),
-                           multiple = FALSE,
+                           choices = unique(uploadedFiles$group_name),
+                           selected = unique(uploadedFiles$group_name)[1],
+                           multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("group_level"),
                            label = "Group Level",
-                           choices = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$group_level),
-                           selected = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$group_level)[1],
+                           choices = unique(uploadedFiles$group_level),
+                           selected = unique(uploadedFiles$group_level)[1],
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("strata_name"),
                            label = "Strata Name",
-                           choices = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$strata_name),
-                           selected = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$strata_name),
+                           choices = unique(uploadedFiles$strata_name),
+                           selected = unique(uploadedFiles$strata_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("strata_level"),
                            label = "Strata Level",
-                           choices = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$strata_level),
-                           selected = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$strata_level),
+                           choices = unique(uploadedFiles$strata_level),
+                           selected = unique(uploadedFiles$strata_level),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
@@ -57,24 +57,24 @@ characteristicsUI <- function(id, uploadedFiles) {
         column(4,
                pickerInput(inputId = ns("variable_name"),
                            label = "Variable",
-                           choices = sort(unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$variable_name)),
-                           selected = unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$variable_name),
+                           choices = sort(unique(uploadedFiles$variable_name)),
+                           selected = unique(uploadedFiles$variable_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("variable_level"),
                            label = "Variable Level",
-                           choices = c("NA", sort(unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$variable_level))),
-                           selected = c("NA", unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$variable_level)),
+                           choices = c("NA", sort(unique(uploadedFiles$variable_level))),
+                           selected = c("NA", unique(uploadedFiles$variable_level)),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("estimate_type"),
                            label = "Estimate Type",
-                           choices = sort(unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$estimate_type)),
-                           selected = sort(unique(uploadedFiles$CohortCharacteristics$summarised_characteristics$estimate_type)),
+                           choices = sort(unique(uploadedFiles$estimate_type)),
+                           selected = sort(unique(uploadedFiles$estimate_type)),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
@@ -242,7 +242,7 @@ characteristicsServer <- function(id, uploadedFiles) {
     if (id == "characteristics") {
       summarised_result <- reactive({
         uploadedFiles <- uploadedFiles()
-        summarised_result <- uploadedFiles$CohortCharacteristics$summarised_characteristics
+        summarised_result <- uploadedFiles
         summarised_result %>%
           mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
           filter(cdm_name %in% input$cdm_name,
@@ -258,7 +258,7 @@ characteristicsServer <- function(id, uploadedFiles) {
 
       summarisedCharacteristics_gt_table <- reactive({
         CohortCharacteristics::tableCharacteristics(result = summarised_result(),
-                                                    split = input$pivotWide,
+                                                    # split = input$pivotWide,
                                                     header = input$header)
       })
 

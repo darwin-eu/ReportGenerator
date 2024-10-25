@@ -1,7 +1,23 @@
 # IncidencePrevalence
+test_that("getIncidencePrevalence", {
+  fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\010\\p3-c1-010-results-ipci\\p3-c1-010-results-ipci\\results_IPCI.zip"
+  uploadedData <- joinDatabases(fileDataPath)
+  incidence_result <- getIncidencePrevalence(uploadedData, type = "incidence")
+
+})
 
 test_that("getItemsList all", {
-  items <- c("incidence_attrition",
+  items <- c("incidence", "summarised_large_scale_characteristics", "point_prevalence",
+             "period_prevalence", "summarised_characteristics", "competing_risk",
+             "single_event")
+  menuList <- getItemsList(items)
+  expect_equal(length(menuList), 17)
+})
+
+
+test_that("getItemsList all", {
+  items <- c("cohortAttrition",
+            "incidence_attrition",
              "prevalence_attrition",
              "incidence_estimates",
              "prevalence_estimates",
@@ -11,7 +27,17 @@ test_that("getItemsList all", {
              "single_event",
              "competing_risk")
   menuList <- getItemsList(items)
+<<<<<<< HEAD
   expect_equal(length(menuList), 13)
+=======
+  expect_equal(length(menuList), 17)
+})
+
+test_that("getItemsList cohort attrition", {
+  items <- "cohortAttrition"
+  menuList <- getItemsList(items)
+  expect_equal(menuList, "Cohort Attrition - Table")
+>>>>>>> develop
 })
 
 test_that("getItemsList attrition both", {

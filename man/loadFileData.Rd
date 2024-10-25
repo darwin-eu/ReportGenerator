@@ -10,8 +10,7 @@ loadFileData(
   configData,
   resultsData,
   resultsColumns,
-  databaseName,
-  logger
+  databaseName
 )
 }
 \arguments{
@@ -26,8 +25,6 @@ loadFileData(
 \item{resultsColumns}{the loaded file columns}
 
 \item{databaseName}{db name}
-
-\item{logger}{logger object}
 }
 \value{
 the list with data
