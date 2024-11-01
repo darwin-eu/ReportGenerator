@@ -184,24 +184,6 @@ addPlotOptions <- function(previewItemString, showCI, stackPlots) {
   return(gsub("options", optionsStr, previewItemString))
 }
 
-#' Export list of package results
-#'
-#' @param resultList Named list with results from a darwin package
-#' @param zipName name to give zip folder
-#' @param outputFolder directory to save zip folder containing results as a set
-#' of CSV files
-#'
-#' @return zip folder of results saved in the outputFolder
-#' @export
-#'
-#' @examples
-#' \donttest{
-#' exportResults(
-#'   resultList = list("mtcars" = mtcars),
-#'   zipName = "test",
-#'   outputFolder = tempdir()
-#' )
-#' }
 exportResults <- function(resultList,
                           zipName,
                           outputFolder) {
