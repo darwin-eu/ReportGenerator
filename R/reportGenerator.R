@@ -180,19 +180,19 @@ reportGenerator <- function(logger = NULL) {
       }
       if ("incidence" %in% items) {
         uploadedFiles$incidence <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                                     analysis_type = "incidence")
+                                                     type_result = "incidence")
       }
       if ("summarised_characteristics" %in% items) {
         uploadedFiles$summarised_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                                                      analysis_type = "summarised_characteristics")
+                                                                      type_result = "summarised_characteristics")
       }
       if ("summarised_large_scale_characteristics" %in% items) {
         uploadedFiles$summarised_large_scale_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                                                                  analysis_type = "summarised_large_scale_characteristics")
+                                                                                  type_result = "summarised_large_scale_characteristics")
       }
       if ("single_event" %in% items) {
         uploadedFiles$single_event <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                                        analysis_type = "survival")
+                                                        type_result = "survival")
       }
       # if ("TreatmentPatterns" %in% pkgNames) {
       #   uploadedFiles$TreatmentPatterns <- uploadedFilesList[["TreatmentPatterns"]]

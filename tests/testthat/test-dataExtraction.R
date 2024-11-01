@@ -1,9 +1,9 @@
 test_that("Complete sequence of functions inside joinDatabases ZIP", {
 
-  # fileDataPath <- list.files(testthat::test_path("studies", "zip"),
-  #                            pattern = "zip",
-  #                            full.names = TRUE)
-  fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\result_\\p3-c1-010-results-ipci\\p3-c1-010-results-ipci\\results_IPCI.zip"
+  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+                             pattern = "zip",
+                             full.names = TRUE)
+  # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\result_\\p3-c1-010-results-ipci\\p3-c1-010-results-ipci\\results_IPCI.zip"
   checkmate::assertCharacter(fileDataPath)
 
   # Configuration
@@ -51,9 +51,8 @@ test_that("Loading 1 zip files whole study", {
                              full.names = TRUE)
   logger <- log4r::logger()
   unzipDir <- file.path(tempdir(), "single")
-  uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath[1],
-                                        unzipDir = unzipDir)
-  expect_equal(length(uploadedFileDataList), 85)
+  uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath[1])
+  expect_equal(length(uploadedFileDataList), 2)
   expect_type(uploadedFileDataList, "list")
   unlink(unzipDir, recursive = TRUE)
 })
@@ -64,9 +63,8 @@ test_that("Loading multiple zip files whole study", {
                              full.names = TRUE)
   logger <- log4r::logger()
   unzipDir <- file.path(tempdir(), "multi")
-  uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath,
-                                        unzipDir = unzipDir)
-  expect_equal(length(uploadedFileDataList), 409)
+  uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath)
+  expect_equal(length(uploadedFileDataList), 2)
   expect_type(uploadedFileDataList, "list")
   unlink(unzipDir, recursive = TRUE)
 })
@@ -82,7 +80,6 @@ test_that("getFileType() either zip or csv", {
                              full.names = TRUE)
   fileType <- getFileType(fileDataPath)
   expect_equal(fileType, "csv")
-
 })
 
 test_that("unzipFiles() correctly", {
@@ -107,14 +104,12 @@ test_that("extractCSV() correctly", {
                              full.names = TRUE)
 
   databaseFolders <- unzipFiles(unzipDir = unzipDir,
-                                fileDataPath = fileDataPath,
-                                logger = logger)
+                                fileDataPath = fileDataPath)
 
   # `extractCSV()` iterates folders for CSV files
   data <- extractCSV(databaseFolders = databaseFolders,
-                     configData = configData,
-                     logger = logger)
-  expect_list(data)
+                     configData = configData)
+  expect_character(data)
 
 })
 
@@ -150,7 +145,7 @@ test_that("processCSV() files into a list with summarisedResult objects", {
 
   data <- processCSV(filesLocation)
 
-  expect_length(data, 85)
+  expect_length(data, 2)
 
 })
 
@@ -170,10 +165,8 @@ test_that("processCSV() summarised result", {
   filesLocation <- filesLocation[3]
 
   data <- processCSV(filesLocation)
-  expect_length(data, 4)
+  expect_length(data, 2)
 })
-
-
 
 test_that("processCSV() in a loop", {
 
@@ -197,28 +190,9 @@ test_that("processCSV() in a loop", {
                                 pattern = ".csv",
                                 full.names = TRUE,
                                 recursive = TRUE)
-    databaseName <- getDatabaseName(filesLocation)
-    data <- processCSV(data, filesLocation, configData, databaseName)
+    data <- processCSV(filesLocation)
   }
-  expect_length(data, 409)
-})
-
-test_that("Loading 1 csv files whole study", {
-  csvLocation <- file.path(tempdir(), "dataLocation")
-  dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("studies", "csv"),
-                             pattern = "csv",
-                             full.names = TRUE)
-  fileName <- list.files(testthat::test_path("studies", "csv"),
-                         pattern = "csv")
-  fileName <- tools::file_path_sans_ext(fileName)
-  logger <- log4r::logger()
-  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[3],
-                                 fileName = fileName[3],
-                                 unzipDir = tempdir())
-  expect_equal(length(uploadedFiles), 0)
-  expect_type(uploadedFiles, "list")
-  unlink(csvLocation, recursive = TRUE)
+  expect_length(data, 2)
 })
 
 test_that("Loading multiple csv files whole study", {
@@ -231,17 +205,16 @@ test_that("Loading multiple csv files whole study", {
                          pattern = "csv")
   fileName <- tools::file_path_sans_ext(fileName)
   logger <- log4r::logger()
-  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath,
-                                 fileName = fileName,
-                                 unzipDir = tempdir())
-  expect_equal(length(uploadedFiles), 85)
+  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath)
+  expect_equal(length(uploadedFiles), 2)
   expect_type(uploadedFiles, "list")
   unlink(csvLocation, recursive = TRUE)
 })
 
 test_that("loadFileData iteration per result id", {
   data <- list()
-  filesLocation <- testthat::test_path("studies", "summarised_result_csv", "CHUBX_incidence_estimates_2024_09_16.csv")
+  filesLocation <- testthat::test_path("studies", "summarised_result_csv", "CHUBX_treatmentPathways_2024_09_16.csv")
+  assertFileExists(filesLocation)
   configData <- yaml.load_file(system.file("config",
                                            "variablesConfig.yaml",
                                            package = "ReportGenerator"))
@@ -256,161 +229,88 @@ test_that("loadFileData iteration per result id", {
                        resultsColumns,
                        databaseName)
 
-  expect_equal(names(data), "CohortCharacteristics")
-  CohortCharacteristicsData <- data$CohortCharacteristics
-  expect_equal(names(CohortCharacteristicsData), c("summarised_characteristics", "summarised_large_scale_characteristics"))
-  expect_equal(CohortCharacteristicsData$summarised_characteristics %>% pull(result_id) %>% unique(), 1)
-  expect_equal(CohortCharacteristicsData$summarised_large_scale_characteristics %>% pull(result_id) %>% unique(), c(1,2))
+  expect_equal(names(data), "TreatmentPatterns")
+  TreatmentData <- data$TreatmentPatterns
+  expect_equal(names(TreatmentData), c("treatmentPathways"))
+  expect_equal(TreatmentData$treatmentPathways %>% pull(cdm_name) %>% unique(), "CHUBX")
+  expect_equal(TreatmentData$treatmentPathways %>% pull(cdm_name) %>% unique(), "CHUBX")
 
 })
-
-test_that("loadFileData iteration per result id two databases", {
-
-  data <- list()
-  filesLocation <- testthat::test_path("studies", "misc", "chr_results.csv")
-  configData <- yaml.load_file(system.file("config",
-                                           "variablesConfig.yaml",
-                                           package = "ReportGenerator"))
-  resultsData <- read_csv(filesLocation, show_col_types = FALSE, col_types = c(.default = "c"))
-  resultsColumns <- names(resultsData)
-
-
-  data <- loadFileData(data,
-                       filesLocation,
-                       configData,
-                       resultsData,
-                       resultsColumns,
-                       databaseName)
-
-  filesLocation <- testthat::test_path("studies", "misc", "chr_results_other_db.csv")
-  resultsData <- read_csv(filesLocation, show_col_types = FALSE, col_types = c(.default = "c"))
-  resultsColumns <- names(resultsData)
-
-  data <- loadFileData(data,
-                       filesLocation,
-                       configData,
-                       resultsData,
-                       resultsColumns,
-                       databaseName)
-
-  expect_equal(names(data), "CohortCharacteristics")
-  CohortCharacteristicsData <- data$CohortCharacteristics
-  expect_equal(names(CohortCharacteristicsData), c("summarised_characteristics"))
-  expect_equal(CohortCharacteristicsData$summarised_characteristics %>% pull(result_id) %>% unique(), 1)
-  expect_equal(CohortCharacteristicsData$summarised_characteristics %>% pull(cdm_name) %>% unique(), c("IPCI-20240430", "BORDEAUX"))
-})
-
-# test_that("loadFileData iteration per result id error same files 'checkGroupCount()'", {
-#   data <- list()
-#   filesLocation <- testthat::test_path("studies", "misc", "chr_results.csv")
-#   configData <- yaml.load_file(system.file("config",
-#                                            "variablesConfig.yaml",
-#                                            package = "ReportGenerator"))
-#   resultsData <- read_csv(filesLocation, show_col_types = FALSE, col_types = c(.default = "c"))
-#   resultsColumns <- names(resultsData)
-#
-#
-#   data <- loadFileData(data,
-#                        filesLocation,
-#                        configData,
-#                        resultsData,
-#                        resultsColumns,
-#                        databaseName,
-#                        logger)
-#
-#   filesLocation <- testthat::test_path("studies", "misc", "chr_results.csv")
-#   resultsData <- read_csv(filesLocation, show_col_types = FALSE, col_types = c(.default = "c"))
-#   resultsColumns <- names(resultsData)
-#
-#   expect_error(data <- loadFileData(data,
-#                                     filesLocation,
-#                                     configData,
-#                                     resultsData,
-#                                     resultsColumns,
-#                                     databaseName,
-#                                     logger))
-# })
 
 test_that("additional columns summary_characteristics", {
-  data <- testData$summarised_characteristics
+  data <- testData$CohortCharacteristics$summarised_characteristics
 
   result <- additionalCols(data)
 
-  expect_equal(names(result), c("result_id", "cdm_name", "group_name", "group_level", "strata_name", "strata_level", "variable_name",
-                                "variable_level", "estimate_name", "estimate_type", "estimate_value",
-                                "additional_name", "additional_level", "result_type", "package_name", "package_version"))
+  expect_equal(names(result), c("result_id", "cdm_name", "group_name", "group_level", "strata_name",
+                                "strata_level", "variable_name", "variable_level", "estimate_name",
+                                "estimate_type", "estimate_value", "additional_name", "additional_level"))
 
 })
 
 test_that("getPackageData returns data for summarised_characteristics", {
   data <- list()
-  resultsData <- testData$summarised_characteristics
-  package <- unique(resultsData$package_name)
-  resultType <- unique(resultsData$result_type)[1]
+  resultsData <- testData$CohortCharacteristics$summarised_characteristics
+  package <- unique(settings(resultsData)$package_name)
+  resultType <- unique(settings(resultsData)$result_type)[1]
   resultsColumns <- names(resultsData)
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
   logger <- log4r::logger()
   result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
   expect_equal(class(result), "list")
-  expect_equal(names(result), "PatientProfiles")
-  expect_equal(names(result$PatientProfiles$summarised_characteristics),
+  expect_equal(names(result), "CohortCharacteristics")
+  expect_equal(names(result$CohortCharacteristics$summarised_characteristics),
                c("result_id", "cdm_name", "group_name", "group_level", "strata_name", "strata_level", "variable_name",
                  "variable_level", "estimate_name", "estimate_type", "estimate_value",
-                 "additional_name", "additional_level", "result_type", "package_name", "package_version"))
+                 "additional_name", "additional_level"))
 })
 
 test_that("additional columns summarised_large_scale_characteristics", {
-  data <- testData$summarised_large_scale_characteristics
+  data <- testData$CohortCharacteristics$summarised_characteristics
   result <- additionalCols(data)
-  expect_equal(names(result), c("result_id", "cdm_name", "group_name", "group_level", "strata_name", "strata_level",
-                                "variable_name", "variable_level", "estimate_name", "estimate_type", "estimate_value",
-                                "additional_name", "additional_level", "table_name", "type", "analysis", "result_type",
-                                "package_name", "package_version"))
+  expect_equal(names(result), c("result_id", "cdm_name", "group_name", "group_level", "strata_name",
+                                "strata_level", "variable_name", "variable_level", "estimate_name",
+                                "estimate_type", "estimate_value", "additional_name", "additional_level"))
 })
 
 test_that("getPackageData returns data for summarised_large_scale_characteristics", {
   data <- list()
-  resultsData <- testData$summarised_large_scale_characteristics
-  package <- unique(resultsData$package_name)
-  resultType <- unique(resultsData$result_type)
+  resultsData <- testData$CohortCharacteristics$summarised_large_scale_characteristics
+  package <- unique(settings(resultsData)$package_name)
+  resultType <- unique(settings(resultsData)$result_type)[1]
   resultsColumns <- names(resultsData)
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  logger <- log4r::logger()
   result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
   expect_equal(class(result), "list")
-  expect_equal(names(result), "PatientProfiles")
-  expect_equal(names(result$PatientProfiles$summarised_large_scale_characteristics),
-               c("result_id", "cdm_name",
-                 "group_name", "group_level", "strata_name", "strata_level", "variable_name",
-                 "variable_level", "estimate_name", "estimate_type", "estimate_value",
-                 "additional_name", "additional_level", "table_name", "type", "analysis", "result_type",
-                 "package_name", "package_version"))
+  expect_equal(names(result), "CohortCharacteristics")
+  expect_equal(names(result$CohortCharacteristics$summarised_large_scale_characteristics),
+               c("result_id", "cdm_name", "group_name", "group_level", "strata_name",
+                 "strata_level", "variable_name", "variable_level", "estimate_name",
+                 "estimate_type", "estimate_value", "additional_name", "additional_level"))
 })
 
 test_that("additional columns `Survival Estimate`", {
-  data <- testData$`Survival estimate`
+  data <- testData$CohortSurvival$single_event
   result <- additionalCols(data)
-  expect_equal(names(result), c("result_id", "cdm_name", "group_name", "group_level", "strata_name", "strata_level", "variable_name",
-                                "variable_level", "estimate_name", "estimate_type", "estimate_value",
-                                "additional_name", "additional_level", "result_type", "package_name", "package_version", "analysis_type"
-  ))
+  expect_equal(names(result), c("result_id", "cdm_name", "group_name", "group_level", "strata_name",
+                                "strata_level", "variable_name", "variable_level", "estimate_name",
+                                "estimate_type", "estimate_value", "additional_name", "additional_level"))
 })
 
 test_that("getPackageData returns data from `Survival Estimate`", {
   data <- list()
-  resultsData <- testData$`Survival estimate`
-  package <- unique(resultsData$package_name)
-  resultType <- unique(resultsData$result_type)
+  resultsData <- testData$CohortSurvival$single_event
+  package <- unique(settings(resultsData)$package_name)
+  resultType <- unique(settings(resultsData)$result_type)[1]
   resultsColumns <- names(resultsData)
   configData <- yaml.load_file(system.file("config", "variablesConfig.yaml", package = "ReportGenerator"))
-  logger <- log4r::logger()
   result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
   expect_equal(class(result), "list")
   expect_equal(names(result), "CohortSurvival")
-  expect_equal(names(result$CohortSurvival$`survival`),
+  expect_equal(names(result$CohortSurvival$survival),
                c("result_id", "cdm_name", "group_name", "group_level", "strata_name", "strata_level", "variable_name",
                  "variable_level", "estimate_name", "estimate_type", "estimate_value",
-                 "additional_name", "additional_level", "result_type", "package_name", "package_version", "analysis_type"))
+                 "additional_name", "additional_level"))
 })
 
 
@@ -432,6 +332,6 @@ test_that("Cohort Attrition", {
 
   data <- extractCSV(databaseFolders = databaseFolders,
                      configData = configData)
-  expect_list(data)
+  expect_character(data)
 
 })

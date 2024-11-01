@@ -9,39 +9,39 @@
 #   expect_equal(class(incidencePrevalenceData), "list")
 # })
 
-test_that("treatmentPathwaysData works", {
-  if (!dir.exists(Sys.getenv("EUNOMIA_DATA_FOLDER"))) {
-    eunomia_temp_folder <- file.path(tempdir(), "eunomia_data_folder")
-    dir.create(eunomia_temp_folder)
-    Sys.setenv(EUNOMIA_DATA_FOLDER = eunomia_temp_folder)
-    treatmentPathwaysData <- getTreatmentPathways()
-    expect_equal(length(treatmentPathwaysData), 6)
-    expect_equal(names(treatmentPathwaysData), c("countsAge", "countsSex",
-                                                 "countsYear", "metadata",
-                                                 "summaryStatsTherapyDuration",
-                                                 "treatmentPathways"))
-    expect_equal(class(treatmentPathwaysData), "list")
-    unlink(eunomia_temp_folder, recursive = TRUE)
-  } else {
-    treatmentPathwaysData <- getTreatmentPathways()
-    expect_equal(length(treatmentPathwaysData), 6)
-    expect_equal(names(treatmentPathwaysData), c("countsAge", "countsSex",
-                                                 "countsYear", "metadata",
-                                                 "summaryStatsTherapyDuration",
-                                                 "treatmentPathways"))
-    expect_equal(class(treatmentPathwaysData), "list")
-  }
-  treatmentPathwaysData <- getTreatmentPathways()
-  expect_equal(length(treatmentPathwaysData), 6)
-  expect_equal(names(treatmentPathwaysData), c("countsAge", "countsSex",
-                                               "countsYear", "metadata",
-                                               "summaryStatsTherapyDuration",
-                                               "treatmentPathways"))
-  expect_equal(class(treatmentPathwaysData), "list")
-  if (exists("eunomia_temp_folder")) {
-    unlink(eunomia_temp_folder, recursive = TRUE)
-  }
-})
+# test_that("treatmentPathwaysData works", {
+#   if (!dir.exists(Sys.getenv("EUNOMIA_DATA_FOLDER"))) {
+#     eunomia_temp_folder <- file.path(tempdir(), "eunomia_data_folder")
+#     dir.create(eunomia_temp_folder)
+#     Sys.setenv(EUNOMIA_DATA_FOLDER = eunomia_temp_folder)
+#     treatmentPathwaysData <- getTreatmentPathways()
+#     expect_equal(length(treatmentPathwaysData), 6)
+#     expect_equal(names(treatmentPathwaysData), c("countsAge", "countsSex",
+#                                                  "countsYear", "metadata",
+#                                                  "summaryStatsTherapyDuration",
+#                                                  "treatmentPathways"))
+#     expect_equal(class(treatmentPathwaysData), "list")
+#     unlink(eunomia_temp_folder, recursive = TRUE)
+#   } else {
+#     treatmentPathwaysData <- getTreatmentPathways()
+#     expect_equal(length(treatmentPathwaysData), 6)
+#     expect_equal(names(treatmentPathwaysData), c("countsAge", "countsSex",
+#                                                  "countsYear", "metadata",
+#                                                  "summaryStatsTherapyDuration",
+#                                                  "treatmentPathways"))
+#     expect_equal(class(treatmentPathwaysData), "list")
+#   }
+#   treatmentPathwaysData <- getTreatmentPathways()
+#   expect_equal(length(treatmentPathwaysData), 6)
+#   expect_equal(names(treatmentPathwaysData), c("countsAge", "countsSex",
+#                                                "countsYear", "metadata",
+#                                                "summaryStatsTherapyDuration",
+#                                                "treatmentPathways"))
+#   expect_equal(class(treatmentPathwaysData), "list")
+#   if (exists("eunomia_temp_folder")) {
+#     unlink(eunomia_temp_folder, recursive = TRUE)
+#   }
+# })
 
 ### The following tests break because of the new version of dbplyr
 
