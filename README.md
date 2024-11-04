@@ -10,7 +10,7 @@
 stable](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ReportGenerator)](https://CRAN.R-project.org/package=ReportGenerator)
-[![codecov](https://codecov.io/gh/darwin-eu-dev/ReportGenerator/branch/main/graph/badge.svg)](https://codecov.io/gh/darwin-eu-dev/ReportGenerator)
+[![codecov](https://codecov.io/gh/darwin-eu-dev/ReportGenerator/graph/badge.svg?token=JPB6L2JMAN)](https://codecov.io/gh/darwin-eu-dev/ReportGenerator)
 <!-- badges: end -->
 
 ## Overview
