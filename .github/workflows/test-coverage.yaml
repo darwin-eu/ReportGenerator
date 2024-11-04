@@ -43,8 +43,6 @@ jobs:
         shell: bash
 
       - name: Upload test results
-        if: failure()
-        uses: actions/upload-artifact@v3
+        uses: codecov/codecov-action@v2
         with:
-          name: coverage-test-failures
-          path: ${{ runner.temp }}/package
+          token: ${{ secrets.CODECOV_TOKEN }}
