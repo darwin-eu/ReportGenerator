@@ -25,7 +25,7 @@ attritionServer <- function(id, uploadedFiles) {
       uploadedFiles <- uploadedFiles()
       summarised_result <- uploadedFiles$cohortAttrition$cohortAttrition
       summarised_result %>%
-        filter(cdm_name %in% input$cdm_name) %>%
+        dplyr::filter(cdm_name %in% input$cdm_name) %>%
         select(cohort,
                number_records,
                number_subjects,

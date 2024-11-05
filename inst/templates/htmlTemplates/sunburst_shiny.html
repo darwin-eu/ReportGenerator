@@ -479,7 +479,7 @@
 						return b.value - a.value;
 					});
 
-				let nodes = partition(root).descendants().filter(d => (d.x1 - d.x0 > 0.005)).reverse(); // 0.005 radians = 0.29 degrees
+				let nodes = partition(root).descendants().dplyr::filter(d => (d.x1 - d.x0 > 0.005)).reverse(); // 0.005 radians = 0.29 degrees
 
 				function search(nameKey){
 					for (var i=0; i < lookup.length; i++) {

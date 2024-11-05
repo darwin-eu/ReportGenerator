@@ -239,37 +239,37 @@ incidenceServer <- function(id, uploadedFiles) {
 
       # Washout
       incidence_estimates <- incidence_estimates %>%
-        filter(analysis_outcome_washout %in% c(input$washoutIncidence))
+        dplyr::filter(analysis_outcome_washout %in% c(input$washoutIncidence))
       # Days Prior
       incidence_estimates <- incidence_estimates %>%
-        filter(denominator_days_prior_observation %in% c(input$daysPriorIncidence))
+        dplyr::filter(denominator_days_prior_observation %in% c(input$daysPriorIncidence))
       # Database
       incidence_estimates <- incidence_estimates %>%
-        filter(cdm_name %in% c(input$databaseIncidence))
+        dplyr::filter(cdm_name %in% c(input$databaseIncidence))
       # Outcome
       incidence_estimates <- incidence_estimates %>%
-        filter(outcome_cohort_name %in% input$outcomeIncidence)
+        dplyr::filter(outcome_cohort_name %in% input$outcomeIncidence)
       # Sex
       incidence_estimates <- incidence_estimates %>%
-        filter(denominator_sex %in% input$sexIncidence)
+        dplyr::filter(denominator_sex %in% input$sexIncidence)
       # Age group
       incidence_estimates <- incidence_estimates %>%
-        filter(denominator_age_group %in% input$ageIncidence)
+        dplyr::filter(denominator_age_group %in% input$ageIncidence)
 
       # Start Time
       incidence_estimates <- incidence_estimates %>%
-        filter(between(as.Date(incidence_start_date),
+        dplyr::filter(between(as.Date(incidence_start_date),
                        as.Date(input$timeFromIncidence),
                        as.Date(input$timeToIncidence)))
       # Interval
       incidence_estimates <- incidence_estimates %>%
-        filter(analysis_interval == input$intervalIncidence)
+        dplyr::filter(analysis_interval == input$intervalIncidence)
       # Repeated events
       incidence_estimates <- incidence_estimates %>%
-        filter(analysis_repeated_events == input$repeatedIncidence)
+        dplyr::filter(analysis_repeated_events == input$repeatedIncidence)
       # Denominator Target Name
       incidence_estimates <- incidence_estimates %>%
-        filter(denominator_target_cohort_name == input$denomTargetNameIncidence)
+        dplyr::filter(denominator_target_cohort_name == input$denomTargetNameIncidence)
 
       incidence_estimates <- incidence_estimates %>%
         mutate_at(vars(person_years,

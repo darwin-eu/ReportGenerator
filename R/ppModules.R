@@ -245,7 +245,7 @@ characteristicsServer <- function(id, uploadedFiles) {
         summarised_result <- uploadedFiles
         summarised_result %>%
           mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
-          filter(cdm_name %in% input$cdm_name,
+          dplyr::filter(cdm_name %in% input$cdm_name,
                  result_id %in% input$result_id,
                  group_name %in% input$group_name,
                  group_level %in% input$group_level,
@@ -286,7 +286,7 @@ characteristicsServer <- function(id, uploadedFiles) {
         summarised_result <- uploadedFiles$CohortCharacteristics$summarised_large_scale_characteristics
         summarised_result %>%
           mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
-          filter(cdm_name %in% input$cdm_name,
+          dplyr::filter(cdm_name %in% input$cdm_name,
                  result_id %in% result_id_table$V1,
                  group_name %in% input$group_name,
                  group_level %in% input$group_level,

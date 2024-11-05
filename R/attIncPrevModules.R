@@ -39,7 +39,7 @@ attritionIncPrevServer <- function(id, uploadedFiles) {
         uploadedFiles <- uploadedFiles()
         uploadedFiles <- uploadedFiles$attrition
         uploadedFiles %>%
-          filter(cdm_name == input$cdm_name,
+          dplyr::filter(cdm_name == input$cdm_name,
                  group_name == input$group_name)
       })
 

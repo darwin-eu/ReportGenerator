@@ -211,7 +211,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
       dataset_split <- dataset %>% visOmopResults::splitAdditional()
 
       dataset_split %>%
-        filter(cdm_name %in% input$cdm_name,
+        dplyr::filter(cdm_name %in% input$cdm_name,
                group_level %in% input$group_level,
                strata_name %in% input$strata_name) %>%
         visOmopResults::uniteAdditional()

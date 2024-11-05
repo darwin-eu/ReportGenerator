@@ -38,7 +38,7 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
                 excluded = round(mean(excluded_subjects ), 0)) %>%
       mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
                                        between(reason_id, 10, 16) ~ "prevalence")) %>%
-      filter(reason != "Do not satisfy full contribution requirement for an interval")
+      dplyr::filter(reason != "Do not satisfy full contribution requirement for an interval")
 
 
     tablePrevalenceAtt <- tablePrevalenceAtt[,-1]
@@ -57,7 +57,7 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
                 excluded = round(mean(excluded_subjects ), 0)) %>%
       mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
                                        between(reason_id, 10, 16) ~ "incidence")) %>%
-      filter(reason != "Do not satisfy full contribution requirement for an interval")
+      dplyr::filter(reason != "Do not satisfy full contribution requirement for an interval")
 
     tableIncidenceAtt <- tableIncidenceAtt[,-1]
 
@@ -110,14 +110,14 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
     # databaseNamePrev <- databaseNamePrev[1:3]
 
     tablePrevalenceAtt <- prevalence_attrition %>%
-      filter(cdm_name == databaseNamePrev[1]) %>%
+      dplyr::filter(cdm_name == databaseNamePrev[1]) %>%
       group_by(reason_id,
                reason) %>%
       summarise(current_n = round(mean(number_subjects ), 0),
                 excluded = round(mean(excluded_subjects ), 0)) %>%
       mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
                                        between(reason_id, 10, 16) ~ "prevalence")) %>%
-      filter(reason != "Do not satisfy full contribution requirement for an interval")
+      dplyr::filter(reason != "Do not satisfy full contribution requirement for an interval")
 
 
     tablePrevalenceAtt <- tablePrevalenceAtt[,-1]
@@ -134,14 +134,14 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
     # databaseNameInc <- databaseNameInc[1:3]
 
     tableIncidenceAtt <- incidence_attrition %>%
-      filter(cdm_name == databaseNameInc[1]) %>%
+      dplyr::filter(cdm_name == databaseNameInc[1]) %>%
       group_by(reason_id,
                reason) %>%
       summarise(current_n = round(mean(number_subjects ), 0),
                 excluded = round(mean(excluded_subjects ), 0)) %>%
       mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
                                        between(reason_id, 10, 16) ~ "incidence")) %>%
-      filter(reason != "Do not satisfy full contribution requirement for an interval")
+      dplyr::filter(reason != "Do not satisfy full contribution requirement for an interval")
 
     tableIncidenceAtt <- tableIncidenceAtt[,-1]
 
@@ -160,14 +160,14 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
     for (i in databaseNamePrev[2:length(databaseNamePrev)]) {
 
       subPrevalenceAtt <- prevalence_attrition %>%
-        filter(cdm_name == i) %>%
+        dplyr::filter(cdm_name == i) %>%
         group_by(reason_id,
                  reason) %>%
         summarise(current_n = round(mean(number_subjects ), 0),
                   excluded = round(mean(excluded_subjects ), 0)) %>%
         mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
                                          between(reason_id, 10, 16) ~ "prevalence")) %>%
-        filter(reason != "Do not satisfy full contribution requirement for an interval")
+        dplyr::filter(reason != "Do not satisfy full contribution requirement for an interval")
 
 
       subPrevalenceAtt <- subPrevalenceAtt[,-1]
@@ -178,14 +178,14 @@ table1NumPar <- function(prevalence_attrition, incidence_attrition) {
       # subPrevalenceAtt
 
       subIncidenceAtt <- incidence_attrition %>%
-        filter(cdm_name == i) %>%
+        dplyr::filter(cdm_name == i) %>%
         group_by(reason_id,
                  reason) %>%
         summarise(current_n = round(mean(number_subjects ), 0),
                   excluded = round(mean(excluded_subjects ), 0)) %>%
         mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
                                          between(reason_id, 10, 16) ~ "incidence")) %>%
-        filter(reason != "Do not satisfy full contribution requirement for an interval")
+        dplyr::filter(reason != "Do not satisfy full contribution requirement for an interval")
 
       subIncidenceAtt <- subIncidenceAtt[,-1]
 
@@ -263,7 +263,7 @@ table1Att <- function(attritionData, attritionDataType) {
                 excluded = round(mean(excluded_subjects ), 0)) %>%
       mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
                                        between(reason_id, 10, 16) ~ attritionDataType)) %>%
-      filter(reason != "Do not satisfy full contribution requirement for an interval")
+      dplyr::filter(reason != "Do not satisfy full contribution requirement for an interval")
     tableAtt <- tableAtt[,-1]
     tableAtt <- tableAtt %>%
       select(analysis_step, everything())
@@ -287,14 +287,14 @@ table1Att <- function(attritionData, attritionDataType) {
     databaseName <- unique(attritionData$cdm_name)
     # databaseName <- databaseName[1:3]
     tableAtt <- attritionData %>%
-      filter(cdm_name == databaseName[1]) %>%
+      dplyr::filter(cdm_name == databaseName[1]) %>%
       group_by(reason_id,
                reason) %>%
       summarise(current_n = round(mean(number_subjects ), 0),
                 excluded = round(mean(excluded_subjects ), 0)) %>%
       mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
                                        between(reason_id, 10, 16) ~ attritionDataType)) %>%
-      filter(reason != "Do not satisfy full contribution requirement for an interval")
+      dplyr::filter(reason != "Do not satisfy full contribution requirement for an interval")
     tableAtt <- tableAtt[,-1]
     tableAtt <- tableAtt %>%
       select(analysis_step, everything())
@@ -302,14 +302,14 @@ table1Att <- function(attritionData, attritionDataType) {
     for (i in databaseName[2:length(databaseName)]) {
       # i <- "SIDIAP"
       subAtt <- attritionData %>%
-        filter(cdm_name == i) %>%
+        dplyr::filter(cdm_name == i) %>%
         group_by(reason_id,
                  reason) %>%
         summarise(current_n = round(mean(number_subjects ), 0),
                   excluded = round(mean(excluded_subjects ), 0)) %>%
         mutate(analysis_step = case_when(between(reason_id, 1, 10) ~ "initial",
                                          between(reason_id, 10, 16) ~ attritionDataType)) %>%
-        filter(reason != "Do not satisfy full contribution requirement for an interval")
+        dplyr::filter(reason != "Do not satisfy full contribution requirement for an interval")
       subAtt <- subAtt[,-1]
       subAtt <- subAtt %>%
         select(analysis_step, everything())
@@ -348,8 +348,8 @@ table1Inc <- function(incidence_estimates) {
   databaseNameInc <- unique(incidence_estimates$cdm_name)
 
   totalParSex <- incidence_estimates %>%
-    filter(cdm_name == databaseNameInc) %>%
-    filter(denominator_sex != "Both") %>%
+    dplyr::filter(cdm_name == databaseNameInc) %>%
+    dplyr::filter(denominator_sex != "Both") %>%
     select(cdm_name, outcome_cohort_name, denominator_sex, n_persons) %>%
     group_by(cdm_name,
              outcome_cohort_name,
@@ -359,8 +359,8 @@ table1Inc <- function(incidence_estimates) {
   totalParSex <- pivot_wider(totalParSex, names_from = denominator_sex, values_from = `Number of Persons`)
 
   totalParAge <- incidence_estimates %>%
-    filter(cdm_name == databaseNameInc) %>%
-    filter(denominator_sex == "Both") %>%
+    dplyr::filter(cdm_name == databaseNameInc) %>%
+    dplyr::filter(denominator_sex == "Both") %>%
     select(cdm_name, outcome_cohort_name, denominator_age_group, n_persons) %>%
     group_by(cdm_name,
              outcome_cohort_name,

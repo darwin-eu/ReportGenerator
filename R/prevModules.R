@@ -213,29 +213,29 @@ prevalenceServer <- function(id, uploadedFiles) {
 
       # Database
       prevalence_estimates <- prevalence_estimates %>%
-        filter(cdm_name %in% c(input$databasePrevalence))
+        dplyr::filter(cdm_name %in% c(input$databasePrevalence))
       # Outcome
       prevalence_estimates <- prevalence_estimates %>%
-        filter(outcome_cohort_name %in% input$outcomePrevalence)
+        dplyr::filter(outcome_cohort_name %in% input$outcomePrevalence)
       # Sex
       prevalence_estimates <- prevalence_estimates %>%
-        filter(denominator_sex %in% input$sexPrevalence)
+        dplyr::filter(denominator_sex %in% input$sexPrevalence)
 
       # Age group
       prevalence_estimates <- prevalence_estimates %>%
-        filter(denominator_age_group %in% input$agePrevalence)
+        dplyr::filter(denominator_age_group %in% input$agePrevalence)
 
       # Start Time
       prevalence_estimates <- prevalence_estimates %>%
-        filter(between(as.Date(prevalence_start_date),
+        dplyr::filter(between(as.Date(prevalence_start_date),
                        as.Date(input$timeFromPrevalence),
                        as.Date(input$timeToPrevalence)))
       # Interval
       prevalence_estimates <- prevalence_estimates %>%
-        filter(analysis_interval == input$intervalPrevalence)
+        dplyr::filter(analysis_interval == input$intervalPrevalence)
       # Repeated events
       prevalence_estimates <- prevalence_estimates %>%
-        filter(analysis_type == input$typePrevalence)
+        dplyr::filter(analysis_type == input$typePrevalence)
 
       prevalence_estimates <- prevalence_estimates %>%
         mutate_at(vars(prevalence,

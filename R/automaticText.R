@@ -25,21 +25,21 @@ autoCaptionCharac <- function(summarisedCharacteristics) {
 table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 
   tablePrevalenceAttTotal <- prevalence_attrition %>%
-    filter(reason == "Starting population") %>%
+    dplyr::filter(reason == "Starting population") %>%
     group_by(cdm_name,
              reason) %>%
     summarise(current_n = unique(as.numeric(number_records))) %>%
     arrange(desc(current_n))
 
   tablePrevalenceAttFem <- prevalence_attrition %>%
-    filter(reason == "Not Male") %>%
+    dplyr::filter(reason == "Not Male") %>%
     group_by(cdm_name,
              reason) %>%
     summarise(current_n = unique(as.numeric(number_records))) %>%
     arrange(desc(current_n))
 
   tablePrevNotObs <- prevalence_attrition %>%
-    filter(reason == "Not observed during the complete database interval") %>%
+    dplyr::filter(reason == "Not observed during the complete database interval") %>%
     group_by(cdm_name,
              reason) %>%
     summarise(excluded = sum(as.numeric(excluded_subjects))) %>%
@@ -53,8 +53,8 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
   maxParticipantsChar <- format(tablePrevalenceAttTotal$current_n[which.max(tablePrevalenceAttTotal$current_n)], big.mark=",", scientific = FALSE)
   maxParticipants <- tablePrevalenceAttTotal$current_n[which.max(tablePrevalenceAttTotal$current_n)]
   databaseNameMax <- tablePrevalenceAttTotal$cdm_name[which.max(tablePrevalenceAttTotal$current_n)]
-  minFemales <- tablePrevalenceAttFem  %>% filter(cdm_name == databaseNameMin) %>% pull(current_n)
-  maxFemales <- tablePrevalenceAttFem  %>% filter(cdm_name == databaseNameMax) %>% pull(current_n)
+  minFemales <- tablePrevalenceAttFem  %>% dplyr::filter(cdm_name == databaseNameMin) %>% pull(current_n)
+  maxFemales <- tablePrevalenceAttFem  %>% dplyr::filter(cdm_name == databaseNameMax) %>% pull(current_n)
   minFemaleProp <- (minFemales / as.numeric(minParticipants))
   maxFemaleProp <- (maxFemales / as.numeric(maxParticipants))
   minFemaleProp <- label_percent(accuracy = 0.01)(minFemaleProp)
@@ -104,21 +104,21 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 tableAttrition <- function(attritionData) {
 
   tableAttTotal <- attritionData %>%
-    filter(reason == "Starting population") %>%
+    dplyr::filter(reason == "Starting population") %>%
     group_by(cdm_name,
              reason) %>%
     summarise(current_n = unique(as.numeric(number_records))) %>%
     arrange(desc(current_n))
 
   tableAttFem <- attritionData %>%
-    filter(reason == "Not Male") %>%
+    dplyr::filter(reason == "Not Male") %>%
     group_by(cdm_name,
              reason) %>%
     summarise(current_n = unique(as.numeric(number_records))) %>%
     arrange(desc(current_n))
 
   tablePrevNotObs <- attritionData %>%
-    filter(reason == "Not observed during the complete database interval") %>%
+    dplyr::filter(reason == "Not observed during the complete database interval") %>%
     group_by(cdm_name,
              reason) %>%
     summarise(excluded = sum(as.numeric(excluded_subjects))) %>%
@@ -132,8 +132,8 @@ tableAttrition <- function(attritionData) {
   maxParticipantsChar <- format(tableAttTotal$current_n[which.max(tableAttTotal$current_n)], big.mark=",", scientific = FALSE)
   maxParticipants <- tableAttTotal$current_n[which.max(tableAttTotal$current_n)]
   databaseNameMax <- tableAttTotal$cdm_name[which.max(tableAttTotal$current_n)]
-  minFemales <- tableAttFem  %>% filter(cdm_name == databaseNameMin) %>% pull(current_n)
-  maxFemales <- tableAttFem  %>% filter(cdm_name == databaseNameMax) %>% pull(current_n)
+  minFemales <- tableAttFem  %>% dplyr::filter(cdm_name == databaseNameMin) %>% pull(current_n)
+  maxFemales <- tableAttFem  %>% dplyr::filter(cdm_name == databaseNameMax) %>% pull(current_n)
   minFemaleProp <- (minFemales / as.numeric(minParticipants))
   maxFemaleProp <- (maxFemales / as.numeric(maxParticipants))
   minFemaleProp <- label_percent(accuracy = 0.01)(minFemaleProp)

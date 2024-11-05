@@ -59,7 +59,7 @@ patternsServer <- function(id, uploadedFiles) {
       uploadedFiles <- uploadedFiles()
       treatmentPathways <- uploadedFiles$TreatmentPatterns$treatmentPathways
       treatmentPathways %>%
-        filter(cdm_name == input$cdmPatterns,
+        dplyr::filter(cdm_name == input$cdmPatterns,
                sex == input$sexPatterns,
                age == input$agePatterns,
                indexYear == input$indexPatterns)

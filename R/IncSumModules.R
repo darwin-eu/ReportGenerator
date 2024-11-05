@@ -1,16 +1,16 @@
 incidenceSumUI <- function(id, uploadedFiles) {
 
-  # settings_incidence <- settings(uploadedFiles)
+  settings_incidence <- settings(uploadedFiles)
   #
   # result_ids <- settings_incidence %>%
-  #   filter(result_type == "incidence") %>%
+  #   dplyr::filter(result_type == "incidence") %>%
   #   pull(result_id)
   #
-  # setttings_denominator_sex <- settings_incidence$denominator_sex
-  # setttings_denominator_age_group <- settings_incidence$denominator_age_group
+  setttings_denominator_sex <- settings_incidence$denominator_sex
+  setttings_denominator_age_group <- settings_incidence$denominator_age_group
   #
   # uploadedFiles <- uploadedFiles %>%
-  #   filter(result_id %in% result_ids)
+  #   dplyr::filter(result_id %in% result_ids)
 
   ns <- NS(id)
     lockName <- "lockIncidence"
@@ -64,25 +64,22 @@ incidenceSumUI <- function(id, uploadedFiles) {
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
-        # ,
-        # column(4,
-        #        pickerInput(inputId = ns("denominator_sex"),
-        #                    label = "Denominator Sex",
-        #                    choices = unique(setttings_denominator_sex),
-        #                    selected = unique(setttings_denominator_sex),
-        #                    multiple = TRUE,
-        #                    list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-        # )
-      # ,
-      #   column(4,
-      #          pickerInput(inputId = ns("denominator_age_group"),
-      #                      label = "Denominator Age Group",
-      #                      choices = unique(setttings_denominator_age_group),
-      #                      selected = unique(setttings_denominator_age_group),
-      #                      multiple = TRUE,
-      #                      list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      #   )
-      # ),
+        column(4,
+               pickerInput(inputId = ns("denominator_sex"),
+                           label = "Denominator Sex",
+                           choices = unique(setttings_denominator_sex),
+                           selected = unique(setttings_denominator_sex),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("denominator_age_group"),
+                           label = "Denominator Age Group",
+                           choices = unique(setttings_denominator_age_group),
+                           selected = unique(setttings_denominator_age_group),
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
         column(4,
                pickerInput(inputId = ns("variable_name"),
                            label = "Variable",
@@ -157,11 +154,11 @@ incidenceSumServer <- function(id, uploadedFiles) {
         summarised_result <- uploadedFiles()
 
         attr(summarised_result, "settings") <- settings(summarised_result) %>%
-          filter(result_id %in% input$result_id)
+          dplyr::filter(result_id %in% input$result_id)
 
         summarised_result <- summarised_result %>%
           # mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
-          filter(cdm_name %in% input$cdm_name,
+          dplyr::filter(cdm_name %in% input$cdm_name,
                  result_id %in% input$result_id,
                  # group_name %in% input$group_name,
                  # group_level %in% input$group_level#,
@@ -205,6 +202,15 @@ incidenceSumServer <- function(id, uploadedFiles) {
                           "variable_name",
                           choices = unique(summarised_result()$variable_name),
                           selected = unique(summarised_result()$variable_name))
+        updatePickerInput(session,
+                          "denominator_sex",
+                          choices = unique(settings(summarised_result())$denominator_sex),
+                          selected = unique(settings(summarised_result())$denominator_sex))
+        updatePickerInput(session,
+                          "denominator_age_group",
+                          choices = unique(settings(summarised_result())$denominator_age_group),
+                          selected = unique(settings(summarised_result())$denominator_age_group))
+
       })
 
       # Final Summarised Result
@@ -214,16 +220,18 @@ incidenceSumServer <- function(id, uploadedFiles) {
         summarised_result <- summarised_result()
 
         attr(summarised_result, "settings") <- settings(summarised_result) %>%
-          filter(result_id %in% input$result_id)
+          dplyr::filter(result_id %in% input$result_id)
 
         # if (!is.null(input$group_level) && input$group_level != "") {
-          summarised_result <- summarised_result %>% filter(group_name %in% input$group_name,
+          summarised_result <- summarised_result %>% dplyr::filter(group_name %in% input$group_name,
                                                             group_level == input$group_level,
                                                             strata_name %in% input$strata_name,
                                                             strata_level %in% input$strata_level,
                                                             estimate_type %in% input$estimate_type,
                                                             variable_level %in% input$variable_level,
-                                                            variable_name %in% input$variable_name)
+                                                            variable_name %in% input$variable_name) %>%
+            visOmopResults::filterSettings(denominator_sex == input$denominator_sex,
+                                           denominator_age_group == input$denominator_age_group)
         # }
 
         summarised_result
@@ -232,10 +240,12 @@ incidenceSumServer <- function(id, uploadedFiles) {
       # Table
 
       summarisedIncidence_gt_table <- reactive({
+        req(final_summarised_result())
         IncidencePrevalence::tableIncidence(result = final_summarised_result())
       })
 
       output$summarisedTableGt <- gt::render_gt({
+        req(summarisedIncidence_gt_table())
         summarisedIncidence_gt_table()
       })
 
