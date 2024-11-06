@@ -1,16 +1,14 @@
 incidenceSumUI <- function(id, uploadedFiles) {
 
+  # Filters defined by the settings(summarisedResult)
   settings_incidence <- settings(uploadedFiles)
-  #
-  # result_ids <- settings_incidence %>%
-  #   dplyr::filter(result_type == "incidence") %>%
-  #   pull(result_id)
-  #
   setttings_denominator_sex <- settings_incidence$denominator_sex
   setttings_denominator_age_group <- settings_incidence$denominator_age_group
-  #
-  # uploadedFiles <- uploadedFiles %>%
-  #   dplyr::filter(result_id %in% result_ids)
+
+  start_end_date <- uploadedFiles %>%
+    visOmopResults::splitAdditional(keep = FALSE, fill = "overall") %>%
+    select(incidence_start_date,
+           incidence_end_date)
 
   ns <- NS(id)
     lockName <- "lockIncidence"
@@ -62,6 +60,22 @@ incidenceSumUI <- function(id, uploadedFiles) {
                            choices = unique(uploadedFiles$strata_level),
                            selected = unique(uploadedFiles$strata_level),
                            multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("incidence_start_date"),
+                           label = "Start Date",
+                           choices = unique(start_end_date$incidence_start_date),
+                           selected = min(unique(start_end_date$incidence_start_date)),
+                           multiple = FALSE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        ),
+        column(4,
+               pickerInput(inputId = ns("incidence_end_date"),
+                           label = "End Date",
+                           choices = unique(start_end_date$incidence_end_date),
+                           selected = max(unique(start_end_date$incidence_end_date)),
+                           multiple = FALSE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
@@ -151,29 +165,20 @@ incidenceSumServer <- function(id, uploadedFiles) {
 
       summarised_result <- reactive({
         req(input$result_id)
-        summarised_result <- uploadedFiles()
-
-        attr(summarised_result, "settings") <- settings(summarised_result) %>%
-          dplyr::filter(result_id %in% input$result_id)
-
-        summarised_result <- summarised_result %>%
-          # mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
+        uploadedFiles() %>%
           dplyr::filter(cdm_name %in% input$cdm_name,
-                 result_id %in% input$result_id,
-                 # group_name %in% input$group_name,
-                 # group_level %in% input$group_level#,
-                 # strata_name %in% input$strata_name#,
-                 # strata_level %in% input$strata_level,
-                 # estimate_type %in% input$estimate_type,
-                 # variable_level %in% input$variable_level,
-                 # variable_name %in% input$variable_name
-                 )
-
-        summarised_result
+                        result_id == input$result_id) %>%
+          visOmopResults::filterSettings(result_id == input$result_id)
       })
 
       observe({
         req(summarised_result())
+
+        summarised_result_end_date <- summarised_result() %>%
+          visOmopResults::splitAdditional(keep = FALSE, fill = "overall") %>%
+          select(incidence_start_date,
+                 incidence_end_date)
+
         updatePickerInput(session,
                           "group_level",
                           choices = unique(summarised_result()$group_level),
@@ -210,6 +215,14 @@ incidenceSumServer <- function(id, uploadedFiles) {
                           "denominator_age_group",
                           choices = unique(settings(summarised_result())$denominator_age_group),
                           selected = unique(settings(summarised_result())$denominator_age_group))
+        updatePickerInput(session,
+                          "incidence_start_date",
+                          choices = unique(summarised_result_end_date$incidence_start_date),
+                          selected = min(unique(summarised_result_end_date$incidence_start_date)))
+        updatePickerInput(session,
+                          "incidence_end_date",
+                          choices = unique(summarised_result_end_date$incidence_end_date),
+                          selected = max(unique(summarised_result_end_date$incidence_end_date)))
 
       })
 
@@ -221,20 +234,17 @@ incidenceSumServer <- function(id, uploadedFiles) {
 
         attr(summarised_result, "settings") <- settings(summarised_result) %>%
           dplyr::filter(result_id %in% input$result_id)
-
-        # if (!is.null(input$group_level) && input$group_level != "") {
-          summarised_result <- summarised_result %>% dplyr::filter(group_name %in% input$group_name,
-                                                            group_level == input$group_level,
-                                                            strata_name %in% input$strata_name,
-                                                            strata_level %in% input$strata_level,
-                                                            estimate_type %in% input$estimate_type,
-                                                            variable_level %in% input$variable_level,
-                                                            variable_name %in% input$variable_name) %>%
+          summarised_result %>% dplyr::filter(group_name %in% input$group_name,
+                                              group_level == input$group_level,
+                                              strata_name %in% input$strata_name,
+                                              strata_level %in% input$strata_level,
+                                              estimate_type %in% input$estimate_type,
+                                              variable_level %in% input$variable_level,
+                                              variable_name %in% input$variable_name) %>%
             visOmopResults::filterSettings(denominator_sex == input$denominator_sex,
-                                           denominator_age_group == input$denominator_age_group)
-        # }
-
-        summarised_result
+                                           denominator_age_group == input$denominator_age_group) %>%
+            visOmopResults::filterAdditional(incidence_start_date %in% input$incidence_start_date,
+                                             incidence_end_date %in% input$incidence_end_date)
       })
 
       # Table
