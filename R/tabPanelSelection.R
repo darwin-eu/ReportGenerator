@@ -8,7 +8,8 @@ tabPanelSelection <- function(selection, uploadedFiles) {
   # } else if (selection == "Number of participants by sex and age group - Table") {
   #   tabPanel(selection, tableUI(selection, uploadedFiles))
   } else if (selection == "Incidence") {
-    tabPanel(selection, incidenceSumUI(selection, uploadedFiles = uploadedFiles$incidence))
+    tabPanel(selection, incidenceMinUI(selection, uploadedFiles = uploadedFiles$incidence))
+    # tabPanel(selection, incidenceSumUI(selection, uploadedFiles = uploadedFiles$incidence))
   } else if (selection == "Prevalence") {
     tabPanel(selection, prevalenceSumUI(selection, uploadedFiles = uploadedFiles$prevalence))
   } else if (selection == "Treatment Pathways Interactive Plots") {
