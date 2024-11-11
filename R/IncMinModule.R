@@ -21,16 +21,16 @@ incidenceMinUI <- function(id, uploadedFiles) {
     #                    multiple = TRUE,
     #                    list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
     #        ),
-    column(4,
-           pickerInput(inputId = ns("group_level"),
-                       label = "Group Level",
-                       choices = unique(uploadedFiles$group_level),
-                       selected = unique(uploadedFiles$group_level)[1],
-                       multiple = TRUE,
-                       list(`actions-box` = TRUE,
-                            size = 10,
-                            `selected-text-format` = "count > 3"))
-           ),
+    # column(4,
+    #        pickerInput(inputId = ns("group_level"),
+    #                    label = "Group Level",
+    #                    choices = unique(uploadedFiles$group_level),
+    #                    selected = unique(uploadedFiles$group_level)[1],
+    #                    multiple = TRUE,
+    #                    list(`actions-box` = TRUE,
+    #                         size = 10,
+    #                         `selected-text-format` = "count > 3"))
+    #        ),
     column(4,
            pickerInput(inputId = ns("strata_level"),
                        label = "Strata Level",
@@ -156,7 +156,7 @@ incidenceMinServer <- function(id, uploadedFiles) {
     ns <- session$ns
 
     summarised_result <- reactive({
-      req(input$group_level)
+      # req(input$group_level)
       uploadedFiles()
       # %>%
       #   filter(group_level %in% input$group_level)
