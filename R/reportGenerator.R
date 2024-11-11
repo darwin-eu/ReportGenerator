@@ -351,7 +351,10 @@ reportGenerator <- function(logger = NULL) {
 
       # Incidence
 
-    incidenceSumServer(id = "Incidence", reactive(uploadedFiles$incidence))
+    incidenceMinServer(id = "Incidence", reactive(uploadedFiles$incidence))
+
+    # incidenceSumServer(id = "Incidence", reactive(uploadedFiles$incidence))
+
 
     # dataIncidenceYear <- incidenceSumServer(id = "Incidence rate per year - Plot",
     #                                      reactive(uploadedFiles$incidence))
