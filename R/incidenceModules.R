@@ -1,4 +1,4 @@
-incidenceMinUI <- function(id, uploadedFiles) {
+incidenceUI <- function(id, uploadedFiles) {
   ns <- NS(id)
 
   # Pull incidence values from uploadedFiles estimate column
@@ -150,7 +150,7 @@ incidenceMinUI <- function(id, uploadedFiles) {
 )
 }
 
-incidenceMinServer <- function(id, uploadedFiles) {
+incidenceServer <- function(id, uploadedFiles) {
 
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
