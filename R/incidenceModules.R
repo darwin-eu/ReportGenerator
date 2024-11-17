@@ -140,7 +140,7 @@ incidenceUI <- function(id, uploadedFiles) {
                                                             step = 1)
                                          )
                                 ),
-                                fluidRow(column(6, downloadButton(ns("downloadIncidencePlot"), "Download Plot"))),
+                                fluidRow(createDownloadPlotUI(ns)),
                                 fluidRow(column(12, plotOutput(ns("summarisedIncidencePlot"))))),
                        tabPanel("Data",
                                 fluidRow(column(12, DT::dataTableOutput(ns("summarisedTable")))))
@@ -216,6 +216,28 @@ incidenceServer <- function(id, uploadedFiles) {
     output$summarisedTable <- DT::renderDataTable(server = FALSE, {
       createDataTable(summarised_result())
     })
+
+    output$downloadFigure <- downloadHandler(
+      filename = function() {
+        paste(id, ".png", sep = "")
+      },
+      content = function(file) {
+        saveGGPlot(file = file,
+                   plot = summarisedIncidence_plot(),
+                   height = as.numeric(input$plotHeight),
+                   width = as.numeric(input$plotWidth),
+                   dpi = as.numeric(input$plotDpi))
+      }
+    )
+
+    output$downloadIncidenceTable <- downloadHandler(
+      filename = function() {
+        paste("incidenceTable", ".docx", sep = "")
+      },
+      content = function(file) {
+        gt::gtsave(summarisedIncidence_gt_table(), file)
+      }
+    )
 
   })
 }
