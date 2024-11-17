@@ -125,6 +125,7 @@ reportGenerator <- function(logger = NULL) {
     # ReactiveValues for data and items menu
     uploadedFiles <- reactiveValues(attrition = NULL,
                                     incidence = NULL,
+                                    prevalence = NULL,
                                     summarised_characteristics = NULL,
                                     summarised_large_scale_characteristics = NULL,
                                     single_event = NULL)
@@ -179,8 +180,12 @@ reportGenerator <- function(logger = NULL) {
         uploadedFiles$attrition <- uploadedData()$other_result$IncidencePrevalence$attrition
       }
       if ("incidence" %in% items) {
-        uploadedFiles$incidence <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                                     type_result = "incidence")
+        uploadedFiles$incidence <- uploadedData()$summarised_result %>%
+          visOmopResults::filterSettings(result_type == "incidence")
+      }
+      if ("prevalence" %in% items) {
+        uploadedFiles$prevalence <- uploadedData()$summarised_result %>%
+          visOmopResults::filterSettings(result_type == "prevalence")
       }
       if ("summarised_characteristics" %in% items) {
         uploadedFiles$summarised_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
@@ -351,10 +356,7 @@ reportGenerator <- function(logger = NULL) {
 
       # Incidence
 
-    incidenceMinServer(id = "Incidence", reactive(uploadedFiles$incidence))
-
-    # incidenceSumServer(id = "Incidence", reactive(uploadedFiles$incidence))
-
+    incidenceServer(id = "Incidence", reactive(uploadedFiles$incidence))
 
     # dataIncidenceYear <- incidenceSumServer(id = "Incidence rate per year - Plot",
     #                                      reactive(uploadedFiles$incidence))
@@ -371,16 +373,18 @@ reportGenerator <- function(logger = NULL) {
 
       # Year
 
-    # dataPrevalenceYear <- prevalenceServer(id = "Prevalence per year - Plot",
-    #                                        reactive(uploadedFiles))
+    prevalenceServer(id = "Prevalence", reactive(uploadedFiles$prevalence))
+
+
+    #   dataPrevalence <-
     #
     # observe({
-    #   for (key in names(dataPrevalenceYear())) {
+    #   for (key in names(dataPrevalence())) {
     #     randomId <- getRandomId()
-    #     dataReport[["objects"]][[randomId]] <- dataPrevalenceYear()
+    #     dataReport[["objects"]][[randomId]] <- dataPrevalence()
     #   }
     # }) %>%
-    #   bindEvent(dataPrevalenceYear())
+    #   bindEvent(dataPrevalence())
 
 
     # Treatment Patterns Interactive Plots
