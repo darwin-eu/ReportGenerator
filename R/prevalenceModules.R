@@ -107,7 +107,7 @@ prevalenceUI <- function(id, uploadedFiles) {
                                                    selected = c("denominator_target_cohort_name"),
                                                    multiple = TRUE))
                               ),
-                              fluidRow(column(6, downloadButton(ns("downloadprevalenceTable"), "Download Table"))),
+                              fluidRow(column(6, downloadButton(ns("downloadPrevalenceTable"), "Download Table"))),
                               fluidRow(column(12, gt::gt_output(ns("summarisedTableGt"))))
                        ),
                        tabPanel("Plot",
@@ -141,7 +141,7 @@ prevalenceUI <- function(id, uploadedFiles) {
                                                             step = 0.01)
                                          )
                                 ),
-                                fluidRow(column(6, downloadButton(ns("downloadPrevalencePlot"), "Download Plot"))),
+                                fluidRow(createDownloadPlotUI(ns)),
                                 fluidRow(column(12, plotOutput(ns("summarisedPrevalencePlot"))))),
                        tabPanel("Data",
                                 fluidRow(column(12, DT::dataTableOutput(ns("summarisedTable")))))
@@ -234,6 +234,28 @@ prevalenceServer <- function(id, uploadedFiles) {
     output$summarisedTable <- DT::renderDataTable(server = FALSE, {
       createDataTable(summarised_result())
     })
+
+    output$downloadFigure <- downloadHandler(
+      filename = function() {
+        paste(id, ".png", sep = "")
+      },
+      content = function(file) {
+        saveGGPlot(file = file,
+                   plot = summarisedPrevalence_plot(),
+                   height = as.numeric(input$plotHeight),
+                   width = as.numeric(input$plotWidth),
+                   dpi = as.numeric(input$plotDpi))
+      }
+    )
+
+    output$downloadPrevalenceTable <- downloadHandler(
+      filename = function() {
+        paste("prevalenceTable", ".docx", sep = "")
+      },
+      content = function(file) {
+        gt::gtsave(summarisedPrevalence_gt_table(), file)
+      }
+    )
 
   })
 }
