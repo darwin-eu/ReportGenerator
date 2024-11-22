@@ -91,7 +91,7 @@ test_that("unzipFiles() correctly", {
   # `unzipFiles()` Unzip files
   databaseFolders <- unzipFiles(unzipDir = unzipDir,
                                 fileDataPath = fileDataPath)
-  expect_length(databaseFolders, 3)
+  expect_length(databaseFolders, 5)
 })
 
 test_that("extractCSV() correctly", {
