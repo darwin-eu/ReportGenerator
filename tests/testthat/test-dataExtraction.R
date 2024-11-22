@@ -61,7 +61,6 @@ test_that("Loading multiple zip files whole study", {
   fileDataPath <- list.files(testthat::test_path("studies", "zip"),
                              pattern = "zip",
                              full.names = TRUE)
-  logger <- log4r::logger()
   unzipDir <- file.path(tempdir(), "multi")
   uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath)
   expect_equal(length(uploadedFileDataList), 2)
