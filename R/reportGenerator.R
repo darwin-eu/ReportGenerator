@@ -177,7 +177,12 @@ reportGenerator <- function(logger = NULL) {
       itemsList$objects[["items"]] <- getItemsList(items)
 
       if ("incidence_attrition" %in% items) {
-        uploadedFiles$attrition <- uploadedData()$other_result$IncidencePrevalence$attrition
+        uploadedFiles$incidence_attrition <- uploadedData()$summarised_result %>%
+          visOmopResults::filterSettings(result_type == "incidence_attrition")
+      }
+      if ("prevalence_attrition" %in% items) {
+        uploadedFiles$prevalence_attrition <- uploadedData()$summarised_result %>%
+          visOmopResults::filterSettings(result_type == "prevalence_attrition")
       }
       if ("incidence" %in% items) {
         uploadedFiles$incidence <- uploadedData()$summarised_result %>%
@@ -287,8 +292,14 @@ reportGenerator <- function(logger = NULL) {
 
     # Attrition table
 
+    attritionServer(id = "Incidence Attrition",
+                    uploadedFiles = reactive(uploadedFiles$incidence_attrition))
+
+    attritionServer(id = "Prevalence Attrition",
+                    uploadedFiles = reactive(uploadedFiles$prevalence_attrition))
+
     # attritionTable <- attritionServer(id = "Incidence Attrition",
-    #                                   uploadedFiles = reactive(uploadedFiles$attrition))
+    #                                   uploadedFiles = reactive(uploadedFiles$incidence_attrition))
     #
     # observe({
     #   for (key in names(attritionTable())) {
