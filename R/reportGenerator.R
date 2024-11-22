@@ -173,7 +173,10 @@ reportGenerator <- function(logger = NULL) {
       }
 
       req(settingsData())
-      items <- analysisNames(settingsData = settingsData())
+      items <- analysisNamesSum(settingsData = settingsData())
+      if (!is.null(uploadedData()$other_result)) {
+        items <- c(items, names(uploadedFileDataList$other_result))
+      }
       itemsList$objects[["items"]] <- getItemsList(items)
 
       if ("incidence_attrition" %in% items) {

@@ -28,10 +28,10 @@ tablePrevalence:
   type:
     - prevalence
   options: NULL
-treatmentPathways:
-  title: "Treatment Pathways Interactive Plots"
+TreatmentPatterns:
+  title: "Treatment Pathways"
   type:
-    - treatmentPathways
+    - TreatmentPatterns
 summaryCharacteristics:
   title: "Summarised Characteristics"
   function: tableCharacteristics(summarisedCharacteristics)

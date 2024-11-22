@@ -11,9 +11,9 @@ test_that("getIncidencePrevalence", {
 test_that("getItemsList all", {
   items <- c("incidence", "summarised_large_scale_characteristics", "point_prevalence",
              "period_prevalence", "summarised_characteristics", "competing_risk",
-             "single_event")
+             "single_event", "TreatmentPatterns")
   menuList <- getItemsList(items)
-  expect_equal(length(menuList), 5)
+  expect_equal(length(menuList), 6)
 })
 
 
