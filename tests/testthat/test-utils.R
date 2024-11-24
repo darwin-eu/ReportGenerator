@@ -78,15 +78,15 @@ test_that("getItemsList only summarised_characteristics", {
 # TreatmentPatterns
 
 test_that("getItemsList treatmentPatterns", {
-  items <- c("treatmentPathways")
+  items <- c("TreatmentPatterns")
   menuList <- getItemsList(items)
-  expect_equal(menuList, c("Treatment Pathways Interactive Plots"))
+  expect_equal(menuList, c("Treatment Pathways"))
 })
 
 test_that("getItemsList joining to apps", {
   itemsList <- list(objects = NULL)
   itemsIP <- c("incidence_attrition", "prevalence_attrition", "incidence_estimates", "prevalence_estimates")
-  itemsTP <- c("treatmentPathways")
+  itemsTP <- c("TreatmentPatterns")
   menuListIP <- getItemsList(itemsIP)
   menuListTP <- getItemsList(itemsTP)
   itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], menuListIP)

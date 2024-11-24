@@ -48,7 +48,7 @@ Survival table:
   type:
     - single_event
 Survival plot:
-  title: "Survival - Competing Risk "
+  title: "Survival - Competing Risk"
   function: CohortSurvival::plotSurvival(survivalEstimate, facet, colour)
   type:
     - competing_risk
