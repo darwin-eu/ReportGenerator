@@ -12,8 +12,8 @@ tabPanelSelection <- function(selection, uploadedFiles) {
     # tabPanel(selection, incidenceSumUI(selection, uploadedFiles = uploadedFiles$incidence))
   } else if (selection == "Prevalence") {
     tabPanel(selection, prevalenceUI(selection, uploadedFiles = uploadedFiles$prevalence))
-  } else if (selection == "Treatment Pathways Interactive Plots") {
-    tabPanel(selection, patternsUI(selection, uploadedFiles))
+  } else if (selection == "Treatment Pathways") {
+    tabPanel(selection, patternsUI(selection, uploadedFiles = uploadedFiles$treatment_pathways))
   } else if (selection == "Summarised Characteristics") {
     tabPanel(selection, characteristicsUI("characteristics", uploadedFiles$summarised_characteristics))
   } else if (selection == "Summarised Large Scale Characteristics - Table") {

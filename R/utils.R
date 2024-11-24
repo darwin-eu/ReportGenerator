@@ -322,21 +322,21 @@ createDataTable <- function(data, tableName = "result") {
                 class = "display")
 }
 
-analysisNames <- function(settingsData) {
+analysisNamesSum <- function(settingsData) {
   # settingsData <- settings(uploadedFilesList)
-  analysisNames <- settingsData %>%
+  analysisNamesSum <- settingsData %>%
     pull(result_type) %>%
     unique()
 
-  if ("survival" %in% analysisNames) {
+  if ("survival" %in% analysisNamesSum) {
     survivalAnalysisType <- settingsData %>%
       dplyr::filter(result_type == "survival") %>%
       pull(analysis_type) %>%
       unique()
-    analysisNames <- analysisNames[-which(analysisNames == "survival")]
-    analysisNames <- c(analysisNames, survivalAnalysisType)
+    analysisNamesSum <- analysisNamesSum[-which(analysisNamesSum == "survival")]
+    analysisNamesSum <- c(analysisNamesSum, survivalAnalysisType)
   }
-  return(analysisNames)
+  return(analysisNamesSum)
 }
 
 getSummarisedData <- function(uploadedData, type_result = "summarised_characteristics") {
