@@ -23,7 +23,7 @@ test_that("getItemsList all", {
              "prevalence_attrition",
              "incidence_estimates",
              "prevalence_estimates",
-             "treatmentPathways",
+             "TreatmentPatterns",
              "summarised_characteristics",
              "summarised_large_scale_characteristics",
              "single_event",

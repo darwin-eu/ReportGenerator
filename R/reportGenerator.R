@@ -128,7 +128,8 @@ reportGenerator <- function(logger = NULL) {
                                     prevalence = NULL,
                                     summarised_characteristics = NULL,
                                     summarised_large_scale_characteristics = NULL,
-                                    single_event = NULL)
+                                    single_event = NULL,
+                                    treatment_pathways = NULL)
     itemsList <- reactiveValues(objects = NULL)
     uploadedData <- reactiveVal(NULL)
     settingsData <- reactiveVal(NULL)
@@ -175,7 +176,7 @@ reportGenerator <- function(logger = NULL) {
       req(settingsData())
       items <- analysisNamesSum(settingsData = settingsData())
       if (!is.null(uploadedData()$other_result)) {
-        items <- c(items, names(uploadedFileDataList$other_result))
+        items <- c(items, names(uploadedData()$other_result))
       }
       itemsList$objects[["items"]] <- getItemsList(items)
 
@@ -207,9 +208,9 @@ reportGenerator <- function(logger = NULL) {
         uploadedFiles$single_event <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
                                                         type_result = "survival")
       }
-      # if ("TreatmentPatterns" %in% pkgNames) {
-      #   uploadedFiles$TreatmentPatterns <- uploadedFilesList[["TreatmentPatterns"]]
-      # }
+      if ("TreatmentPatterns" %in% items) {
+        uploadedFiles$treatment_pathways <- uploadedData()$other_result$TreatmentPatterns$treatmentPathways
+      }
       # if ("CohortSurvival" %in% pkgNames) {
       #   uploadedFiles$CohortSurvival <- uploadedFilesList[["CohortSurvival"]]
       # }
