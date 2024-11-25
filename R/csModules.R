@@ -6,19 +6,19 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
   dlPlot <- NULL
   if (id == "survivalTable") {
     outResult <- gt::gt_output(ns("cs_data"))
-    dataset <- uploadedFiles$CohortSurvival$single_event %>%
+    dataset <- uploadedFiles %>%
       visOmopResults::splitAdditional()
   } else if (id == "survivalPlot") {
     outResult <- plotOutput(ns("cs_plot"))
-    dataset <- uploadedFiles$CohortSurvival$single_event %>%
+    dataset <- uploadedFiles %>%
       visOmopResults::splitAdditional()
   } else if (id == "failureTable") {
     outResult <- gt::gt_output(ns("cu_inc_data"))
-    dataset <- uploadedFiles$CohortSurvival$competing_risk %>%
+    dataset <- uploadedFiles %>%
       visOmopResults::splitAdditional()
   } else if (id == "failurePlot") {
     outResult <- plotOutput(ns("cu_inc_plot"))
-    dataset <- uploadedFiles$CohortSurvival$competing_risk %>%
+    dataset <- uploadedFiles$competing_risk %>%
       visOmopResults::splitAdditional()
   }
   if (grepl("Plot", id)) {
@@ -204,9 +204,9 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
     getData <- reactive({
       uploadedFiles <- uploadedFiles()
       if (id == "survivalTable"  || id == "survivalPlot") {
-        dataset <- uploadedFiles$CohortSurvival$single_event
+        dataset <- uploadedFiles
       } else if (id == "failureTable"  || id == "failurePlot") {
-        dataset <- uploadedFiles$CohortSurvival$competing_risk
+        dataset <- uploadedFiles$competing_risk
       }
       dataset_split <- dataset %>% visOmopResults::splitAdditional()
 

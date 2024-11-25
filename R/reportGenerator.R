@@ -129,6 +129,7 @@ reportGenerator <- function(logger = NULL) {
                                     summarised_characteristics = NULL,
                                     summarised_large_scale_characteristics = NULL,
                                     single_event = NULL,
+                                    competing_risk = NULL,
                                     treatment_pathways = NULL)
     itemsList <- reactiveValues(objects = NULL)
     uploadedData <- reactiveVal(NULL)
@@ -205,8 +206,16 @@ reportGenerator <- function(logger = NULL) {
                                                                                   type_result = "summarised_large_scale_characteristics")
       }
       if ("single_event" %in% items) {
-        uploadedFiles$single_event <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                                        type_result = "survival")
+        single_event_data <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
+                                           type_result = "survival") %>%
+          visOmopResults::filterSettings(analysis_type == "single_event")
+        uploadedFiles$single_event <- single_event_data
+      }
+      if ("competing_risk" %in% items) {
+        competing_risk_data <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
+                                                 type_result = "survival") %>%
+          visOmopResults::filterSettings(analysis_type == "competing_risk")
+        uploadedFiles$competing_risk <- competing_risk_data
       }
       if ("TreatmentPatterns" %in% items) {
         uploadedFiles$treatment_pathways <- uploadedData()$other_result$TreatmentPatterns$treatmentPathways

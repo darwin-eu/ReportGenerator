@@ -20,11 +20,7 @@ tabPanelSelection <- function(selection, uploadedFiles) {
     tabPanel(selection, characteristicsUI("lsc", uploadedFiles$summarised_large_scale_characteristics))
   } else if (selection == "Survival - Single Event") {
     tabPanel(selection, cohortSurvivalUI("survivalTable", uploadedFiles$single_event))
-  } else if (selection == "Single Event - Plot") {
-    tabPanel(selection, cohortSurvivalUI("survivalPlot", uploadedFiles))
-  } else if (selection == "Competing Risk - Table") {
-    tabPanel(selection, cohortSurvivalUI("failureTable", uploadedFiles))
-  } else if (selection == "Competing Risk - Plot") {
-    tabPanel(selection, cohortSurvivalUI("failurePlot", uploadedFiles))
+  } else if (selection == "Survival - Competing Risk") {
+    tabPanel(selection, cohortSurvivalUI("failureTable",  uploadedFiles$competing_risk))
   }
 }
