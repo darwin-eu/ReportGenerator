@@ -16,8 +16,8 @@ tabPanelSelection <- function(selection, uploadedFiles) {
     tabPanel(selection, patternsUI(selection, uploadedFiles = uploadedFiles$treatment_pathways))
   } else if (selection == "Summarised Characteristics") {
     tabPanel(selection, characteristicsUI("characteristics", uploadedFiles$summarised_characteristics))
-  } else if (selection == "Summarised Large Scale Characteristics - Table") {
-    tabPanel(selection, characteristicsUI("lsc", uploadedFiles))
+  } else if (selection == "Summarised Large Scale Characteristics") {
+    tabPanel(selection, characteristicsUI("lsc", uploadedFiles$summarised_large_scale_characteristics))
   } else if (selection == "Survival - Single Event") {
     tabPanel(selection, cohortSurvivalUI("survivalTable", uploadedFiles$single_event))
   } else if (selection == "Single Event - Plot") {

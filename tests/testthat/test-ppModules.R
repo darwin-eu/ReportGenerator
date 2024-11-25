@@ -1,17 +1,16 @@
 test_that("summarised Characteristics and LSC", {
   testServer(reportGenerator(), {
-    uploadedFiles <- list()
-    uploadedFiles[["CohortCharacteristics"]][["summarised_characteristics"]] <- testData$summarised_characteristics
-    uploadedFiles[["CohortCharacteristics"]][["summarised_large_scale_characteristics"]] <- testData$summarised_large_scale_characteristics
+    summarised_characteristics_data <- testData$CohortCharacteristics$summarised_characteristics
+    summarised_large_scale_characteristics_data <- testData$CohortCharacteristics$summarised_large_scale_characteristics
 
     expect_s3_class(characteristicsUI("characteristics",
-                                      uploadedFiles = testData), "shiny.tag.list")
+                                      uploadedFiles = summarised_characteristics_data), "shiny.tag.list")
     expect_s3_class(characteristicsServer("characteristics",
-                                          uploadedFiles = testData), "reactiveVal")
+                                          uploadedFiles = summarised_large_scale_characteristics_data), "reactiveVal")
     expect_s3_class(characteristicsUI("lsc",
-                                      uploadedFiles = testData), "shiny.tag.list")
+                                      uploadedFiles = summarised_characteristics_data), "shiny.tag.list")
     expect_s3_class(characteristicsServer("lsc",
-                                          uploadedFiles = testData), "reactiveVal")
+                                          uploadedFiles = summarised_large_scale_characteristics_data), "reactiveVal")
   })
 })
 
