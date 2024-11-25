@@ -404,8 +404,8 @@ reportGenerator <- function(logger = NULL) {
 
     # Treatment Patterns Interactive Plots
 
-    dataPatterns <- patternsServer("Treatment Pathways Interactive Plots",
-                                   reactive(uploadedFiles))
+    dataPatterns <- patternsServer("Treatment Pathways",
+                                   reactive(uploadedFiles$treatment_pathways))
 
     observe({
       for (key in names(dataPatterns())) {
@@ -429,7 +429,7 @@ reportGenerator <- function(logger = NULL) {
       bindEvent(dataCharacteristics())
 
     dataLSC <- characteristicsServer(id = "lsc",
-                                     reactive(uploadedFiles))
+                                     reactive(uploadedFiles$summarised_large_scale_characteristics))
 
     observe({
       for (key in names(dataLSC())) {
