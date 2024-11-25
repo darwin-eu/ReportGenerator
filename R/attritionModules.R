@@ -52,7 +52,7 @@ attritionServer <- function(id, uploadedFiles) {
           type = "gt",
           header = "variable_name",
           groupColumn = NULL,
-          settingsColumns = NULL,
+          settingsColumns = c("denominator_sex", "denominator_age_group"),
           hide = "estimate_name"
         )
       })
@@ -64,7 +64,7 @@ attritionServer <- function(id, uploadedFiles) {
           type = "gt",
           header = "variable_name",
           groupColumn = NULL,
-          settingsColumns = NULL,
+          settingsColumns = colnames(settings(prevalence_attrition)),
           hide = "estimate_name"
         )
       })
