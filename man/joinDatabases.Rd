@@ -8,8 +8,6 @@ joinDatabases(fileDataPath)
 }
 \arguments{
 \item{fileDataPath}{List of full file locations}
-
-\item{fileName}{Name of the file in character to process in case the input is only csv}
 }
 \value{
 A list of dataframes

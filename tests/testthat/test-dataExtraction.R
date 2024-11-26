@@ -155,7 +155,7 @@ test_that("processCSV() summarised result", {
                                            package = "ReportGenerator"))
 
   filesLocation <- list.files(testthat::test_path("studies",
-                                                  "summarised_result_csv"),
+                                                  "summarised_csv"),
                               pattern = "csv",
                               full.names = TRUE)
 
@@ -212,7 +212,7 @@ test_that("Loading multiple csv files whole study", {
 
 test_that("loadFileData iteration per result id", {
   data <- list()
-  filesLocation <- testthat::test_path("studies", "summarised_result_csv", "CHUBX_treatmentPathways_2024_09_16.csv")
+  filesLocation <- testthat::test_path("studies", "summarised_csv", "treatmentPathways.csv")
   assertFileExists(filesLocation)
   configData <- yaml.load_file(system.file("config",
                                            "variablesConfig.yaml",

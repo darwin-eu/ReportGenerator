@@ -56,8 +56,9 @@ Imports:
     CodelistGenerator,
     CohortCharacteristics,
     cli,
-    fs,
-    purrr
+    data.table,
+    shinyalert,
+    visOmopResults
 Suggests:
     testthat,
     rmarkdown,
