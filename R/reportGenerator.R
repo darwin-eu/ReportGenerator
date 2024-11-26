@@ -145,12 +145,6 @@ reportGenerator <- function(logger = NULL) {
       fileName <- inFile$name
 
       # Joins one or several zips into the reactive value
-      # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\latest\\p3-c1-010-results 2"
-      # fileDataPath <- list.files(fileDataPath, full.names = TRUE, pattern = ".zip")
-      # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ild"
-      # fileDataPath <- list.files(fileDataPath, full.names = TRUE, pattern = ".zip")
-      # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ild\\survival\\cdw_survival_results.csv"
-      # fileDataPath <- list.files(fileDataPath, full.names = TRUE, pattern = ".zip")
 
       tryCatch({
         data_joined <- joinDatabases(fileDataPath = fileDataPath)
@@ -220,12 +214,6 @@ reportGenerator <- function(logger = NULL) {
       if ("TreatmentPatterns" %in% items) {
         uploadedFiles$treatment_pathways <- uploadedData()$other_result$TreatmentPatterns$treatmentPathways
       }
-      # if ("CohortSurvival" %in% pkgNames) {
-      #   uploadedFiles$CohortSurvival <- uploadedFilesList[["CohortSurvival"]]
-      # }
-      # if ("cohortAttrition" %in% pkgNames) {
-      #   uploadedFiles$cohortAttrition <- uploadedFilesList[["cohortAttrition"]]
-      # }
 
       # # Generate verbatim text output dynamically based on user input
       # output$monitorData <- renderPrint({
@@ -321,60 +309,6 @@ reportGenerator <- function(logger = NULL) {
     #   }
     # }) %>%
     #   bindEvent(attritionTable())
-
-
-    # Inc/Prev Table Modules
-
-    # tableNumPar <- attritionIncPrevServer(id = "Incidence Attrition",
-    #                                       uploadedFiles = reactive(uploadedFiles$attrition))
-    #
-    # observe({
-    #   for (key in names(tableNumPar())) {
-    #     randomId <- getRandomId()
-    #     dataReport[["objects"]][[randomId]] <- tableNumPar()
-    #   }
-    # }) %>%
-    #   bindEvent(tableNumPar())
-    #
-    # # Attrition Incidence only
-    #
-    # tableAttInc <- attritionIncPrevServer(id = "Incidence Attrition - Table",
-    #                                       uploadedFiles = reactive(uploadedFiles))
-    #
-    # observe({
-    #   for (key in names(tableAttInc())) {
-    #     randomId <- getRandomId()
-    #     dataReport[["objects"]][[randomId]] <- tableAttInc()
-    #   }
-    # }) %>%
-    #   bindEvent(tableAttInc())
-
-    # Attrition Prevelence only
-
-    # tableAttPrev <- attritionIncPrevServer(id = "Prevalence Attrition - Table",
-    #                                        uploadedFiles = reactive(uploadedFiles))
-    #
-    # observe({
-    #   for (key in names(tableAttPrev())) {
-    #     randomId <- getRandomId()
-    #     dataReport[["objects"]][[randomId]] <- tableAttPrev()
-    #   }
-    # }) %>%
-    #   bindEvent(tableAttPrev())
-
-    # Table Sex/Age
-
-    # tableSexAge <- tableServer(id = "Table - Number of participants by sex and age group",
-    #                            reactive(uploadedFiles))
-    #
-    # observe({
-    #   for (key in names(tableSexAge())) {
-    #     randomId <- getRandomId()
-    #     dataReport[["objects"]][[randomId]] <- tableSexAge()
-    #   }
-    # }) %>%
-    #   bindEvent(tableSexAge())
-
 
     # Incidence Modules
 

@@ -23,7 +23,25 @@ attritionUI <- function(id, uploadedFiles) {
                          selected = unique(settings(uploadedFiles)$denominator_age_group),
                          multiple = FALSE,
                          list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      )
+      ),
+      column(4,
+             pickerInput(inputId = ns("header"),
+                         label = "Header",
+                         choices = names(uploadedFiles),
+                         selected = c("variable_name"),
+                         multiple = TRUE)),
+      column(4,
+             pickerInput(inputId = ns("groupColumn"),
+                         label = "Group Column",
+                         choices = names(uploadedFiles),
+                         selected = c("cdm_name"),
+                         multiple = TRUE)),
+      column(4,
+             pickerInput(inputId = ns("settingsColumns"),
+                         label = "Settings Columns",
+                         choices = colnames(settings(uploadedFiles)),
+                         selected = c("analysis_type", "denominator_sex", "denominator_age_group"),
+                         multiple = TRUE))
     ),
     fluidRow(createAddItemToReportUI(ns("lockAttrition"))),
     fluidRow(
@@ -50,9 +68,9 @@ attritionServer <- function(id, uploadedFiles) {
         tableIncidenceAttrition(
           result = summarised_result(),
           type = "gt",
-          header = "variable_name",
-          groupColumn = NULL,
-          settingsColumns = c("denominator_sex", "denominator_age_group"),
+          header = input$header,
+          groupColumn = input$groupColumn,
+          settingsColumns = input$settingsColumns,
           hide = "estimate_name"
         )
       })
@@ -62,9 +80,10 @@ attritionServer <- function(id, uploadedFiles) {
         tablePrevalenceAttrition(
           result = summarised_result(),
           type = "gt",
-          header = "variable_name",
-          groupColumn = NULL,
-          settingsColumns = colnames(settings(prevalence_attrition)),
+          header = input$header,
+          groupColumn = input$groupColumn,
+          settingsColumns = input$settingsColumns,
+          # settingsColumns = colnames(settings(summarised_result())),
           hide = "estimate_name"
         )
       })
