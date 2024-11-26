@@ -83,7 +83,6 @@ attritionServer <- function(id, uploadedFiles) {
           header = input$header,
           groupColumn = input$groupColumn,
           settingsColumns = input$settingsColumns,
-          # settingsColumns = colnames(settings(summarised_result())),
           hide = "estimate_name"
         )
       })
