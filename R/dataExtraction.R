@@ -18,7 +18,6 @@
 #' `joinDatabases()` joins several zip or csv folders into a list of dataframes.
 #'
 #' @param fileDataPath List of full file locations
-#' @param fileName Name of the file in character to process in case the input is only csv
 #'
 #' @return A list of dataframes
 #'
@@ -127,10 +126,7 @@ extractCSV <- function(databaseFolders, configData) {
 }
 #' `processCSV()` iterates every csv file and uses `loadFileData()` to check what type of result it is and adds it to a list
 #'
-#' @param data Results
-#' @param filesLocation A path for filelocation
-#' @param configData Data from yaml configuration file
-#' @param databaseName Database name from TreatmentPatterns
+#' @param csv_files CSV files to process
 #'
 #' @return A list with all the results organized by type
 processCSV <- function(csv_files) {

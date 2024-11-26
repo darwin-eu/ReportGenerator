@@ -7,13 +7,7 @@
 processCSV(csv_files)
 }
 \arguments{
-\item{data}{Results}
-
-\item{filesLocation}{A path for filelocation}
-
-\item{configData}{Data from yaml configuration file}
-
-\item{databaseName}{Database name from TreatmentPatterns}
+\item{csv_files}{CSV files to process}
 }
 \value{
 A list with all the results organized by type
