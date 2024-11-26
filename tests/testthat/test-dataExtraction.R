@@ -195,19 +195,12 @@ test_that("processCSV() in a loop", {
 })
 
 test_that("Loading multiple csv files whole study", {
-  csvLocation <- file.path(tempdir(), "dataLocation")
-  dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("studies", "csv"),
+  fileDataPath <- list.files(testthat::test_path("studies", "summarised_csv"),
                              pattern = "csv",
                              full.names = TRUE)
-  fileName <- list.files(testthat::test_path("studies", "csv"),
-                         pattern = "csv")
-  fileName <- tools::file_path_sans_ext(fileName)
-  logger <- log4r::logger()
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath)
   expect_equal(length(uploadedFiles), 2)
   expect_type(uploadedFiles, "list")
-  unlink(csvLocation, recursive = TRUE)
 })
 
 test_that("loadFileData iteration per result id", {
