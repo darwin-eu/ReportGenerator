@@ -4,28 +4,7 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
   outResult <- NULL
   dlTable <- NULL
   dlPlot <- NULL
-  if (id == "survivalTable") {
-    outResult <- gt::gt_output(ns("cs_data"))
-    dataset <- uploadedFiles %>%
-      visOmopResults::splitAdditional()
-  } else if (id == "survivalPlot") {
-    outResult <- plotOutput(ns("cs_plot"))
-    dataset <- uploadedFiles %>%
-      visOmopResults::splitAdditional()
-  } else if (id == "failureTable") {
-    outResult <- gt::gt_output(ns("cu_inc_data"))
-    dataset <- uploadedFiles %>%
-      visOmopResults::splitAdditional()
-  } else if (id == "failurePlot") {
-    outResult <- plotOutput(ns("cu_inc_plot"))
-    dataset <- uploadedFiles$competing_risk %>%
-      visOmopResults::splitAdditional()
-  }
-  if (grepl("Plot", id)) {
-    dlPlot <- createDownloadPlotUI(ns)
-  } else if (grepl("Table", id)) {
-    dlTable <- createDownloadTableUI(ns)
-  }
+  dataset <- uploadedFiles %>% visOmopResults::splitAdditional()
   captionUI <- fluidRow(
     column(12,
            uiOutput(outputId = ns("caption"))
@@ -40,160 +19,256 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
   variableNameOptions <- unique(dataset$variable_name)
   variableLevelOptions <- unique(dataset$variable_level)
   estimateTypeOptions <- unique(dataset$estimate_type)
-  timeOptions <- unique(dataset$estimate_type)
+  # outcomeOptions <- "death_cohort"
   outcomeOptions <- unique(dataset$outcome)
+  # eventgapOptions <- c("overall", "365", "1096", "1826", "3653")
   eventgapOptions <- unique(dataset$eventgap)
   pickerOptions <- list(`actions-box` = TRUE,
                         size = 10,
                         `selected-text-format` = "count > 3")
   cdmOptions <- unique(dataset$cdm_name)
 
-  tagList(
-    fluidRow(
-      column(4,
-             pickerInput(
-               inputId = ns("cdm_name"),
-               label = "Database",
-               choices = cdmOptions,
-               selected = cdmOptions[1],
-               options = pickerOptions,
-               multiple = TRUE
-             )
+  # if (id == "single_event" || id == "competing_risk") {
+    tagList(
+      fluidRow(
+        column(4,
+               pickerInput(
+                 inputId = ns("cdm_name"),
+                 label = "Database",
+                 choices = cdmOptions,
+                 selected = cdmOptions[1],
+                 options = pickerOptions,
+                 multiple = TRUE
+               )
+        ),
+        column(4,
+               pickerInput(
+                 inputId = ns("result_id"),
+                 label = "Result Id",
+                 choices = resultIdOptions,
+                 selected = resultIdOptions,
+                 options = pickerOptions,
+                 multiple = TRUE
+               )
+        ),
+        column(4,
+               pickerInput(
+                 inputId = ns("group_name"),
+                 label = "Group Name",
+                 choices = groupNameOptions,
+                 selected = groupNameOptions[1],
+                 options = pickerOptions,
+                 multiple = TRUE
+               )
+        ),
+        column(4,
+               pickerInput(
+                 inputId = ns("group_level"),
+                 label = "Group Level",
+                 choices = groupLevelOptions,
+                 selected = groupLevelOptions,
+                 options = pickerOptions,
+                 multiple = TRUE
+               )
+        ),
+        column(4,
+               pickerInput(
+                 inputId = ns("strata_name"),
+                 label = "Strata Name",
+                 choices = strataNameOptions,
+                 selected = strataNameOptions[1],
+                 options = pickerOptions,
+                 multiple = TRUE
+               )
+        ),
+        column(4,
+               pickerInput(
+                 inputId = ns("strata_level"),
+                 label = "Strata Level",
+                 choices = strataLevelOptions,
+                 selected = strataLevelOptions[1],
+                 options = pickerOptions,
+                 multiple = TRUE
+               )
+        ),
+        column(4,
+               pickerInput(
+                 inputId = ns("variable_name"),
+                 label = "Variable Name",
+                 choices = variableNameOptions,
+                 selected = variableNameOptions,
+                 options = pickerOptions,
+                 multiple = TRUE
+               )
+        ),
+        column(4,
+               pickerInput(
+                 inputId = ns("variable_level"),
+                 label = "Variable Level",
+                 choices = variableLevelOptions,
+                 selected = variableLevelOptions,
+                 options = pickerOptions,
+                 multiple = TRUE
+               )
+        ),
+        column(4,
+               pickerInput(
+                 inputId = ns("estimate_type"),
+                 label = "Estimate Level",
+                 choices = estimateTypeOptions,
+                 selected = estimateTypeOptions,
+                 options = pickerOptions,
+                 multiple = TRUE
+               )
+        ),
+        column(4,
+               pickerInput(
+                 inputId = ns("outcome"),
+                 label = "Outcome",
+                 choices = outcomeOptions,
+                 selected = outcomeOptions,
+                 options = pickerOptions,
+                 multiple = TRUE
+               )
+        ),
+        column(4,
+               pickerInput(
+                 inputId = ns("eventgap"),
+                 label = "Event Gap",
+                 choices = eventgapOptions,
+                 selected = eventgapOptions[1],
+                 options = pickerOptions,
+                 multiple = TRUE
+               )
+        )
       ),
-      column(4,
-             pickerInput(
-               inputId = ns("result_id"),
-               label = "Result Id",
-               choices = resultIdOptions,
-               selected = resultIdOptions,
-               options = pickerOptions,
-               multiple = TRUE
-             )
+      tags$br(),
+      tabsetPanel(type = "tabs",
+                  tabPanel("Table",
+      fluidRow(
+        column(6,
+               pickerInput(inputId = ns("pivotWide"),
+                           label = "Arrange by",
+                           choices = c("group", "strata"),
+                           selected = c("group", "strata"),
+                           multiple = TRUE)
+        ),
+        column(6,
+               pickerInput(inputId = ns("header"),
+                           label = "Header",
+                           choices = c("cdm_name", "group", "strata",
+                                       "additional", "variable", "estimate", "settings"),
+                           selected = c("cdm_name", "estimate"),
+                           multiple = TRUE)),
       ),
-      column(4,
-             pickerInput(
-               inputId = ns("group_name"),
-               label = "Group Name",
-               choices = groupNameOptions,
-               selected = groupNameOptions[1],
-               options = pickerOptions,
-               multiple = TRUE
-             )
-      ),
-      column(4,
-             pickerInput(
-              inputId = ns("group_level"),
-              label = "Group Level",
-              choices = groupLevelOptions,
-              selected = groupLevelOptions[1],
-              options = pickerOptions,
-              multiple = TRUE
-             )
-      ),
-      column(4,
-             pickerInput(
-               inputId = ns("strata_name"),
-               label = "Strata Name",
-               choices = strataNameOptions,
-               selected = strataNameOptions[1],
-               options = pickerOptions,
-               multiple = TRUE
-             )
-      ),
-      column(4,
-             pickerInput(
-               inputId = ns("strata_level"),
-               label = "Strata Level",
-               choices = strataLevelOptions,
-               selected = strataLevelOptions[1],
-               options = pickerOptions,
-               multiple = TRUE
-             )
-      ),
-      column(4,
-             pickerInput(
-               inputId = ns("variable_name"),
-               label = "Variable Name",
-               choices = variableNameOptions,
-               selected = variableNameOptions[1],
-               options = pickerOptions,
-               multiple = TRUE
-             )
-      ),
-      column(4,
-             pickerInput(
-               inputId = ns("variable_level"),
-               label = "Variable Level",
-               choices = variableLevelOptions,
-               selected = variableLevelOptions,
-               options = pickerOptions,
-               multiple = TRUE
-             )
-      ),
-      column(4,
-             pickerInput(
-               inputId = ns("estimate_type"),
-               label = "Estimate Level",
-               choices = estimateTypeOptions,
-               selected = estimateTypeOptions,
-               options = pickerOptions,
-               multiple = TRUE
-             )
-      ),
-      column(4,
-             pickerInput(
-               inputId = ns("time"),
-               label = "Estimate Level",
-               choices = timeOptions,
-               selected = timeOptions,
-               options = pickerOptions,
-               multiple = TRUE
-             )
-      ),
-      column(4,
-             pickerInput(
-               inputId = ns("outcome"),
-               label = "Outcome",
-               choices = outcomeOptions,
-               selected = outcomeOptions,
-               options = pickerOptions,
-               multiple = TRUE
-             )
-      ),
-      column(4,
-             pickerInput(
-               inputId = ns("eventgap"),
-               label = "Event Gap",
-               choices = eventgapOptions,
-               selected = eventgapOptions[1],
-               options = pickerOptions,
-               multiple = TRUE
-             )
-      )
+      captionUI,
+      # fluidRow(createAddItemToReportUI(ns(paste0("lock", id))),
+      #          dlTable),
+      tags$br(),
+      fluidRow(column(12, shinycssloaders::withSpinner(gt::gt_output(ns("cs_data")))))
     ),
-    fluidRow(
-      column(6,
-             pickerInput(inputId = ns("pivotWide"),
-                         label = "Arrange by",
-                         choices = c("group", "strata"),
-                         selected = c("group", "strata"),
-                         multiple = TRUE)
-      ),
-      column(6,
-             pickerInput(inputId = ns("header"),
-                         label = "Header",
-                         choices = c("cdm_name", "group", "strata",
-                                     "additional", "variable", "estimate", "settings"),
-                         selected = c("cdm_name", "estimate"),
-                         multiple = TRUE)),
-    ),
-    captionUI,
-    fluidRow(createAddItemToReportUI(ns(paste0("lock", id))),
-             dlTable,
-             dlPlot),
-    tags$br(),
-    fluidRow(column(12, outResult))
-  )
+    tabPanel("Plot",
+             captionUI,
+             fluidRow(createDownloadPlotUI(ns)),
+             # fluidRow(createAddItemToReportUI(ns(paste0("lock", id))),
+             #          dlPlot),
+             tags$br(),
+             fluidRow(column(12, shinycssloaders::withSpinner(plotOutput(ns("cs_plot")))))
+      )))
+  # }
+
+  # else if (id == "survivalPlot") {
+  #
+  #   tagList(
+  #     fluidRow(
+  #       column(4,
+  #              pickerInput(
+  #                inputId = ns("cdm_name"),
+  #                label = "Database",
+  #                choices = cdmOptions,
+  #                selected = cdmOptions[1],
+  #                options = pickerOptions,
+  #                multiple = TRUE
+  #              )
+  #       ),
+  #       column(4,
+  #              pickerInput(
+  #                inputId = ns("result_id"),
+  #                label = "Result Id",
+  #                choices = resultIdOptions,
+  #                selected = resultIdOptions,
+  #                options = pickerOptions,
+  #                multiple = TRUE
+  #              )
+  #       ),
+  #       column(4,
+  #              pickerInput(
+  #                inputId = ns("group_name"),
+  #                label = "Group Name",
+  #                choices = groupNameOptions,
+  #                selected = groupNameOptions[1],
+  #                options = pickerOptions,
+  #                multiple = TRUE
+  #              )
+  #       ),
+  #       column(4,
+  #              pickerInput(
+  #                inputId = ns("group_level"),
+  #                label = "Group Level",
+  #                choices = groupLevelOptions,
+  #                selected = groupLevelOptions[1],
+  #                options = pickerOptions,
+  #                multiple = TRUE
+  #              )
+  #       ),
+  #       column(4,
+  #              pickerInput(
+  #                inputId = ns("strata_name"),
+  #                label = "Strata Name",
+  #                choices = strataNameOptions,
+  #                selected = strataNameOptions[1],
+  #                options = pickerOptions,
+  #                multiple = TRUE
+  #              )
+  #       ),
+  #       column(4,
+  #              pickerInput(
+  #                inputId = ns("strata_level"),
+  #                label = "Strata Level",
+  #                choices = strataLevelOptions,
+  #                selected = strataLevelOptions[1],
+  #                options = pickerOptions,
+  #                multiple = TRUE
+  #              )
+  #       ),
+  #       column(4,
+  #              pickerInput(
+  #                inputId = ns("variable_name"),
+  #                label = "Variable Name",
+  #                choices = variableNameOptions,
+  #                selected = variableNameOptions,
+  #                options = pickerOptions,
+  #                multiple = TRUE
+  #              )
+  #       ),
+  #       column(4,
+  #              pickerInput(
+  #                inputId = ns("variable_level"),
+  #                label = "Variable Level",
+  #                choices = variableLevelOptions,
+  #                selected = variableLevelOptions,
+  #                options = pickerOptions,
+  #                multiple = TRUE
+  #              )
+  #       )
+  #     ),
+  #     captionUI,
+  #     tags$br(),
+  #     fluidRow(column(12, shinycssloaders::withSpinner(plotOutput(ns("cs_plot")))))
+  #   )
+  #
+  #
+  # }
 }
 
 cohortSurvivalServer <- function(id, uploadedFiles) {
@@ -202,44 +277,71 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
   moduleServer(id, function(input, output, session) {
 
     getData <- reactive({
-      uploadedFiles <- uploadedFiles()
-      if (id == "survivalTable"  || id == "survivalPlot") {
-        dataset <- uploadedFiles
-      } else if (id == "failureTable"  || id == "failurePlot") {
-        dataset <- uploadedFiles$competing_risk
+      if (id == "single_event" || id == "competing_risk") {
+        uploadedFiles() %>%
+          filter(cdm_name %in% input$cdm_name,
+                 result_id %in% input$result_id,
+                 group_name %in% input$group_name,
+                 group_level %in% input$group_level,
+                 strata_name %in% input$strata_name,
+                 strata_level %in% input$strata_level,
+                 variable_name %in% input$variable_name,
+                 variable_level %in% input$variable_level,
+                 estimate_type %in% input$estimate_type) %>%
+          visOmopResults::filterAdditional(outcome %in% input$outcome,
+                                           eventgap %in% input$eventgap)
+
       }
-      dataset_split <- dataset %>% visOmopResults::splitAdditional()
 
-      dataset_split %>%
-        dplyr::filter(cdm_name %in% input$cdm_name,
-               group_level %in% input$group_level,
-               strata_name %in% input$strata_name) %>%
-        visOmopResults::uniteAdditional()
+      # else if (id == "survivalPlot") {
+      #   uploadedFiles() %>%
+      #     filter(cdm_name %in% input$cdm_name,
+      #            result_id %in% input$result_id,
+      #            group_name %in% input$group_name,
+      #            group_level %in% input$group_level,
+      #            strata_name %in% input$strata_name,
+      #            strata_level %in% input$strata_level,
+      #            variable_name %in% input$variable_name,
+      #            variable_level %in% input$variable_level)
+      # }
+
 
     })
 
-    survival_gt_table <- reactive({
-      CohortSurvival::tableSurvival(getData(),
-                                    header = input$header)
-    })
+      survival_gt_table <- reactive({
+        CohortSurvival::tableSurvival(getData(),
+                                      timeScale = "days",
+                                      times = c(365,
+                                              1096,
+                                              1826,
+                                              3653),
+                                      groupColumn = "cohort",
+                                      header = input$header)
+      })
 
-    if (id == "survivalTable") {
+
+    # if (id == "single_event" || id == "competing_risk") {
       output$cs_data <- gt::render_gt({
         survival_gt_table()
       })
-    } else if (id == "survivalPlot") {
-      output$cs_plot <- renderPlot({
+
+    previewFigure <- reactive({
+      plot <- NULL
+      if (nrow(getData()) > 0 && id == "single_event") {
+        cumulativeFailure <- TRUE
+      } else if (nrow(getData()) > 0 && id == "competing_risk") {
+        cumulativeFailure <- TRUE
+      }
+        CohortSurvival::plotSurvival(getData(),
+                                     xscale = "years",
+                                     cumulativeFailure = cumulativeFailure,
+                                     facet = "cdm_name",
+                                     colour = "strata_name")
+      })
+
+    output$cs_plot <- renderPlot({
         previewFigure()
       })
-    } else if (id == "failureTable") {
-      output$cu_inc_data <- gt::render_gt({
-        survival_gt_table()
-      })
-    } else if (id == "failurePlot") {
-      output$cu_inc_plot <- renderPlot({
-        previewFigure()
-      })
-    }
 
     output$downloadSurvivalTable <- downloadHandler(
       filename = function() {
@@ -249,22 +351,6 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
         gt::gtsave(survival_gt_table(), file)
       }
     )
-
-    previewFigure <- reactive({
-      plot <- NULL
-      if (nrow(getData()) > 0) {
-        if (id == "survivalPlot") {
-          plot <- CohortSurvival::plotSurvival(getData(),
-                                               facet = "cdm_name",
-                                               colour = "strata_name")
-        } else if (id == "failurePlot") {
-            plot <- CohortSurvival::plotSurvival(getData(),
-                                                 facet = "cdm_name",
-                                                 colour = "strata_name")
-        }
-      }
-      return(plot)
-    })
 
     output$downloadFigure <- downloadHandler(
       filename = function() {
@@ -281,62 +367,39 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
 
     output$caption <- renderUI({
       captionId <- captionText <- NULL
-      if (id == "survivalTable") {
+      if (id == "single_event" || id == "competing_risk") {
         captionText <- "Table 1. Survival Probability"
         captionId <-  "captionSurvivalEstimateData"
       } else if (id == "survivalPlot") {
         captionText <- "Figure 1. Survival Probability"
         captionId <-  "captionSurvivalEstimate"
-      } else if (id == "failureTable") {
-        captionText <- "Table 1. Cumulative Survival Probability"
-        captionId <-  "captionCumulativeIncidenceData"
-      } else if (id == "failurePlot") {
-        captionText <- "Figure 1. Cumulative Survival Probability"
-        captionId <-  "captionCumulativeIncidence"
       }
+
       captionText <- glue::glue("{captionText} in {paste0(input$cdm_name, collapse = ',')} (group_level: {paste0(input$group_level, collapse = ',')}; strata: {paste0(input$strata_name, collapse = ',')})")
       createCaptionInput(inputId = ns(captionId),
                          value = captionText)
     })
 
     addObject <- reactiveVal()
-    observeEvent(input$locksurvivalTable, {
-      if (nrow(getData()) > 0) {
-        addObject(
-          list(`Single Event - Table` = list(survivalEstimate = getData(),
-                                       caption = input$captionSurvivalEstimateData))
-        )
-      }
-    })
+    # observeEvent(input$locksurvivalTable, {
+    #   if (nrow(getData()) > 0) {
+    #     addObject(
+    #       list(`Single Event - Table` = list(survivalEstimate = getData(),
+    #                                    caption = input$captionSurvivalEstimateData))
+    #     )
+    #   }
+    # })
+    #
+    # observeEvent(input$locksurvivalPlot, {
+    #   if (nrow(getData()) > 0) {
+    #     addObject(
+    #       list(`Single Event - Plot` = list(survivalEstimate = getData(),
+    #                                   plotOption = "Facet by database, colour by strata_name",
+    #                                   caption = input$captionSurvivalEstimate))
+    #     )
+    #   }
+    # })
 
-    observeEvent(input$locksurvivalPlot, {
-      if (nrow(getData()) > 0) {
-        addObject(
-          list(`Single Event - Plot` = list(survivalEstimate = getData(),
-                                      plotOption = "Facet by database, colour by strata_name",
-                                      caption = input$captionSurvivalEstimate))
-        )
-      }
-    })
-
-    observeEvent(input$lockfailureTable, {
-      if (nrow(getData()) > 0) {
-        addObject(
-          list(`Competing Risk - Table` = list(cumulativeSurvivalEstimate = getData(),
-                                                   caption = input$captionCumulativeIncidenceData))
-        )
-      }
-    })
-
-    observeEvent(input$lockfailurePlot, {
-      if (nrow(getData()) > 0) {
-        addObject(
-          list(`Competing Risk - Plot` = list(cumulativeSurvivalEstimate = getData(),
-                                                  plotOption = "Facet by database, colour by strata_name",
-                                                  caption = input$captionCumulativeIncidence))
-        )
-      }
-    })
     return(addObject)
   })
 }

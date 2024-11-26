@@ -384,45 +384,45 @@ reportGenerator <- function(logger = NULL) {
 
     # Cohort Survival Modules
 
-    dataSurvivalTable <- cohortSurvivalServer("survivalTable", reactive(uploadedFiles$single_event))
+    dataSingleEvent <- cohortSurvivalServer("single_event", reactive(uploadedFiles$single_event))
 
     observe({
-      for (key in names(dataSurvivalTable())) {
+      for (key in names(dataSingleEvent())) {
         randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- dataSurvivalTable()
+        dataReport[["objects"]][[randomId]] <- dataSingleEvent()
       }
     }) %>%
-      bindEvent(dataSurvivalTable())
+      bindEvent(dataSingleEvent())
 
-    dataSurvivalPlot <- cohortSurvivalServer("survivalPlot", reactive(uploadedFiles$single_event))
+    # dataSurvivalPlot <- cohortSurvivalServer("survivalPlot", reactive(uploadedFiles$single_event))
+    #
+    # observe({
+    #   for (key in names(dataSurvivalPlot())) {
+    #     randomId <- getRandomId()
+    #     dataReport[["objects"]][[randomId]] <- dataSurvivalPlot()
+    #   }
+    # }) %>%
+    #   bindEvent(dataSurvivalPlot())
+
+    dataCompetingRisk <- cohortSurvivalServer("competing_risk", reactive(uploadedFiles$competing_risk))
 
     observe({
-      for (key in names(dataSurvivalPlot())) {
+      for (key in names(dataCompetingRisk())) {
         randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- dataSurvivalPlot()
+        dataReport[["objects"]][[randomId]] <- dataCompetingRisk()
       }
     }) %>%
-      bindEvent(dataSurvivalPlot())
+      bindEvent(dataCompetingRisk())
 
-    dataFailureTable <- cohortSurvivalServer("failureTable", reactive(uploadedFiles))
-
-    observe({
-      for (key in names(dataFailureTable())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- dataFailureTable()
-      }
-    }) %>%
-      bindEvent(dataFailureTable())
-
-    dataFailurePlot <- cohortSurvivalServer("failurePlot", reactive(uploadedFiles))
-
-    observe({
-      for (key in names(dataFailurePlot())) {
-        randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- dataFailurePlot()
-      }
-    }) %>%
-      bindEvent(dataFailurePlot())
+    # dataFailurePlot <- cohortSurvivalServer("failurePlot", reactive(uploadedFiles))
+    #
+    # observe({
+    #   for (key in names(dataFailurePlot())) {
+    #     randomId <- getRandomId()
+    #     dataReport[["objects"]][[randomId]] <- dataFailurePlot()
+    #   }
+    # }) %>%
+    #   bindEvent(dataFailurePlot())
 
 
     # Data Report Preview
