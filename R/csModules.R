@@ -1,4 +1,3 @@
-# CohortSurivial
 cohortSurvivalUI <- function(id, uploadedFiles) {
   ns <- NS(id)
   outResult <- NULL
