@@ -19,16 +19,13 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
   variableNameOptions <- unique(dataset$variable_name)
   variableLevelOptions <- unique(dataset$variable_level)
   estimateTypeOptions <- unique(dataset$estimate_type)
-  # outcomeOptions <- "death_cohort"
   outcomeOptions <- unique(dataset$outcome)
-  # eventgapOptions <- c("overall", "365", "1096", "1826", "3653")
   eventgapOptions <- unique(dataset$eventgap)
   pickerOptions <- list(`actions-box` = TRUE,
                         size = 10,
                         `selected-text-format` = "count > 3")
   cdmOptions <- unique(dataset$cdm_name)
 
-  # if (id == "single_event" || id == "competing_risk") {
     tagList(
       fluidRow(
         column(4,
@@ -175,100 +172,6 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
              tags$br(),
              fluidRow(column(12, shinycssloaders::withSpinner(plotOutput(ns("cs_plot")))))
       )))
-  # }
-
-  # else if (id == "survivalPlot") {
-  #
-  #   tagList(
-  #     fluidRow(
-  #       column(4,
-  #              pickerInput(
-  #                inputId = ns("cdm_name"),
-  #                label = "Database",
-  #                choices = cdmOptions,
-  #                selected = cdmOptions[1],
-  #                options = pickerOptions,
-  #                multiple = TRUE
-  #              )
-  #       ),
-  #       column(4,
-  #              pickerInput(
-  #                inputId = ns("result_id"),
-  #                label = "Result Id",
-  #                choices = resultIdOptions,
-  #                selected = resultIdOptions,
-  #                options = pickerOptions,
-  #                multiple = TRUE
-  #              )
-  #       ),
-  #       column(4,
-  #              pickerInput(
-  #                inputId = ns("group_name"),
-  #                label = "Group Name",
-  #                choices = groupNameOptions,
-  #                selected = groupNameOptions[1],
-  #                options = pickerOptions,
-  #                multiple = TRUE
-  #              )
-  #       ),
-  #       column(4,
-  #              pickerInput(
-  #                inputId = ns("group_level"),
-  #                label = "Group Level",
-  #                choices = groupLevelOptions,
-  #                selected = groupLevelOptions[1],
-  #                options = pickerOptions,
-  #                multiple = TRUE
-  #              )
-  #       ),
-  #       column(4,
-  #              pickerInput(
-  #                inputId = ns("strata_name"),
-  #                label = "Strata Name",
-  #                choices = strataNameOptions,
-  #                selected = strataNameOptions[1],
-  #                options = pickerOptions,
-  #                multiple = TRUE
-  #              )
-  #       ),
-  #       column(4,
-  #              pickerInput(
-  #                inputId = ns("strata_level"),
-  #                label = "Strata Level",
-  #                choices = strataLevelOptions,
-  #                selected = strataLevelOptions[1],
-  #                options = pickerOptions,
-  #                multiple = TRUE
-  #              )
-  #       ),
-  #       column(4,
-  #              pickerInput(
-  #                inputId = ns("variable_name"),
-  #                label = "Variable Name",
-  #                choices = variableNameOptions,
-  #                selected = variableNameOptions,
-  #                options = pickerOptions,
-  #                multiple = TRUE
-  #              )
-  #       ),
-  #       column(4,
-  #              pickerInput(
-  #                inputId = ns("variable_level"),
-  #                label = "Variable Level",
-  #                choices = variableLevelOptions,
-  #                selected = variableLevelOptions,
-  #                options = pickerOptions,
-  #                multiple = TRUE
-  #              )
-  #       )
-  #     ),
-  #     captionUI,
-  #     tags$br(),
-  #     fluidRow(column(12, shinycssloaders::withSpinner(plotOutput(ns("cs_plot")))))
-  #   )
-  #
-  #
-  # }
 }
 
 cohortSurvivalServer <- function(id, uploadedFiles) {
@@ -293,19 +196,6 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
 
       }
 
-      # else if (id == "survivalPlot") {
-      #   uploadedFiles() %>%
-      #     filter(cdm_name %in% input$cdm_name,
-      #            result_id %in% input$result_id,
-      #            group_name %in% input$group_name,
-      #            group_level %in% input$group_level,
-      #            strata_name %in% input$strata_name,
-      #            strata_level %in% input$strata_level,
-      #            variable_name %in% input$variable_name,
-      #            variable_level %in% input$variable_level)
-      # }
-
-
     })
 
       survival_gt_table <- reactive({
@@ -319,9 +209,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
                                       header = input$header)
       })
 
-
-    # if (id == "single_event" || id == "competing_risk") {
-      output$cs_data <- gt::render_gt({
+    output$cs_data <- gt::render_gt({
         survival_gt_table()
       })
 
@@ -380,7 +268,7 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
                          value = captionText)
     })
 
-    addObject <- reactiveVal()
+    # addObject <- reactiveVal()
     # observeEvent(input$locksurvivalTable, {
     #   if (nrow(getData()) > 0) {
     #     addObject(
