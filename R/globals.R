@@ -114,4 +114,7 @@ utils::globalVariables(c("age_strata",
                          "denominator_target_cohort_name",
                          "fileDataPath",
                          "package",
-                         "."))
+                         ".",
+                         "outcome",
+                         "eventgap",
+                         "test_path"))
