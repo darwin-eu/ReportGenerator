@@ -18,7 +18,7 @@ test_that("summarised Characteristics and LSC", {
 test_that("summarised Characteristics and LSC", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
@@ -53,7 +53,7 @@ test_that("summarised Characteristics and LSC", {
 #   settings(data$CohortCharacteristics$summarised_characteristics)
 #
 #
-#   fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+#   fileDataPath <- list.files(test_path("studies", "summarised_zip"),
 #                              pattern = "zip",
 #                              full.names = TRUE)
 #   logger <- log4r::logger()
@@ -64,7 +64,7 @@ test_that("summarised Characteristics and LSC", {
 #
 #   csvLocation <- file.path(tempdir(), "dataLocation")
 #   dir.create(csvLocation)
-#   fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+#   fileDataPath <- list.files(test_path("studies", "summarised_zip"),
 #                              pattern = "zip",
 #                              full.names = TRUE)
 #   logger <- log4r::logger()

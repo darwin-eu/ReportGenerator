@@ -1,6 +1,6 @@
 test_that("Prevalence Attrition", {
 
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
   test_data <- joinDatabases(fileDataPath[1])

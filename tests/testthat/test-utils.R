@@ -1,6 +1,6 @@
 # IncidencePrevalence
 test_that("getSummarisedData summarised_characteristics", {
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
   uploadedData <- joinDatabases(fileDataPath)
@@ -10,7 +10,7 @@ test_that("getSummarisedData summarised_characteristics", {
 })
 
 test_that("getIncidencePrevalence", {
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
   uploadedData <- joinDatabases(fileDataPath)
