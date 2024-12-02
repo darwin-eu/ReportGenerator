@@ -314,52 +314,29 @@ reportGenerator <- function(logger = NULL) {
 
       # Incidence
 
-    incidenceServer(id = "Incidence", reactive(uploadedFiles$incidence))
+    dataIncidence<- incidenceServer(id = "Incidence", reactive(uploadedFiles$incidence))
 
-    # dataIncidenceYear <- incidenceSumServer(id = "Incidence rate per year - Plot",
-    #                                      reactive(uploadedFiles$incidence))
-
-    # observe({
-    #   for (key in names(dataIncidenceYear())) {
-    #     randomId <- getRandomId()
-    #     dataReport[["objects"]][[randomId]] <- dataIncidenceYear()
-    #   }
-    # }) %>%
-    #   bindEvent(dataIncidenceYear())
+    observe({
+      for (key in names(dataIncidence())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- dataIncidence()
+      }
+    }) %>%
+      bindEvent(dataIncidence())
 
     # Prevalence Modules
 
-      # Year
-
-    prevalenceServer(id = "Prevalence", reactive(uploadedFiles$prevalence))
-
-
-    #   dataPrevalence <-
-    #
-    # observe({
-    #   for (key in names(dataPrevalence())) {
-    #     randomId <- getRandomId()
-    #     dataReport[["objects"]][[randomId]] <- dataPrevalence()
-    #   }
-    # }) %>%
-    #   bindEvent(dataPrevalence())
-
-
-    # Treatment Patterns Interactive Plots
-
-    dataPatterns <- patternsServer("Treatment Pathways",
-                                   reactive(uploadedFiles$treatment_pathways))
+    dataPrevalence <- prevalenceServer(id = "Prevalence", reactive(uploadedFiles$prevalence))
 
     observe({
-      for (key in names(dataPatterns())) {
+      for (key in names(dataPrevalence())) {
         randomId <- getRandomId()
-        dataReport[["objects"]][[randomId]] <- dataPatterns()
+        dataReport[["objects"]][[randomId]] <- dataPrevalence()
       }
     }) %>%
-      bindEvent(dataPatterns())
+      bindEvent(dataPrevalence())
 
-
-    # PatientProfiles Modules
+    # Characteristics Modules
     dataCharacteristics <- characteristicsServer("characteristics",
                                                  reactive(uploadedFiles$summarised_characteristics))
 
@@ -394,16 +371,6 @@ reportGenerator <- function(logger = NULL) {
     }) %>%
       bindEvent(dataSingleEvent())
 
-    # dataSurvivalPlot <- cohortSurvivalServer("survivalPlot", reactive(uploadedFiles$single_event))
-    #
-    # observe({
-    #   for (key in names(dataSurvivalPlot())) {
-    #     randomId <- getRandomId()
-    #     dataReport[["objects"]][[randomId]] <- dataSurvivalPlot()
-    #   }
-    # }) %>%
-    #   bindEvent(dataSurvivalPlot())
-
     dataCompetingRisk <- cohortSurvivalServer("competing_risk", reactive(uploadedFiles$competing_risk))
 
     observe({
@@ -414,16 +381,18 @@ reportGenerator <- function(logger = NULL) {
     }) %>%
       bindEvent(dataCompetingRisk())
 
-    # dataFailurePlot <- cohortSurvivalServer("failurePlot", reactive(uploadedFiles))
-    #
-    # observe({
-    #   for (key in names(dataFailurePlot())) {
-    #     randomId <- getRandomId()
-    #     dataReport[["objects"]][[randomId]] <- dataFailurePlot()
-    #   }
-    # }) %>%
-    #   bindEvent(dataFailurePlot())
+    # Treatment Patterns Interactive Plots
 
+    dataPatterns <- patternsServer("Treatment Pathways",
+                                   reactive(uploadedFiles$treatment_pathways))
+
+    observe({
+      for (key in names(dataPatterns())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- dataPatterns()
+      }
+    }) %>%
+      bindEvent(dataPatterns())
 
     # Data Report Preview
 

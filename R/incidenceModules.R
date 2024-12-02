@@ -106,7 +106,8 @@ incidenceUI <- function(id, uploadedFiles) {
                                                    selected = c("denominator_target_cohort_name"),
                                                    multiple = TRUE))
                               ),
-                              fluidRow(column(6, downloadButton(ns("downloadIncidenceTable"), "Download Table"))),
+                              fluidRow(createAddItemToReportUI(ns("incidence_table")),
+                                       column(4, downloadButton(ns("downloadIncidenceTable"), "Download Table"))),
                               fluidRow(column(12, gt::gt_output(ns("summarisedTableGt"))))
                        ),
                        tabPanel("Plot",
@@ -140,6 +141,7 @@ incidenceUI <- function(id, uploadedFiles) {
                                                             step = 1)
                                          )
                                 ),
+                                fluidRow(createAddItemToReportUI(ns("incidence_plot"))),
                                 fluidRow(createDownloadPlotUI(ns)),
                                 fluidRow(column(12, plotOutput(ns("summarisedIncidencePlot"))))),
                        tabPanel("Data",
@@ -238,6 +240,33 @@ incidenceServer <- function(id, uploadedFiles) {
         gt::gtsave(summarisedIncidence_gt_table(), file)
       }
     )
+
+    addObject <- reactiveVal()
+        observeEvent(input$incidence_table, {
+          addObject(
+            list(incidence_table = list(incidence_estimates = final_summarised_result()
+                                                         # plotOption = input$facet
+                                                         # caption = input$captionInc,
+                                                         # ribbon = input$ribbonIncidence,
+                                                         # options = c(input$showCIIncidence, input$stackPlotsIncidence)
+                                            )
+                 )
+          )
+        })
+
+        observeEvent(input$incidence_plot, {
+          addObject(
+            list(incidence_plot = list(incidence_estimates = final_summarised_result()
+                                                                # plotOption = input$facet
+                                                                # caption = input$captionInc,
+                                                                # ribbon = input$ribbonIncidence,
+                                                                # options = c(input$showCIIncidence, input$stackPlotsIncidence)
+                                           )
+                 )
+          )
+        })
+
+        return(addObject)
 
   })
 }

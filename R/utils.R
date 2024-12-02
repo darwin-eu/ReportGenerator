@@ -280,8 +280,7 @@ saveGGPlot <- function(file, plot, height = 10, width = 20, dpi = 300) {
 }
 
 createAddItemToReportUI <- function(id) {
-  tagList(column(2, shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
-                    shiny::br(), actionButton(id, "Add item to report")))
+  tagList(column(4, actionButton(id, "Add item to report")))
 }
 
 createDownloadTableUI <- function(ns) {
