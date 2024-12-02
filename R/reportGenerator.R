@@ -45,7 +45,10 @@ reportGenerator <- function(logger = NULL) {
   header <- glue::glue("ReportGenerator {packageVersion('ReportGenerator')}")
 
   ui <- dashboardPage(
-    dashboardHeader(title = header),
+    dashboardHeader(title = tags$div(
+      header,
+      style = "font-size: 16px;" # Adjust the font size here
+    )),
     dashboardSidebar(
       sidebarMenu(
         menuItem("StudyPackage", datasetLoadUI("StudyPackage"),
