@@ -314,7 +314,7 @@ reportGenerator <- function(logger = NULL) {
 
       # Incidence
 
-    dataIncidence<- incidenceServer(id = "Incidence", reactive(uploadedFiles$incidence))
+    dataIncidence <- incidenceServer(id = "Incidence", reactive(uploadedFiles$incidence))
 
     observe({
       for (key in names(dataIncidence())) {

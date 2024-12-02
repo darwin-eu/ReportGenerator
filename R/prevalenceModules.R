@@ -107,7 +107,8 @@ prevalenceUI <- function(id, uploadedFiles) {
                                                    selected = c("denominator_target_cohort_name"),
                                                    multiple = TRUE))
                               ),
-                              fluidRow(column(6, downloadButton(ns("downloadPrevalenceTable"), "Download Table"))),
+                       fluidRow(createAddItemToReportUI(ns("prevalence_table")),
+                                column(4, downloadButton(ns("downloadPrevalenceTable"), "Download Table"))),
                               fluidRow(column(12, gt::gt_output(ns("summarisedTableGt"))))
                        ),
                        tabPanel("Plot",
@@ -141,6 +142,7 @@ prevalenceUI <- function(id, uploadedFiles) {
                                                             step = 0.01)
                                          )
                                 ),
+                                fluidRow(createAddItemToReportUI(ns("prevalence_plot"))),
                                 fluidRow(createDownloadPlotUI(ns)),
                                 fluidRow(column(12, plotOutput(ns("summarisedPrevalencePlot"))))),
                        tabPanel("Data",
@@ -256,6 +258,33 @@ prevalenceServer <- function(id, uploadedFiles) {
         gt::gtsave(summarisedPrevalence_gt_table(), file)
       }
     )
+
+    addObject <- reactiveVal()
+    observeEvent(input$prevalence_table, {
+      addObject(
+        list(prevalence_table = list(prevalence_estimates = final_summarised_result()
+                                    # plotOption = input$facet
+                                    # caption = input$captionInc,
+                                    # ribbon = input$ribbonprevalence,
+                                    # options = c(input$showCIprevalence, input$stackPlotsprevalence)
+        )
+        )
+      )
+    })
+
+    observeEvent(input$prevalence_plot, {
+      addObject(
+        list(prevalence_plot = list(prevalence_estimates = final_summarised_result()
+                                   # plotOption = input$facet
+                                   # caption = input$captionInc,
+                                   # ribbon = input$ribbonprevalence,
+                                   # options = c(input$showCIprevalence, input$stackPlotsprevalence)
+        )
+        )
+      )
+    })
+
+    return(addObject)
 
   })
 }
