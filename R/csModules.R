@@ -4,11 +4,6 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
   dlTable <- NULL
   dlPlot <- NULL
   dataset <- uploadedFiles %>% visOmopResults::splitAdditional()
-  captionUI <- fluidRow(
-    column(12,
-           uiOutput(outputId = ns("caption"))
-    ),
-  )
   cdmOptions <- unique(dataset$cdm_name)
   resultIdOptions <- unique(dataset$result_id)
   groupLevelOptions <- unique(dataset$group_level)
@@ -157,20 +152,20 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
                            selected = c("cdm_name", "estimate"),
                            multiple = TRUE)),
       ),
-      captionUI,
-      # fluidRow(createAddItemToReportUI(ns(paste0("lock", id))),
-      #          dlTable),
+      uiOutput(outputId = ns("caption_table")),
+      fluidRow(createAddItemToReportUI(ns("lock_table")),
+               dlTable),
       tags$br(),
       fluidRow(column(12, shinycssloaders::withSpinner(gt::gt_output(ns("cs_data")))))
     ),
     tabPanel("Plot",
-             captionUI,
+             uiOutput(outputId = ns("caption_plot")),
              fluidRow(createDownloadPlotUI(ns)),
-             # fluidRow(createAddItemToReportUI(ns(paste0("lock", id))),
-             #          dlPlot),
+             fluidRow(createAddItemToReportUI(ns("lock_plot"))),
+                      dlPlot),
              tags$br(),
              fluidRow(column(12, shinycssloaders::withSpinner(plotOutput(ns("cs_plot")))))
-      )))
+      ))
 }
 
 cohortSurvivalServer <- function(id, uploadedFiles) {
@@ -252,14 +247,11 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
       }
     )
 
-    output$caption <- renderUI({
+    output$caption_table <- renderUI({
       captionId <- captionText <- NULL
       if (id == "single_event" || id == "competing_risk") {
         captionText <- "Table 1. Survival Probability"
-        captionId <-  "captionSurvivalEstimateData"
-      } else if (id == "survivalPlot") {
-        captionText <- "Figure 1. Survival Probability"
-        captionId <-  "captionSurvivalEstimate"
+        captionId <-  "captionSurvivalEstimateTable"
       }
 
       captionText <- glue::glue("{captionText} in {paste0(input$cdm_name, collapse = ',')} (group_level: {paste0(input$group_level, collapse = ',')}; strata: {paste0(input$strata_name, collapse = ',')})")
@@ -267,25 +259,40 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
                          value = captionText)
     })
 
-    # addObject <- reactiveVal()
-    # observeEvent(input$locksurvivalTable, {
-    #   if (nrow(getData()) > 0) {
-    #     addObject(
-    #       list(`Single Event - Table` = list(survivalEstimate = getData(),
-    #                                    caption = input$captionSurvivalEstimateData))
-    #     )
-    #   }
-    # })
-    #
-    # observeEvent(input$locksurvivalPlot, {
-    #   if (nrow(getData()) > 0) {
-    #     addObject(
-    #       list(`Single Event - Plot` = list(survivalEstimate = getData(),
-    #                                   plotOption = "Facet by database, colour by strata_name",
-    #                                   caption = input$captionSurvivalEstimate))
-    #     )
-    #   }
-    # })
+    output$caption_plot <- renderUI({
+      captionId <- captionText <- NULL
+      captionText <- "Figure 1. Survival Probability"
+      captionId <-  "captionSurvivalEstimatePlot"
+
+      captionText <- glue::glue("{captionText} in {paste0(input$cdm_name, collapse = ',')} (group_level: {paste0(input$group_level, collapse = ',')}; strata: {paste0(input$strata_name, collapse = ',')})")
+      createCaptionInput(inputId = ns(captionId),
+                         value = captionText)
+    })
+
+    addObject <- reactiveVal()
+    observeEvent(input$lock_table, {
+      if (nrow(getData()) > 0) {
+        survivalObjectType <- paste0(id, " - Table")
+        tempList <- list()
+        tempList[[survivalObjectType]] <- list(
+          survivalEstimate = getData(),
+          caption = input$captionSurvivalEstimateTable
+        )
+        addObject(tempList)
+      }
+    })
+
+    observeEvent(input$lock_plot, {
+      if (nrow(getData()) > 0) {
+        survivalObjectType <- paste0(id, " - Plot")
+        tempList <- list()
+        tempList[[survivalObjectType]] <- list(
+          survivalEstimate = getData(),
+          caption = input$captionSurvivalEstimatePlot
+          )
+        addObject(tempList)
+      }
+    })
 
     return(addObject)
   })
