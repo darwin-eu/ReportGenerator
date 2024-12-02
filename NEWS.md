@@ -1,6 +1,6 @@
 # ReportGenerator 1.19.0
 
-* Improved filter coherence for IncidencePrevalence results.
+* Improved integration with summarisedResult() format for IncidencePrevalence, CohortCharacteristics and CohortSurvival.
 
 # ReportGenerator 1.18.0
 
