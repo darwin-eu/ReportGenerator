@@ -7,7 +7,7 @@
 generateMockData(
   databaseName = c("CHUBX", "CPRD_GOLD", "IMASIS", "IPCI", "SIDIAP"),
   simulatePopulation = TRUE,
-  outputPath = testthat::test_path("studies", "zip"),
+  outputPath = test_path("studies", "summarised_zip"),
   internal = TRUE
 )
 }

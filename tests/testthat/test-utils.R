@@ -1,19 +1,31 @@
 # IncidencePrevalence
-test_that("getIncidencePrevalence", {
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+test_that("getSummarisedData summarised_characteristics", {
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
   uploadedData <- joinDatabases(fileDataPath)
   summarised_characteristics_result <- getSummarisedData(uploadedData$summarised_result, type_result = 'summarised_characteristics')
   expect_equal(settings(summarised_characteristics_result)$result_type, "summarised_characteristics")
+
 })
+
+test_that("getIncidencePrevalence", {
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
+                             pattern = "zip",
+                             full.names = TRUE)
+  uploadedData <- joinDatabases(fileDataPath)
+  survival_result <- getSummarisedData(uploadedData$summarised_result, type_result = 'survival')
+  expect_equal(settings(survival_result)$analysis_type, c("competing_risk", "single_event"))
+})
+
+
 
 test_that("getItemsList all", {
   items <- c("incidence", "summarised_large_scale_characteristics", "point_prevalence",
              "period_prevalence", "summarised_characteristics", "competing_risk",
-             "single_event")
+             "single_event", "TreatmentPatterns")
   menuList <- getItemsList(items)
-  expect_equal(length(menuList), 5)
+  expect_equal(length(menuList), 6)
 })
 
 
@@ -23,7 +35,7 @@ test_that("getItemsList all", {
              "prevalence_attrition",
              "incidence_estimates",
              "prevalence_estimates",
-             "treatmentPathways",
+             "TreatmentPatterns",
              "summarised_characteristics",
              "summarised_large_scale_characteristics",
              "single_event",
@@ -78,15 +90,15 @@ test_that("getItemsList only summarised_characteristics", {
 # TreatmentPatterns
 
 test_that("getItemsList treatmentPatterns", {
-  items <- c("treatmentPathways")
+  items <- c("TreatmentPatterns")
   menuList <- getItemsList(items)
-  expect_equal(menuList, c("Treatment Pathways Interactive Plots"))
+  expect_equal(menuList, c("Treatment Pathways"))
 })
 
 test_that("getItemsList joining to apps", {
   itemsList <- list(objects = NULL)
   itemsIP <- c("incidence_attrition", "prevalence_attrition", "incidence_estimates", "prevalence_estimates")
-  itemsTP <- c("treatmentPathways")
+  itemsTP <- c("TreatmentPatterns")
   menuListIP <- getItemsList(itemsIP)
   menuListTP <- getItemsList(itemsTP)
   itemsList$objects[["items"]] <- c(itemsList$objects[["items"]], menuListIP)

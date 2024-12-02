@@ -1,6 +1,6 @@
 test_that("Complete sequence of functions inside joinDatabases ZIP", {
 
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
   # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\result_\\p3-c1-010-results-ipci\\p3-c1-010-results-ipci\\results_IPCI.zip"
@@ -46,7 +46,7 @@ test_that("Complete sequence of functions inside joinDatabases ZIP", {
 })
 
 test_that("Loading 1 zip files whole study", {
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
@@ -58,10 +58,9 @@ test_that("Loading 1 zip files whole study", {
 })
 
 test_that("Loading multiple zip files whole study", {
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
-  logger <- log4r::logger()
   unzipDir <- file.path(tempdir(), "multi")
   uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath)
   expect_equal(length(uploadedFileDataList), 2)
@@ -70,12 +69,12 @@ test_that("Loading multiple zip files whole study", {
 })
 
 test_that("getFileType() either zip or csv", {
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
   fileType <- getFileType(fileDataPath)
   expect_equal(fileType, "zip")
-  fileDataPath <- list.files(testthat::test_path("studies", "csv"),
+  fileDataPath <- list.files(testthat::test_path("studies", "summarised_csv"),
                              pattern = "csv",
                              full.names = TRUE)
   fileType <- getFileType(fileDataPath)
@@ -84,14 +83,14 @@ test_that("getFileType() either zip or csv", {
 
 test_that("unzipFiles() correctly", {
   unzipDir <- file.path(tempdir(), "unzipData")
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
 
   # `unzipFiles()` Unzip files
   databaseFolders <- unzipFiles(unzipDir = unzipDir,
                                 fileDataPath = fileDataPath)
-  expect_length(databaseFolders, 3)
+  expect_length(databaseFolders, 5)
 })
 
 test_that("extractCSV() correctly", {
@@ -99,7 +98,7 @@ test_that("extractCSV() correctly", {
                                            "variablesConfig.yaml",
                                            package = "ReportGenerator"))
   unzipDir <- file.path(tempdir(), "unzipData")
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
 
@@ -115,14 +114,14 @@ test_that("extractCSV() correctly", {
 
 test_that("`getDatabaseName()` if there is a metadata file from TP", {
   # With metadata
-  filesLocation <- list.files(testthat::test_path("studies", "csv"),
+  filesLocation <- list.files(testthat::test_path("studies", "summarised_csv"),
                               pattern = "csv",
                               full.names = TRUE)
   databaseName <- getDatabaseName(filesLocation = filesLocation)
   expect_equal(databaseName, "Synthea synthetic health database")
 
   # No metadata
-  filesLocation <- list.files(testthat::test_path("studies", "csv"),
+  filesLocation <- list.files(testthat::test_path("studies", "summarised_csv"),
                               pattern = "csv",
                               full.names = TRUE)
   databaseName <- getDatabaseName(filesLocation = filesLocation[2])
@@ -135,7 +134,7 @@ test_that("processCSV() files into a list with summarisedResult objects", {
                                            "variablesConfig.yaml",
                                            package = "ReportGenerator"))
 
-  filesLocation <- list.files(testthat::test_path("studies", "csv"),
+  filesLocation <- list.files(testthat::test_path("studies", "summarised_csv"),
                               pattern = "csv",
                               full.names = TRUE)
 
@@ -156,7 +155,7 @@ test_that("processCSV() summarised result", {
                                            package = "ReportGenerator"))
 
   filesLocation <- list.files(testthat::test_path("studies",
-                                                  "summarised_result_csv"),
+                                                  "summarised_csv"),
                               pattern = "csv",
                               full.names = TRUE)
 
@@ -174,7 +173,7 @@ test_that("processCSV() in a loop", {
                                            "variablesConfig.yaml",
                                            package = "ReportGenerator"))
   unzipDir <- file.path(tempdir(), "unzipData")
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
 
@@ -196,24 +195,17 @@ test_that("processCSV() in a loop", {
 })
 
 test_that("Loading multiple csv files whole study", {
-  csvLocation <- file.path(tempdir(), "dataLocation")
-  dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("studies", "csv"),
+  fileDataPath <- list.files(testthat::test_path("studies", "summarised_csv"),
                              pattern = "csv",
                              full.names = TRUE)
-  fileName <- list.files(testthat::test_path("studies", "csv"),
-                         pattern = "csv")
-  fileName <- tools::file_path_sans_ext(fileName)
-  logger <- log4r::logger()
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath)
   expect_equal(length(uploadedFiles), 2)
   expect_type(uploadedFiles, "list")
-  unlink(csvLocation, recursive = TRUE)
 })
 
 test_that("loadFileData iteration per result id", {
   data <- list()
-  filesLocation <- testthat::test_path("studies", "summarised_result_csv", "CHUBX_treatmentPathways_2024_09_16.csv")
+  filesLocation <- testthat::test_path("studies", "summarised_csv", "treatmentPathways.csv")
   assertFileExists(filesLocation)
   configData <- yaml.load_file(system.file("config",
                                            "variablesConfig.yaml",

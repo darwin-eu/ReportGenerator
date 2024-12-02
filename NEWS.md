@@ -1,3 +1,7 @@
+# ReportGenerator 1.19.0
+
+* Improved integration with summarisedResult() format for IncidencePrevalence, CohortCharacteristics and CohortSurvival.
+
 # ReportGenerator 1.18.0
 
 * omopgenerics integrations for IncidencePrevalence and data extraction. 

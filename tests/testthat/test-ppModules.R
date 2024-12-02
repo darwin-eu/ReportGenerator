@@ -1,17 +1,16 @@
 test_that("summarised Characteristics and LSC", {
   testServer(reportGenerator(), {
-    uploadedFiles <- list()
-    uploadedFiles[["CohortCharacteristics"]][["summarised_characteristics"]] <- testData$summarised_characteristics
-    uploadedFiles[["CohortCharacteristics"]][["summarised_large_scale_characteristics"]] <- testData$summarised_large_scale_characteristics
+    summarised_characteristics_data <- testData$CohortCharacteristics$summarised_characteristics
+    summarised_large_scale_characteristics_data <- testData$CohortCharacteristics$summarised_large_scale_characteristics
 
     expect_s3_class(characteristicsUI("characteristics",
-                                      uploadedFiles = testData), "shiny.tag.list")
+                                      uploadedFiles = summarised_characteristics_data), "shiny.tag.list")
     expect_s3_class(characteristicsServer("characteristics",
-                                          uploadedFiles = testData), "reactiveVal")
+                                          uploadedFiles = summarised_large_scale_characteristics_data), "reactiveVal")
     expect_s3_class(characteristicsUI("lsc",
-                                      uploadedFiles = testData), "shiny.tag.list")
+                                      uploadedFiles = summarised_characteristics_data), "shiny.tag.list")
     expect_s3_class(characteristicsServer("lsc",
-                                          uploadedFiles = testData), "reactiveVal")
+                                          uploadedFiles = summarised_large_scale_characteristics_data), "reactiveVal")
   })
 })
 
@@ -19,7 +18,7 @@ test_that("summarised Characteristics and LSC", {
 test_that("summarised Characteristics and LSC", {
   csvLocation <- file.path(tempdir(), "dataLocation")
   dir.create(csvLocation)
-  fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
   logger <- log4r::logger()
@@ -54,7 +53,7 @@ test_that("summarised Characteristics and LSC", {
 #   settings(data$CohortCharacteristics$summarised_characteristics)
 #
 #
-#   fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+#   fileDataPath <- list.files(test_path("studies", "summarised_zip"),
 #                              pattern = "zip",
 #                              full.names = TRUE)
 #   logger <- log4r::logger()
@@ -65,7 +64,7 @@ test_that("summarised Characteristics and LSC", {
 #
 #   csvLocation <- file.path(tempdir(), "dataLocation")
 #   dir.create(csvLocation)
-#   fileDataPath <- list.files(testthat::test_path("studies", "zip"),
+#   fileDataPath <- list.files(test_path("studies", "summarised_zip"),
 #                              pattern = "zip",
 #                              full.names = TRUE)
 #   logger <- log4r::logger()

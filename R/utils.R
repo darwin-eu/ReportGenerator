@@ -280,8 +280,7 @@ saveGGPlot <- function(file, plot, height = 10, width = 20, dpi = 300) {
 }
 
 createAddItemToReportUI <- function(id) {
-  tagList(column(2, shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
-                    shiny::br(), actionButton(id, "Add item to report")))
+  tagList(column(4, actionButton(id, "Add item to report")))
 }
 
 createDownloadTableUI <- function(ns) {
@@ -322,34 +321,34 @@ createDataTable <- function(data, tableName = "result") {
                 class = "display")
 }
 
-analysisNames <- function(settingsData) {
+analysisNamesSum <- function(settingsData) {
   # settingsData <- settings(uploadedFilesList)
-  analysisNames <- settingsData %>%
+  analysisNamesSum <- settingsData %>%
     pull(result_type) %>%
     unique()
 
-  if ("survival" %in% analysisNames) {
+  if ("survival" %in% analysisNamesSum) {
     survivalAnalysisType <- settingsData %>%
-      filter(result_type == "survival") %>%
+      dplyr::filter(result_type == "survival") %>%
       pull(analysis_type) %>%
       unique()
-    analysisNames <- analysisNames[-which(analysisNames == "survival")]
-    analysisNames <- c(analysisNames, survivalAnalysisType)
+    analysisNamesSum <- analysisNamesSum[-which(analysisNamesSum == "survival")]
+    analysisNamesSum <- c(analysisNamesSum, survivalAnalysisType)
   }
-  return(analysisNames)
+  return(analysisNamesSum)
 }
 
 getSummarisedData <- function(uploadedData, type_result = "summarised_characteristics") {
 
   result_ids <- settings(uploadedData) %>%
-    filter(result_type == type_result) %>%
+    dplyr::filter(result_type == type_result) %>%
     pull(result_id)
 
   summarised_result <- uploadedData %>%
-    filter(result_id %in% result_ids)
+    dplyr::filter(result_id %in% result_ids)
 
   attr(summarised_result, "settings") <- settings(summarised_result) %>%
-    filter(result_id %in% result_ids)
+    dplyr::filter(result_id %in% result_ids)
 
   return(summarised_result)
 }

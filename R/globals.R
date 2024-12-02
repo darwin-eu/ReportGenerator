@@ -110,4 +110,11 @@ utils::globalVariables(c("age_strata",
                          "strata_name",
                          "table_name",
                          "variable_level",
-                         "variable_name"))
+                         "variable_name",
+                         "denominator_target_cohort_name",
+                         "fileDataPath",
+                         "package",
+                         ".",
+                         "outcome",
+                         "eventgap",
+                         "test_path"))
