@@ -43,34 +43,43 @@ function(input, output, session) {
   })
 
   # 2.Assign Data
-  # Inc/Prev Table Modules
+
   # Table w/ attrition data from Inc/Prev
 
-  dataIncidenceYear <- incidenceSumServer(id = "Incidence", reactive(uploadedFiles$incidence))
+
+  attritionServer(id = "Incidence Attrition",
+                  uploadedFiles = reactive(uploadedFiles$incidence_attrition))
+
+  attritionServer(id = "Prevalence Attrition",
+                  uploadedFiles = reactive(uploadedFiles$prevalence_attrition))
+
+  # Incidence Modules
+
+  # Incidence
+
+  dataIncidence <- incidenceServer(id = "Incidence", reactive(uploadedFiles$incidence))
 
   observe({
-    for (key in names(dataIncidenceYear())) {
+    for (key in names(dataIncidence())) {
       randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- dataIncidenceYear()
+      dataReport[["objects"]][[randomId]] <- dataIncidence()
     }
   }) %>%
-    bindEvent(dataIncidenceYear())
+    bindEvent(dataIncidence())
 
-  # Treatment Patterns Interactive Plots
+  # Prevalence Modules
 
-  dataPatterns <- patternsServer("Treatment Pathways Interactive Plots",
-                                 reactive(uploadedFiles))
+  dataPrevalence <- prevalenceServer(id = "Prevalence", reactive(uploadedFiles$prevalence))
 
   observe({
-    for (key in names(dataPatterns())) {
+    for (key in names(dataPrevalence())) {
       randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- dataPatterns()
+      dataReport[["objects"]][[randomId]] <- dataPrevalence()
     }
   }) %>%
-    bindEvent(dataPatterns())
+    bindEvent(dataPrevalence())
 
-
-  # PatientProfiles Modules
+  # Characteristics Modules
   dataCharacteristics <- characteristicsServer("characteristics",
                                                reactive(uploadedFiles$summarised_characteristics))
 
@@ -83,7 +92,7 @@ function(input, output, session) {
     bindEvent(dataCharacteristics())
 
   dataLSC <- characteristicsServer(id = "lsc",
-                                   reactive(uploadedFiles))
+                                   reactive(uploadedFiles$summarised_large_scale_characteristics))
 
   observe({
     for (key in names(dataLSC())) {
@@ -95,45 +104,39 @@ function(input, output, session) {
 
   # Cohort Survival Modules
 
-  dataSurvivalTable <- cohortSurvivalServer("survivalTable", reactive(uploadedFiles))
+  dataSingleEvent <- cohortSurvivalServer("single_event", reactive(uploadedFiles$single_event))
 
   observe({
-    for (key in names(dataSurvivalTable())) {
+    for (key in names(dataSingleEvent())) {
       randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- dataSurvivalTable()
+      dataReport[["objects"]][[randomId]] <- dataSingleEvent()
     }
   }) %>%
-    bindEvent(dataSurvivalTable())
+    bindEvent(dataSingleEvent())
 
-  dataSurvivalPlot <- cohortSurvivalServer("survivalPlot", reactive(uploadedFiles))
+  dataCompetingRisk <- cohortSurvivalServer("competing_risk", reactive(uploadedFiles$competing_risk))
 
   observe({
-    for (key in names(dataSurvivalPlot())) {
+    for (key in names(dataCompetingRisk())) {
       randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- dataSurvivalPlot()
+      dataReport[["objects"]][[randomId]] <- dataCompetingRisk()
     }
   }) %>%
-    bindEvent(dataSurvivalPlot())
+    bindEvent(dataCompetingRisk())
 
-  dataFailureTable <- cohortSurvivalServer("failureTable", reactive(uploadedFiles))
+  # Treatment Patterns Interactive Plots
+
+  dataPatterns <- patternsServer("Treatment Pathways",
+                                 reactive(uploadedFiles$treatment_pathways))
 
   observe({
-    for (key in names(dataFailureTable())) {
+    for (key in names(dataPatterns())) {
       randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- dataFailureTable()
+      dataReport[["objects"]][[randomId]] <- dataPatterns()
     }
   }) %>%
-    bindEvent(dataFailureTable())
+    bindEvent(dataPatterns())
 
-  dataFailurePlot <- cohortSurvivalServer("failurePlot", reactive(uploadedFiles))
-
-  observe({
-    for (key in names(dataFailurePlot())) {
-      randomId <- getRandomId()
-      dataReport[["objects"]][[randomId]] <- dataFailurePlot()
-    }
-  }) %>%
-    bindEvent(dataFailurePlot())
 
   # Data Report Preview
   objectsListPreview <- reactive({

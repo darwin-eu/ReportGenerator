@@ -241,10 +241,8 @@ characteristicsServer <- function(id, uploadedFiles) {
 
     if (id == "characteristics") {
       summarised_result <- reactive({
-        uploadedFiles <- uploadedFiles()
-        summarised_result <- uploadedFiles
-        summarised_result %>%
-          mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
+        uploadedFiles() %>%
+          # mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
           dplyr::filter(cdm_name %in% input$cdm_name,
                  result_id %in% input$result_id,
                  group_name %in% input$group_name,

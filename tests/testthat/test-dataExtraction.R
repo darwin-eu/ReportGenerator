@@ -46,15 +46,11 @@ test_that("Complete sequence of functions inside joinDatabases ZIP", {
 })
 
 test_that("Loading 1 zip files whole study", {
-  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
-                             pattern = "zip",
-                             full.names = TRUE)
-  logger <- log4r::logger()
-  unzipDir <- file.path(tempdir(), "single")
-  uploadedFileDataList <- joinDatabases(fileDataPath = fileDataPath[1])
-  expect_equal(length(uploadedFileDataList), 2)
-  expect_type(uploadedFileDataList, "list")
-  unlink(unzipDir, recursive = TRUE)
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"), pattern = "zip", full.names = TRUE)
+  # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ipci2.zip"
+  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1])
+  expect_equal(length(uploadedFiles), 2)
+  expect_type(uploadedFiles, "list")
 })
 
 test_that("Loading multiple zip files whole study", {
@@ -195,9 +191,8 @@ test_that("processCSV() in a loop", {
 })
 
 test_that("Loading multiple csv files whole study", {
-  fileDataPath <- list.files(testthat::test_path("studies", "summarised_csv"),
-                             pattern = "csv",
-                             full.names = TRUE)
+  fileDataPath <- list.files(testthat::test_path("studies", "summarised_csv"), pattern = "csv", full.names = TRUE)
+  # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ipci2\\ipci2\\suicide_characterization_results.csv"
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath)
   expect_equal(length(uploadedFiles), 2)
   expect_type(uploadedFiles, "list")
