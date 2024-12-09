@@ -296,7 +296,7 @@ characteristicsServer <- function(id, uploadedFiles) {
 
       summarisedLSC_gt_table <- reactive({
           CohortCharacteristics::tableLargeScaleCharacteristics(result = summarised_result(),
-                                                                splitStrata  = TRUE,
+                                                                # splitStrata  = TRUE,
                                                                 topConcepts = input$top_n,
                                                                 header = input$header)
       })
