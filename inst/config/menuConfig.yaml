@@ -1,4 +1,4 @@
-cohortAttritionTable:
+cohort_attrition_table:
   title: "Cohort Attrition - Table"
   function: cohortAttritionTable(incidence_attrition, prevalence_attrition)
   type:
@@ -32,22 +32,23 @@ TreatmentPatterns:
   title: "Treatment Pathways"
   type:
     - TreatmentPatterns
-summaryCharacteristics:
+summarised_characteristics:
   title: "Summarised Characteristics"
   function: tableCharacteristics(summarisedCharacteristics)
   type:
+    - summarise_characteristics
     - summarised_characteristics
 summarised_large_scale_characteristics:
   title: "Summarised Large Scale Characteristics"
   function: tableCharacteristics(summarisedCharacteristics)
   type:
     - summarised_large_scale_characteristics
-Survival table:
+survival_table:
   title: "Survival - Single Event"
   function: cohortSurvivalTable(survivalEstimate)
   type:
     - single_event
-Survival plot:
+survival_plot:
   title: "Survival - Competing Risk"
   function: CohortSurvival::plotSurvival(survivalEstimate, facet, colour)
   type:

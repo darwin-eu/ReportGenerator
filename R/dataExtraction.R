@@ -49,8 +49,14 @@ joinDatabases <- function(fileDataPath) {
                             configData = configData)
     csv_list <- processCSV(csv_files)
     summarised_result <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list)
-    other_result <- importOtherResult(csv_list = csv_list$other_result_list,
-                                      configData = configData)
+    if (length(csv_list$other_result_list) > 0) {
+      other_result <- importOtherResult(csv_list = csv_list$other_result_list,
+                                        configData = configData)
+    } else {
+      other_result <- NULL
+    }
+    # other_result <- importOtherResult(csv_list = csv_list$other_result_list,
+    #                                   configData = configData)
 
   } else if (fileType == "csv") {
     cli::cli_progress_step("Processing {length(fileDataPath)} CSV files", spinner = TRUE)
@@ -58,8 +64,12 @@ joinDatabases <- function(fileDataPath) {
     # fileDataPath <- list.files(fileDataPath, full.names = TRUE)
     csv_list <- processCSV(csv_files = fileDataPath)
     summarised_result <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list)
-    other_result <- importOtherResult(csv_list = csv_list$other_result_list,
-                                      configData = configData)
+    if (length(csv_list$other_result_list) > 0) {
+      other_result <- importOtherResult(csv_list = csv_list$other_result_list,
+                                        configData = configData)
+    } else {
+      other_result <- NULL
+    }
     cli::cli_process_done()
 
   }
