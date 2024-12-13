@@ -48,6 +48,7 @@ test_that("Complete sequence of functions inside joinDatabases ZIP", {
 test_that("Loading 1 zip files whole study", {
   fileDataPath <- list.files(test_path("studies", "summarised_zip"), pattern = "zip", full.names = TRUE)
   # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ipci2.zip"
+  # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\p3-c1-019-results-ipci.zip"
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1])
   expect_equal(length(uploadedFiles), 2)
   expect_type(uploadedFiles, "list")
