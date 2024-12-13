@@ -3107,13 +3107,13 @@
     },
     "ReportGenerator": {
       "Package": "ReportGenerator",
-      "Version": "1.18.0",
+      "Version": "1.19.2",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "ReportGenerator",
       "RemoteUsername": "darwin-eu",
-      "RemoteRef": "v1.18.0"
+      "RemoteRef": "v1.19.2"
     }
   }
 }
