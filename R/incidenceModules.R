@@ -7,6 +7,7 @@ incidenceUI <- function(id, uploadedFiles) {
     filter(estimate_name == "incidence_100000_pys_95CI_upper") %>%
     pull(estimate_value) %>%
     ifelse(is.na(.), 0, .) %>%
+    ifelse(. == "-", 0, .) %>%
     as.numeric() %>%
     max() %>%
     round()
@@ -108,7 +109,7 @@ incidenceUI <- function(id, uploadedFiles) {
                               ),
                               fluidRow(createAddItemToReportUI(ns("incidence_table")),
                                        column(4, downloadButton(ns("downloadIncidenceTable"), "Download Table"))),
-                              fluidRow(column(12, gt::gt_output(ns("summarisedTableGt"))))
+                              fluidRow(column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt")))))
                        ),
                        tabPanel("Plot",
                                 fluidRow(column(4,
@@ -143,9 +144,9 @@ incidenceUI <- function(id, uploadedFiles) {
                                 ),
                                 fluidRow(createAddItemToReportUI(ns("incidence_plot"))),
                                 fluidRow(createDownloadPlotUI(ns)),
-                                fluidRow(column(12, plotOutput(ns("summarisedIncidencePlot"))))),
+                                fluidRow(column(12, shinycssloaders::withSpinner(plotOutput(ns("summarisedIncidencePlot")))))),
                        tabPanel("Data",
-                                fluidRow(column(12, DT::dataTableOutput(ns("summarisedTable")))))
+                                fluidRow(column(12, shinycssloaders::withSpinner(DT::dataTableOutput(ns("summarisedTable"))))))
                               # fluidRow(column(12, verbatimTextOutput(ns("summarised_text")))))
 
   )

@@ -1,3 +1,9 @@
+# ReportGenerator 1.19.2
+
+# ReportGenerator 1.19.1
+
+* Fixed bug related to other_result.
+
 # ReportGenerator 1.19.0
 
 * Improved integration with summarisedResult() format for IncidencePrevalence, CohortCharacteristics and CohortSurvival.

@@ -36,12 +36,26 @@ test_that("getItemsList all", {
              "incidence_estimates",
              "prevalence_estimates",
              "TreatmentPatterns",
-             "summarised_characteristics",
+             "summarise_characteristics",
              "summarised_large_scale_characteristics",
              "single_event",
              "competing_risk")
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 8)
+})
+
+test_that("getItemsList summarised", {
+  items <- c("summarised_characteristics", "summarise_characteristics")
+  menuList <- getItemsList(items)
+  expect_equal(length(menuList), 1)
+
+  items <- c("summarise_characteristics")
+  menuList <- getItemsList(items)
+  expect_equal(length(menuList), 1)
+
+  items <- c("summarised_characteristics")
+  menuList <- getItemsList(items)
+  expect_equal(length(menuList), 1)
 })
 
 test_that("getItemsList cohort attrition", {

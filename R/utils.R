@@ -25,7 +25,7 @@
 getItemsList <- function(items) {
   menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
   menuList <- lapply(menuData, function(menuData, itemsList) {
-    if (all(menuData[["type"]] %in% itemsList)) {
+    if (any(menuData[["type"]] %in% itemsList)) {
       menuData[["title"]]
     }
   }, itemsList = items)

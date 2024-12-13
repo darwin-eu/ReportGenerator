@@ -16,7 +16,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                pickerInput(inputId = ns("result_id"),
                            label = "Result Id",
                            choices = unique(uploadedFiles$result_id),
-                           selected = unique(uploadedFiles$result_id),
+                           selected = unique(uploadedFiles$result_id)[1],
                            multiple = FALSE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
@@ -241,10 +241,8 @@ characteristicsServer <- function(id, uploadedFiles) {
 
     if (id == "characteristics") {
       summarised_result <- reactive({
-        uploadedFiles <- uploadedFiles()
-        summarised_result <- uploadedFiles
-        summarised_result %>%
-          mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
+        uploadedFiles() %>%
+          # mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
           dplyr::filter(cdm_name %in% input$cdm_name,
                  result_id %in% input$result_id,
                  group_name %in% input$group_name,
@@ -298,7 +296,7 @@ characteristicsServer <- function(id, uploadedFiles) {
 
       summarisedLSC_gt_table <- reactive({
           CohortCharacteristics::tableLargeScaleCharacteristics(result = summarised_result(),
-                                                                splitStrata  = TRUE,
+                                                                # splitStrata  = TRUE,
                                                                 topConcepts = input$top_n,
                                                                 header = input$header)
       })
