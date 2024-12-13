@@ -1,6 +1,6 @@
 # ReportGenerator 1.19.2
 
-# ReportGenerator 1.19.1
+* Update for new versions of analytical packages.
 
 * Fixed bug related to other_result.
 
