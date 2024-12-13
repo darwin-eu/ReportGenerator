@@ -129,7 +129,7 @@ reportGenerator <- function(logger = NULL) {
     uploadedFiles <- reactiveValues(attrition = NULL,
                                     incidence = NULL,
                                     prevalence = NULL,
-                                    summarised_characteristics = NULL,
+                                    summarise_characteristics = NULL,
                                     summarised_large_scale_characteristics = NULL,
                                     single_event = NULL,
                                     competing_risk = NULL,
@@ -195,7 +195,7 @@ reportGenerator <- function(logger = NULL) {
           visOmopResults::filterSettings(result_type == "prevalence")
       }
       if ("summarise_characteristics" %in% items) {
-        uploadedFiles$summarised_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
+        uploadedFiles$summarise_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
                                                                       type_result = "summarise_characteristics")
       }
       if ("summarised_large_scale_characteristics" %in% items) {
@@ -241,7 +241,7 @@ reportGenerator <- function(logger = NULL) {
       itemsList$objects <- NULL
       uploadedFiles <- reactiveValues(attrition = NULL,
                                       incidence = NULL,
-                                      summarised_characteristics = NULL,
+                                      summarise_characteristics = NULL,
                                       summarised_large_scale_characteristics = NULL,
                                       single_event = NULL)
       updateTabsetPanel(session, "mainPanel",
@@ -341,7 +341,7 @@ reportGenerator <- function(logger = NULL) {
 
     # Characteristics Modules
     dataCharacteristics <- characteristicsServer("characteristics",
-                                                 reactive(uploadedFiles$summarised_characteristics))
+                                                 reactive(uploadedFiles$summarise_characteristics))
 
     observe({
       for (key in names(dataCharacteristics())) {

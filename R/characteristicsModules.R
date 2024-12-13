@@ -16,7 +16,7 @@ characteristicsUI <- function(id, uploadedFiles) {
                pickerInput(inputId = ns("result_id"),
                            label = "Result Id",
                            choices = unique(uploadedFiles$result_id),
-                           selected = unique(uploadedFiles$result_id),
+                           selected = unique(uploadedFiles$result_id)[1],
                            multiple = FALSE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
