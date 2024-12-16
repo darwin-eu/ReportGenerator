@@ -330,7 +330,7 @@ downloadReportApp <- function(reportItems, logger = NULL) {
 
     # PatientProfiles Modules
     dataCharacteristics <- characteristicsServer("characteristics",
-                                                 reactive(uploadedFiles$CohortCharacteristics$summarised_characteristics))
+                                                 reactive(uploadedFiles$CohortCharacteristics$summarise_characteristics))
 
     observe({
       for (key in names(dataCharacteristics())) {
@@ -341,7 +341,7 @@ downloadReportApp <- function(reportItems, logger = NULL) {
       bindEvent(dataCharacteristics())
 
     dataLSC <- characteristicsServer(id = "lsc",
-                                     reactive(uploadedFiles$CohortCharacteristics$summarised_large_scale_characteristics))
+                                     reactive(uploadedFiles$CohortCharacteristics$summarise_large_scale_characteristics))
 
     observe({
       for (key in names(dataLSC())) {

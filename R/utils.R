@@ -209,7 +209,7 @@ exportResults <- function(resultList,
     workingResult <- resultList[[i]][[k]]
     classWorkingResult <- class(workingResult)
     workingName <- names(resultList[[i]])[[k]]
-    if (workingName == "summarised_large_scale_characteristics") {
+    if (workingName == "summarise_large_scale_characteristics") {
       fileName <- paste0(
         unique(workingResult$cdm_name), "_",
         "large_scale_characteristics", "_",
@@ -338,7 +338,7 @@ analysisNamesSum <- function(settingsData) {
   return(analysisNamesSum)
 }
 
-getSummarisedData <- function(uploadedData, type_result = "summarised_characteristics") {
+getSummarisedData <- function(uploadedData, type_result = "summarise_characteristics") {
 
   result_ids <- settings(uploadedData) %>%
     dplyr::filter(result_type == type_result) %>%

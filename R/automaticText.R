@@ -1,6 +1,6 @@
-#' Generic to create automatic text paragraph for the caption for table from summarised_characteristics object.
+#' Generic to create automatic text paragraph for the caption for table from summarise_characteristics object.
 #'
-#' @param summarisedCharacteristics Data frame with summarised_characteristics data
+#' @param summarisedCharacteristics Data frame with summarise_characteristics data
 #'
 #' @return Automatic text as a character string
 #'
@@ -25,7 +25,8 @@ autoCaptionCharac <- function(summarisedCharacteristics) {
 table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 
   tablePrevalenceAttTotal <- prevalence_attrition %>%
-    dplyr::filter(reason == "Starting population") %>%
+    dplyr::filter(strata_name == "reason",
+                  strata_level == "Starting population") %>%
     group_by(cdm_name,
              reason) %>%
     summarise(current_n = unique(as.numeric(number_records))) %>%

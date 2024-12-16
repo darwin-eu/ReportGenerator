@@ -63,8 +63,8 @@ generateMockData <- function(databaseName = c("CHUBX",
 
     incidencePrevalenceData <- getIncidencePrevalenceMock(sampleSize = sampleSize)
     treatmentPathwaysData <- getTreatmentPathways()
-    summarised_characteristics <- getCharacteristicsResult()
-    summarised_large_scale_characteristics <- getLargeScaleCharacteristicsResult()
+    summarise_characteristics <- getCharacteristicsResult()
+    summarise_large_scale_characteristics <- getLargeScaleCharacteristicsResult()
     cohortSurvivalData <- getCohortSurvival()
 
     # Gather data
@@ -74,8 +74,8 @@ generateMockData <- function(databaseName = c("CHUBX",
                                                   # "incidence_attrition" = incidencePrevalenceData$incidence_attrition,
                                                   # "prevalence_point_attrition" = incidencePrevalenceData$prevalence_point_attrition,
                                                   # "prevalence_period_attrition" = incidencePrevalenceData$prevalence_period_attrition),
-                     "CohortCharacteristics" = list("summarised_characteristics" = summarised_characteristics,
-                                                    "summarised_large_scale_characteristics" = summarised_large_scale_characteristics),
+                     "CohortCharacteristics" = list("summarise_characteristics" = summarise_characteristics,
+                                                    "summarise_large_scale_characteristics" = summarise_large_scale_characteristics),
                      "CohortSurvival" = list("single_event" = cohortSurvivalData$single_event,
                                              "competing_risk" = cohortSurvivalData$competing_risk),
                      "TreatmentPatterns" = list("treatmentPathways" = treatmentPathwaysData$treatmentPathways,
@@ -95,8 +95,8 @@ generateMockData <- function(databaseName = c("CHUBX",
     # dataList[["IncidencePrevalence"]][["incidence_attrition"]] <- resultListIP$incidence_attrition
     # dataList[["IncidencePrevalence"]][["prevalence_point_attrition"]] <- resultListIP$prevalence_point_attrition
     # dataList[["IncidencePrevalence"]][["prevalence_period_attrition"]] <- resultListIP$prevalence_period_attrition
-    dataList[["CohortCharacteristics"]][["summarised_characteristics"]] <- resultListCC$summarised_characteristics
-    dataList[["CohortCharacteristics"]][["summarised_large_scale_characteristics"]] <- resultListCC$summarised_large_scale_characteristics
+    dataList[["CohortCharacteristics"]][["summarise_characteristics"]] <- resultListCC$summarise_characteristics
+    dataList[["CohortCharacteristics"]][["summarise_large_scale_characteristics"]] <- resultListCC$summarise_large_scale_characteristics
     dataList[["CohortSurvival"]][["single_event"]] <- resultListCS$single_event
     dataList[["CohortSurvival"]][["competing_risk"]] <- resultListCS$competing_risk
     dataList[["TreatmentPatterns"]][["treatmentPathways"]] <- resultListTP$treatmentPathways
@@ -115,8 +115,8 @@ generateMockData <- function(databaseName = c("CHUBX",
         result[["IncidencePrevalence"]][["prevalence_estimates"]] <- omopgenerics::bind(result[["IncidencePrevalence"]][["prevalence_estimates"]], dataList[["IncidencePrevalence"]][["prevalence_estimates"]])
         # result[["IncidencePrevalence"]][["incidence_attrition"]] <- dplyr::bind_rows(result[["IncidencePrevalence"]][["incidence_attrition"]], dataList[["IncidencePrevalence"]][["incidence_attrition"]])
         # result[["IncidencePrevalence"]][["prevalence_attrition"]] <- dplyr::bind_rows(result[["IncidencePrevalence"]][["prevalence_attrition"]], dataList[["IncidencePrevalence"]][["prevalence_attrition"]])
-        result[["CohortCharacteristics"]][["summarised_characteristics"]] <- omopgenerics::bind(result[["CohortCharacteristics"]][["summarised_characteristics"]] , dataList[["CohortCharacteristics"]][["summarised_characteristics"]] )
-        result[["CohortCharacteristics"]][["summarised_large_scale_characteristics"]] <- omopgenerics::bind(result[["CohortCharacteristics"]][["summarised_large_scale_characteristics"]], dataList[["CohortCharacteristics"]][["summarised_large_scale_characteristics"]])
+        result[["CohortCharacteristics"]][["summarise_characteristics"]] <- omopgenerics::bind(result[["CohortCharacteristics"]][["summarise_characteristics"]] , dataList[["CohortCharacteristics"]][["summarise_characteristics"]] )
+        result[["CohortCharacteristics"]][["summarise_large_scale_characteristics"]] <- omopgenerics::bind(result[["CohortCharacteristics"]][["summarise_large_scale_characteristics"]], dataList[["CohortCharacteristics"]][["summarise_large_scale_characteristics"]])
         result[["CohortSurvival"]][["single_event"]] <- omopgenerics::bind(result[["CohortSurvival"]][["single_event"]] , dataList[["CohortSurvival"]][["single_event"]])
         result[["CohortSurvival"]][["competing_risk"]] <- omopgenerics::bind(result[["CohortSurvival"]][["competing_risk"]], dataList[["CohortSurvival"]][["competing_risk"]])
         result[["TreatmentPatterns"]][["treatmentPathways"]] <- dplyr::bind_rows(result[["TreatmentPatterns"]][["treatmentPathways"]], dataList[["TreatmentPatterns"]][["treatmentPathways"]])

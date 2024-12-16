@@ -197,5 +197,5 @@
 1,"CHUBX","cohort_name","hip_fracture","overall","overall","Medications on index date","Warfarin","percentage","percentage","0","table &&& window &&& value","meds &&& 0 to 0 &&& flag"
 1,NA,"overall","overall","overall","overall","settings",NA,"package_name","character","CohortCharacteristics","overall","overall"
 1,NA,"overall","overall","overall","overall","settings",NA,"package_version","character","0.2.1","overall","overall"
-1,NA,"overall","overall","overall","overall","settings",NA,"result_type","character","summarised_characteristics","overall","overall"
+1,NA,"overall","overall","overall","overall","settings",NA,"result_type","character","summarise_characteristics","overall","overall"
 1,NA,"overall","overall","overall","overall","settings",NA,"min_cell_count","integer","5","overall","overall"

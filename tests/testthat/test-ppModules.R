@@ -1,16 +1,16 @@
 test_that("summarised Characteristics and LSC", {
   testServer(reportGenerator(), {
-    summarised_characteristics_data <- testData$CohortCharacteristics$summarised_characteristics
-    summarised_large_scale_characteristics_data <- testData$CohortCharacteristics$summarised_large_scale_characteristics
+    summarise_characteristics_data <- testData$CohortCharacteristics$summarise_characteristics
+    summarise_large_scale_characteristics_data <- testData$CohortCharacteristics$summarise_large_scale_characteristics
 
     expect_s3_class(characteristicsUI("characteristics",
-                                      uploadedFiles = summarised_characteristics_data), "shiny.tag.list")
+                                      uploadedFiles = summarise_characteristics_data), "shiny.tag.list")
     expect_s3_class(characteristicsServer("characteristics",
-                                          uploadedFiles = summarised_large_scale_characteristics_data), "reactiveVal")
+                                          uploadedFiles = summarise_large_scale_characteristics_data), "reactiveVal")
     expect_s3_class(characteristicsUI("lsc",
-                                      uploadedFiles = summarised_characteristics_data), "shiny.tag.list")
+                                      uploadedFiles = summarise_characteristics_data), "shiny.tag.list")
     expect_s3_class(characteristicsServer("lsc",
-                                          uploadedFiles = summarised_large_scale_characteristics_data), "reactiveVal")
+                                          uploadedFiles = summarise_large_scale_characteristics_data), "reactiveVal")
   })
 })
 
@@ -46,11 +46,11 @@ test_that("summarised Characteristics and LSC", {
 #                        resultsColumns,
 #                        databaseName)
 #
-#   settingsLSC <- settings(data$CohortCharacteristics$summarised_large_scale_characteristics)
+#   settingsLSC <- settings(data$CohortCharacteristics$summarise_large_scale_characteristics)
 #
 #   settingsLSC %>% select(result_id, )
 #
-#   settings(data$CohortCharacteristics$summarised_characteristics)
+#   settings(data$CohortCharacteristics$summarise_characteristics)
 #
 #
 #   fileDataPath <- list.files(test_path("studies", "summarised_zip"),
