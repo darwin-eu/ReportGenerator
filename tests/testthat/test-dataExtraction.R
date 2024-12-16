@@ -226,7 +226,7 @@ test_that("loadFileData iteration per result id", {
 })
 
 test_that("additional columns summary_characteristics", {
-  data <- testData$CohortCharacteristics$summarised_characteristics
+  data <- testData$CohortCharacteristics$summarise_characteristics
 
   result <- additionalCols(data)
 
@@ -236,9 +236,9 @@ test_that("additional columns summary_characteristics", {
 
 })
 
-test_that("getPackageData returns data for summarised_characteristics", {
+test_that("getPackageData returns data for summarise_characteristics", {
   data <- list()
-  resultsData <- testData$CohortCharacteristics$summarised_characteristics
+  resultsData <- testData$CohortCharacteristics$summarise_characteristics
   package <- unique(settings(resultsData)$package_name)
   resultType <- unique(settings(resultsData)$result_type)[1]
   resultsColumns <- names(resultsData)
@@ -247,23 +247,23 @@ test_that("getPackageData returns data for summarised_characteristics", {
   result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
   expect_equal(class(result), "list")
   expect_equal(names(result), "CohortCharacteristics")
-  expect_equal(names(result$CohortCharacteristics$summarised_characteristics),
+  expect_equal(names(result$CohortCharacteristics$summarise_characteristics),
                c("result_id", "cdm_name", "group_name", "group_level", "strata_name", "strata_level", "variable_name",
                  "variable_level", "estimate_name", "estimate_type", "estimate_value",
                  "additional_name", "additional_level"))
 })
 
-test_that("additional columns summarised_large_scale_characteristics", {
-  data <- testData$CohortCharacteristics$summarised_characteristics
+test_that("additional columns summarise_large_scale_characteristics", {
+  data <- testData$CohortCharacteristics$summarise_characteristics
   result <- additionalCols(data)
   expect_equal(names(result), c("result_id", "cdm_name", "group_name", "group_level", "strata_name",
                                 "strata_level", "variable_name", "variable_level", "estimate_name",
                                 "estimate_type", "estimate_value", "additional_name", "additional_level"))
 })
 
-test_that("getPackageData returns data for summarised_large_scale_characteristics", {
+test_that("getPackageData returns data for summarise_large_scale_characteristics", {
   data <- list()
-  resultsData <- testData$CohortCharacteristics$summarised_large_scale_characteristics
+  resultsData <- testData$CohortCharacteristics$summarise_large_scale_characteristics
   package <- unique(settings(resultsData)$package_name)
   resultType <- unique(settings(resultsData)$result_type)[1]
   resultsColumns <- names(resultsData)
@@ -271,7 +271,7 @@ test_that("getPackageData returns data for summarised_large_scale_characteristic
   result <- getPackageData(data, package, resultType, resultsColumns, resultsData, configData)
   expect_equal(class(result), "list")
   expect_equal(names(result), "CohortCharacteristics")
-  expect_equal(names(result$CohortCharacteristics$summarised_large_scale_characteristics),
+  expect_equal(names(result$CohortCharacteristics$summarise_large_scale_characteristics),
                c("result_id", "cdm_name", "group_name", "group_level", "strata_name",
                  "strata_level", "variable_name", "variable_level", "estimate_name",
                  "estimate_type", "estimate_value", "additional_name", "additional_level"))
