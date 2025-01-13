@@ -6065,5 +6065,5 @@ result_id,cdm_name,group_name,group_level,strata_name,strata_level,variable_name
 1,IPCI-20240430,cohort_name,ild_all_no_prior_observation,age_group &&& sex,80 to 150 &&& Male,Concepts flag -365 to 0,Tyrosine kinase inhibitors tk is including egfr inhibitors drug,percentage,percentage,0,window &&& value,-365 to 0 &&& flag
 1,NA,overall,overall,overall,overall,settings,NA,package_name,character,CohortCharacteristics,overall,overall
 1,NA,overall,overall,overall,overall,settings,NA,package_version,character,0.2.1,overall,overall
-1,NA,overall,overall,overall,overall,settings,NA,result_type,character,summarised_characteristics,overall,overall
+1,NA,overall,overall,overall,overall,settings,NA,result_type,character,summarise_characteristics,overall,overall
 1,NA,overall,overall,overall,overall,settings,NA,min_cell_count,integer,0,overall,overall

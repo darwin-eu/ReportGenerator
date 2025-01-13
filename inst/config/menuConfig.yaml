@@ -32,17 +32,18 @@ TreatmentPatterns:
   title: "Treatment Pathways"
   type:
     - TreatmentPatterns
-summarised_characteristics:
+summarise_characteristics:
   title: "Summarised Characteristics"
   function: tableCharacteristics(summarisedCharacteristics)
   type:
     - summarise_characteristics
-    - summarised_characteristics
-summarised_large_scale_characteristics:
+    - summarise_characteristics
+summarise_large_scale_characteristics:
   title: "Summarised Large Scale Characteristics"
   function: tableCharacteristics(summarisedCharacteristics)
   type:
     - summarised_large_scale_characteristics
+    - summarise_large_scale_characteristics
 survival_table:
   title: "Survival - Single Event"
   function: cohortSurvivalTable(survivalEstimate)

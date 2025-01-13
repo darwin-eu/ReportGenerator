@@ -2,16 +2,16 @@
 % Please edit documentation in R/automaticText.R
 \name{autoCaptionCharac}
 \alias{autoCaptionCharac}
-\title{Generic to create automatic text paragraph for the caption for table from summarised_characteristics object.}
+\title{Generic to create automatic text paragraph for the caption for table from summarise_characteristics object.}
 \usage{
 autoCaptionCharac(summarisedCharacteristics)
 }
 \arguments{
-\item{summarisedCharacteristics}{Data frame with summarised_characteristics data}
+\item{summarisedCharacteristics}{Data frame with summarise_characteristics data}
 }
 \value{
 Automatic text as a character string
 }
 \description{
-Generic to create automatic text paragraph for the caption for table from summarised_characteristics object.
+Generic to create automatic text paragraph for the caption for table from summarise_characteristics object.
 }

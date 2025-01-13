@@ -1,11 +1,11 @@
 # IncidencePrevalence
-test_that("getSummarisedData summarised_characteristics", {
+test_that("getSummarisedData summarise_characteristics", {
   fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)
   uploadedData <- joinDatabases(fileDataPath)
-  summarised_characteristics_result <- getSummarisedData(uploadedData$summarised_result, type_result = 'summarised_characteristics')
-  expect_equal(settings(summarised_characteristics_result)$result_type, "summarised_characteristics")
+  summarise_characteristics_result <- getSummarisedData(uploadedData$summarised_result, type_result = 'summarise_characteristics')
+  expect_equal(settings(summarise_characteristics_result)$result_type, "summarise_characteristics")
 
 })
 
@@ -21,8 +21,8 @@ test_that("getIncidencePrevalence", {
 
 
 test_that("getItemsList all", {
-  items <- c("incidence", "summarised_large_scale_characteristics", "point_prevalence",
-             "period_prevalence", "summarised_characteristics", "competing_risk",
+  items <- c("incidence", "summarise_large_scale_characteristics", "point_prevalence",
+             "period_prevalence", "summarise_characteristics", "competing_risk",
              "single_event", "TreatmentPatterns")
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 6)
@@ -37,7 +37,7 @@ test_that("getItemsList all", {
              "prevalence_estimates",
              "TreatmentPatterns",
              "summarise_characteristics",
-             "summarised_large_scale_characteristics",
+             "summarise_large_scale_characteristics",
              "single_event",
              "competing_risk")
   menuList <- getItemsList(items)
@@ -45,7 +45,7 @@ test_that("getItemsList all", {
 })
 
 test_that("getItemsList summarised", {
-  items <- c("summarised_characteristics", "summarise_characteristics")
+  items <- c("summarise_characteristics", "summarise_characteristics")
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 1)
 
@@ -53,7 +53,7 @@ test_that("getItemsList summarised", {
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 1)
 
-  items <- c("summarised_characteristics")
+  items <- c("summarise_characteristics")
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 1)
 })
@@ -94,8 +94,8 @@ test_that("getItemsList only prevalence", {
   expect_equal(length(menuList), 0)
 })
 
-test_that("getItemsList only summarised_characteristics", {
-  items <- c("summarised_characteristics")
+test_that("getItemsList only summarise_characteristics", {
+  items <- c("summarise_characteristics")
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 1)
   expect_equal(menuList, "Summarised Characteristics")
@@ -176,19 +176,19 @@ test_that("addPreviewItemType edge cases", {
 # PatientProfiles
 
 test_that("PatientProfiles Both Summaries", {
-  items <- c("summarised_characteristics", "summarised_large_scale_characteristics")
+  items <- c("summarise_characteristics", "summarise_large_scale_characteristics")
   menuList <- getItemsList(items)
   expect_equal(length(menuList), 2)
 })
 
 test_that("PatientProfiles Summary", {
-  items <- c("summarised_characteristics")
+  items <- c("summarise_characteristics")
   menuList <- getItemsList(items)
   expect_equal(menuList, "Summarised Characteristics")
 })
 
 test_that("PatientProfiles LSC", {
-  items <- c("summarised_large_scale_characteristics")
+  items <- c("summarise_large_scale_characteristics")
   menuList <- getItemsList(items)
   expect_equal(menuList, "Summarised Large Scale Characteristics")
 })

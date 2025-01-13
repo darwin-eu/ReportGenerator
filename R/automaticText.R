@@ -1,6 +1,6 @@
-#' Generic to create automatic text paragraph for the caption for table from summarised_characteristics object.
+#' Generic to create automatic text paragraph for the caption for table from summarise_characteristics object.
 #'
-#' @param summarisedCharacteristics Data frame with summarised_characteristics data
+#' @param summarisedCharacteristics Data frame with summarise_characteristics data
 #'
 #' @return Automatic text as a character string
 #'
@@ -22,28 +22,34 @@ autoCaptionCharac <- function(summarisedCharacteristics) {
 #'
 #' @import glue
 #' @importFrom scales label_percent
-table1aAutText <- function(incidence_attrition, prevalence_attrition) {
+table1aAutText <- function(attrition_data) {
 
-  tablePrevalenceAttTotal <- prevalence_attrition %>%
-    dplyr::filter(reason == "Starting population") %>%
+  tablePrevalenceAttTotal <- attrition_data %>%
+    dplyr::filter(strata_name == "reason",
+                  strata_level == "Starting population") %>%
     group_by(cdm_name,
-             reason) %>%
-    summarise(current_n = unique(as.numeric(number_records))) %>%
+             strata_name) %>%
+    summarise(current_n = unique(as.numeric(estimate_value))) %>%
+    filter(!is.na(current_n)) %>%
     arrange(desc(current_n))
 
-  tablePrevalenceAttFem <- prevalence_attrition %>%
-    dplyr::filter(reason == "Not Male") %>%
+  tablePrevalenceAttFem <- attrition_data %>%
+    dplyr::filter(strata_name == "reason",
+                  strata_level == "Not Male") %>%
     group_by(cdm_name,
-             reason) %>%
-    summarise(current_n = unique(as.numeric(number_records))) %>%
+             strata_name) %>%
+    summarise(current_n = unique(as.numeric(estimate_value))) %>%
+    filter(!is.na(current_n)) %>%
     arrange(desc(current_n))
 
-  tablePrevNotObs <- prevalence_attrition %>%
-    dplyr::filter(reason == "Not observed during the complete database interval") %>%
+  tablePrevNotObs <- attrition_data %>%
+    dplyr::filter(strata_name == "reason",
+                  strata_level == "Not observed during the complete database interval") %>%
     group_by(cdm_name,
-             reason) %>%
-    summarise(excluded = sum(as.numeric(excluded_subjects))) %>%
-    arrange(desc(excluded))
+             strata_name) %>%
+    summarise(current_n = unique(as.numeric(estimate_value))) %>%
+    filter(!is.na(current_n)) %>%
+    arrange(desc(current_n))
 
   totalParticipants <- sum(tablePrevalenceAttTotal$current_n)
   totalParticipantsChar <- format(sum(tablePrevalenceAttTotal$current_n), big.mark=",", scientific = FALSE)
@@ -76,7 +82,7 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
                             adjective = "excluded due to not having been observed for the complete database interval ",
                             totalParticipants,
                             databaseName = tablePrevNotObs$cdm_name,
-                            individuals = tablePrevNotObs$excluded)
+                            individuals = tablePrevNotObs$current_n)
 
 
   autoText <- glue(
@@ -101,28 +107,34 @@ table1aAutText <- function(incidence_attrition, prevalence_attrition) {
 #'
 #' @import glue
 #' @importFrom scales label_percent
-tableAttrition <- function(attritionData) {
+tableAttrition <- function(attrition_data) {
 
-  tableAttTotal <- attritionData %>%
-    dplyr::filter(reason == "Starting population") %>%
+  tableAttTotal <- attrition_data %>%
+    dplyr::filter(strata_name == "reason",
+                  strata_level == "Starting population") %>%
     group_by(cdm_name,
-             reason) %>%
-    summarise(current_n = unique(as.numeric(number_records))) %>%
+             strata_name) %>%
+    summarise(current_n = unique(as.numeric(estimate_value))) %>%
+    filter(!is.na(current_n)) %>%
     arrange(desc(current_n))
 
-  tableAttFem <- attritionData %>%
-    dplyr::filter(reason == "Not Male") %>%
+  tableAttFem <- attrition_data %>%
+    dplyr::filter(strata_name == "reason",
+                  strata_level == "Not Male") %>%
     group_by(cdm_name,
-             reason) %>%
-    summarise(current_n = unique(as.numeric(number_records))) %>%
+             strata_name) %>%
+    summarise(current_n = unique(as.numeric(estimate_value))) %>%
+    filter(!is.na(current_n)) %>%
     arrange(desc(current_n))
 
-  tablePrevNotObs <- attritionData %>%
-    dplyr::filter(reason == "Not observed during the complete database interval") %>%
+  tableAttNotObs <- attrition_data %>%
+    dplyr::filter(strata_name == "reason",
+                  strata_level == "Not observed during the complete database interval") %>%
     group_by(cdm_name,
-             reason) %>%
-    summarise(excluded = sum(as.numeric(excluded_subjects))) %>%
-    arrange(desc(excluded))
+             strata_name) %>%
+    summarise(current_n = unique(as.numeric(estimate_value))) %>%
+    filter(!is.na(current_n)) %>%
+    arrange(desc(current_n))
 
   totalParticipants <- sum(tableAttTotal$current_n)
   totalParticipantsChar <- format(sum(tableAttTotal$current_n), big.mark=",", scientific = FALSE)
@@ -154,8 +166,8 @@ tableAttrition <- function(attritionData) {
   excludedRec <- phraseList(initialPhrase = " A further ",
                             adjective = "excluded due to not having been observed for the complete database interval ",
                             totalParticipants,
-                            databaseName = tablePrevNotObs$cdm_name,
-                            individuals = tablePrevNotObs$excluded)
+                            databaseName = tableAttNotObs$cdm_name,
+                            individuals = tableAttNotObs$current_n)
 
 
   autoText <- glue(

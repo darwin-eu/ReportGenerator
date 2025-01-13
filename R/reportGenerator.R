@@ -130,7 +130,7 @@ reportGenerator <- function(logger = NULL) {
                                     incidence = NULL,
                                     prevalence = NULL,
                                     summarise_characteristics = NULL,
-                                    summarised_large_scale_characteristics = NULL,
+                                    summarise_large_scale_characteristics = NULL,
                                     single_event = NULL,
                                     competing_risk = NULL,
                                     treatment_pathways = NULL)
@@ -198,9 +198,9 @@ reportGenerator <- function(logger = NULL) {
         uploadedFiles$summarise_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
                                                                       type_result = "summarise_characteristics")
       }
-      if ("summarised_large_scale_characteristics" %in% items) {
-        uploadedFiles$summarised_large_scale_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                                                                  type_result = "summarised_large_scale_characteristics")
+      if ("summarise_large_scale_characteristics" %in% items) {
+        uploadedFiles$summarise_large_scale_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
+                                                                                  type_result = "summarise_large_scale_characteristics")
       }
       if ("single_event" %in% items) {
         single_event_data <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
@@ -242,7 +242,7 @@ reportGenerator <- function(logger = NULL) {
       uploadedFiles <- reactiveValues(attrition = NULL,
                                       incidence = NULL,
                                       summarise_characteristics = NULL,
-                                      summarised_large_scale_characteristics = NULL,
+                                      summarise_large_scale_characteristics = NULL,
                                       single_event = NULL)
       updateTabsetPanel(session, "mainPanel",
                         selected = "Item selection")
@@ -352,7 +352,7 @@ reportGenerator <- function(logger = NULL) {
       bindEvent(dataCharacteristics())
 
     dataLSC <- characteristicsServer(id = "lsc",
-                                     reactive(uploadedFiles$summarised_large_scale_characteristics))
+                                     reactive(uploadedFiles$summarise_large_scale_characteristics))
 
     observe({
       for (key in names(dataLSC())) {

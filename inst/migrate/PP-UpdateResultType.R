@@ -32,12 +32,12 @@ for (filename in ppFiles) {
   if (length(colNames) > 1) {
     if ("result_type" %in% colNames) {
       resultType <- unique(data$result_type)
-      if (resultType != "summarised_characteristics") {
-        data$result_type <- "summarised_characteristics"
+      if (resultType != "summarise_characteristics") {
+        data$result_type <- "summarise_characteristics"
         fileUpdated <- anyUpdates <- TRUE
       }
     } else {
-      data$result_type <- "summarised_characteristics"
+      data$result_type <- "summarise_characteristics"
       fileUpdated <- anyUpdates <- TRUE
     }
   } else {
