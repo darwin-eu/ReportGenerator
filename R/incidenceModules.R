@@ -265,12 +265,7 @@ incidenceServer <- function(id, uploadedFiles) {
                                        ylim = c(0, input$y_limit),
                                        facet = input$facet,
                                        colour = input$colour,
-                                       # caption = input$captionInc,
-                                       ribbon = input$ribbon #,
-                                       # options = c(input$showCIIncidence, input$stackPlotsIncidence)
-                                       )
-                 )
-          )
+                                       ribbon = input$ribbon)))
         })
 
         return(addObject)

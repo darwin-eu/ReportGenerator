@@ -112,7 +112,7 @@ prevalenceUI <- function(id, uploadedFiles) {
                               fluidRow(column(12, gt::gt_output(ns("summarisedTableGt"))))
                        ),
                        tabPanel("Plot",
-                                fluidRow(column(4,
+                                fluidRow(column(3,
                                                 pickerInput(inputId = ns("facet"),
                                                             label = "Facet",
                                                             choices = c("cdm_name",
@@ -122,7 +122,7 @@ prevalenceUI <- function(id, uploadedFiles) {
                                                             # choices = names(uploadedFiles),
                                                             selected = c("cdm_name", "denominator_sex"),
                                                             multiple = TRUE)),
-                                         column(4,
+                                         column(3,
                                                 pickerInput(inputId = ns("colour"),
                                                             label = "Colour",
                                                             choices = c("cdm_name",
@@ -133,14 +133,20 @@ prevalenceUI <- function(id, uploadedFiles) {
                                                             # choices = colnames(settings(uploadedFiles)),
                                                             selected = "denominator_age_group",
                                                             multiple = TRUE)),
-                                         column(4,
+                                         column(3,
                                                 sliderInput(inputId = ns("y_limit"),
                                                             label = "Y limit",
                                                             min = 0,
                                                             max = prevalenceMax,
                                                             value = prevalenceMax,
                                                             step = 0.01)
-                                         )
+                                         ),
+                                         column(3,
+                                                checkboxInput(inputId = ns("ribbon"),
+                                                              label = "Ribbon",
+                                                              value = FALSE,
+                                                              width = NULL)
+                                         ),
                                 ),
                                 fluidRow(createAddItemToReportUI(ns("prevalence_plot"))),
                                 fluidRow(createDownloadPlotUI(ns)),
@@ -221,12 +227,10 @@ prevalenceServer <- function(id, uploadedFiles) {
       IncidencePrevalence::plotPrevalence(result = final_summarised_result(),
                                          x = "prevalence_start_date",
                                          ylim = c(0, input$y_limit),
-                                         ribbon = TRUE,
+                                         ribbon = input$ribbon,
                                          facet = input$facet,
                                          colour = input$colour,
-                                         colour_name = NULL #,
-                                         # options = list('hideConfidenceInterval' = TRUE)
-                                         )
+                                         colour_name = NULL)
     })
 
     output$summarisedPrevalencePlot <- renderPlot({
@@ -262,26 +266,20 @@ prevalenceServer <- function(id, uploadedFiles) {
     addObject <- reactiveVal()
     observeEvent(input$prevalence_table, {
       addObject(
-        list(prevalence_table = list(prevalence_estimates = final_summarised_result()
-                                    # plotOption = input$facet
-                                    # caption = input$captionInc,
-                                    # ribbon = input$ribbonprevalence,
-                                    # options = c(input$showCIprevalence, input$stackPlotsprevalence)
-        )
-        )
-      )
+        list(prevalence_table = list(result = final_summarised_result(),
+                                     type = "gt",
+                                     header = input$header,
+                                     groupColumn = input$groupColumn,
+                                     settingsColumns = input$settingsColumns)))
     })
 
     observeEvent(input$prevalence_plot, {
       addObject(
-        list(prevalence_plot = list(prevalence_estimates = final_summarised_result()
-                                   # plotOption = input$facet
-                                   # caption = input$captionInc,
-                                   # ribbon = input$ribbonprevalence,
-                                   # options = c(input$showCIprevalence, input$stackPlotsprevalence)
-        )
-        )
-      )
+        list(prevalence_plot = list(result = final_summarised_result(),
+                                    ylim = c(0, input$y_limit),
+                                    facet = input$facet,
+                                    colour = input$colour,
+                                    ribbon = input$ribbon)))
     })
 
     return(addObject)
