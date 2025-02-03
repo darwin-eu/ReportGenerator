@@ -18,8 +18,15 @@ table1PrevAtt:
   options: NULL
 tableIncidence:
   title: "Incidence"
-  function: tableIncidence(incidence_estimates, type = "gt", .options = list())
+  function: "tableIncidence"
   object: "incidence_table"
+  type:
+    - incidence
+  options: NULL
+plotIncidence:
+  title: "Incidence"
+  function: "plotIncidence"
+  object: "incidence_plot"
   type:
     - incidence
   options: NULL

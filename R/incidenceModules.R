@@ -112,7 +112,7 @@ incidenceUI <- function(id, uploadedFiles) {
                               fluidRow(column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt")))))
                        ),
                        tabPanel("Plot",
-                                fluidRow(column(4,
+                                fluidRow(column(3,
                                                 pickerInput(inputId = ns("facet"),
                                                             label = "Facet",
                                                             choices = c("cdm_name",
@@ -122,7 +122,7 @@ incidenceUI <- function(id, uploadedFiles) {
                                                             # choices = names(uploadedFiles),
                                                             selected = c("cdm_name", "denominator_sex"),
                                                             multiple = TRUE)),
-                                         column(4,
+                                         column(3,
                                                 pickerInput(inputId = ns("colour"),
                                                             label = "Colour",
                                                             choices = c("cdm_name",
@@ -132,15 +132,22 @@ incidenceUI <- function(id, uploadedFiles) {
                                                                         "variable_level"),
                                                             # choices = colnames(settings(uploadedFiles)),
                                                             selected = "denominator_age_group",
-                                                            multiple = TRUE)),
-                                         column(4,
+                                                            multiple = TRUE)
+                                                ),
+                                         column(3,
                                                 sliderInput(inputId = ns("y_limit"),
                                                             label = "Y limit",
                                                             min = 0,
                                                             max = incidenceMax,
                                                             value = incidenceMax,
                                                             step = 1)
-                                         )
+                                                ),
+                                         column(3,
+                                                checkboxInput(inputId = ns("ribbon"),
+                                                              label = "Ribbon",
+                                                              value = FALSE,
+                                                              width = NULL)
+                                                ),
                                 ),
                                 fluidRow(createAddItemToReportUI(ns("incidence_plot"))),
                                 fluidRow(createDownloadPlotUI(ns)),
@@ -204,7 +211,7 @@ incidenceServer <- function(id, uploadedFiles) {
       IncidencePrevalence::plotIncidence(result = final_summarised_result(),
                                          x = "incidence_start_date",
                                          ylim = c(0, input$y_limit),
-                                         ribbon = TRUE,
+                                         ribbon = input$ribbon,
                                          facet = input$facet,
                                          colour = input$colour,
                                          colour_name = NULL #,
@@ -245,24 +252,23 @@ incidenceServer <- function(id, uploadedFiles) {
     addObject <- reactiveVal()
         observeEvent(input$incidence_table, {
           addObject(
-            list(incidence_table = list(incidence_estimates = final_summarised_result()
-                                                         # plotOption = input$facet
-                                                         # caption = input$captionInc,
-                                                         # ribbon = input$ribbonIncidence,
-                                                         # options = c(input$showCIIncidence, input$stackPlotsIncidence)
-                                            )
-                 )
-          )
+            list(incidence_table = list(result = final_summarised_result(),
+                                        type = "gt",
+                                        header = input$header,
+                                        groupColumn = input$groupColumn,
+                                        settingsColumns = input$settingsColumns)))
         })
 
         observeEvent(input$incidence_plot, {
           addObject(
-            list(incidence_plot = list(incidence_estimates = final_summarised_result()
-                                                                # plotOption = input$facet
-                                                                # caption = input$captionInc,
-                                                                # ribbon = input$ribbonIncidence,
-                                                                # options = c(input$showCIIncidence, input$stackPlotsIncidence)
-                                           )
+            list(incidence_plot = list(result = final_summarised_result(),
+                                       ylim = c(0, input$y_limit),
+                                       facet = input$facet,
+                                       colour = input$colour,
+                                       # caption = input$captionInc,
+                                       ribbon = input$ribbon #,
+                                       # options = c(input$showCIIncidence, input$stackPlotsIncidence)
+                                       )
                  )
           )
         })

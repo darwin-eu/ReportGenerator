@@ -38,46 +38,20 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
       # i <- 1
       # Get the function to generate and print in report
       titleText <- names(dataReportList[[i]])
-      expression <- getItemConfig(input = "object",
-                                  output = "function",
-                                  inputValue = titleText)
-      # Get relevant options for the function
-      itemOptions <- getItemConfig(input = "object",
-                                   output = "options",
-                                   inputValue = titleText)
+      expression <- getItemConfig(input = "object", output = "function", inputValue = titleText)
 
-      # Additional parameter if there are options for the graphs
-      if (!is.null(itemOptions)) {
-        if (grepl("by sex", titleText)) {
-          expression <- expression %>%
-            addPreviewItemTypeSex(dataReportList[[i]][[1]][["plotOption"]])
-        } else if (grepl("by age", titleText)) {
-          expression <- expression %>%
-            addPreviewItemTypeAge(dataReportList[[i]][[1]][["plotOption"]])
-        } else  {
-          expression <- expression %>%
-            addPreviewItemType(dataReportList[[i]][[1]][["plotOption"]])
-        }
-        if (grepl("Ribbon", itemOptions)) {
-          expression <- expression %>%
-            addPreviewItemRibbon(dataReportList[[i]][[1]][["ribbon"]])
-        }
-        if (grepl("Options", itemOptions)) {
-          expression <- do.call(addPlotOptions, append(list(expression),
-                                                       as.list(dataReportList[[i]][[1]][["options"]])))
-        }
-      }
+      # Save function as an object
+      arguments <- dataReportList[[i]][[titleText]]
+      object <- do.call(expression, args = arguments)
 
-      # Evaluate function
-      object <- eval(parse(text = expression), envir = dataReportList[[i]][[1]])
 
       # Check class of every function and add it to the word report accordingly
       if ("gt_tbl" %in% class(object)) {
         log4r::info(logger, glue::glue("Generating gt_tble object"))
         body_end_section_landscape(reportDocx)
         body_add_gt(reportDocx, value = object)
-        body_add(reportDocx,
-                 value = dataReportList[[i]][[1]][["caption"]])
+        # body_add(reportDocx,
+        #          value = dataReportList[[i]][[1]][["caption"]])
         body_add(reportDocx,
                  value = titleText,
                  style = "heading 1")
@@ -91,8 +65,8 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
                     width = plotDim[["width"]],
                     height = plotDim[["height"]],
                     style = "Normal")
-        body_add(reportDocx,
-                 value = dataReportList[[i]][[1]][["caption"]])
+        # body_add(reportDocx,
+        #          value = dataReportList[[i]][[1]][["caption"]])
         body_add(reportDocx,
                  value = titleText,
                  style = "heading 1")

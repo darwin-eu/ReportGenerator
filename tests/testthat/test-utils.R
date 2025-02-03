@@ -123,12 +123,19 @@ test_that("getItemsList joining to apps", {
 test_that("getItemConfig for getting a function", {
   input <- "object"
   output <- "function"
-  # incidence
+  # incidence table
   inputValue <- "incidence_table"
   expression <- getItemConfig(input = input,
                                output = output,
                                inputValue = inputValue)
   expect_equal(expression, "tableIncidence(incidence_estimates, type = \"gt\", .options = list())" )
+
+  # incidence plot
+  inputValue <- "incidence_plot"
+  expression <- getItemConfig(input = input,
+                              output = output,
+                              inputValue = inputValue)
+  expect_equal(expression, "plotIncidence(incidence_estimates)")
 
   # incidence
   inputValue <- "prevalence_table"
