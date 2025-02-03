@@ -1,3 +1,9 @@
+# ReportGenerator 1.20.0
+
+* Bug fixes. 
+
+* Improvements in preview sections.
+
 # ReportGenerator 1.19.2
 
 * Update for new versions of analytical packages.
