@@ -46,16 +46,18 @@ TreatmentPatterns:
     - TreatmentPatterns
 summarise_characteristics:
   title: "Summarised Characteristics"
-  function: tableCharacteristics(summarisedCharacteristics)
+  function: "tableCharacteristics"
   object:
+    - Summarised Characteristics - Table
     - summarised_characteristics
     - summarise_characteristics
   type:
+    - Summarised Characteristics - Table
     - summarised_characteristics
     - summarise_characteristics
 summarise_large_scale_characteristics:
   title: "Summarised Large Scale Characteristics"
-  function: tableCharacteristics(summarisedCharacteristics)
+  function: "tableLargeScaleCharacteristics"
   object:
     - summarised_large_scale_characteristics
     - summarise_large_scale_characteristics
