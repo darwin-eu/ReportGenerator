@@ -93,19 +93,20 @@ characteristicsUI <- function(id, uploadedFiles) {
                              br(),
                              fluidRow(
                                column(6,
-                                      pickerInput(inputId = ns("pivotWide"),
-                                                  label = "Arrange by",
-                                                  choices = c("group", "strata"),
-                                                  selected = c("group", "strata"),
-                                                  multiple = TRUE)
-                               ),
-                               column(6,
                                       pickerInput(inputId = ns("header"),
                                                   label = "Header",
-                                                  choices = c( "cdm_name", "group", "strata", "additional", "variable", "estimate", "settings"),
-                                                  selected = c("cdm_name", "group"),
-                                                  multiple = TRUE)),
-                             ),
+                                                  choices = c("cdm_name", "cohort_name", "strata", "window_name"),
+                                                  selected = c("cdm_name", "cohort_name"),
+                                                  multiple = TRUE)
+                                      ),
+                               column(6,
+                                      pickerInput(inputId = ns("groupColumn"),
+                                                  label = "Group Column",
+                                                  choices = names(uploadedFiles),
+                                                  selected = c("variable_name"),
+                                                  multiple = TRUE)
+                                      )
+                               ),
                              fluidRow(column(6, downloadButton(ns("downloadCharacteristicsTable"), "Download Table"))),
                              column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
@@ -211,18 +212,18 @@ characteristicsUI <- function(id, uploadedFiles) {
                              br(),
                              fluidRow(
                                column(6,
-                                 pickerInput(inputId = ns("pivotWide"),
-                                             label = "Arrange by",
-                                             choices = c("group", "strata"),
-                                             selected = c("group", "strata"),
-                                             multiple = TRUE)
+                                      pickerInput(inputId = ns("header"),
+                                      label = "Header",
+                                      choices = c("cdm_name", "cohort_name", "strata", "window_name"),
+                                      selected = c("cdm_name", "cohort_name"),
+                                      multiple = TRUE))
                                ),
-                               column(6,
-                                 pickerInput(inputId = ns("header"),
-                                             label = "Header",
-                                             choices = c("cdm_name", "cohort_name", "strata", "window_name"),
-                                             selected = c("cdm_name", "cohort_name"),
-                                             multiple = TRUE)),
+                             column(6,
+                                    pickerInput(inputId = ns("groupColumn"),
+                                                label = "Group Column",
+                                                choices = names(uploadedFiles),
+                                                selected = c("cdm_name"),
+                                                multiple = TRUE)
                              ),
                              fluidRow(column(6, downloadButton(ns("downloadLSCTable"), "Download Table"))),
                              column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
@@ -256,8 +257,10 @@ characteristicsServer <- function(id, uploadedFiles) {
 
       summarisedCharacteristics_gt_table <- reactive({
         CohortCharacteristics::tableCharacteristics(result = summarised_result(),
-                                                    # split = input$pivotWide,
-                                                    header = input$header)
+                                                    type = "gt",
+                                                    header = input$header,
+                                                    groupColumn = input$groupColumn,
+                                                    hide = character())
       })
 
       output$summarisedTableGt <- gt::render_gt({
@@ -331,10 +334,12 @@ characteristicsServer <- function(id, uploadedFiles) {
 
     observeEvent(input$lockSummary, {
       addObject(
-        list(`Summarised Characteristics - Table` = list(summarisedCharacteristics = summarised_result(),
-                                               caption = input$captionCharacteristics))
-      )
-    })
+        list(`Summarised Characteristics - Table` = list(result = summarised_result(),
+                                                         type = "gt",
+                                                         header = input$header,
+                                                         groupColumn = input$groupColumn,
+                                                         hide = character())))
+      })
 
     observeEvent(input$lockLSC, {
       addObject(
