@@ -1,6 +1,12 @@
+# ReportGenerator 1.21.0
+
+* Bugs fixes.
+
 # ReportGenerator 1.20.0
 
-* Fixed some tests for automatic text. 
+* Bugs fixes. 
+
+* Improvements in preview sections.
 
 # ReportGenerator 1.19.2
 
