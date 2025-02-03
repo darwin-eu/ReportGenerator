@@ -76,8 +76,8 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
         log4r::info(logger, glue::glue("Generating gt_tble object"))
         body_end_section_landscape(reportDocx)
         body_add_gt(reportDocx, value = object)
-        body_add(reportDocx,
-                 value = dataReportList[[i]][[1]][["caption"]])
+        # body_add(reportDocx,
+        #          value = dataReportList[[i]][[1]][["caption"]])
         body_add(reportDocx,
                  value = titleText,
                  style = "heading 1")
@@ -91,8 +91,8 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
                     width = plotDim[["width"]],
                     height = plotDim[["height"]],
                     style = "Normal")
-        body_add(reportDocx,
-                 value = dataReportList[[i]][[1]][["caption"]])
+        # body_add(reportDocx,
+        #          value = dataReportList[[i]][[1]][["caption"]])
         body_add(reportDocx,
                  value = titleText,
                  style = "heading 1")

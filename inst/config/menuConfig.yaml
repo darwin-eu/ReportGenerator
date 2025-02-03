@@ -23,6 +23,13 @@ tableIncidence:
   type:
     - incidence
   options: NULL
+plotIncidence:
+  title: "Incidence"
+  function: plotIncidence(incidence_estimates)
+  object: "incidence_plot"
+  type:
+    - incidence
+  options: NULL
 tablePrevalence:
   title: "Prevalence"
   function: tablePrevalence(prevalence, type = "gt", .options = list())
