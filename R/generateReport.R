@@ -47,7 +47,7 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
 
       # Check class of every function and add it to the word report accordingly
       if ("gt_tbl" %in% class(object)) {
-        log4r::info(logger, glue::glue("Generating gt_tble object"))
+        log4r::info(logger, glue::glue("Generating GT table object"))
         body_end_section_landscape(reportDocx)
         body_add_gt(reportDocx, value = object)
         # body_add(reportDocx,
@@ -58,6 +58,7 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
         body_end_section_portrait(reportDocx)
 
       } else if ("ggplot" %in% class(object)) {
+        log4r::info(logger, glue::glue("Generating ggplot object"))
         body_end_section_landscape(reportDocx)
         plotDim <- getGGPlotDimensions()
         body_add_gg(x = reportDocx,

@@ -22,21 +22,24 @@ tableIncidence:
   object: "incidence_table"
   type:
     - incidence
-  options: NULL
 plotIncidence:
   title: "Incidence"
   function: "plotIncidence"
   object: "incidence_plot"
   type:
     - incidence
-  options: NULL
 tablePrevalence:
   title: "Prevalence"
-  function: tablePrevalence(prevalence, type = "gt", .options = list())
+  function: "tablePrevalence"
   object: "prevalence_table"
   type:
     - prevalence
-  options: NULL
+plotPrevalence:
+  title: "Prevalence"
+  function: "plotPrevalence"
+  object: "prevalence_plot"
+  type:
+    - prevalence
 TreatmentPatterns:
   title: "Treatment Pathways"
   type:
