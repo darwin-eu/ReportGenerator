@@ -38,11 +38,11 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
       # i <- 1
       # Get the function to generate and print in report
       titleText <- names(dataReportList[[i]])
-      expression <- getItemConfig(input = "title",
+      expression <- getItemConfig(input = "object",
                                   output = "function",
                                   inputValue = titleText)
       # Get relevant options for the function
-      itemOptions <- getItemConfig(input = "title",
+      itemOptions <- getItemConfig(input = "object",
                                    output = "options",
                                    inputValue = titleText)
 

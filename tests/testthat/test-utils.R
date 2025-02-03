@@ -121,19 +121,57 @@ test_that("getItemsList joining to apps", {
 })
 
 test_that("getItemConfig for getting a function", {
-  title <- c("Summarised Characteristics")
-  expression <- getItemConfig(input = "title",
-                              output = "function",
-                              inputValue = title)
-  expect_equal(expression, c("tableCharacteristics(summarisedCharacteristics)"))
-})
+  input <- "object"
+  output <- "function"
+  # incidence
+  inputValue <- "incidence_table"
+  expression <- getItemConfig(input = input,
+                               output = output,
+                               inputValue = inputValue)
+  expect_equal(expression, "tableIncidence(incidence_estimates, type = \"gt\", .options = list())" )
 
-test_that("getItemConfig for getting options", {
-  title <- c("Incidence")
-  itemOptions <- getItemConfig(input = "title",
-                               output = "function",
-                               inputValue = title)
-  expect_equal(itemOptions, "tableIncidence(incidence, type = \"gt\", .options = list())" )
+  # incidence
+  inputValue <- "prevalence_table"
+  expression <- getItemConfig(input = input,
+                              output = output,
+                              inputValue = inputValue)
+  expect_equal(expression, "tablePrevalence(prevalence, type = \"gt\", .options = list())")
+
+  # summarised_characteristics
+  inputValue <- "summarised_characteristics"
+  expression <- getItemConfig(input = input,
+                              output = output,
+                              inputValue = inputValue)
+  expect_equal(expression, c("tableCharacteristics(summarisedCharacteristics)"))
+
+  # summarised_large_scale_characteristics
+  inputValue <- "summarised_large_scale_characteristics"
+  expression <- getItemConfig(input = input,
+                              output = output,
+                              inputValue = inputValue)
+  expect_equal(expression, c("tableCharacteristics(summarisedCharacteristics)"))
+
+  # single_event
+  inputValue <- "single_event"
+  expression <- getItemConfig(input = input,
+                              output = output,
+                              inputValue = inputValue)
+  expect_equal(expression, c("cohortSurvivalTable(survivalEstimate)"))
+
+  # single_event
+  inputValue <- "competing_risk"
+  expression <- getItemConfig(input = input,
+                              output = output,
+                              inputValue = inputValue)
+  expect_equal(expression, c("CohortSurvival::plotSurvival(survivalEstimate, facet, colour)"))
+
+  # TreatmentPatterns
+  # inputValue <- "TreatmentPatterns"
+  # expression <- getItemConfig(input = input,
+  #                             output = output,
+  #                             inputValue = inputValue)
+  # expect_equal(expression, c("CohortSurvival::plotSurvival(survivalEstimate, facet, colour)"))
+
 })
 
 test_that("getFunctionReport error more than length 1", {

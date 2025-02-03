@@ -1,3 +1,7 @@
+# ReportGenerator 1.20.0
+
+* Fixed some tests for automatic text. 
+
 # ReportGenerator 1.19.2
 
 * Update for new versions of analytical packages.

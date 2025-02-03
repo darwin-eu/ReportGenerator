@@ -61,11 +61,11 @@ getItemConfig <- function(input = NULL,
   checkmate::assertCharacter(inputValue)
 
   menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
-  functionText <- lapply(menuData, function(menuData, title) {
-    if (menuData[[input]] == inputValue) {
+  functionText <- lapply(menuData, function(menuData, type) {
+    if (any(inputValue %in% menuData[[input]])) {
       menuData[[output]]
     }
-  }, title = title)
+  }, type = type)
   result <- list()
   for (i in functionText) {
     if (!is.null(i)) {
@@ -73,6 +73,9 @@ getItemConfig <- function(input = NULL,
     }
   }
   result <- unlist(result)
+  if (is.null(result)) {
+    cli::cli_alert_danger("No item found in the menuConfig.yaml file.")
+  }
   return(result)
 }
 

@@ -107,6 +107,10 @@ reportGenerator <- function(logger = NULL) {
                           ),
                           div(id = "reportOutput")
                    )
+                 ),
+                 fluidRow(
+                   h2("Monitor"),
+                   verbatimTextOutput("monitorReportItems")
                  )
         )
       )
@@ -417,6 +421,11 @@ reportGenerator <- function(logger = NULL) {
         }
         return(result)
       }
+    })
+
+    output$monitorReportItems <- renderPrint({
+      reportItems <- rev(reactiveValuesToList(do.call(reactiveValues, dataReport$objects)))
+      reportItems
     })
 
     output$dataReportMenu <- renderDT({
