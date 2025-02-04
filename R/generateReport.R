@@ -73,19 +73,6 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
                  style = "heading 1")
         body_end_section_portrait(reportDocx)
 
-      } else if ("huxtable" %in% class(object)) {
-        body_end_section_landscape(reportDocx)
-        body_add_table(reportDocx,
-                       value = object,
-                       style = "Table Paragraph",
-                       header = FALSE)
-        body_add_par(reportDocx, " ")
-        body_add(reportDocx,
-                 value = dataReportList[[i]][[1]][["caption"]])
-        body_add(reportDocx,
-                 value = titleText,
-                 style = "heading 1")
-        body_end_section_portrait(reportDocx)
       }
 
       if (titleText == "Sunburst Plot - TreatmentPatterns") {
