@@ -51,12 +51,12 @@ test_that("Generate Report summarise_characteristics", {
   unlink(testdir, recursive = TRUE)
 })
 
-test_that("Generate Report tablenumpar ild", {
+test_that("Generate Report summarise_characteristics", {
   reportDocx <- read_docx(path = system.file("templates",
                                              "word",
                                              "DARWIN_EU_Study_Report.docx",
                                              package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "misc", "ild", "reportItems.rds")
+  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_large_scale_table_plot.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
   testdir <- file.path(tempdir(), "reportItems")
