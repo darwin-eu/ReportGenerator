@@ -117,6 +117,5 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
 }
 
 getGGPlotDimensions <- function() {
-  return(list("width" = 10.5,
-              "height" = 4.75))
+  return(list("width" = 10.5, "height" = 4.75))
 }
