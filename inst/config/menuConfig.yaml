@@ -59,9 +59,11 @@ summarise_large_scale_characteristics:
   title: "Summarised Large Scale Characteristics"
   function: "tableLargeScaleCharacteristics"
   object:
+    - Summarised Large Scale Characteristics - Table
     - summarised_large_scale_characteristics
     - summarise_large_scale_characteristics
   type:
+    - Summarised Large Scale Characteristics - Table
     - summarised_large_scale_characteristics
     - summarise_large_scale_characteristics
 survival_table:

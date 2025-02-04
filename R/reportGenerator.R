@@ -355,8 +355,8 @@ reportGenerator <- function(logger = NULL) {
     }) %>%
       bindEvent(dataCharacteristics())
 
-    dataLSC <- characteristicsServer(id = "lsc",
-                                     reactive(uploadedFiles$summarise_large_scale_characteristics))
+    dataLSC <- largeScaleServer(id = "lsc",
+                                reactive(uploadedFiles$summarise_large_scale_characteristics))
 
     observe({
       for (key in names(dataLSC())) {
