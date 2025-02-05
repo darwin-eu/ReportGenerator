@@ -23,26 +23,25 @@ attritionUI <- function(id, uploadedFiles) {
                          selected = unique(settings(uploadedFiles)$denominator_age_group),
                          multiple = FALSE,
                          list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      )
-      # ,
-      # column(4,
-      #        pickerInput(inputId = ns("header"),
-      #                    label = "Header",
-      #                    choices = names(uploadedFiles),
-      #                    selected = names(uploadedFiles)[1],
-      #                    multiple = TRUE)),
-      # column(4,
-      #        pickerInput(inputId = ns("groupColumn"),
-      #                    label = "Group Column",
-      #                    choices = names(uploadedFiles),
-      #                    selected = names(uploadedFiles)[1],
-      #                    multiple = TRUE)),
-      # column(4,
-      #        pickerInput(inputId = ns("settingsColumns"),
-      #                    label = "Settings Columns",
-      #                    choices = colnames(settings(uploadedFiles)),
-      #                    selected = colnames(settings(uploadedFiles))[1],
-      #                    multiple = TRUE))
+      ),
+      column(4,
+             pickerInput(inputId = ns("header"),
+                         label = "Header",
+                         choices = names(uploadedFiles),
+                         selected = c("cdm_name", "variable_name"),
+                         multiple = TRUE)),
+      column(4,
+             pickerInput(inputId = ns("groupColumn"),
+                         label = "Group Column",
+                         choices = names(uploadedFiles),
+                         selected = c("group_level"),
+                         multiple = TRUE)),
+      column(4,
+             pickerInput(inputId = ns("settingsColumns"),
+                         label = "Settings Columns",
+                         choices = colnames(settings(uploadedFiles)),
+                         selected = c("result_type"),
+                         multiple = TRUE))
     ),
     fluidRow(createAddItemToReportUI(ns("lockAttrition"))),
     fluidRow(
@@ -71,9 +70,9 @@ attritionServer <- function(id, uploadedFiles) {
         tableIncidenceAttrition(
           result = summarised_result(),
           type = "gt",
-          # header = input$header,
-          # groupColumn = input$groupColumn,
-          # settingsColumns = input$settingsColumns,
+          header = input$header,
+          groupColumn = input$groupColumn,
+          settingsColumns = input$settingsColumns,
           hide = "estimate_name"
         )
       })
@@ -95,9 +94,9 @@ attritionServer <- function(id, uploadedFiles) {
         tablePrevalenceAttrition(
           result = summarised_result(),
           type = "gt",
-          header = input$header,
-          groupColumn = input$groupColumn,
-          settingsColumns = input$settingsColumns,
+          header = NULL, # input$header,
+          groupColumn = NULL, # input$groupColumn,
+          settingsColumns = NULL, # input$settingsColumns,
           hide = "estimate_name"
         )
       })
@@ -106,9 +105,9 @@ attritionServer <- function(id, uploadedFiles) {
         addObject(
           list("Prevalence Attrition - Table" = list(result = summarised_result(),
                                                      type = "gt",
-                                                     header = input$header,
-                                                     groupColumn = input$groupColumn,
-                                                     settingsColumns = input$settingsColumns,
+                                                     header = NULL, # input$header,
+                                                     groupColumn = NULL, # input$groupColumn,
+                                                     settingsColumns = NULL, # input$settingsColumns,
                                                      hide = "estimate_name"))
         )
       })

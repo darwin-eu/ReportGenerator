@@ -6,7 +6,7 @@ cohort_attrition_table:
   options: NULL
 tableIncidenceAttrition:
   title: "Incidence Attrition"
-  function: "tablePrevalenceAttrition"
+  function: "tableIncidenceAttrition"
   object:
     - Incidence Attrition - Table
 tablePrevalenceAttrition:
