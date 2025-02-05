@@ -193,13 +193,17 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
 
       survival_gt_table <- reactive({
         CohortSurvival::tableSurvival(getData(),
-                                      timeScale = "days",
                                       times = c(365,
-                                              1096,
-                                              1826,
-                                              3653),
-                                      groupColumn = "cohort",
-                                      header = input$header)
+                                                1096,
+                                                1826,
+                                                3653),
+                                      timeScale = "days",
+                                      splitStrata = TRUE,
+                                      header = input$header,
+                                      type = "gt",
+                                      groupColumn = NULL,
+                                      .options = list()
+                                      )
       })
 
     output$cs_data <- gt::render_gt({
@@ -274,8 +278,17 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
         survivalObjectType <- paste0(id, " - Table")
         tempList <- list()
         tempList[[survivalObjectType]] <- list(
-          survivalEstimate = getData(),
-          caption = input$captionSurvivalEstimateTable
+          x = getData(),
+          times = c(365,
+                    1096,
+                    1826,
+                    3653),
+          timeScale = "days",
+          splitStrata = TRUE,
+          header = input$header,
+          type = "gt",
+          groupColumn = NULL,
+          .options = list()
         )
         addObject(tempList)
       }
