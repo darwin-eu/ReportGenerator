@@ -1,12 +1,8 @@
 tabPanelSelection <- function(selection, uploadedFiles) {
-  if (selection == "Incidence Attrition") {
-    tabPanel(selection, attritionUI(selection, uploadedFiles$incidence_attrition))
-  } else if (selection == "Prevalence Attrition") {
-    tabPanel(selection, attritionUI(selection, uploadedFiles$incidence_attrition))
-  } else if (selection == "Incidence") {
-    tabPanel(selection, incidenceUI(selection, uploadedFiles = uploadedFiles$incidence))
+  if (selection == "Incidence") {
+    tabPanel(selection, incidenceUI(selection, uploadedFiles = uploadedFiles$incidence, uploadedFilesAttrition = uploadedFiles$incidence_attrition))
   } else if (selection == "Prevalence") {
-    tabPanel(selection, prevalenceUI(selection, uploadedFiles = uploadedFiles$prevalence))
+    tabPanel(selection, prevalenceUI(selection, uploadedFiles = uploadedFiles$prevalence, uploadedFilesAttrition = uploadedFiles$prevalence_attrition))
   } else if (selection == "Treatment Pathways") {
     tabPanel(selection, patternsUI(selection, uploadedFiles = uploadedFiles$treatment_pathways))
   } else if (selection == "Summarised Characteristics") {

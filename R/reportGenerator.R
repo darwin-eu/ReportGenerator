@@ -180,23 +180,19 @@ reportGenerator <- function(logger = NULL) {
       if (!is.null(uploadedData()$other_result)) {
         items <- c(items, names(uploadedData()$other_result))
       }
-      itemsList$objects[["items"]] <- getItemsList(items)
+      itemsList$objects[["items"]] <- getItemsList(items) %>% unique()
 
-      if ("incidence_attrition" %in% items) {
-        uploadedFiles$incidence_attrition <- uploadedData()$summarised_result %>%
-          visOmopResults::filterSettings(result_type == "incidence_attrition")
-      }
-      if ("prevalence_attrition" %in% items) {
-        uploadedFiles$prevalence_attrition <- uploadedData()$summarised_result %>%
-          visOmopResults::filterSettings(result_type == "prevalence_attrition")
-      }
       if ("incidence" %in% items) {
         uploadedFiles$incidence <- uploadedData()$summarised_result %>%
           visOmopResults::filterSettings(result_type == "incidence")
+        uploadedFiles$incidence_attrition <- uploadedData()$summarised_result %>%
+          visOmopResults::filterSettings(result_type == "incidence_attrition")
       }
       if ("prevalence" %in% items) {
         uploadedFiles$prevalence <- uploadedData()$summarised_result %>%
           visOmopResults::filterSettings(result_type == "prevalence")
+        uploadedFiles$prevalence_attrition <- uploadedData()$summarised_result %>%
+          visOmopResults::filterSettings(result_type == "prevalence_attrition")
       }
       if ("summarise_characteristics" %in% items) {
         uploadedFiles$summarise_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
@@ -300,22 +296,27 @@ reportGenerator <- function(logger = NULL) {
 
     # Attrition table
 
-    attritionServer(id = "Incidence Attrition",
-                    uploadedFiles = reactive(uploadedFiles$incidence_attrition))
+    incidenceAttritionTable <- attritionServer(id = "Incidence Attrition",
+                                               uploadedFiles = reactive(uploadedFiles$incidence_attrition))
 
-    attritionServer(id = "Prevalence Attrition",
-                    uploadedFiles = reactive(uploadedFiles$prevalence_attrition))
+    observe({
+      for (key in names(incidenceAttritionTable())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- incidenceAttritionTable()
+      }
+    }) %>%
+      bindEvent(incidenceAttritionTable())
 
-    # attritionTable <- attritionServer(id = "Incidence Attrition",
-    #                                   uploadedFiles = reactive(uploadedFiles$incidence_attrition))
-    #
-    # observe({
-    #   for (key in names(attritionTable())) {
-    #     randomId <- getRandomId()
-    #     dataReport[["objects"]][[randomId]] <- attritionTable()
-    #   }
-    # }) %>%
-    #   bindEvent(attritionTable())
+    prevalenceAttritionTable <- attritionServer(id = "Prevalence Attrition",
+                                                uploadedFiles = reactive(uploadedFiles$prevalence_attrition))
+
+    observe({
+      for (key in names(prevalenceAttritionTable())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- prevalenceAttritionTable()
+      }
+    }) %>%
+      bindEvent(prevalenceAttritionTable())
 
     # Incidence Modules
 

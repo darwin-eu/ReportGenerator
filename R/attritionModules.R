@@ -63,6 +63,8 @@ attritionServer <- function(id, uploadedFiles) {
                                        denominator_age_group %in% input$denominator_age_group)
     })
 
+    addObject <- reactiveVal()
+
     if (id == "Incidence Attrition") {
       output$attritionTable <- gt::render_gt({
         req(summarised_result())
@@ -75,6 +77,18 @@ attritionServer <- function(id, uploadedFiles) {
           hide = "estimate_name"
         )
       })
+
+      observeEvent(input$lockAttrition, {
+        addObject(
+          list("Incidence Attrition - Table" = list(result = summarised_result(),
+                                                    type = "gt",
+                                                    header = input$header,
+                                                    groupColumn = input$groupColumn,
+                                                    settingsColumns = input$settingsColumns,
+                                                    hide = "estimate_name"))
+        )
+      })
+
     } else if (id == "Prevalence Attrition") {
       output$attritionTable <- gt::render_gt({
         req(summarised_result())
@@ -87,18 +101,19 @@ attritionServer <- function(id, uploadedFiles) {
           hide = "estimate_name"
         )
       })
+
+      observeEvent(input$lockAttrition, {
+        addObject(
+          list("Prevalence Attrition - Table" = list(result = summarised_result(),
+                                                     type = "gt",
+                                                     header = input$header,
+                                                     groupColumn = input$groupColumn,
+                                                     settingsColumns = input$settingsColumns,
+                                                     hide = "estimate_name"))
+        )
+      })
+
     }
-    # addObject <- reactiveVal()
-    #
-    # observeEvent(input$lockAttrition, {
-    #   addObject(
-    #     list(`Cohort Attrition - Table` = list(cohortAttrition = attritionResult()
-    #                                            # ,
-    #                                            # caption = input$captionCharacteristics
-    #                                            ))
-    #   )
-    # })
-    #
-    # addObject
+    return(addObject)
   })
 }
