@@ -136,36 +136,35 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
       tags$br(),
       tabsetPanel(type = "tabs",
                   tabPanel("Table",
-      fluidRow(
-        column(6,
-               pickerInput(inputId = ns("pivotWide"),
-                           label = "Arrange by",
-                           choices = c("group", "strata"),
-                           selected = c("group", "strata"),
-                           multiple = TRUE)
-        ),
-        column(6,
-               pickerInput(inputId = ns("header"),
-                           label = "Header",
-                           choices = c("cdm_name", "group", "strata",
-                                       "additional", "variable", "estimate", "settings"),
-                           selected = c("cdm_name", "estimate"),
-                           multiple = TRUE)),
-      ),
-      uiOutput(outputId = ns("caption_table")),
-      fluidRow(createAddItemToReportUI(ns("lock_table")),
-               dlTable),
-      tags$br(),
-      fluidRow(column(12, shinycssloaders::withSpinner(gt::gt_output(ns("cs_data")))))
-    ),
-    tabPanel("Plot",
-             uiOutput(outputId = ns("caption_plot")),
-             fluidRow(createDownloadPlotUI(ns)),
-             fluidRow(createAddItemToReportUI(ns("lock_plot"))),
-                      dlPlot),
-             tags$br(),
-             fluidRow(column(12, shinycssloaders::withSpinner(plotOutput(ns("cs_plot")))))
-      ))
+                           tags$br(),
+                           fluidRow(
+                             column(6,
+                                    pickerInput(inputId = ns("pivotWide"),
+                                                label = "Arrange by",
+                                                choices = c("group", "strata"),
+                                                selected = c("group", "strata"),
+                                                multiple = TRUE)
+                                    ),
+                             column(6,
+                                    pickerInput(inputId = ns("header"),
+                                                label = "Header",
+                                                choices = c("cdm_name", "group", "strata", "additional", "variable", "estimate", "settings"),
+                                                selected = c("cdm_name", "estimate"),
+                                                multiple = TRUE)),
+                             ),
+                           uiOutput(outputId = ns("caption_table")),
+                           fluidRow(createAddItemToReportUI(ns("lock_table")), dlTable),
+                           tags$br(),
+                           fluidRow(column(12, shinycssloaders::withSpinner(gt::gt_output(ns("cs_data")))))),
+                  tabPanel("Plot",
+                           tags$br(),
+                           uiOutput(outputId = ns("caption_plot")),
+                           fluidRow(createDownloadPlotUI(ns)),
+                           fluidRow(createAddItemToReportUI(ns("lock_plot")), dlPlot),
+                           tags$br(),
+                           fluidRow(column(12, shinycssloaders::withSpinner(plotOutput(ns("cs_plot"))))))
+                  )
+      )
 }
 
 cohortSurvivalServer <- function(id, uploadedFiles) {
