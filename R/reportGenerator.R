@@ -391,7 +391,7 @@ reportGenerator <- function(logger = NULL) {
 
     # Treatment Patterns Interactive Plots
 
-    dataPatterns <- patternsServer("Treatment Pathways",
+    dataPatterns <- pathwaysServer("Treatment Pathways",
                                    reactive(uploadedFiles$treatment_pathways))
 
     observe({
