@@ -528,6 +528,7 @@ reportGenerator <- function(logger = NULL) {
           targetPath <- tempdir()
           file.copy(packagePath, targetPath, recursive = TRUE)
           reportAppPath <- file.path(targetPath, "reportApp")
+
           # Copy config file
           cli::cli_alert("Copying config file")
           reportAppConfigPath <- file.path(reportAppPath, "config")
@@ -535,6 +536,7 @@ reportGenerator <- function(logger = NULL) {
           menuConfigFile <- "menuConfig.yaml"
           menuConfig <- system.file("config", menuConfigFile, package = "ReportGenerator")
           file.copy(menuConfig, file.path(reportAppConfigPath, menuConfigFile))
+
           # Copy modules file
           cli::cli_alert("Copying modules file")
           reportAppModulesPath <- file.path(reportAppPath, "modules")
@@ -561,6 +563,7 @@ reportGenerator <- function(logger = NULL) {
           } else {
             file.remove(file.path(reportAppPath, "ui_total.R"))
           }
+
           # Create results dir
           cli::cli_alert("Creating results directory")
           targetPathResults <- file.path(reportAppPath, "results")

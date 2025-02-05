@@ -136,36 +136,35 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
       tags$br(),
       tabsetPanel(type = "tabs",
                   tabPanel("Table",
-      fluidRow(
-        column(6,
-               pickerInput(inputId = ns("pivotWide"),
-                           label = "Arrange by",
-                           choices = c("group", "strata"),
-                           selected = c("group", "strata"),
-                           multiple = TRUE)
-        ),
-        column(6,
-               pickerInput(inputId = ns("header"),
-                           label = "Header",
-                           choices = c("cdm_name", "group", "strata",
-                                       "additional", "variable", "estimate", "settings"),
-                           selected = c("cdm_name", "estimate"),
-                           multiple = TRUE)),
-      ),
-      uiOutput(outputId = ns("caption_table")),
-      fluidRow(createAddItemToReportUI(ns("lock_table")),
-               dlTable),
-      tags$br(),
-      fluidRow(column(12, shinycssloaders::withSpinner(gt::gt_output(ns("cs_data")))))
-    ),
-    tabPanel("Plot",
-             uiOutput(outputId = ns("caption_plot")),
-             fluidRow(createDownloadPlotUI(ns)),
-             fluidRow(createAddItemToReportUI(ns("lock_plot"))),
-                      dlPlot),
-             tags$br(),
-             fluidRow(column(12, shinycssloaders::withSpinner(plotOutput(ns("cs_plot")))))
-      ))
+                           tags$br(),
+                           fluidRow(
+                             column(6,
+                                    pickerInput(inputId = ns("pivotWide"),
+                                                label = "Arrange by",
+                                                choices = c("group", "strata"),
+                                                selected = c("group", "strata"),
+                                                multiple = TRUE)
+                                    ),
+                             column(6,
+                                    pickerInput(inputId = ns("header"),
+                                                label = "Header",
+                                                choices = c("cdm_name", "group", "strata", "additional", "variable", "estimate", "settings"),
+                                                selected = c("cdm_name", "estimate"),
+                                                multiple = TRUE)),
+                             ),
+                           uiOutput(outputId = ns("caption_table")),
+                           fluidRow(createAddItemToReportUI(ns("lock_table")), dlTable),
+                           tags$br(),
+                           fluidRow(column(12, shinycssloaders::withSpinner(gt::gt_output(ns("cs_data")))))),
+                  tabPanel("Plot",
+                           tags$br(),
+                           uiOutput(outputId = ns("caption_plot")),
+                           fluidRow(createDownloadPlotUI(ns)),
+                           fluidRow(createAddItemToReportUI(ns("lock_plot")), dlPlot),
+                           tags$br(),
+                           fluidRow(column(12, shinycssloaders::withSpinner(plotOutput(ns("cs_plot"))))))
+                  )
+      )
 }
 
 cohortSurvivalServer <- function(id, uploadedFiles) {
@@ -194,13 +193,17 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
 
       survival_gt_table <- reactive({
         CohortSurvival::tableSurvival(getData(),
-                                      timeScale = "days",
                                       times = c(365,
-                                              1096,
-                                              1826,
-                                              3653),
-                                      groupColumn = "cohort",
-                                      header = input$header)
+                                                1096,
+                                                1826,
+                                                3653),
+                                      timeScale = "days",
+                                      splitStrata = TRUE,
+                                      header = input$header,
+                                      type = "gt",
+                                      groupColumn = NULL,
+                                      .options = list()
+                                      )
       })
 
     output$cs_data <- gt::render_gt({
@@ -214,11 +217,16 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
       } else if (nrow(getData()) > 0 && id == "competing_risk") {
         cumulativeFailure <- TRUE
       }
-        CohortSurvival::plotSurvival(getData(),
+        CohortSurvival::plotSurvival(result = getData(),
+                                     x = "time",
                                      xscale = "years",
+                                     ylim = c(0, NA),
                                      cumulativeFailure = cumulativeFailure,
+                                     ribbon = TRUE,
                                      facet = "cdm_name",
-                                     colour = "strata_name")
+                                     colour = "strata_name",
+                                     colourName = NULL
+                                     )
       })
 
     output$cs_plot <- renderPlot({
@@ -275,8 +283,17 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
         survivalObjectType <- paste0(id, " - Table")
         tempList <- list()
         tempList[[survivalObjectType]] <- list(
-          survivalEstimate = getData(),
-          caption = input$captionSurvivalEstimateTable
+          x = getData(),
+          times = c(365,
+                    1096,
+                    1826,
+                    3653),
+          timeScale = "days",
+          splitStrata = TRUE,
+          header = input$header,
+          type = "gt",
+          groupColumn = NULL,
+          .options = list()
         )
         addObject(tempList)
       }
@@ -284,11 +301,23 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
 
     observeEvent(input$lock_plot, {
       if (nrow(getData()) > 0) {
+        if (nrow(getData()) > 0 && id == "single_event") {
+          cumulativeFailure <- TRUE
+        } else if (nrow(getData()) > 0 && id == "competing_risk") {
+          cumulativeFailure <- TRUE
+        }
+
         survivalObjectType <- paste0(id, " - Plot")
         tempList <- list()
-        tempList[[survivalObjectType]] <- list(
-          survivalEstimate = getData(),
-          caption = input$captionSurvivalEstimatePlot
+        tempList[[survivalObjectType]] <- list(result = getData(),
+                                               x = "time",
+                                               xscale = "years",
+                                               ylim = c(0, NA),
+                                               cumulativeFailure = cumulativeFailure,
+                                               ribbon = TRUE,
+                                               facet = "cdm_name",
+                                               colour = "strata_name",
+                                               colourName = NULL
           )
         addObject(tempList)
       }
