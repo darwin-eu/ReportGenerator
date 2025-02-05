@@ -38,24 +38,35 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
       # i <- 1
       # Get the function to generate and print in report
       titleText <- names(dataReportList[[i]])
-      expression <- getItemConfig(input = "object", output = "function", inputValue = titleText)
 
-      # Save function as an object
-      arguments <- dataReportList[[i]][[titleText]]
-      object <- do.call(expression, args = arguments)
-
-
-      # Check class of every function and add it to the word report accordingly
-      if ("gt_tbl" %in% class(object)) {
-        log4r::info(logger, glue::glue("Generating GT table object"))
-        body_end_section_landscape(reportDocx)
-        body_add_gt(reportDocx, value = object)
-        # body_add(reportDocx,
-        #          value = dataReportList[[i]][[1]][["caption"]])
+      if (titleText == "Sankey Diagram - TreatmentPatterns") {
+        body_add_img(x = reportDocx,
+                     src = dataReportList[[i]][[1]][["fileImage"]],
+                     height = 3,
+                     width = 7)
         body_add(reportDocx,
                  value = titleText,
                  style = "heading 1")
-        body_end_section_portrait(reportDocx)
+      } else {
+
+        expression <- getItemConfig(input = "object", output = "function", inputValue = titleText)
+
+        # Save function as an object
+        arguments <- dataReportList[[i]][[titleText]]
+        object <- do.call(expression, args = arguments)
+
+
+        # Check class of every function and add it to the word report accordingly
+        if ("gt_tbl" %in% class(object)) {
+          log4r::info(logger, glue::glue("Generating GT table object"))
+          body_end_section_landscape(reportDocx)
+          body_add_gt(reportDocx, value = object)
+          # body_add(reportDocx,
+          #          value = dataReportList[[i]][[1]][["caption"]])
+          body_add(reportDocx,
+                   value = titleText,
+                   style = "heading 1")
+          body_end_section_portrait(reportDocx)
 
       } else if ("ggplot" %in% class(object)) {
         log4r::info(logger, glue::glue("Generating ggplot object"))
@@ -75,15 +86,9 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
 
       }
 
-      if (titleText == "Sankey Diagram - TreatmentPatterns") {
-        body_add_img(x = reportDocx,
-                     src = dataReportList[[i]][[1]][["fileImage"]],
-                     height = 3,
-                     width = 7)
-        body_add(reportDocx,
-                 value = titleText,
-                 style = "heading 1")
       }
+
+
     }
   } else {
     log4r::warn(logger, "No items added to the report")
