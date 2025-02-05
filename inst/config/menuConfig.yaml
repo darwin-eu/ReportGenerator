@@ -4,18 +4,16 @@ cohort_attrition_table:
   type:
     - cohortAttrition
   options: NULL
-table1IncAtt:
+tableIncidenceAttrition:
   title: "Incidence Attrition"
-  function: table1Att(incidence_attrition, attritionDataType)
-  type:
-    - incidence_attrition
-  options: NULL
-table1PrevAtt:
+  function: "tableIncidenceAttrition"
+  object:
+    - Incidence Attrition - Table
+tablePrevalenceAttrition:
   title: "Prevalence Attrition"
-  function: table1Att(prevalence_attrition, attritionDataType)
-  type:
-    - prevalence_attrition
-  options: NULL
+  function: "tablePrevalenceAttrition"
+  object:
+    - Prevalence Attrition - Table
 tableIncidence:
   title: "Incidence"
   function: "tableIncidence"
