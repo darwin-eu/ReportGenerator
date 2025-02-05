@@ -217,11 +217,16 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
       } else if (nrow(getData()) > 0 && id == "competing_risk") {
         cumulativeFailure <- TRUE
       }
-        CohortSurvival::plotSurvival(getData(),
+        CohortSurvival::plotSurvival(result = getData(),
+                                     x = "time",
                                      xscale = "years",
+                                     ylim = c(0, NA),
                                      cumulativeFailure = cumulativeFailure,
+                                     ribbon = TRUE,
                                      facet = "cdm_name",
-                                     colour = "strata_name")
+                                     colour = "strata_name",
+                                     colourName = NULL
+                                     )
       })
 
     output$cs_plot <- renderPlot({
@@ -296,11 +301,23 @@ cohortSurvivalServer <- function(id, uploadedFiles) {
 
     observeEvent(input$lock_plot, {
       if (nrow(getData()) > 0) {
+        if (nrow(getData()) > 0 && id == "single_event") {
+          cumulativeFailure <- TRUE
+        } else if (nrow(getData()) > 0 && id == "competing_risk") {
+          cumulativeFailure <- TRUE
+        }
+
         survivalObjectType <- paste0(id, " - Plot")
         tempList <- list()
-        tempList[[survivalObjectType]] <- list(
-          survivalEstimate = getData(),
-          caption = input$captionSurvivalEstimatePlot
+        tempList[[survivalObjectType]] <- list(result = getData(),
+                                               x = "time",
+                                               xscale = "years",
+                                               ylim = c(0, NA),
+                                               cumulativeFailure = cumulativeFailure,
+                                               ribbon = TRUE,
+                                               facet = "cdm_name",
+                                               colour = "strata_name",
+                                               colourName = NULL
           )
         addObject(tempList)
       }

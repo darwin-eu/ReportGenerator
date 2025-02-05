@@ -64,16 +64,31 @@ summarise_large_scale_characteristics:
     - Summarised Large Scale Characteristics - Table
     - summarised_large_scale_characteristics
     - summarise_large_scale_characteristics
-survival_table:
+tableSurvivalSingle:
   title: "Survival - Single Event"
-  function: cohortSurvivalTable(survivalEstimate)
+  function: "tableSurvival"
   object:
-    survival_table
+    - single_event - Table
   type:
     - single_event
-survival_plot:
+plotSurvivalSingle:
+  title: "Survival - Single Event"
+  function: "plotSurvival"
+  object:
+    - single_event - Plot
+  type:
+    - single_event
+tableSurvivalCompeting:
   title: "Survival - Competing Risk"
-  function: CohortSurvival::plotSurvival(survivalEstimate, facet, colour)
+  function: "tableSurvival"
+  object:
+    - competing_risk - Table
   type:
     - competing_risk
-  options: Facet by database, colour by strata_name
+plotSurvivalCompeting:
+  title: "Survival - Competing Risk"
+  function: "plotSurvival"
+  object:
+    - competing_risk - Plot
+  type:
+    - competing_risk
