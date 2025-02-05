@@ -58,7 +58,8 @@ Imports:
     cli,
     data.table,
     shinyalert,
-    visOmopResults
+    visOmopResults,
+    forcats
 Suggests:
     testthat,
     rmarkdown,

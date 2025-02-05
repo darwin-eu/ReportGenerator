@@ -368,7 +368,7 @@ sunburstPathways <- function(pathwaysData) {
   ring_inner <- df_split %>%
     group_by(cdm_name, level1) %>%
     summarise(freq = sum(freq), .groups = "drop") %>%
-    mutate(level1 = fct_inorder(level1)) %>%
+    mutate(level1 = forcats::fct_inorder(level1)) %>%
     arrange(cdm_name, level1) %>%
     group_by(cdm_name) %>%
     mutate(prop = freq / sum(freq),
@@ -389,21 +389,21 @@ sunburstPathways <- function(pathwaysData) {
     mutate(outer_start = start + cum_within_prev * (stop - start),
            outer_stop  = start + cum_within * (stop - start))
 
-  ggplot() +
-    geom_rect(data = ring_outer,
-              aes(xmin = outer_start, xmax = outer_stop,
+  ggplot2::ggplot() +
+    ggplot2::geom_rect(data = ring_outer,
+                       ggplot2::aes(xmin = outer_start, xmax = outer_stop,
                   ymin = 1, ymax = 20, fill = level2),
               color = "white") +
-    geom_rect(data = ring_inner,
-              aes(xmin = start, xmax = stop,
+    ggplot2::geom_rect(data = ring_inner,
+                       ggplot2::aes(xmin = start, xmax = stop,
                   ymin = -20, ymax = 0, fill = level1),
               color = "white") +
-    coord_polar(theta = "x") +
-    theme_minimal() +
-    theme(axis.text  = element_blank(),
-          panel.grid = element_blank(),
+    ggplot2::coord_polar(theta = "x") +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(axis.text  = ggplot2::element_blank(),
+          panel.grid = ggplot2::element_blank(),
           legend.position = "right") +
-    ylim(-40, 30) +
-    labs(fill = "Category") +
-    facet_wrap(~ cdm_name, ncol = 2)
+    ggplot2::ylim(-40, 30) +
+    ggplot2::labs(fill = "Category") +
+    ggplot2::facet_wrap(~ cdm_name, ncol = 2)
 }

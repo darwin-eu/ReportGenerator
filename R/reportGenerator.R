@@ -20,10 +20,10 @@
 #'
 #' @param logger optional logger object
 #'
-#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml TreatmentPatterns PatientProfiles
+#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml TreatmentPatterns PatientProfiles ggplot2
 #' @importFrom sortable bucket_list add_rank_list sortable_options
 #' @importFrom utils read.csv tail unzip
-#' @importFrom ggplot2 ggsave
+#' @importFrom ggplot2 ggsave aes geom_bar theme_minimal theme axis.text.x element_text
 #' @importFrom gto body_add_gt
 #' @importFrom here here
 #' @importFrom TreatmentPatterns createSankeyDiagram
@@ -33,6 +33,7 @@
 #' @importFrom ParallelLogger addDefaultConsoleLogger
 #' @importFrom cli cli_progress_step
 #' @importFrom glue glue
+#' @importFrom forcats fct_inorder
 #' @export
 reportGenerator <- function(logger = NULL) {
 
