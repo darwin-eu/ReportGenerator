@@ -21,27 +21,15 @@ test_that("getIncidencePrevalence", {
 
 
 test_that("getItemsList all", {
-  items <- c("incidence", "summarise_large_scale_characteristics", "point_prevalence",
-             "period_prevalence", "summarise_characteristics", "competing_risk",
-             "single_event", "TreatmentPatterns")
-  menuList <- getItemsList(items)
-  expect_equal(length(menuList), 6)
-})
-
-
-test_that("getItemsList all", {
-  items <- c("cohortAttrition",
-            "incidence_attrition",
-             "prevalence_attrition",
-             "incidence_estimates",
-             "prevalence_estimates",
-             "TreatmentPatterns",
-             "summarise_characteristics",
+  items <- c("incidence",
+             "prevalence",
              "summarise_large_scale_characteristics",
+             "summarise_characteristics",
+             "competing_risk",
              "single_event",
-             "competing_risk")
+             "TreatmentPatterns")
   menuList <- getItemsList(items)
-  expect_equal(length(menuList), 8)
+  expect_equal(length(menuList), 7)
 })
 
 test_that("getItemsList summarised", {
@@ -65,33 +53,9 @@ test_that("getItemsList cohort attrition", {
 })
 
 test_that("getItemsList attrition both", {
-  items <- c("incidence_attrition", "prevalence_attrition")
+  items <- c("incidence", "prevalence")
   menuList <- getItemsList(items)
-  expect_equal(menuList, c("Incidence Attrition", "Prevalence Attrition"))
-})
-
-test_that("getItemsList only incidence_attrition", {
-  items <- c("incidence_attrition")
-  menuList <- getItemsList(items)
-  expect_equal(menuList, c("Incidence Attrition"))
-})
-
-test_that("getItemsList only prevalence_attrition", {
-  items <- c("prevalence_attrition")
-  menuList <- getItemsList(items)
-  expect_equal(menuList, c("Prevalence Attrition"))
-})
-
-test_that("getItemsList only incidence_estimate", {
-  items <- c("incidence_estimates")
-  menuList <- getItemsList(items)
-  expect_equal(length(menuList), 0)
-})
-
-test_that("getItemsList only prevalence", {
-  items <- c("prevalence_estimates")
-  menuList <- getItemsList(items)
-  expect_equal(length(menuList), 0)
+  expect_equal(menuList, c("Incidence", "Prevalence"))
 })
 
 test_that("getItemsList only summarise_characteristics", {
@@ -111,7 +75,7 @@ test_that("getItemsList treatmentPatterns", {
 
 test_that("getItemsList joining to apps", {
   itemsList <- list(objects = NULL)
-  itemsIP <- c("incidence_attrition", "prevalence_attrition", "incidence_estimates", "prevalence_estimates")
+  itemsIP <- c("incidence", "prevalence")
   itemsTP <- c("TreatmentPatterns")
   menuListIP <- getItemsList(itemsIP)
   menuListTP <- getItemsList(itemsTP)
@@ -128,49 +92,63 @@ test_that("getItemConfig for getting a function", {
   expression <- getItemConfig(input = input,
                                output = output,
                                inputValue = inputValue)
-  expect_equal(expression, "tableIncidence(incidence_estimates, type = \"gt\", .options = list())" )
+  expect_equal(expression, "tableIncidence" )
 
   # incidence plot
   inputValue <- "incidence_plot"
   expression <- getItemConfig(input = input,
                               output = output,
                               inputValue = inputValue)
-  expect_equal(expression, "plotIncidence(incidence_estimates)")
+  expect_equal(expression, "plotIncidence")
 
   # incidence
   inputValue <- "prevalence_table"
   expression <- getItemConfig(input = input,
                               output = output,
                               inputValue = inputValue)
-  expect_equal(expression, "tablePrevalence(prevalence, type = \"gt\", .options = list())")
+  expect_equal(expression, "tablePrevalence")
 
   # summarised_characteristics
   inputValue <- "summarised_characteristics"
   expression <- getItemConfig(input = input,
                               output = output,
                               inputValue = inputValue)
-  expect_equal(expression, c("tableCharacteristics(summarisedCharacteristics)"))
+  expect_equal(expression, c("tableCharacteristics"))
 
   # summarised_large_scale_characteristics
   inputValue <- "summarised_large_scale_characteristics"
   expression <- getItemConfig(input = input,
                               output = output,
                               inputValue = inputValue)
-  expect_equal(expression, c("tableCharacteristics(summarisedCharacteristics)"))
+  expect_equal(expression, c("tableLargeScaleCharacteristics"))
 
-  # single_event
-  inputValue <- "single_event"
+  # single_event table
+  inputValue <- "single_event - Table"
   expression <- getItemConfig(input = input,
                               output = output,
                               inputValue = inputValue)
-  expect_equal(expression, c("cohortSurvivalTable(survivalEstimate)"))
+  expect_equal(expression, c("tableSurvival"))
 
-  # single_event
-  inputValue <- "competing_risk"
+  # single_event table
+  inputValue <- "competing_risk - Table"
   expression <- getItemConfig(input = input,
                               output = output,
                               inputValue = inputValue)
-  expect_equal(expression, c("CohortSurvival::plotSurvival(survivalEstimate, facet, colour)"))
+  expect_equal(expression, c("tableSurvival"))
+
+  # single_event plot
+  inputValue <- "single_event - Plot"
+  expression <- getItemConfig(input = input,
+                              output = output,
+                              inputValue = inputValue)
+  expect_equal(expression, c("plotSurvival"))
+
+  # single_event plot
+  inputValue <- "competing_risk - Plot"
+  expression <- getItemConfig(input = input,
+                              output = output,
+                              inputValue = inputValue)
+  expect_equal(expression, c("plotSurvival"))
 
   # TreatmentPatterns
   # inputValue <- "TreatmentPatterns"
@@ -195,7 +173,7 @@ test_that("addPreviewItemType happy flow", {
                                previewItemType = "Facet by outcome")
 
   expect_equal(class(result), "character")
-  expect_equal(result, "tableIncidence(incidence, type = \"gt\", .options = list())")
+  expect_equal(result, c("tableIncidence", "plotIncidence"))
 
   # type might be empty, set default
   result <- addPreviewItemType(previewItemString = getItemConfig(input = "title",
@@ -204,7 +182,7 @@ test_that("addPreviewItemType happy flow", {
                                previewItemType = NULL)
 
   expect_equal(class(result), "character")
-  expect_equal(result, "tableIncidence(incidence, type = \"gt\", .options = list())")
+  expect_equal(result, c("tableIncidence", "plotIncidence"))
 })
 
 

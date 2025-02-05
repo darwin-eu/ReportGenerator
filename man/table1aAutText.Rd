@@ -4,7 +4,7 @@
 \alias{table1aAutText}
 \title{Generates automatic text paragraph for Table 1}
 \usage{
-table1aAutText(incidence_attrition, prevalence_attrition)
+table1aAutText(attrition_data)
 }
 \arguments{
 \item{incidence_attrition}{Data frame with incidence attrition data}

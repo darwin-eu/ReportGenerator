@@ -35,7 +35,8 @@ getItemsList <- function(items) {
       result <- rbind(result, i)
     }
   }
-  result <- unlist(result)
+  result <- unlist(result) %>%
+    unique()
   return(result)
 }
 

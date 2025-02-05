@@ -180,7 +180,7 @@ reportGenerator <- function(logger = NULL) {
       if (!is.null(uploadedData()$other_result)) {
         items <- c(items, names(uploadedData()$other_result))
       }
-      itemsList$objects[["items"]] <- getItemsList(items) %>% unique()
+      itemsList$objects[["items"]] <- getItemsList(items)
 
       if ("incidence" %in% items) {
         uploadedFiles$incidence <- uploadedData()$summarised_result %>%
