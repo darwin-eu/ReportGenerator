@@ -4,7 +4,7 @@ tabPanelSelection <- function(selection, uploadedFiles) {
   } else if (selection == "Prevalence") {
     tabPanel(selection, prevalenceUI(selection, uploadedFiles = uploadedFiles$prevalence, uploadedFilesAttrition = uploadedFiles$prevalence_attrition))
   } else if (selection == "Treatment Pathways") {
-    tabPanel(selection, patternsUI(selection, uploadedFiles = uploadedFiles$treatment_pathways))
+    tabPanel(selection, pathwaysUI(selection, uploadedFiles = uploadedFiles$treatment_pathways))
   } else if (selection == "Summarised Characteristics") {
     tabPanel(selection, characteristicsUI("characteristics", uploadedFiles$summarise_characteristics))
   } else if (selection == "Summarised Large Scale Characteristics") {

@@ -75,16 +75,7 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
 
       }
 
-      if (titleText == "Sunburst Plot - TreatmentPatterns") {
-        body_add_img(x = reportDocx,
-                     src = dataReportList[[i]][[1]][["fileImage"]],
-                     height = 5.5,
-                     width = 7)
-        body_add(reportDocx,
-                 value = titleText,
-                 style = "heading 1")
-
-      }  else if (titleText == "Sankey Diagram - TreatmentPatterns") {
+      if (titleText == "Sankey Diagram - TreatmentPatterns") {
         body_add_img(x = reportDocx,
                      src = dataReportList[[i]][[1]][["fileImage"]],
                      height = 3,

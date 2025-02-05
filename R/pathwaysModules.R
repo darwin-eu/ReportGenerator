@@ -13,7 +13,7 @@ pathwaysUI <- function(id, uploadedFiles) {
                          label = "CDM",
                          choices = cdm_name,
                          selected = cdm_name[1],
-                         multiple = FALSE)),
+                         multiple = TRUE)),
       column(4,
              pickerInput(inputId = ns("sex"),
                          label = "Sex",
@@ -39,7 +39,7 @@ pathwaysUI <- function(id, uploadedFiles) {
                   tabPanel("Sunburst", br(),
                            fluidRow(column(6, actionButton(ns("lockSunburst"), "Add plot to the report")),
                                     column(6, downloadButton(ns("downloadSunburst"), "Download Plot"))),
-                           uiOutput(ns("previewSunburst"))),
+                           plotOutput(ns("previewSunburst"))),
                   tabPanel("Sankey", br(),
                            fluidRow(column(6, actionButton(ns("lockSankey"), "Add diagram to the report")),
                                     column(6, downloadButton(ns("downloadSankey"), "Download Plot"))),
@@ -48,7 +48,7 @@ pathwaysUI <- function(id, uploadedFiles) {
   )
 }
 
-pathwaysModules <- function(id, uploadedFiles) {
+pathwaysServer <- function(id, uploadedFiles) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -63,10 +63,9 @@ pathwaysModules <- function(id, uploadedFiles) {
 
     # Sunburst
 
-    output$previewSunburst <- renderUI({
+    output$previewSunburst <- renderPlot({
       if (nrow(pathwaysData()) > 0) {
-        TreatmentPatterns::createSunburstPlot(pathwaysData(),
-                                              groupCombinations = FALSE)
+        sunburstPathways(pathwaysData())
       }
     })
 
@@ -117,29 +116,10 @@ pathwaysModules <- function(id, uploadedFiles) {
     addObject <- reactiveVal()
 
     observeEvent(input$lockSunburst, {
-      outputFile <- here::here("sunburstPlot.html")
-
-      treatmentPathways <- pathwaysData()
-      if (nrow(treatmentPathways) > 0) {
-        outputSunburst <- TreatmentPatterns::createSunburstPlot(
-          treatmentPathways = treatmentPathways,
-          groupCombinations = TRUE,
-        )
-        htmlwidgets::saveWidget(outputSunburst, outputFile)
-        sunburstPNG <- tempfile(pattern = "sunburstPlot", fileext = ".png")
-        webshot2::webshot(
-          url = outputFile,
-          file = sunburstPNG,
-          vwidth = 1200,
-          vheight = 1200)
-        sunburstPNG <- normalizePath(sunburstPNG)
         addObject(
-          list(`Sunburst Plot - TreatmentPatterns` = list(treatmentPathways = treatmentPathways,
-                                                          groupCombinations = TRUE,
-                                                          fileImage = sunburstPNG))
+          list(`Sunburst Plot - TreatmentPatterns` = list(pathwaysData = pathwaysData()))
         )
-      }
-    })
+      })
 
     observeEvent(input$lockSankey, {
       outputFile <- here::here("sankeyDiagram.html")

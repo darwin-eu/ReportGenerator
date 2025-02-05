@@ -38,8 +38,11 @@ plotPrevalence:
   object: "prevalence_plot"
   type:
     - prevalence
-TreatmentPatterns:
+sunburstPathways:
   title: "Treatment Pathways"
+  function: "sunburstPathways"
+  object:
+    Sunburst Plot - TreatmentPatterns
   type:
     - TreatmentPatterns
 summarise_characteristics:
