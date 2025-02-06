@@ -433,7 +433,7 @@ reportGenerator <- function(logger = NULL) {
     output$dataReportMenu <- renderDT({
       dataReportFrame <- objectsListPreview()
       if (inherits(dataReportFrame, "data.frame")) {
-        DT::datatable(dataReportFrame, options = list(dom = 't'))
+        DT::datatable(dataReportFrame, options = list(pageLength = 100, dom = 't'))
       }
     })
 
