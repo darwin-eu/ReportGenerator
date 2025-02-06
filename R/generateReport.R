@@ -20,9 +20,10 @@
 #' @param dataReportList the list of items to be added
 #' @param fileName the name of the report file
 #' @param logger logger object
+#' @param reportApp If TRUE, it will pull the menuConfig yaml file from the reportApp folder.
 #'
 #' @return NULL, the report is written to given file
-generateReport <- function(reportDocx, dataReportList, fileName, logger) {
+generateReport <- function(reportDocx, dataReportList, fileName, logger, reportApp = FALSE) {
   errorMessage <- checkmate::makeAssertCollection()
   checkmate::assertClass(reportDocx, "rdocx", add = errorMessage)
   checkmate::assertList(dataReportList, add = errorMessage)
@@ -49,7 +50,10 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger) {
                  style = "heading 1")
       } else {
 
-        expression <- getItemConfig(input = "object", output = "function", inputValue = titleText)
+        expression <- getItemConfig(input = "object",
+                                    output = "function",
+                                    inputValue = titleText,
+                                    reportApp = reportApp)
 
         # Save function as an object
         arguments <- dataReportList[[i]][[titleText]]

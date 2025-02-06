@@ -48,11 +48,13 @@ getItemsList <- function(items) {
 #' @param input Declare the type of value such as "title" to look up in the yml file.
 #' @param output Expected value from the yml file such as the "function" to evaluate.
 #' @param inputValue The actual value in character to look up.
+#' @param reportApp If TRUE, it will pull the menuConfig yaml file from the reportApp folder.
 #'
 #' @return a dataframe with the properties of the items
 getItemConfig <- function(input = NULL,
                           output = NULL,
-                          inputValue = NULL) {
+                          inputValue = NULL,
+                          reportApp = FALSE) {
 
   checkmate::assertSetEqual(length(input), 1)
   checkmate::assertSetEqual(length(output), 1)
@@ -61,7 +63,11 @@ getItemConfig <- function(input = NULL,
   checkmate::assertCharacter(output)
   checkmate::assertCharacter(inputValue)
 
-  menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
+  if (!reportApp) {
+    menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
+  } else {
+    menuData <- yaml.load_file(here::here("config", "menuConfig.yaml"))
+  }
   functionText <- lapply(menuData, function(menuData, type) {
     if (any(inputValue %in% menuData[[input]])) {
       menuData[[output]]

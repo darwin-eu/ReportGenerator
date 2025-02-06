@@ -67,7 +67,7 @@ reportGenerator <- function(logger = NULL) {
           tags$br(),
           tags$br(),
           downloadButton("createReportApp", "Download Shiny App", class = "dlReportBtn"),
-          checkboxInput("enableReporting", "Add reporting option", value = FALSE)
+          checkboxInput("enableReporting", "Add reporting option", value = TRUE)
         )
         # ,
         # verbatimTextOutput("checkFileUploadedOut")
@@ -458,7 +458,8 @@ reportGenerator <- function(logger = NULL) {
         generateReport(reportDocx,
                        reportItems,
                        file,
-                       logger)
+                       logger,
+                       reportApp = FALSE)
         shinyjs::enable("generateReport")
         shinycssloaders::hidePageSpinner()
       }
