@@ -35,7 +35,8 @@ getItemsList <- function(items) {
       result <- rbind(result, i)
     }
   }
-  result <- unlist(result)
+  result <- unlist(result) %>%
+    unique()
   return(result)
 }
 
@@ -47,11 +48,13 @@ getItemsList <- function(items) {
 #' @param input Declare the type of value such as "title" to look up in the yml file.
 #' @param output Expected value from the yml file such as the "function" to evaluate.
 #' @param inputValue The actual value in character to look up.
+#' @param reportApp If TRUE, it will pull the menuConfig yaml file from the reportApp folder.
 #'
 #' @return a dataframe with the properties of the items
 getItemConfig <- function(input = NULL,
                           output = NULL,
-                          inputValue = NULL) {
+                          inputValue = NULL,
+                          reportApp = FALSE) {
 
   checkmate::assertSetEqual(length(input), 1)
   checkmate::assertSetEqual(length(output), 1)
@@ -60,12 +63,16 @@ getItemConfig <- function(input = NULL,
   checkmate::assertCharacter(output)
   checkmate::assertCharacter(inputValue)
 
-  menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
-  functionText <- lapply(menuData, function(menuData, title) {
-    if (menuData[[input]] == inputValue) {
+  if (!reportApp) {
+    menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
+  } else {
+    menuData <- yaml.load_file(here::here("config", "menuConfig.yaml"))
+  }
+  functionText <- lapply(menuData, function(menuData, type) {
+    if (any(inputValue %in% menuData[[input]])) {
       menuData[[output]]
     }
-  }, title = title)
+  }, type = type)
   result <- list()
   for (i in functionText) {
     if (!is.null(i)) {
@@ -73,6 +80,9 @@ getItemConfig <- function(input = NULL,
     }
   }
   result <- unlist(result)
+  if (is.null(result)) {
+    cli::cli_alert_danger("No item found in the menuConfig.yaml file.")
+  }
   return(result)
 }
 
@@ -351,4 +361,55 @@ getSummarisedData <- function(uploadedData, type_result = "summarise_characteris
     dplyr::filter(result_id %in% result_ids)
 
   return(summarised_result)
+}
+
+sunburstPathways <- function(pathwaysData) {
+
+  df_all <- pathwaysData %>% mutate(freq = as.numeric(freq))
+
+  df_split <- df_all %>%
+    separate(path, into = c("level1", "level2"), sep = "/", fill = "right", extra = "merge") %>%
+    mutate(level2 = if_else(is.na(level2), level1, level2))
+
+  ring_inner <- df_split %>%
+    group_by(cdm_name, level1) %>%
+    summarise(freq = sum(freq), .groups = "drop") %>%
+    mutate(level1 = forcats::fct_inorder(level1)) %>%
+    arrange(cdm_name, level1) %>%
+    group_by(cdm_name) %>%
+    mutate(prop = freq / sum(freq),
+           start = lag(cumsum(prop), default = 0),
+           stop  = cumsum(prop)) %>%
+    ungroup()
+
+  ring_outer <- df_split %>%
+    group_by(cdm_name, level1, level2) %>%
+    summarise(freq = sum(freq), .groups = "drop") %>%
+    group_by(cdm_name, level1) %>%
+    mutate(prop_within     = freq / sum(freq),
+           cum_within      = cumsum(prop_within),
+           cum_within_prev = lag(cum_within, default = 0)) %>%
+    ungroup() %>%
+    left_join(ring_inner %>% select(cdm_name, level1, start, stop),
+              by = c("cdm_name", "level1")) %>%
+    mutate(outer_start = start + cum_within_prev * (stop - start),
+           outer_stop  = start + cum_within * (stop - start))
+
+  ggplot2::ggplot() +
+    ggplot2::geom_rect(data = ring_outer,
+                       ggplot2::aes(xmin = outer_start, xmax = outer_stop,
+                  ymin = 1, ymax = 20, fill = level2),
+              color = "white") +
+    ggplot2::geom_rect(data = ring_inner,
+                       ggplot2::aes(xmin = start, xmax = stop,
+                  ymin = -20, ymax = 0, fill = level1),
+              color = "white") +
+    ggplot2::coord_polar(theta = "x") +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(axis.text  = ggplot2::element_blank(),
+          panel.grid = ggplot2::element_blank(),
+          legend.position = "right") +
+    ggplot2::ylim(-40, 30) +
+    ggplot2::labs(fill = "Category") +
+    ggplot2::facet_wrap(~ cdm_name, ncol = 2)
 }

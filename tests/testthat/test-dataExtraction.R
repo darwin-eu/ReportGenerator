@@ -193,7 +193,6 @@ test_that("processCSV() in a loop", {
 
 test_that("Loading multiple csv files whole study", {
   fileDataPath <- list.files(testthat::test_path("studies", "summarised_csv"), pattern = "csv", full.names = TRUE)
-  # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ipci2\\ipci2\\suicide_characterization_results.csv"
   uploadedFiles <- joinDatabases(fileDataPath = fileDataPath)
   expect_equal(length(uploadedFiles), 2)
   expect_type(uploadedFiles, "list")

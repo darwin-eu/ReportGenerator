@@ -4,54 +4,94 @@ cohort_attrition_table:
   type:
     - cohortAttrition
   options: NULL
-table1IncAtt:
+tableIncidenceAttrition:
   title: "Incidence Attrition"
-  function: table1Att(incidence_attrition, attritionDataType)
-  type:
-    - incidence_attrition
-  options: NULL
-table1PrevAtt:
+  function: "tableIncidenceAttrition"
+  object:
+    - Incidence Attrition - Table
+tablePrevalenceAttrition:
   title: "Prevalence Attrition"
-  function: table1Att(prevalence_attrition, attritionDataType)
-  type:
-    - prevalence_attrition
-  options: NULL
+  function: "tablePrevalenceAttrition"
+  object:
+    - Prevalence Attrition - Table
 tableIncidence:
   title: "Incidence"
-  function: tableIncidence(incidence, type = "gt", .options = list())
+  function: "tableIncidence"
+  object: "incidence_table"
   type:
     - incidence
-  options: NULL
+plotIncidence:
+  title: "Incidence"
+  function: "plotIncidence"
+  object: "incidence_plot"
+  type:
+    - incidence
 tablePrevalence:
   title: "Prevalence"
-  function: tablePrevalence(prevalence, type = "gt", .options = list())
+  function: "tablePrevalence"
+  object: "prevalence_table"
   type:
     - prevalence
-  options: NULL
-TreatmentPatterns:
+plotPrevalence:
+  title: "Prevalence"
+  function: "plotPrevalence"
+  object: "prevalence_plot"
+  type:
+    - prevalence
+sunburstPathways:
   title: "Treatment Pathways"
+  function: "sunburstPathways"
+  object:
+    Sunburst Plot - TreatmentPatterns
   type:
     - TreatmentPatterns
 summarise_characteristics:
   title: "Summarised Characteristics"
-  function: tableCharacteristics(summarisedCharacteristics)
-  type:
+  function: "tableCharacteristics"
+  object:
+    - Summarised Characteristics - Table
+    - summarised_characteristics
     - summarise_characteristics
+  type:
+    - Summarised Characteristics - Table
+    - summarised_characteristics
     - summarise_characteristics
 summarise_large_scale_characteristics:
   title: "Summarised Large Scale Characteristics"
-  function: tableCharacteristics(summarisedCharacteristics)
-  type:
+  function: "tableLargeScaleCharacteristics"
+  object:
+    - Summarised Large Scale Characteristics - Table
     - summarised_large_scale_characteristics
     - summarise_large_scale_characteristics
-survival_table:
+  type:
+    - Summarised Large Scale Characteristics - Table
+    - summarised_large_scale_characteristics
+    - summarise_large_scale_characteristics
+tableSurvivalSingle:
   title: "Survival - Single Event"
-  function: cohortSurvivalTable(survivalEstimate)
+  function: "tableSurvival"
+  object:
+    - single_event - Table
   type:
     - single_event
-survival_plot:
+plotSurvivalSingle:
+  title: "Survival - Single Event"
+  function: "plotSurvival"
+  object:
+    - single_event - Plot
+  type:
+    - single_event
+tableSurvivalCompeting:
   title: "Survival - Competing Risk"
-  function: CohortSurvival::plotSurvival(survivalEstimate, facet, colour)
+  function: "tableSurvival"
+  object:
+    - competing_risk - Table
   type:
     - competing_risk
-  options: Facet by database, colour by strata_name
+plotSurvivalCompeting:
+  title: "Survival - Competing Risk"
+  function: "plotSurvival"
+  object:
+    - competing_risk - Plot
+  type:
+    - competing_risk

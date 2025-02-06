@@ -20,10 +20,10 @@
 #'
 #' @param logger optional logger object
 #'
-#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml TreatmentPatterns PatientProfiles
+#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml TreatmentPatterns PatientProfiles ggplot2
 #' @importFrom sortable bucket_list add_rank_list sortable_options
 #' @importFrom utils read.csv tail unzip
-#' @importFrom ggplot2 ggsave
+#' @importFrom ggplot2 ggsave aes geom_bar theme_minimal theme axis.text.x element_text
 #' @importFrom gto body_add_gt
 #' @importFrom here here
 #' @importFrom TreatmentPatterns createSankeyDiagram
@@ -33,6 +33,7 @@
 #' @importFrom ParallelLogger addDefaultConsoleLogger
 #' @importFrom cli cli_progress_step
 #' @importFrom glue glue
+#' @importFrom forcats fct_inorder
 #' @export
 reportGenerator <- function(logger = NULL) {
 
@@ -66,7 +67,7 @@ reportGenerator <- function(logger = NULL) {
           tags$br(),
           tags$br(),
           downloadButton("createReportApp", "Download Shiny App", class = "dlReportBtn"),
-          checkboxInput("enableReporting", "Add reporting option", value = FALSE)
+          checkboxInput("enableReporting", "Add reporting option", value = TRUE)
         )
         # ,
         # verbatimTextOutput("checkFileUploadedOut")
@@ -107,6 +108,10 @@ reportGenerator <- function(logger = NULL) {
                           ),
                           div(id = "reportOutput")
                    )
+                 ),
+                 fluidRow(
+                   h2("Monitor"),
+                   verbatimTextOutput("monitorReportItems")
                  )
         )
       )
@@ -178,21 +183,17 @@ reportGenerator <- function(logger = NULL) {
       }
       itemsList$objects[["items"]] <- getItemsList(items)
 
-      if ("incidence_attrition" %in% items) {
-        uploadedFiles$incidence_attrition <- uploadedData()$summarised_result %>%
-          visOmopResults::filterSettings(result_type == "incidence_attrition")
-      }
-      if ("prevalence_attrition" %in% items) {
-        uploadedFiles$prevalence_attrition <- uploadedData()$summarised_result %>%
-          visOmopResults::filterSettings(result_type == "prevalence_attrition")
-      }
       if ("incidence" %in% items) {
         uploadedFiles$incidence <- uploadedData()$summarised_result %>%
           visOmopResults::filterSettings(result_type == "incidence")
+        uploadedFiles$incidence_attrition <- uploadedData()$summarised_result %>%
+          visOmopResults::filterSettings(result_type == "incidence_attrition")
       }
       if ("prevalence" %in% items) {
         uploadedFiles$prevalence <- uploadedData()$summarised_result %>%
           visOmopResults::filterSettings(result_type == "prevalence")
+        uploadedFiles$prevalence_attrition <- uploadedData()$summarised_result %>%
+          visOmopResults::filterSettings(result_type == "prevalence_attrition")
       }
       if ("summarise_characteristics" %in% items) {
         uploadedFiles$summarise_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
@@ -296,22 +297,27 @@ reportGenerator <- function(logger = NULL) {
 
     # Attrition table
 
-    attritionServer(id = "Incidence Attrition",
-                    uploadedFiles = reactive(uploadedFiles$incidence_attrition))
+    incidenceAttritionTable <- attritionServer(id = "Incidence Attrition",
+                                               uploadedFiles = reactive(uploadedFiles$incidence_attrition))
 
-    attritionServer(id = "Prevalence Attrition",
-                    uploadedFiles = reactive(uploadedFiles$prevalence_attrition))
+    observe({
+      for (key in names(incidenceAttritionTable())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- incidenceAttritionTable()
+      }
+    }) %>%
+      bindEvent(incidenceAttritionTable())
 
-    # attritionTable <- attritionServer(id = "Incidence Attrition",
-    #                                   uploadedFiles = reactive(uploadedFiles$incidence_attrition))
-    #
-    # observe({
-    #   for (key in names(attritionTable())) {
-    #     randomId <- getRandomId()
-    #     dataReport[["objects"]][[randomId]] <- attritionTable()
-    #   }
-    # }) %>%
-    #   bindEvent(attritionTable())
+    prevalenceAttritionTable <- attritionServer(id = "Prevalence Attrition",
+                                                uploadedFiles = reactive(uploadedFiles$prevalence_attrition))
+
+    observe({
+      for (key in names(prevalenceAttritionTable())) {
+        randomId <- getRandomId()
+        dataReport[["objects"]][[randomId]] <- prevalenceAttritionTable()
+      }
+    }) %>%
+      bindEvent(prevalenceAttritionTable())
 
     # Incidence Modules
 
@@ -351,8 +357,8 @@ reportGenerator <- function(logger = NULL) {
     }) %>%
       bindEvent(dataCharacteristics())
 
-    dataLSC <- characteristicsServer(id = "lsc",
-                                     reactive(uploadedFiles$summarise_large_scale_characteristics))
+    dataLSC <- largeScaleServer(id = "lsc",
+                                reactive(uploadedFiles$summarise_large_scale_characteristics))
 
     observe({
       for (key in names(dataLSC())) {
@@ -386,7 +392,7 @@ reportGenerator <- function(logger = NULL) {
 
     # Treatment Patterns Interactive Plots
 
-    dataPatterns <- patternsServer("Treatment Pathways",
+    dataPatterns <- pathwaysServer("Treatment Pathways",
                                    reactive(uploadedFiles$treatment_pathways))
 
     observe({
@@ -419,6 +425,11 @@ reportGenerator <- function(logger = NULL) {
       }
     })
 
+    output$monitorReportItems <- renderPrint({
+      reportItems <- rev(reactiveValuesToList(do.call(reactiveValues, dataReport$objects)))
+      reportItems
+    })
+
     output$dataReportMenu <- renderDT({
       dataReportFrame <- objectsListPreview()
       if (inherits(dataReportFrame, "data.frame")) {
@@ -447,7 +458,8 @@ reportGenerator <- function(logger = NULL) {
         generateReport(reportDocx,
                        reportItems,
                        file,
-                       logger)
+                       logger,
+                       reportApp = FALSE)
         shinyjs::enable("generateReport")
         shinycssloaders::hidePageSpinner()
       }
@@ -518,6 +530,7 @@ reportGenerator <- function(logger = NULL) {
           targetPath <- tempdir()
           file.copy(packagePath, targetPath, recursive = TRUE)
           reportAppPath <- file.path(targetPath, "reportApp")
+
           # Copy config file
           cli::cli_alert("Copying config file")
           reportAppConfigPath <- file.path(reportAppPath, "config")
@@ -525,6 +538,7 @@ reportGenerator <- function(logger = NULL) {
           menuConfigFile <- "menuConfig.yaml"
           menuConfig <- system.file("config", menuConfigFile, package = "ReportGenerator")
           file.copy(menuConfig, file.path(reportAppConfigPath, menuConfigFile))
+
           # Copy modules file
           cli::cli_alert("Copying modules file")
           reportAppModulesPath <- file.path(reportAppPath, "modules")
@@ -551,6 +565,7 @@ reportGenerator <- function(logger = NULL) {
           } else {
             file.remove(file.path(reportAppPath, "ui_total.R"))
           }
+
           # Create results dir
           cli::cli_alert("Creating results directory")
           targetPathResults <- file.path(reportAppPath, "results")
