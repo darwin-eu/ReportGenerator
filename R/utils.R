@@ -365,13 +365,13 @@ getSummarisedData <- function(uploadedData, type_result = "summarise_characteris
 
 sunburstPathways <- function(pathwaysData) {
 
-  df_all <- pathwaysData %>% mutate(freq = as.numeric(freq))
+  data_all <- pathwaysData %>% mutate(freq = as.numeric(freq))
 
-  df_split <- df_all %>%
+  data_split <- data_all %>%
     separate(path, into = c("level1", "level2"), sep = "/", fill = "right", extra = "merge") %>%
     mutate(level2 = if_else(is.na(level2), level1, level2))
 
-  ring_inner <- df_split %>%
+  ring_inner <- data_split %>%
     group_by(cdm_name, level1) %>%
     summarise(freq = sum(freq), .groups = "drop") %>%
     mutate(level1 = forcats::fct_inorder(level1)) %>%
@@ -379,21 +379,21 @@ sunburstPathways <- function(pathwaysData) {
     group_by(cdm_name) %>%
     mutate(prop = freq / sum(freq),
            start = lag(cumsum(prop), default = 0),
-           stop  = cumsum(prop)) %>%
+           stop = cumsum(prop)) %>%
     ungroup()
 
-  ring_outer <- df_split %>%
+  ring_outer <- data_split %>%
     group_by(cdm_name, level1, level2) %>%
     summarise(freq = sum(freq), .groups = "drop") %>%
     group_by(cdm_name, level1) %>%
-    mutate(prop_within     = freq / sum(freq),
-           cum_within      = cumsum(prop_within),
+    mutate(prop_within = freq / sum(freq),
+           cum_within = cumsum(prop_within),
            cum_within_prev = lag(cum_within, default = 0)) %>%
     ungroup() %>%
     left_join(ring_inner %>% select(cdm_name, level1, start, stop),
               by = c("cdm_name", "level1")) %>%
     mutate(outer_start = start + cum_within_prev * (stop - start),
-           outer_stop  = start + cum_within * (stop - start))
+           outer_stop = start + cum_within * (stop - start))
 
   ggplot2::ggplot() +
     ggplot2::geom_rect(data = ring_outer,
