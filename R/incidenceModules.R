@@ -220,31 +220,28 @@ incidenceServer <- function(id, uploadedFiles) {
       req(uploadedFiles())
       # summarised_result <- summarised_result()
 
-      uploadedFiles() %>% dplyr::filter(cdm_name %in% "CHUBX",
-                                        group_level %in% "denominator_cohort_3 &&& cohort_1",
-                                        strata_level %in% "overall",
-                                        variable_level %in% NA
-      ) %>%
-        visOmopResults::filterSettings(denominator_target_cohort_name %in% "None",
-                                       denominator_sex %in% "Both",
-                                       denominator_age_group %in% "0 to 64",
-                                       denominator_time_at_risk %in% "0 to Inf"
-                                       # ,
-                                       # analysis_type %in% input$analysis_type
-        )
-
-      # uploadedFiles() %>% dplyr::filter(cdm_name %in% input$cdm_name,
-      #                                   group_level %in% input$group_level,
-      #                                   strata_level %in% input$strata_level,
-      #                                   variable_level %in% input$variable_level
-      #                                   ) %>%
-      #   visOmopResults::filterSettings(denominator_target_cohort_name %in% input$denominator_target_cohort_name,
-      #                                  denominator_sex %in% input$denominator_sex,
-      #                                  denominator_age_group %in% input$denominator_age_group,
-      #                                  denominator_time_at_risk %in% input$denominator_time_at_risk
+      # uploadedFiles() %>% dplyr::filter(cdm_name %in% "CHUBX",
+      #                                   group_level %in% "denominator_cohort_3 &&& cohort_1",
+      #                                   strata_level %in% "overall",
+      #                                   variable_level %in% NA
+      # ) %>%
+      #   visOmopResults::filterSettings(denominator_target_cohort_name %in% "None",
+      #                                  denominator_sex %in% "Both",
+      #                                  denominator_age_group %in% "0 to 64",
+      #                                  denominator_time_at_risk %in% "0 to Inf"
       #                                  # ,
       #                                  # analysis_type %in% input$analysis_type
-      #                                  )
+      #   )
+
+      uploadedFiles() %>% dplyr::filter(cdm_name %in% input$cdm_name,
+                                        group_level %in% input$group_level,
+                                        strata_level %in% input$strata_level,
+                                        variable_level %in% NA) %>%
+        visOmopResults::filterSettings(denominator_target_cohort_name %in% input$denominator_target_cohort_name,
+                                       denominator_sex %in% input$denominator_sex,
+                                       denominator_age_group %in% input$denominator_age_group,
+                                       denominator_time_at_risk %in% input$denominator_time_at_risk,
+                                       analysis_type %in% NA)
 
     })
 
