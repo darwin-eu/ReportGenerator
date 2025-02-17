@@ -105,7 +105,7 @@ prevalenceUI <- function(id, uploadedFiles, uploadedFilesAttrition) {
                                                                           selected = c("cdm_name"),
                                                                           multiple = TRUE)),
                                                        column(4,
-                                                              pickerInput(inputId = ns("settingsColumns"),
+                                                              pickerInput(inputId = ns("settingsColumn"),
                                                                           label = "Settings Columns",
                                                                           choices = colnames(settings(uploadedFiles)),
                                                                           selected = c("denominator_target_cohort_name"),
@@ -228,7 +228,7 @@ prevalenceServer <- function(id, uploadedFiles) {
       IncidencePrevalence::tablePrevalence(result = final_summarised_result(),
                                           header = input$header,
                                           groupColumn = input$groupColumn,
-                                          settingsColumns = input$settingsColumns)
+                                          settingsColumn = input$settingsColumn)
     })
 
     output$summarisedTableGt <- gt::render_gt({
@@ -283,7 +283,7 @@ prevalenceServer <- function(id, uploadedFiles) {
                                      type = "gt",
                                      header = input$header,
                                      groupColumn = input$groupColumn,
-                                     settingsColumns = input$settingsColumns)))
+                                     settingsColumn = input$settingsColumn)))
     })
 
     observeEvent(input$prevalence_plot, {

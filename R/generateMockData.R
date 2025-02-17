@@ -145,10 +145,10 @@ getIncidencePrevalenceMock <- function(sampleSize) {
 
   sampleSize <- 1000
 
-  cdm <- IncidencePrevalence::mockIncidencePrevalenceRef(sampleSize = sampleSize,
-                                                         outPre = 0.3,
-                                                         minOutcomeDays = 365,
-                                                         maxOutcomeDays = 3650)
+  cdm <- IncidencePrevalence::mockIncidencePrevalence(sampleSize = sampleSize,
+                                                      outPre = 0.3,
+                                                      minOutcomeDays = 365,
+                                                      maxOutcomeDays = 3650)
 
   # Denominator data
   cdm <- IncidencePrevalence::generateDenominatorCohortSet(
@@ -170,8 +170,7 @@ getIncidencePrevalenceMock <- function(sampleSize) {
     interval = "years",
     repeatedEvents = TRUE,
     outcomeWashout = 180,
-    completeDatabaseIntervals = TRUE,
-    minCellCount = 5
+    completeDatabaseIntervals = TRUE
   )
 
   # incidence_attrition <- IncidencePrevalence::attrition(incidence_estimates)
@@ -189,8 +188,7 @@ getIncidencePrevalenceMock <- function(sampleSize) {
     outcomeTable = "outcome",
     interval = "years",
     completeDatabaseIntervals = TRUE,
-    fullContribution = TRUE,
-    minCellCount = 5
+    fullContribution = TRUE
   )
 
   # # Attrition data
@@ -204,8 +202,7 @@ getIncidencePrevalenceMock <- function(sampleSize) {
     denominatorTable = "denominator",
     outcomeTable = "outcome",
     interval = "years",
-    timePoint = "start",
-    minCellCount = 5
+    timePoint = "start"
   )
   # # Attrition data
   # prevalence_point_attrition <- prevalencePoint |>

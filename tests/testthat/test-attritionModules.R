@@ -15,7 +15,7 @@ test_that("Prevalence Attrition", {
                            type = "gt",
                            header = "variable_name",
                            groupColumn = c("cdm_name", "variable_level"),
-                           settingsColumns = NULL,
+                           settingsColumn = NULL,
                            hide = "estimate_name"))
 
 })
