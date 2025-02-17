@@ -37,7 +37,7 @@ attritionUI <- function(id, uploadedFiles) {
                          selected = c("group_level"),
                          multiple = TRUE)),
       column(4,
-             pickerInput(inputId = ns("settingsColumns"),
+             pickerInput(inputId = ns("settingsColumn"),
                          label = "Settings Columns",
                          choices = colnames(settings(uploadedFiles)),
                          selected = c("result_type"),
@@ -72,7 +72,7 @@ attritionServer <- function(id, uploadedFiles) {
           type = "gt",
           header = input$header,
           groupColumn = input$groupColumn,
-          settingsColumns = input$settingsColumns,
+          settingsColumn = input$settingsColumn,
           hide = "estimate_name"
         )
       })
@@ -83,7 +83,7 @@ attritionServer <- function(id, uploadedFiles) {
                                                     type = "gt",
                                                     header = input$header,
                                                     groupColumn = input$groupColumn,
-                                                    settingsColumns = input$settingsColumns,
+                                                    settingsColumn = input$settingsColumn,
                                                     hide = "estimate_name"))
         )
       })
@@ -96,7 +96,7 @@ attritionServer <- function(id, uploadedFiles) {
           type = "gt",
           header = NULL, # input$header,
           groupColumn = NULL, # input$groupColumn,
-          settingsColumns = NULL, # input$settingsColumns,
+          settingsColumn = NULL, # input$settingsColumn,
           hide = "estimate_name"
         )
       })
@@ -107,7 +107,7 @@ attritionServer <- function(id, uploadedFiles) {
                                                      type = "gt",
                                                      header = NULL, # input$header,
                                                      groupColumn = NULL, # input$groupColumn,
-                                                     settingsColumns = NULL, # input$settingsColumns,
+                                                     settingsColumn = NULL, # input$settingsColumn,
                                                      hide = "estimate_name"))
         )
       })
