@@ -16,80 +16,7 @@ incidenceUI <- function(id, uploadedFiles, uploadedFilesAttrition) {
     tabsetPanel(type = "tabs",
                 tabPanel("Estimates",
                          tags$br(),
-                         fluidRow(
-                           column(4,
-                                  pickerInput(inputId = ns("cdm_name"),
-                                              label = "CDM Name",
-                                              choices = unique(uploadedFiles$cdm_name),
-                                              selected = unique(uploadedFiles$cdm_name),
-                                              multiple = TRUE,
-                                              list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                           ),
-                           column(4,
-                                  pickerInput(inputId = ns("group_level"),
-                                              label = "Group Level",
-                                              choices = unique(uploadedFiles$group_level),
-                                              selected = unique(uploadedFiles$group_level),
-                                              multiple = TRUE,
-                                              list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                                  ),
-                           column(4,
-                                  pickerInput(inputId = ns("strata_level"),
-                                              label = "Strata Level",
-                                              choices = unique(uploadedFiles$strata_level),
-                                              selected = unique(uploadedFiles$strata_level)[1],
-                                              multiple = TRUE,
-                                              list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                                  ),
-                           column(4,
-                                  pickerInput(inputId = ns("variable_level"),
-                                              label = "Variable Level",
-                                              choices = unique(uploadedFiles$variable_level),
-                                              selected = unique(uploadedFiles$variable_level)[1],
-                                              multiple = TRUE,
-                                              list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                                ),
-                           column(4,
-                                  pickerInput(inputId = ns("denominator_target_cohort_name"),
-                                              label = "Denominator target cohort name",
-                                              choices = unique(settings(uploadedFiles)$denominator_target_cohort_name),
-                                              selected = unique(settings(uploadedFiles)$denominator_target_cohort_name)[1],
-                                              multiple = TRUE,
-                                              list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                                  ),
-                           column(4,
-                                  pickerInput(inputId = ns("denominator_sex"),
-                                              label = "Sex",
-                                              choices = unique(settings(uploadedFiles)$denominator_sex),
-                                              selected = unique(settings(uploadedFiles)$denominator_sex)[1],
-                                              multiple = TRUE,
-                                              list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                                  ),
-                           column(4,
-                                  pickerInput(inputId = ns("denominator_age_group"),
-                                              label = "Age Group",
-                                              choices = unique(settings(uploadedFiles)$denominator_age_group),
-                                              selected = unique(settings(uploadedFiles)$denominator_age_group)[1],
-                                              multiple = TRUE,
-                                              list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                                  ),
-                           column(4,
-                                  pickerInput(inputId = ns("denominator_time_at_risk"),
-                                              label = "Denominator Time at Risk",
-                                              choices = unique(settings(uploadedFiles)$denominator_time_at_risk),
-                                              selected = unique(settings(uploadedFiles)$denominator_time_at_risk),
-                                              multiple = TRUE,
-                                              list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                           ),
-                           column(4,
-                                  pickerInput(inputId = ns("analysis_type"),
-                                              label = "Analysis Type",
-                                              choices = unique(settings(uploadedFiles)$analysis_type),
-                                              selected = unique(settings(uploadedFiles)$analysis_type[3]),
-                                              multiple = FALSE,
-                                              list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                                  )
-                           ),
+                         mainFiltersIncPrevUI(id = id, uploadedFiles),
                          tags$br(),
                          tabsetPanel(type = "tabs",
                                      tabPanel("Table",
@@ -193,6 +120,87 @@ incidenceUI <- function(id, uploadedFiles, uploadedFilesAttrition) {
                          attritionUI("Incidence Attrition", uploadedFiles = uploadedFilesAttrition)
                 ))
 )
+}
+
+mainFiltersIncPrevUI <- function(id, uploadedFiles) {
+  ns <- NS(id)
+
+  tagList(
+    fluidRow(
+      column(4,
+             pickerInput(inputId = ns("cdm_name"),
+                         label = "CDM Name",
+                         choices = unique(uploadedFiles$cdm_name),
+                         selected = unique(uploadedFiles$cdm_name),
+                         multiple = TRUE,
+                         list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      ),
+      column(4,
+             pickerInput(inputId = ns("group_level"),
+                         label = "Group Level",
+                         choices = unique(uploadedFiles$group_level),
+                         selected = unique(uploadedFiles$group_level),
+                         multiple = TRUE,
+                         list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      ),
+      column(4,
+             pickerInput(inputId = ns("strata_level"),
+                         label = "Strata Level",
+                         choices = unique(uploadedFiles$strata_level),
+                         selected = unique(uploadedFiles$strata_level)[1],
+                         multiple = TRUE,
+                         list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      ),
+      column(4,
+             pickerInput(inputId = ns("variable_level"),
+                         label = "Variable Level",
+                         choices = unique(uploadedFiles$variable_level),
+                         selected = unique(uploadedFiles$variable_level)[1],
+                         multiple = TRUE,
+                         list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      ),
+      column(4,
+             pickerInput(inputId = ns("denominator_target_cohort_name"),
+                         label = "Denominator target cohort name",
+                         choices = unique(settings(uploadedFiles)$denominator_target_cohort_name),
+                         selected = unique(settings(uploadedFiles)$denominator_target_cohort_name)[1],
+                         multiple = TRUE,
+                         list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      ),
+      column(4,
+             pickerInput(inputId = ns("denominator_sex"),
+                         label = "Sex",
+                         choices = unique(settings(uploadedFiles)$denominator_sex),
+                         selected = unique(settings(uploadedFiles)$denominator_sex)[1],
+                         multiple = TRUE,
+                         list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      ),
+      column(4,
+             pickerInput(inputId = ns("denominator_age_group"),
+                         label = "Age Group",
+                         choices = unique(settings(uploadedFiles)$denominator_age_group),
+                         selected = unique(settings(uploadedFiles)$denominator_age_group)[1],
+                         multiple = TRUE,
+                         list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      ),
+      column(4,
+             pickerInput(inputId = ns("denominator_time_at_risk"),
+                         label = "Denominator Time at Risk",
+                         choices = unique(settings(uploadedFiles)$denominator_time_at_risk),
+                         selected = unique(settings(uploadedFiles)$denominator_time_at_risk),
+                         multiple = TRUE,
+                         list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      ),
+      column(4,
+             pickerInput(inputId = ns("analysis_type"),
+                         label = "Analysis Type",
+                         choices = unique(settings(uploadedFiles)$analysis_type),
+                         selected = unique(settings(uploadedFiles)$analysis_type[3]),
+                         multiple = FALSE,
+                         list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+      )
+    ),
+  )
 }
 
 incidenceServer <- function(id, uploadedFiles) {
