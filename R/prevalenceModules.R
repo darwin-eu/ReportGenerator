@@ -4,90 +4,19 @@ prevalenceUI <- function(id, uploadedFiles, uploadedFilesAttrition) {
   # Pull prevalence values from uploadedFiles estimate column
   # Round without decimal points
 
-  prevalenceMax <- uploadedFiles %>%
-    filter(estimate_name == "prevalence_95CI_upper") %>%
-    pull(estimate_value) %>%
-    ifelse(is.na(.), 0, .) %>%
-    as.numeric() %>%
-    max() %>%
-    round()
+  # prevalenceMax <- uploadedFiles %>%
+  #   filter(estimate_name == "prevalence_95CI_upper") %>%
+  #   pull(estimate_value) %>%
+  #   ifelse(is.na(.), 0, .) %>%
+  #   as.numeric() %>%
+  #   max() %>%
+  #   round()
 
   tagList(
     tabsetPanel(type = "tabs",
                 tabPanel("Estimates",
                          tags$br(),
-                         fluidRow(
-                         # column(4,
-                         #        pickerInput(inputId = ns("group_level"),
-                         #                    label = "Group Level",
-                         #                    choices = unique(uploadedFiles$group_level),
-                         #                    selected = unique(uploadedFiles$group_level)[1],
-                         #                    multiple = TRUE,
-                         #                    list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                         #        ),
-                         column(4,
-                                pickerInput(inputId = ns("analysis_type"),
-                                            label = "Analysis Type",
-                                            choices = unique(settings(uploadedFiles)$analysis_type),
-                                            selected = unique(settings(uploadedFiles)$analysis_type)[1],
-                                            multiple = FALSE,
-                                            list(`actions-box` = TRUE,
-                                                 size = 10,
-                                                 `selected-text-format` = "count > 3"))
-                         ),
-                         column(4,
-                                pickerInput(inputId = ns("strata_level"),
-                                            label = "Strata Level",
-                                            choices = unique(uploadedFiles$strata_level),
-                                            selected = unique(uploadedFiles$strata_level)[1],
-                                            multiple = TRUE,
-                                            list(`actions-box` = TRUE,
-                                                 size = 10,
-                                                 `selected-text-format` = "count > 3"))
-                         ),
-                         column(4,
-                                pickerInput(inputId = ns("variable_level"),
-                                            label = "Variable Level",
-                                            choices = unique(uploadedFiles$variable_level),
-                                            selected = unique(uploadedFiles$variable_level)[1],
-                                            multiple = TRUE,
-                                            list(`actions-box` = TRUE,
-                                                 size = 10,
-                                                 `selected-text-format` = "count > 3"))
-                         ),
-                         column(4,
-                                pickerInput(inputId = ns("denominator_target_cohort_name"),
-                                            label = "Denominator target cohort name",
-                                            choices = unique(settings(uploadedFiles)$denominator_target_cohort_name),
-                                            selected = unique(settings(uploadedFiles)$denominator_target_cohort_name)[1],
-                                            multiple = TRUE,
-                                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                         ),
-                         column(4,
-                                pickerInput(inputId = ns("cdm_name"),
-                                            label = "CDM Name",
-                                            choices = unique(uploadedFiles$cdm_name),
-                                            selected = unique(uploadedFiles$cdm_name)[1],
-                                            multiple = TRUE,
-                                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                         ),
-                         column(4,
-                                pickerInput(inputId = ns("denominator_sex"),
-                                            label = "Sex",
-                                            choices = unique(settings(uploadedFiles)$denominator_sex),
-                                            selected = unique(settings(uploadedFiles)$denominator_sex),
-                                            multiple = TRUE,
-                                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                         ),
-                         column(4,
-                                pickerInput(inputId = ns("denominator_age_group"),
-                                            label = "Age Group",
-                                            choices = unique(settings(uploadedFiles)$denominator_age_group),
-                                            selected = unique(settings(uploadedFiles)$denominator_age_group),
-                                            multiple = TRUE,
-                                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-                         )
-                         ),
+                         mainFiltersIncPrevUI(id = id, uploadedFiles),
                          tags$br(),
                          tabsetPanel(type = "tabs",
                                      tabPanel("Table",
@@ -138,14 +67,14 @@ prevalenceUI <- function(id, uploadedFiles, uploadedFilesAttrition) {
                                                                           # choices = colnames(settings(uploadedFiles)),
                                                                           selected = "denominator_age_group",
                                                                           multiple = TRUE)),
-                                                       column(3,
-                                                              sliderInput(inputId = ns("y_limit"),
-                                                                          label = "Y limit",
-                                                                          min = 0,
-                                                                          max = prevalenceMax,
-                                                                          value = prevalenceMax,
-                                                                          step = 0.01)
-                                                       ),
+                                                       # column(3,
+                                                       #        sliderInput(inputId = ns("y_limit"),
+                                                       #                    label = "Y limit",
+                                                       #                    min = 0,
+                                                       #                    max = prevalenceMax,
+                                                       #                    value = prevalenceMax,
+                                                       #                    step = 0.01)
+                                                       # ),
                                                        column(3,
                                                               checkboxInput(inputId = ns("ribbon"),
                                                                             label = "Ribbon",
@@ -214,7 +143,8 @@ prevalenceServer <- function(id, uploadedFiles) {
       req(summarised_result())
       summarised_result <- summarised_result()
 
-      summarised_result %>% dplyr::filter(variable_level %in% input$variable_level,
+      summarised_result %>% dplyr::filter(
+        # variable_level %in% input$variable_level,
                                           strata_level %in% input$strata_level,
                                           cdm_name %in% input$cdm_name) %>%
         visOmopResults::filterSettings(denominator_target_cohort_name %in% input$denominator_target_cohort_name,
@@ -237,13 +167,25 @@ prevalenceServer <- function(id, uploadedFiles) {
     })
 
     summarisedPrevalence_plot <- reactive({
-      IncidencePrevalence::plotPrevalence(result = final_summarised_result(),
-                                         x = "prevalence_start_date",
-                                         ylim = c(0, input$y_limit),
-                                         ribbon = input$ribbon,
-                                         facet = input$facet,
-                                         colour = input$colour,
-                                         colour_name = NULL)
+      IncidencePrevalence::plotPrevalence(  result = final_summarised_result(),
+                                            x = "prevalence_start_date",
+                                            y = "prevalence",
+                                            line = FALSE,
+                                            point = TRUE,
+                                            ribbon = FALSE,
+                                            ymin = "prevalence_95CI_lower",
+                                            ymax = "prevalence_95CI_upper",
+                                            facet = NULL,
+                                            colour = NULL)
+
+
+      # IncidencePrevalence::plotPrevalence(result = final_summarised_result(),
+      #                                    x = "prevalence_start_date",
+      #                                    ylim = c(0, input$y_limit),
+      #                                    ribbon = input$ribbon,
+      #                                    facet = input$facet,
+      #                                    colour = input$colour,
+      #                                    colour_name = NULL)
     })
 
     output$summarisedPrevalencePlot <- renderPlot({
