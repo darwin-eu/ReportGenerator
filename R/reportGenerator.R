@@ -132,13 +132,13 @@ reportGenerator <- function(logger = NULL) {
 
     # ReactiveValues for data and items menu
     uploaded_files <- reactiveValues(attrition = NULL,
-                                    incidence = NULL,
-                                    prevalence = NULL,
-                                    summarise_characteristics = NULL,
-                                    summarise_large_scale_characteristics = NULL,
-                                    single_event = NULL,
-                                    competing_risk = NULL,
-                                    treatment_pathways = NULL)
+                                     incidence = NULL,
+                                     prevalence = NULL,
+                                     summarise_characteristics = NULL,
+                                     summarise_large_scale_characteristics = NULL,
+                                     single_event = NULL,
+                                     competing_risk = NULL,
+                                     treatment_pathways = NULL)
     itemsList <- reactiveValues(objects = NULL)
     uploadedData <- reactiveVal(NULL)
     settingsData <- reactiveVal(NULL)
@@ -392,8 +392,7 @@ reportGenerator <- function(logger = NULL) {
 
     # Treatment Patterns Interactive Plots
 
-    dataPatterns <- pathwaysServer("Treatment Pathways",
-                                   reactive(uploaded_files$treatment_pathways))
+    dataPatterns <- pathwaysServer("Treatment Pathways", reactive(uploaded_files$treatment_pathways))
 
     observe({
       for (key in names(dataPatterns())) {
