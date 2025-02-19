@@ -1,9 +1,9 @@
 test_that("Incidence module works", {
   testServer(reportGenerator(), {
-    uploadedFiles <- testData$IncidencePrevalence$incidence_estimates
-    uploadedFilesAttrition <- testData$IncidencePrevalence$incidence_estimates %>%
+    uploaded_files <- testData$IncidencePrevalence$incidence_estimates
+    uploaded_files_attrition <- testData$IncidencePrevalence$incidence_estimates %>%
       visOmopResults::filterSettings(result_type == "incidence_attrition")
     selection <- "Incidence"
-    expect_s3_class(incidenceUI(selection, uploadedFiles, uploadedFilesAttrition), "shiny.tag.list")
+    expect_s3_class(incidencePrevalenceUI(selection, uploaded_files, uploaded_files_attrition), "shiny.tag.list")
   })
 })

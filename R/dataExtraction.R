@@ -547,34 +547,34 @@ dataCleanAttrition <- function(attrition) {
 #'   checkmate::assertDirectoryExists(testFilesTP)
 #'   checkmate::assertDirectoryExists(testFilesPP)
 #'   checkmate::assertDirectoryExists(testFilesCS)
-#'   uploadedFilesIP <- list.files(testFilesIP,
+#'   uploaded_filesIP <- list.files(testFilesIP,
 #'                                 pattern = ".zip",
 #'                                 full.names = TRUE,
 #'                                 recursive = TRUE)
 #'   treatmentPathways_test <- read_csv(file.path(testFilesTP, "treatmentPathways.csv"),
 #'                                      show_col_types = FALSE)
-#'   uploadedFilesPP <- list.files(testFilesPP,
+#'   uploaded_filesPP <- list.files(testFilesPP,
 #'                                 pattern = ".zip",
 #'                                 full.names = TRUE,
 #'                                 recursive = TRUE)
-#'   uploadedFilesCS <- list.files(testFilesCS,
+#'   uploaded_filesCS <- list.files(testFilesCS,
 #'                                 pattern = ".zip",
 #'                                 full.names = TRUE,
 #'                                 recursive = TRUE)
-#'   checkmate::assertFileExists(uploadedFilesIP)
-#'   checkmate::assertFileExists(uploadedFilesPP[1])
-#'   checkmate::assertFileExists(uploadedFilesCS[1])
+#'   checkmate::assertFileExists(uploaded_filesIP)
+#'   checkmate::assertFileExists(uploaded_filesPP[1])
+#'   checkmate::assertFileExists(uploaded_filesCS[1])
 #'   checkmate::assertTibble(treatmentPathways_test)
 #'   outputDir <- file.path(tempdir(), "dataLocation")
 #'   dir.create(outputDir)
 #'
 #'   # Extract
-#'   testData <- joinDatabases(fileDataPath  = uploadedFilesIP,
+#'   testData <- joinDatabases(fileDataPath  = uploaded_filesIP,
 #'                            outputDir = outputDir)$IncidencePrevalence
 #'   testData[["treatmentPathways_test"]] <- treatmentPathways_test
-#'   testDataPP <- joinDatabases(fileDataPath  = uploadedFilesPP,
+#'   testDataPP <- joinDatabases(fileDataPath  = uploaded_filesPP,
 #'                              outputDir = outputDir)$PatientProfiles
-#'   testDataCS <- joinDatabases(fileDataPath  = uploadedFilesCS,
+#'   testDataCS <- joinDatabases(fileDataPath  = uploaded_filesCS,
 #'                              outputDir = outputDir)$CohortSurvival
 #'
 #'   testData <- c(testData, testDataPP, testDataCS)

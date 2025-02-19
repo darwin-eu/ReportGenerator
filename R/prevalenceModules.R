@@ -1,236 +1,94 @@
-prevalenceUI <- function(id, uploadedFiles, uploadedFilesAttrition) {
-  ns <- NS(id)
-
-  # Pull prevalence values from uploadedFiles estimate column
-  # Round without decimal points
-
-  # prevalenceMax <- uploadedFiles %>%
-  #   filter(estimate_name == "prevalence_95CI_upper") %>%
-  #   pull(estimate_value) %>%
-  #   ifelse(is.na(.), 0, .) %>%
-  #   as.numeric() %>%
-  #   max() %>%
-  #   round()
-
-  tagList(
-    tabsetPanel(type = "tabs",
-                tabPanel("Estimates",
-                         tags$br(),
-                         mainFiltersIncPrevUI(id = id, uploadedFiles),
-                         tags$br(),
-                         tabsetPanel(type = "tabs",
-                                     tabPanel("Table",
-                                              tags$br(),
-                                              fluidRow(column(4,
-                                                              pickerInput(inputId = ns("header"),
-                                                                          label = "Header",
-                                                                          choices = names(uploadedFiles),
-                                                                          selected = c("estimate_name"),
-                                                                          multiple = TRUE)),
-                                                       column(4,
-                                                              pickerInput(inputId = ns("groupColumn"),
-                                                                          label = "Group Column",
-                                                                          choices = names(uploadedFiles),
-                                                                          selected = c("cdm_name"),
-                                                                          multiple = TRUE)),
-                                                       column(4,
-                                                              pickerInput(inputId = ns("settingsColumn"),
-                                                                          label = "Settings Columns",
-                                                                          choices = colnames(settings(uploadedFiles)),
-                                                                          selected = c("denominator_target_cohort_name"),
-                                                                          multiple = TRUE))
-                                              ),
-                                              fluidRow(createAddItemToReportUI(ns("prevalence_table")),
-                                                       column(4, downloadButton(ns("downloadPrevalenceTable"), "Download Table"))),
-                                              fluidRow(column(12, gt::gt_output(ns("summarisedTableGt"))))
-                                     ),
-                                     tabPanel("Plot",
-                                              tags$br(),
-                                              fluidRow(column(3,
-                                                              pickerInput(inputId = ns("facet"),
-                                                                          label = "Facet",
-                                                                          choices = c("cdm_name",
-                                                                                      "denominator_sex",
-                                                                                      "denominator_age_group",
-                                                                                      "variable_level"),
-                                                                          # choices = names(uploadedFiles),
-                                                                          selected = c("cdm_name", "denominator_sex"),
-                                                                          multiple = TRUE)),
-                                                       column(3,
-                                                              pickerInput(inputId = ns("colour"),
-                                                                          label = "Colour",
-                                                                          choices = c("cdm_name",
-                                                                                      "denominator_sex",
-                                                                                      "denominator_age_group",
-                                                                                      "strata_level",
-                                                                                      "variable_level"),
-                                                                          # choices = colnames(settings(uploadedFiles)),
-                                                                          selected = "denominator_age_group",
-                                                                          multiple = TRUE)),
-                                                       # column(3,
-                                                       #        sliderInput(inputId = ns("y_limit"),
-                                                       #                    label = "Y limit",
-                                                       #                    min = 0,
-                                                       #                    max = prevalenceMax,
-                                                       #                    value = prevalenceMax,
-                                                       #                    step = 0.01)
-                                                       # ),
-                                                       column(3,
-                                                              checkboxInput(inputId = ns("ribbon"),
-                                                                            label = "Ribbon",
-                                                                            value = FALSE,
-                                                                            width = NULL)
-                                                       ),
-                                              ),
-                                              fluidRow(createAddItemToReportUI(ns("prevalence_plot"))),
-                                              fluidRow(createDownloadPlotUI(ns)),
-                                              fluidRow(column(12, shinycssloaders::withSpinner(plotOutput(ns("summarisedPrevalencePlot"))))),
-                                     tabPanel("Data",
-                                              fluidRow(column(12, shinycssloaders::withSpinner(DT::dataTableOutput(ns("summarisedTable"))))))
-                                     # fluidRow(column(12, verbatimTextOutput(ns("summarised_text")))))
-
-                         ))
-
-                ),
-                tabPanel("Attrition",
-                         tags$br(),
-                         attritionUI("Prevalence Attrition", uploadedFiles = uploadedFilesAttrition)
-
-  )
-)
-)
-}
-
-prevalenceServer <- function(id, uploadedFiles) {
+prevalenceServer <- function(id, uploaded_files) {
 
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    summarised_result <- reactive({
-      req(input$analysis_type)
-      uploadedFiles <- uploadedFiles()
-      uploadedFiles %>%
-        visOmopResults::filterSettings(analysis_type == input$analysis_type)
+    # Common Data
+    summarised_result_data <- reactive({
+      req(uploaded_files())
+      uploaded_files() %>% dplyr::filter(# variable_level %in% NA,
+        cdm_name %in% input$cdm_name,
+        group_level %in% input$group_level,
+        strata_level %in% input$strata_level) %>%
+        visOmopResults::filterSettings(# analysis_type %in% input$analysis_type,
+          denominator_target_cohort_name %in% input$denominator_target_cohort_name,
+          denominator_sex %in% input$denominator_sex,
+          denominator_age_group %in% input$denominator_age_group,
+          denominator_time_at_risk %in% input$denominator_time_at_risk)
     })
 
-    observe({
-      req(summarised_result())
-      # updatePickerInput(session,
-      #                   "strata_level",
-      #                   choices = unique(summarised_result()$strata_level),
-      #                   selected = unique(summarised_result()$strata_level)[1])
-      # updatePickerInput(session,
-      #                   "variable_level",
-      #                   choices = unique(summarised_result()$variable_level),
-      #                   selected = unique(summarised_result()$variable_level)[1])
-      # updatePickerInput(session,
-      #                   "denominator_target_cohort_name",
-      #                   choices = unique(summarised_result()$denominator_target_cohort_name),
-      #                   selected = unique(summarised_result()$denominator_target_cohort_name)[1])
-      # updatePickerInput(session,
-      #                   "denominator_age_group",
-      #                   choices = unique(summarised_result()$denominator_age_group),
-      #                   selected = unique(summarised_result()$denominator_age_group)[1])
-      # updatePickerInput(session,
-      #                   "denominator_age_group",
-      #                   choices = unique(summarised_result()$denominator_sex),
-      #                   selected = unique(summarised_result()$denominator_sex)[1])
-
-
+    summarised_gt_table <- reactive({
+      req(summarised_result_data())
+      IncidencePrevalence::tablePrevalence(result = summarised_result_data(),
+                                           header = input$header,
+                                           groupColumn = input$groupColumn,
+                                           settingsColumn = input$settingsColumn,
+                                           hide = input$hide,
+                                           .options = list())
     })
 
-    final_summarised_result <- reactive({
-      req(summarised_result())
-      summarised_result <- summarised_result()
-
-      summarised_result %>% dplyr::filter(
-        # variable_level %in% input$variable_level,
-                                          strata_level %in% input$strata_level,
-                                          cdm_name %in% input$cdm_name) %>%
-        visOmopResults::filterSettings(denominator_target_cohort_name %in% input$denominator_target_cohort_name,
-                                       denominator_sex %in% input$denominator_sex,
-                                       denominator_age_group %in% input$denominator_age_group)
-
+    output$summarisedTable <- gt::render_gt({
+      req(summarised_gt_table())
+      summarised_gt_table()
     })
 
-    summarisedPrevalence_gt_table <- reactive({
-      req(final_summarised_result())
-      IncidencePrevalence::tablePrevalence(result = final_summarised_result(),
-                                          header = input$header,
-                                          groupColumn = input$groupColumn,
-                                          settingsColumn = input$settingsColumn)
+    summarised_plot <- reactive({
+      req(summarised_result_data())
+      IncidencePrevalence::plotPrevalence(result = summarised_result_data(),
+                                          x = "prevalence_start_date",
+                                          y = "prevalence",
+                                          line = input$line,
+                                          point = input$point,
+                                          ribbon = input$ribbon,
+                                          ymin = "prevalence_95CI_lower",
+                                          ymax = "prevalence_95CI_upper",
+                                          facet = input$facet,
+                                          colour = input$colour)
     })
 
-    output$summarisedTableGt <- gt::render_gt({
-      req(summarisedPrevalence_gt_table())
-      summarisedPrevalence_gt_table()
+    output$summarisedPlot <- renderPlot({
+      summarised_plot()
     })
 
-    summarisedPrevalence_plot <- reactive({
-      IncidencePrevalence::plotPrevalence(  result = final_summarised_result(),
-                                            x = "prevalence_start_date",
-                                            y = "prevalence",
-                                            line = FALSE,
-                                            point = TRUE,
-                                            ribbon = FALSE,
-                                            ymin = "prevalence_95CI_lower",
-                                            ymax = "prevalence_95CI_upper",
-                                            facet = NULL,
-                                            colour = NULL)
-
-
-      # IncidencePrevalence::plotPrevalence(result = final_summarised_result(),
-      #                                    x = "prevalence_start_date",
-      #                                    ylim = c(0, input$y_limit),
-      #                                    ribbon = input$ribbon,
-      #                                    facet = input$facet,
-      #                                    colour = input$colour,
-      #                                    colour_name = NULL)
+    output$dataTable <- DT::renderDataTable(server = FALSE, {
+      createDataTable(summarised_result_data())
     })
 
-    output$summarisedPrevalencePlot <- renderPlot({
-      summarisedPrevalence_plot()
-    })
-
-    output$summarisedTable <- DT::renderDataTable(server = FALSE, {
-      createDataTable(summarised_result())
-    })
-
-    output$downloadFigure <- downloadHandler(
+    output$downloadPlot <- downloadHandler(
       filename = function() {
-        paste(id, ".png", sep = "")
+        paste(id, "-plot.png", sep = "")
       },
       content = function(file) {
         saveGGPlot(file = file,
-                   plot = summarisedPrevalence_plot(),
+                   plot = summarised_plot(),
                    height = as.numeric(input$plotHeight),
                    width = as.numeric(input$plotWidth),
                    dpi = as.numeric(input$plotDpi))
       }
     )
 
-    output$downloadPrevalenceTable <- downloadHandler(
+    output$downloadTable <- downloadHandler(
       filename = function() {
-        paste("prevalenceTable", ".docx", sep = "")
+        paste(id, "-table.docx", sep = "")
       },
       content = function(file) {
-        gt::gtsave(summarisedPrevalence_gt_table(), file)
+        gt::gtsave(summarised_gt_table(), file)
       }
     )
 
     addObject <- reactiveVal()
-    observeEvent(input$prevalence_table, {
+    observeEvent(input$summarised_table, {
       addObject(
-        list(prevalence_table = list(result = final_summarised_result(),
+        list(prevalence_table = list(result = summarised_result_data(),
                                      type = "gt",
                                      header = input$header,
                                      groupColumn = input$groupColumn,
                                      settingsColumn = input$settingsColumn)))
     })
 
-    observeEvent(input$prevalence_plot, {
+    observeEvent(input$summarised_plot, {
       addObject(
-        list(prevalence_plot = list(result = final_summarised_result(),
+        list(prevalence_plot = list(result = summarised_result_data(),
                                     ylim = c(0, input$y_limit),
                                     facet = input$facet,
                                     colour = input$colour,
