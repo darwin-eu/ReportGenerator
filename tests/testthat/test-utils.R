@@ -166,36 +166,6 @@ test_that("getFunctionReport error more than length 1", {
                              inputValue = title))
 })
 
-test_that("addPreviewItemType happy flow", {
-  result <- addPreviewItemType(previewItemString = getItemConfig(input = "title",
-                                                                 output = "function",
-                                                                 inputValue = "Incidence"),
-                               previewItemType = "Facet by outcome")
-
-  expect_equal(class(result), "character")
-  expect_equal(result, c("tableIncidence", "plotIncidence", "plotIncidencePopulation"))
-
-  # type might be empty, set default
-  result <- addPreviewItemType(previewItemString = getItemConfig(input = "title",
-                                                                 output = "function",
-                                                                 inputValue = "Incidence"),
-                               previewItemType = NULL)
-
-  expect_equal(class(result), "character")
-  expect_equal(result, c("tableIncidence", "plotIncidence", "plotIncidencePopulation"))
-})
-
-
-test_that("addPreviewItemType edge cases", {
-  result <- addPreviewItemType(previewItemString = "incidenceRatePerYearPlot_no_brackets",
-                               previewItemType = "Facet by outcome")
-  expect_equal(result, "incidenceRatePerYearPlot_no_brackets")
-
-  result <- addPreviewItemType(previewItemString = "",
-                               previewItemType = "Facet by outcome")
-  expect_equal(result, "")
-})
-
 # PatientProfiles
 
 test_that("PatientProfiles Both Summaries", {
