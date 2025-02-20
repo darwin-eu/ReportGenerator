@@ -298,15 +298,15 @@ createDownloadTableUI <- function(ns) {
                             shiny::br(), downloadButton(ns("downloadSurvivalTable"), "Download Plot"))))
 }
 
-createDownloadPlotUI <- function(ns) {
+createDownloadPlotUI <- function(ns, type = "download_plot") {
   tagList(column(2, div("height:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-                 div(style = "display: inline-block;margin-top:5px", textInput(ns("plotHeight"), "", 10, width = "50px"))),
+                 div(style = "display: inline-block;margin-top:5px", textInput(ns(paste0(type, "_height")), "", 10, width = "50px"))),
           column(2, div("width:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-                 div(style = "display: inline-block;margin-top:5px", textInput(ns("plotWidth"), "", 20, width = "50px"))),
+                 div(style = "display: inline-block;margin-top:5px", textInput(ns(paste0(type, "_width")), "", 20, width = "50px"))),
           column(2, div("dpi:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-                 div(style = "display: inline-block;margin-top:5px", textInput(ns("plotDpi"), "", 300, width = "50px"))),
+                 div(style = "display: inline-block;margin-top:5px", textInput(ns(paste0(type, "_dpi")), "", 300, width = "50px"))),
           column(2, tagList(shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
-                            shiny::br(), downloadButton(ns("downloadPlot"), "Download Plot"))))
+                            shiny::br(), downloadButton(ns(type), "Download Plot"))))
 }
 
 createDataTable <- function(data, tableName = "result") {

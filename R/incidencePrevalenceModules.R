@@ -17,6 +17,10 @@ incidencePrevalenceUI <- function(id, uploaded_files, uploaded_files_attrition) 
                                               tags$br(),
                                               # Filters exclusive for plotIncidence/Prevalence
                                               plotFiltersIncPrevUI(id, uploaded_files)),
+                                     tabPanel("Population",
+                                              tags$br(),
+                                              # Filters exclusive for plotIncidence/Prevalence
+                                              plotPopulationFiltersIncPrevUI(id, uploaded_files)),
                                      tabPanel("Tidy Data",
                                               # Raw Tidy Data
                                               fluidRow(column(12, shinycssloaders::withSpinner(DT::dataTableOutput(ns("dataTable"))))))
@@ -58,6 +62,7 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
 
     if (id == "Incidence") {
 
+      # TABLE
       summarised_gt_table <- reactive({
         req(summarised_result_data())
         IncidencePrevalence::tableIncidence(result = summarised_result_data(),
@@ -67,6 +72,7 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                             hide = input$hide)
       })
 
+      # PLOT
       summarised_plot <- reactive({
         IncidencePrevalence::plotIncidence(
           result = summarised_result_data(),
@@ -82,11 +88,24 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
         )
       })
 
+      # POPULATION PLOT
+      summarised_population_plot <- reactive({
+        IncidencePrevalence::plotIncidencePopulation(
+          result = summarised_result_data(),
+          x = input$x_axis,
+          y = input$y_axis,
+          facet = input$facet,
+          colour = input$colour
+        )
+      })
+
+      # TIDY DATA
       tidy_data <- reactive({
         req(summarised_result_data())
         IncidencePrevalence::asIncidenceResult(summarised_result_data())
       })
 
+      # Add table
       observeEvent(input$add_table, {
         addObject(
           list(incidence_table = list(result = summarised_result_data(),
@@ -98,6 +117,7 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                       .options = list())))
       })
 
+      # Add plot
       observeEvent(input$add_plot, {
         addObject(
           list(incidence_plot = list(result = summarised_result_data(),
@@ -110,6 +130,16 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                      ymax = "incidence_100000_pys_95CI_upper",
                                      facet = input$facet,
                                      colour = input$colour)))
+      })
+
+      # Add population plot
+      observeEvent(input$add_population_plot, {
+        addObject(
+          list(incidence_population_plot = list(result = summarised_result_data(),
+                                                x = input$x_axis,
+                                                y = input$y_axis,
+                                                facet = input$facet,
+                                                colour = input$colour)))
       })
 
     } else if (id == "Prevalence") {
@@ -180,20 +210,38 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
       summarised_plot()
     })
 
+    output$summarisedPopulationPlot <- renderPlot({
+      req(summarised_population_plot())
+      summarised_population_plot()
+    })
+
     output$dataTable <- DT::renderDataTable(server = FALSE, {
       createDataTable(tidy_data())
     })
 
-    output$downloadPlot <- downloadHandler(
+    output$download_plot <- downloadHandler(
       filename = function() {
         paste(id, "-Plot.png", sep = "")
       },
       content = function(file) {
         saveGGPlot(file = file,
-                   plot = summarised_incidence_plot(),
-                   height = as.numeric(input$plotHeight),
-                   width = as.numeric(input$plotWidth),
-                   dpi = as.numeric(input$plotDpi))
+                   plot = summarised_plot(),
+                   height = as.numeric(input$download_plot_height),
+                   width = as.numeric(input$download_plot_width),
+                   dpi = as.numeric(input$download_plot_dpi))
+      }
+    )
+
+    output$download_population_plot <- downloadHandler(
+      filename = function() {
+        paste(id, "-Population-Plot.png", sep = "")
+      },
+      content = function(file) {
+        saveGGPlot(file = file,
+                   plot = summarised_population_plot(),
+                   height = as.numeric(input$download_population_plot_height),
+                   width = as.numeric(input$download_population_plot_width),
+                   dpi = as.numeric(input$download_population_plot_dpi))
       }
     )
 

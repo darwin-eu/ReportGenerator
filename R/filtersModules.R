@@ -187,4 +187,56 @@ plotFiltersIncPrevUI <- function(id, uploaded_files) {
     fluidRow(column(12,
                     shinycssloaders::withSpinner(plotOutput(ns("summarisedPlot")))))
   )
-  }
+}
+
+plotPopulationFiltersIncPrevUI <- function(id, uploaded_files) {
+  ns <- NS(id)
+  tagList(
+    fluidRow(
+      column(4,
+             pickerInput(inputId = ns("x_axis"),
+                         label = "X Axis",
+                         choices = c("incidence_start_date",
+                                     "denominator_count"),
+                         selected = c("incidence_start_date"),
+                         multiple = FALSE)),
+      column(4,
+             pickerInput(inputId = ns("y_axis"),
+                         label = "Y Axis",
+                         choices = c("incidence_start_date",
+                                     "denominator_count"),
+                         selected = c("denominator_count"),
+                         multiple = FALSE)),
+      column(4,
+             pickerInput(inputId = ns("facet"),
+                         label = "Facet",
+                         choices = c("cdm_name",
+                                     "denominator_sex",
+                                     "denominator_age_group",
+                                     "strata_level",
+                                     "group",
+                                     "outcome_cohort_name"),
+                         selected = c("cdm_name"),
+                         multiple = TRUE)),
+      column(4,
+             pickerInput(inputId = ns("colour"),
+                         label = "Colour",
+                         choices = c("cdm_name",
+                                     "denominator_sex",
+                                     "denominator_age_group",
+                                     "strata",
+                                     "outcome_cohort_name"),
+                         selected = "outcome_cohort_name",
+                         multiple = TRUE))
+    ),
+    fluidRow(
+      column(3,
+             actionButton(ns("add_population_plot"), "Add plot to report"))
+    ),
+    fluidRow(
+      createDownloadPlotUI(ns, type = "download_population_plot")
+    ),
+    fluidRow(column(12,
+                    shinycssloaders::withSpinner(plotOutput(ns("summarisedPopulationPlot")))))
+  )
+}
