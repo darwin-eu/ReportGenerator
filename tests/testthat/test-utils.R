@@ -14,7 +14,7 @@ test_that("getIncidencePrevalence", {
                              pattern = "zip",
                              full.names = TRUE)
   uploadedData <- joinDatabases(fileDataPath)
-  survival_result <- getSummarisedData(uploadedData$summarised_result, type_result = 'survival')
+  survival_result <- getSummarisedData(uploadedData = uploadedData$summarised_result, type_result = 'survival')
   expect_equal(settings(survival_result)$analysis_type, c("competing_risk", "single_event"))
 })
 
