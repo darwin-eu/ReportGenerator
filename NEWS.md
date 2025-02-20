@@ -1,3 +1,7 @@
+# ReportGenerator 1.22.0
+
+* Updated to use the latest version of IncidencePrevalence (v1.0.0).
+
 # ReportGenerator 1.21.0
 
 * Bugs fixes.
