@@ -44,6 +44,12 @@ plotPrevalence:
   object: "prevalence_plot"
   type:
     - prevalence
+plotPrevalencePopulation:
+  title: "Prevalence"
+  function: "plotPrevalencePopulation"
+  object: "prevalence_population_plot"
+  type:
+    - prevalence
 sunburstPathways:
   title: "Treatment Pathways"
   function: "sunburstPathways"

@@ -191,19 +191,22 @@ plotFiltersIncPrevUI <- function(id, uploaded_files) {
 
 plotPopulationFiltersIncPrevUI <- function(id, uploaded_files) {
   ns <- NS(id)
+
+  inc_prev_label <- tolower(id)
+
   tagList(
     fluidRow(
       column(4,
              pickerInput(inputId = ns("x_axis"),
                          label = "X Axis",
-                         choices = c("incidence_start_date",
+                         choices = c(paste0(inc_prev_label, "_start_date"),
                                      "denominator_count"),
-                         selected = c("incidence_start_date"),
+                         selected = paste0(inc_prev_label, "_start_date"),
                          multiple = FALSE)),
       column(4,
              pickerInput(inputId = ns("y_axis"),
                          label = "Y Axis",
-                         choices = c("incidence_start_date",
+                         choices = c(paste0(inc_prev_label, "_start_date"),
                                      "denominator_count"),
                          selected = c("denominator_count"),
                          multiple = FALSE)),
