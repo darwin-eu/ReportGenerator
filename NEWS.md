@@ -1,6 +1,6 @@
 # ReportGenerator 1.22.0
 
-* Updated to use the latest version of IncidencePrevalence (v1.0.0).
+* Updated to use the latest version of IncidencePrevalence (v1.0.0), CohortCharacteristics (v0.4.0) and CohortSurvival (v0.6.2).
 
 # ReportGenerator 1.21.0
 
