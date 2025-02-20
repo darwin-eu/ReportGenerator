@@ -86,114 +86,6 @@ getItemConfig <- function(input = NULL,
   return(result)
 }
 
-#' Adds the given type to the current previewItem string.
-#'
-#' @param previewItemString string representing the previewItem
-#' @param previewItemType preview item type
-#'
-#' @return the updated preview item string
-addPreviewItemType <- function(previewItemString, previewItemType) {
-
-  result <- previewItemString
-  if (is.null(previewItemType)) {
-    previewItemType <- "Facet by outcome"
-  }
-  if (previewItemType == "Facet by outcome") {
-    facet <- "facet = 'outcome_cohort_name'"
-    colour <- "colour = 'cdm_name'"
-  } else if (previewItemType == "Facet by database, colour by strata_name"){
-    facet <- "facet = 'cdm_name'"
-    colour <- "colour = 'strata_name'"
-  } else if (previewItemType == "Facet by database"){
-    facet <- "facet = 'cdm_name'"
-    colour <- "colour = 'outcome_cohort_name'"
-  }
-  result <- gsub("colour", colour, previewItemString)
-  result <- gsub("facet", facet, result)
-  return(result)
-}
-
-#' Adds the given type to the current previewItem string, by sex
-#'
-#' @param previewItemString string representing the previewItem
-#' @param previewItemType preview item type
-#'
-#' @return the updated preview item string
-addPreviewItemTypeSex <- function(previewItemString, previewItemType) {
-
-  result <- previewItemString
-  if (is.null(previewItemType)) {
-    previewItemType <- "Facet by outcome"
-  }
-
-  if (previewItemType == "Facet by outcome") {
-    facet <- "facet = 'outcome_cohort_name'"
-    colour <- "colour = 'denominator_sex'"
-  } else if (previewItemType == "Facet by database"){
-    facet <- "facet = 'cdm_name'"
-    colour <- "colour = 'denominator_sex'"
-  }
-  result <- gsub("colour", colour, previewItemString)
-  result <- gsub("facet", facet, result)
-  return(result)
-}
-
-#' Adds the given type to the current previewItem string, by sex
-#'
-#' @param previewItemString string representing the previewItem
-#' @param previewItemType preview item type
-#'
-#' @return the updated preview item string
-addPreviewItemTypeAge <- function(previewItemString, previewItemType) {
-
-  result <- previewItemString
-  if (is.null(previewItemType)) {
-    previewItemType <- "Facet by outcome"
-  }
-  if (previewItemType == "Facet by outcome") {
-    facet <- "facet = 'outcome_cohort_name'"
-    colour <- "colour = 'denominator_age_group'"
-  } else if (previewItemType == "Facet by database"){
-    facet <- "facet = 'cdm_name'"
-    colour <- "colour = 'denominator_age_group'"
-  }
-  result <- gsub("colour", colour, previewItemString)
-  result <- gsub("facet", facet, result)
-  return(result)
-}
-
-#' Adds the given ribbon to the current previewItem string.
-#'
-#' @param previewItemString string representing the previewItem
-#' @param ribbon ribbon value
-#'
-#' @return the updated preview item string
-addPreviewItemRibbon <- function(previewItemString, ribbon) {
-  ribbonStr <- paste0("ribbon = ", ribbon)
-  return(gsub("ribbon", ribbonStr, previewItemString))
-}
-
-#' Adds plot options to the current previewItem string.
-#'
-#' @param previewItemString string representing the previewItem
-#' @param showCI if confidence interval should be shown
-#' @param stackPlots if subplots should be stacked (on top of each other) or not
-#'
-#' @return the updated preview item string
-addPlotOptions <- function(previewItemString, showCI, stackPlots) {
-  optionsStr <- "options = list("
-  showCI <- as.logical(showCI)
-  stackPlots <- as.logical(stackPlots)
-  if (!showCI) {
-    optionsStr <- paste0(optionsStr, "hideConfidenceInterval = TRUE")
-  }
-  if (stackPlots) {
-    optionsStr <- paste0(optionsStr, ifelse(!showCI, ",", ""), "facetNcols = 1")
-  }
-  optionsStr <- paste0(optionsStr, ")")
-  return(gsub("options", optionsStr, previewItemString))
-}
-
 exportResults <- function(resultList,
                           zipName,
                           outputFolder) {
@@ -298,15 +190,15 @@ createDownloadTableUI <- function(ns) {
                             shiny::br(), downloadButton(ns("downloadSurvivalTable"), "Download Plot"))))
 }
 
-createDownloadPlotUI <- function(ns) {
+createDownloadPlotUI <- function(ns, type = "download_plot") {
   tagList(column(2, div("height:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-                 div(style = "display: inline-block;margin-top:5px", textInput(ns("plotHeight"), "", 10, width = "50px"))),
+                 div(style = "display: inline-block;margin-top:5px", textInput(ns(paste0(type, "_height")), "", 10, width = "50px"))),
           column(2, div("width:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-                 div(style = "display: inline-block;margin-top:5px", textInput(ns("plotWidth"), "", 20, width = "50px"))),
+                 div(style = "display: inline-block;margin-top:5px", textInput(ns(paste0(type, "_width")), "", 20, width = "50px"))),
           column(2, div("dpi:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-                 div(style = "display: inline-block;margin-top:5px", textInput(ns("plotDpi"), "", 300, width = "50px"))),
+                 div(style = "display: inline-block;margin-top:5px", textInput(ns(paste0(type, "_dpi")), "", 300, width = "50px"))),
           column(2, tagList(shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
-                            shiny::br(), downloadButton(ns("downloadFigure"), "Download Plot"))))
+                            shiny::br(), downloadButton(ns(type), "Download Plot"))))
 }
 
 createDataTable <- function(data, tableName = "result") {
@@ -332,7 +224,7 @@ createDataTable <- function(data, tableName = "result") {
 }
 
 analysisNamesSum <- function(settingsData) {
-  # settingsData <- settings(uploadedFilesList)
+  # settingsData <- settings(uploaded_filesList)
   analysisNamesSum <- settingsData %>%
     pull(result_type) %>%
     unique()

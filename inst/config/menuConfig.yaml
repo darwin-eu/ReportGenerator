@@ -26,6 +26,12 @@ plotIncidence:
   object: "incidence_plot"
   type:
     - incidence
+plotIncidencePopulation:
+  title: "Incidence"
+  function: "plotIncidencePopulation"
+  object: "incidence_population_plot"
+  type:
+    - incidence
 tablePrevalence:
   title: "Prevalence"
   function: "tablePrevalence"
@@ -36,6 +42,12 @@ plotPrevalence:
   title: "Prevalence"
   function: "plotPrevalence"
   object: "prevalence_plot"
+  type:
+    - prevalence
+plotPrevalencePopulation:
+  title: "Prevalence"
+  function: "plotPrevalencePopulation"
+  object: "prevalence_population_plot"
   type:
     - prevalence
 sunburstPathways:

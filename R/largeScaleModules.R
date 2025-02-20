@@ -1,16 +1,16 @@
-largeScaleUI <- function(id, uploadedFiles) {
+largeScaleUI <- function(id, uploaded_files) {
   ns <- NS(id)
     lockName <- "lockLSC"
     captionText <- "Table 2. Baseline characteristics of new user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
-    settingsLSC <- settings(uploadedFiles)
+    settingsLSC <- settings(uploaded_files)
     result_id_table_name <- paste(settingsLSC$result_id, settingsLSC$table_name, sep = " - ")
     tagList(
       fluidRow(
         column(4,
                pickerInput(inputId = ns("cdm_name"),
                            label = "Database",
-                           choices = unique(uploadedFiles$cdm_name),
-                           selected = unique(uploadedFiles$cdm_name),
+                           choices = unique(uploaded_files$cdm_name),
+                           selected = unique(uploaded_files$cdm_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
@@ -24,32 +24,32 @@ largeScaleUI <- function(id, uploadedFiles) {
         column(4,
                pickerInput(inputId = ns("group_name"),
                            label = "Group Name",
-                           choices = unique(uploadedFiles$group_name),
-                           selected = unique(uploadedFiles$group_name),
+                           choices = unique(uploaded_files$group_name),
+                           selected = unique(uploaded_files$group_name),
                            multiple = FALSE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("group_level"),
                            label = "Group Level",
-                           choices = unique(uploadedFiles$group_level),
-                           selected = unique(uploadedFiles$group_level)[1],
+                           choices = unique(uploaded_files$group_level),
+                           selected = unique(uploaded_files$group_level)[1],
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("strata_name"),
                            label = "Strata Name",
-                           choices = unique(uploadedFiles$strata_name),
-                           selected = unique(uploadedFiles$strata_name),
+                           choices = unique(uploaded_files$strata_name),
+                           selected = unique(uploaded_files$strata_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("strata_level"),
                            label = "Strata Level",
-                           choices = unique(uploadedFiles$strata_level),
-                           selected = unique(uploadedFiles$strata_level),
+                           choices = unique(uploaded_files$strata_level),
+                           selected = unique(uploaded_files$strata_level),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
@@ -58,24 +58,24 @@ largeScaleUI <- function(id, uploadedFiles) {
         column(4,
                pickerInput(inputId = ns("variable_name"),
                            label = "Variable",
-                           choices = sort(unique(uploadedFiles$variable_name)),
-                           selected = unique(uploadedFiles$variable_name),
+                           choices = sort(unique(uploaded_files$variable_name)),
+                           selected = unique(uploaded_files$variable_name),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("variable_level"),
                            label = "Variable Level",
-                           choices = c("NA", sort(unique(uploadedFiles$variable_level))),
-                           selected = c("NA", unique(uploadedFiles$variable_level)),
+                           choices = c("NA", sort(unique(uploaded_files$variable_level))),
+                           selected = c("NA", unique(uploaded_files$variable_level)),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         ),
         column(4,
                pickerInput(inputId = ns("estimate_type"),
                            label = "Estimate Type",
-                           choices = sort(unique(uploadedFiles$estimate_type)),
-                           selected = sort(unique(uploadedFiles$estimate_type)),
+                           choices = sort(unique(uploaded_files$estimate_type)),
+                           selected = sort(unique(uploaded_files$estimate_type)),
                            multiple = TRUE,
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
@@ -105,7 +105,7 @@ largeScaleUI <- function(id, uploadedFiles) {
                                       column(6,
                                             pickerInput(inputId = ns("groupColumn"),
                                                         label = "Group Column",
-                                                        choices = names(uploadedFiles),
+                                                        choices = names(uploaded_files),
                                                         selected = c("variable_name"),
                                                         multiple = TRUE)
                                     )),
@@ -118,7 +118,7 @@ largeScaleUI <- function(id, uploadedFiles) {
     )
 }
 
-largeScaleServer <- function(id, uploadedFiles) {
+largeScaleServer <- function(id, uploaded_files) {
 
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
@@ -128,7 +128,7 @@ largeScaleServer <- function(id, uploadedFiles) {
       split_text <- strsplit(result_id_table_name, " - ")
       result_id_table <- do.call(rbind, split_text)
       result_id_table <- as.data.frame(result_id_table, stringsAsFactors = FALSE)
-      summarised_result <- uploadedFiles()
+      summarised_result <- uploaded_files()
       summarised_result %>%
         mutate(across(where(is.character), ~ ifelse(is.na(.), "NA", .))) %>%
         dplyr::filter(cdm_name %in% input$cdm_name,

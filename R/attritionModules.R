@@ -1,45 +1,45 @@
-attritionUI <- function(id, uploadedFiles) {
+attritionUI <- function(id, uploaded_files) {
   ns <- NS(id)
   tagList(
     fluidRow(
       column(4,
              pickerInput(inputId = ns("cdm_name"),
                          label = "Database",
-                         choices = unique(uploadedFiles$cdm_name),
+                         choices = unique(uploaded_files$cdm_name),
                          multiple = FALSE)
       ),
       column(4,
              pickerInput(inputId = ns("denominator_sex"),
                          label = "Sex",
-                         choices = unique(settings(uploadedFiles)$denominator_sex),
-                         selected = unique(settings(uploadedFiles)$denominator_sex),
+                         choices = unique(settings(uploaded_files)$denominator_sex),
+                         selected = unique(settings(uploaded_files)$denominator_sex),
                          multiple = FALSE,
                          list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
       ),
       column(4,
              pickerInput(inputId = ns("denominator_age_group"),
                          label = "Age Group",
-                         choices = unique(settings(uploadedFiles)$denominator_age_group),
-                         selected = unique(settings(uploadedFiles)$denominator_age_group),
+                         choices = unique(settings(uploaded_files)$denominator_age_group),
+                         selected = unique(settings(uploaded_files)$denominator_age_group),
                          multiple = FALSE,
                          list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
       ),
       column(4,
              pickerInput(inputId = ns("header"),
                          label = "Header",
-                         choices = names(uploadedFiles),
+                         choices = names(uploaded_files),
                          selected = c("cdm_name", "variable_name"),
                          multiple = TRUE)),
       column(4,
              pickerInput(inputId = ns("groupColumn"),
                          label = "Group Column",
-                         choices = names(uploadedFiles),
+                         choices = names(uploaded_files),
                          selected = c("group_level"),
                          multiple = TRUE)),
       column(4,
              pickerInput(inputId = ns("settingsColumn"),
                          label = "Settings Columns",
-                         choices = colnames(settings(uploadedFiles)),
+                         choices = colnames(settings(uploaded_files)),
                          selected = c("result_type"),
                          multiple = TRUE))
     ),
@@ -50,13 +50,13 @@ attritionUI <- function(id, uploadedFiles) {
 }
 
 
-attritionServer <- function(id, uploadedFiles) {
+attritionServer <- function(id, uploaded_files) {
 
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     summarised_result <- reactive({
-      uploadedFiles() %>%
+      uploaded_files() %>%
         dplyr::filter(cdm_name %in% input$cdm_name) %>%
         visOmopResults::filterSettings(denominator_sex %in% input$denominator_sex,
                                        denominator_age_group %in% input$denominator_age_group)

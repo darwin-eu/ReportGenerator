@@ -1,10 +1,10 @@
-patternsUI <- function(id, uploadedFiles) {
+patternsUI <- function(id, uploaded_files) {
   ns <- NS(id)
 
-  cdm_name <- unique(uploadedFiles$cdm_name)
-  sex <- unique(uploadedFiles$sex)
-  age <- unique(uploadedFiles$age)
-  indexYear <- unique(uploadedFiles$indexYear)
+  cdm_name <- unique(uploaded_files$cdm_name)
+  sex <- unique(uploaded_files$sex)
+  age <- unique(uploaded_files$age)
+  indexYear <- unique(uploaded_files$indexYear)
 
   tagList(
     fluidRow(
@@ -48,12 +48,12 @@ patternsUI <- function(id, uploadedFiles) {
     )
 }
 
-patternsServer <- function(id, uploadedFiles) {
+patternsServer <- function(id, uploaded_files) {
 
   moduleServer(id, function(input, output, session) {
 
     pathwaysData <- reactive({
-      treatmentPathways <- uploadedFiles()
+      treatmentPathways <- uploaded_files()
       treatmentPathways %>%
         dplyr::filter(cdm_name == input$cdm_name,
                sex == input$sex,

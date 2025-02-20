@@ -4,13 +4,13 @@ test_that("summarised Characteristics and LSC", {
     summarise_large_scale_characteristics_data <- testData$CohortCharacteristics$summarise_large_scale_characteristics
 
     expect_s3_class(characteristicsUI("characteristics",
-                                      uploadedFiles = summarise_characteristics_data), "shiny.tag.list")
+                                      uploaded_files = summarise_characteristics_data), "shiny.tag.list")
     expect_s3_class(characteristicsServer("characteristics",
-                                          uploadedFiles = summarise_large_scale_characteristics_data), "reactiveVal")
+                                          uploaded_files = summarise_large_scale_characteristics_data), "reactiveVal")
     expect_s3_class(characteristicsUI("lsc",
-                                      uploadedFiles = summarise_characteristics_data), "shiny.tag.list")
+                                      uploaded_files = summarise_characteristics_data), "shiny.tag.list")
     expect_s3_class(characteristicsServer("lsc",
-                                          uploadedFiles = summarise_large_scale_characteristics_data), "reactiveVal")
+                                          uploaded_files = summarise_large_scale_characteristics_data), "reactiveVal")
   })
 })
 
@@ -23,9 +23,9 @@ test_that("summarised Characteristics and LSC", {
                              full.names = TRUE)
   logger <- log4r::logger()
   unzipDir <- file.path(tempdir(), "lsc")
-  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1])
+  uploaded_files <- joinDatabases(fileDataPath = fileDataPath[1])
   testServer(reportGenerator(), {
-    expect_s3_class(characteristicsUI("characteristics", uploadedFiles), "shiny.tag.list")
-    expect_s3_class(characteristicsServer("characteristics", uploadedFiles), "reactiveVal")
+    expect_s3_class(characteristicsUI("characteristics", uploaded_files), "shiny.tag.list")
+    expect_s3_class(characteristicsServer("characteristics", uploaded_files), "reactiveVal")
   })
 })
