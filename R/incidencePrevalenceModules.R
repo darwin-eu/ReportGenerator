@@ -43,6 +43,9 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    ### DATA
+
+    # Filtered data
     summarised_result_data <- reactive({
       req(uploaded_files())
       uploaded_files() %>% dplyr::filter(
@@ -58,7 +61,12 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
           denominator_time_at_risk %in% input$denominator_time_at_risk)
     })
 
+    # Add object
     addObject <- reactiveVal()
+
+    ### OBJECTS C
+    ## Creates specific tables and plots for IncPrev
+    ## Observe functions to add them to addObject
 
     if (id == "Incidence") {
 
@@ -144,6 +152,7 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
 
     } else if (id == "Prevalence") {
 
+      # TABLE
       summarised_gt_table <- reactive({
         req(summarised_result_data())
         IncidencePrevalence::tablePrevalence(result = summarised_result_data(),
@@ -155,6 +164,7 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                              .options = list())
       })
 
+      # PLOT
       summarised_plot <- reactive({
         req(summarised_result_data())
         IncidencePrevalence::plotPrevalence(result = summarised_result_data(),
@@ -169,11 +179,24 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                             colour = input$colour)
       })
 
+      # POPULATION PLOT
+      summarised_population_plot <- reactive({
+        IncidencePrevalence::plotPrevalencePopulation(
+          result = summarised_result_data(),
+          x = input$x_axis,
+          y = input$y_axis,
+          facet = input$facet,
+          colour = input$colour
+        )
+      })
+
+      # TIDY DATA
       tidy_data <- reactive({
         req(summarised_result_data())
         IncidencePrevalence::asPrevalenceResult(summarised_result_data())
       })
 
+      # Add table
       observeEvent(input$add_table, {
         addObject(
           list(prevalence_table = list(result = summarised_result_data(),
@@ -184,6 +207,7 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                        hide = input$hide)))
       })
 
+      # Add plot
       observeEvent(input$add_plot, {
         addObject(
           list(prevalence_plot = list(result = summarised_result_data(),
@@ -198,27 +222,58 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                       colour = input$colour)))
       })
 
+      # Add population plot
+      observeEvent(input$add_population_plot, {
+        addObject(
+          list(prevalence_population_plot = list(result = summarised_result_data(),
+                                                 x = input$x_axis,
+                                                 y = input$y_axis,
+                                                 facet = input$facet,
+                                                 colour = input$colour)))
+      })
+
     }
 
+    #--------------------------------
+
+    ### OUTPUTS
+
+    # TABLE
     output$summarisedTable <- gt::render_gt({
       req(summarised_gt_table())
       summarised_gt_table()
     })
 
+    # PLOT
     output$summarisedPlot <- renderPlot({
       req(summarised_plot())
       summarised_plot()
     })
 
+    # POPULATION PLOT
     output$summarisedPopulationPlot <- renderPlot({
       req(summarised_population_plot())
       summarised_population_plot()
     })
 
+    # TIDY DATA
     output$dataTable <- DT::renderDataTable(server = FALSE, {
       createDataTable(tidy_data())
     })
 
+    ### DOWNLOAD HANDLERS
+
+    # TABLE
+    output$downloadTable <- downloadHandler(
+      filename = function() {
+        paste(id, "-Table.docx", sep = "")
+      },
+      content = function(file) {
+        gt::gtsave(summarised_incidence_gt_table(), file)
+      }
+    )
+
+    # PLOT
     output$download_plot <- downloadHandler(
       filename = function() {
         paste(id, "-Plot.png", sep = "")
@@ -232,6 +287,7 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
       }
     )
 
+    # POPULATION PLOT
     output$download_population_plot <- downloadHandler(
       filename = function() {
         paste(id, "-Population-Plot.png", sep = "")
@@ -242,15 +298,6 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                    height = as.numeric(input$download_population_plot_height),
                    width = as.numeric(input$download_population_plot_width),
                    dpi = as.numeric(input$download_population_plot_dpi))
-      }
-    )
-
-    output$downloadTable <- downloadHandler(
-      filename = function() {
-        paste(id, "-Table.docx", sep = "")
-      },
-      content = function(file) {
-        gt::gtsave(summarised_incidence_gt_table(), file)
       }
     )
 
