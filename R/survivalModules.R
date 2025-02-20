@@ -1,9 +1,9 @@
-cohortSurvivalUI <- function(id, uploadedFiles) {
+cohortSurvivalUI <- function(id, uploaded_files) {
   ns <- NS(id)
   outResult <- NULL
   dlTable <- NULL
   dlPlot <- NULL
-  dataset <- uploadedFiles %>% visOmopResults::splitAdditional()
+  dataset <- uploaded_files %>% visOmopResults::splitAdditional()
   cdmOptions <- unique(dataset$cdm_name)
   resultIdOptions <- unique(dataset$result_id)
   groupLevelOptions <- unique(dataset$group_level)
@@ -167,14 +167,14 @@ cohortSurvivalUI <- function(id, uploadedFiles) {
       )
 }
 
-cohortSurvivalServer <- function(id, uploadedFiles) {
+cohortSurvivalServer <- function(id, uploaded_files) {
 
   ns <- NS(id)
   moduleServer(id, function(input, output, session) {
 
     getData <- reactive({
       if (id == "single_event" || id == "competing_risk") {
-        uploadedFiles() %>%
+        uploaded_files() %>%
           filter(cdm_name %in% input$cdm_name,
                  result_id %in% input$result_id,
                  group_name %in% input$group_name,

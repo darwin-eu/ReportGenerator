@@ -306,7 +306,7 @@ createDownloadPlotUI <- function(ns) {
           column(2, div("dpi:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
                  div(style = "display: inline-block;margin-top:5px", textInput(ns("plotDpi"), "", 300, width = "50px"))),
           column(2, tagList(shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
-                            shiny::br(), downloadButton(ns("downloadFigure"), "Download Plot"))))
+                            shiny::br(), downloadButton(ns("downloadPlot"), "Download Plot"))))
 }
 
 createDataTable <- function(data, tableName = "result") {
@@ -332,7 +332,7 @@ createDataTable <- function(data, tableName = "result") {
 }
 
 analysisNamesSum <- function(settingsData) {
-  # settingsData <- settings(uploadedFilesList)
+  # settingsData <- settings(uploaded_filesList)
   analysisNamesSum <- settingsData %>%
     pull(result_type) %>%
     unique()
