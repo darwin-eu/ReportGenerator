@@ -51,7 +51,7 @@ test_that("Generate report incidence attrition", {
   unlink(testdir, recursive = TRUE)
 })
 
-test_that("Generate report incidence attrition", {
+test_that("Generate report prevalence attrition", {
   reportDocx <- read_docx(path = system.file("templates",
                                              "word",
                                              "DARWIN_EU_Study_Report.docx",
