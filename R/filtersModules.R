@@ -158,7 +158,7 @@ plotFiltersIncPrevUI <- function(id, uploaded_files) {
                                      "strata",
                                      "outcome_cohort_name"),
                          selected = "outcome_cohort_name",
-                         multiple = TRUE))
+                         multiple = TRUE)),
     ),
     fluidRow(
       column(3,
@@ -246,6 +246,12 @@ plotPopulationFiltersIncPrevUI <- function(id, uploaded_files) {
 
 plotFiltersSurvivalUI <- function(id, uploaded_files) {
   ns <- NS(id)
+  if (id == "competing_risk") {
+    cumulativeFailureOption <- TRUE
+  } else {
+    cumulativeFailureOption <- FALSE
+  }
+
   tagList(
     fluidRow(
       column(4,
@@ -265,19 +271,28 @@ plotFiltersSurvivalUI <- function(id, uploaded_files) {
                          label = "Colour",
                          choices = c("strata_name"),
                          selected = c("strata_name"),
-                         multiple = TRUE))
+                         multiple = TRUE)),
     ),
     fluidRow(
-      column(3,
+      column(2,
+             checkboxInput(inputId = ns("cumulative_failure"),
+                           label = "Cumulative Failure",
+                           value = cumulativeFailureOption,
+                           width = NULL)),
+      column(2,
              checkboxInput(inputId = ns("ribbon"),
                            label = "Ribbon",
                            value = FALSE,
                            width = NULL)),
-      column(3,
+      column(2,
              checkboxInput(inputId = ns("risk_table"),
                            label = "Risk Table",
                            value = FALSE,
                            width = NULL)),
+      column(3,
+             textInput(ns("risk_interval"),
+                       label = "Risk Interval",
+                       value = "30"))
     ),
     fluidRow(
       column(3,
@@ -289,4 +304,41 @@ plotFiltersSurvivalUI <- function(id, uploaded_files) {
     fluidRow(column(12,
                     shinycssloaders::withSpinner(plotOutput(ns("summarisedPlot")))))
   )
+}
+
+tableFiltersSurvivalUI <- function(id, uploaded_files) {
+  ns <- NS(id)
+  tagList(
+    fluidRow(
+      column(6,
+             pickerInput(inputId = ns("header"),
+                         label = "Header",
+                         choices = c("cdm_name",
+                                     "group",
+                                     "strata",
+                                     "additional",
+                                     "variable",
+                                     "estimate",
+                                     "settings"),
+                        selected = c("cdm_name", "estimate"),
+                        multiple = TRUE)),
+      column(6,
+             pickerInput(inputId = ns("groupColumn"),
+                         label = "Group",
+                         choices = c("group", "strata"),
+                         selected = c("group"),
+                         multiple = TRUE)),
+    ),
+    fluidRow(
+      column(2,
+             checkboxInput(inputId = ns("split_strata"),
+                           label = "Split Strata",
+                           value = TRUE,
+                           width = NULL)),
+    ),
+    uiOutput(outputId = ns("caption_table")),
+    fluidRow(createAddItemToReportUI(ns("add_table"))),
+    tags$br(),
+    fluidRow(column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTable")))))
+    )
 }

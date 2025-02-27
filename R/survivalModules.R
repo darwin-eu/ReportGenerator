@@ -153,35 +153,10 @@ cohortSurvivalUI <- function(id, uploaded_files) {
       tabsetPanel(type = "tabs",
                   tabPanel("Table",
                            tags$br(),
-                           fluidRow(
-                             column(6,
-                                    pickerInput(inputId = ns("header"),
-                                                label = "Header",
-                                                choices = c("cdm_name",
-                                                            "group",
-                                                            "strata",
-                                                            "additional",
-                                                            "variable",
-                                                            "estimate",
-                                                            "settings"),
-                                                selected = c("cdm_name", "estimate"),
-                                                multiple = TRUE)),
-                           column(6,
-                                  pickerInput(inputId = ns("groupColumn"),
-                                              label = "Group",
-                                              choices = c("group", "strata"),
-                                              selected = c("group"),
-                                              multiple = TRUE)),
-                           ),
-                           uiOutput(outputId = ns("caption_table")),
-                           fluidRow(createAddItemToReportUI(ns("lock_table")), dlTable),
-                           tags$br(),
-                           fluidRow(column(12, shinycssloaders::withSpinner(gt::gt_output(ns("cs_data")))))),
+                           tableFiltersSurvivalUI(id, uploaded_files)),
                   tabPanel("Plot",
                            tags$br(),
-                           # Filters exclusive for plotIncidence/Prevalence
                            plotFiltersSurvivalUI(id, uploaded_files)),
-
                   )
       )
 }
@@ -235,7 +210,6 @@ cohortSurvivalServer <- function(id, uploaded_files) {
     })
 
     times <- reactive({
-
       values <- unlist(strsplit(input$times, "[, ]+"))
       as.numeric(values)
     })
@@ -251,7 +225,7 @@ cohortSurvivalServer <- function(id, uploaded_files) {
         CohortSurvival::tableSurvival(getData(),
                                       times = times(),
                                       timeScale = input$time_scale,
-                                      splitStrata = TRUE,
+                                      splitStrata = input$split_strata,
                                       header = input$header,
                                       type = "gt",
                                       groupColumn = input$groupColumn,
@@ -259,28 +233,21 @@ cohortSurvivalServer <- function(id, uploaded_files) {
                                       )
       })
 
-    output$cs_data <- gt::render_gt({
+    output$summarisedTable <- gt::render_gt({
         survival_gt_table()
       })
 
     summarised_plot <- reactive({
-      plot <- NULL
-      if (nrow(getData()) > 0 && id == "single_event") {
-        cumulativeFailure <- TRUE
-      } else if (nrow(getData()) > 0 && id == "competing_risk") {
-        cumulativeFailure <- TRUE
-      }
-        CohortSurvival::plotSurvival(result = getData(),
-                                     x = input$x_axis,
-                                     xscale = input$time_scale,
-                                     ylim = c(0, NA),
-                                     cumulativeFailure = cumulativeFailure,
-                                     ribbon = input$ribbon,
-                                     facet = input$facet,
-                                     colour = input$colour,
-                                     riskTable = input$risk_table,
-                                     riskInterval = 30
-                                     )
+      CohortSurvival::plotSurvival(result = getData(),
+                                   x = input$x_axis,
+                                   xscale = input$time_scale,
+                                   ylim = c(0, NA),
+                                   cumulativeFailure = input$cumulative_failure,
+                                   ribbon = input$ribbon,
+                                   facet = input$facet,
+                                   colour = input$colour,
+                                   riskTable = input$risk_table, # input$risk_table,
+                                   riskInterval = as.numeric(input$risk_interval))
       })
 
     output$summarisedPlot <- renderPlot({
@@ -332,18 +299,18 @@ cohortSurvivalServer <- function(id, uploaded_files) {
     })
 
     addObject <- reactiveVal()
-    observeEvent(input$lock_table, {
+    observeEvent(input$add_table, {
       if (nrow(getData()) > 0) {
         survivalObjectType <- paste0(id, " - Table")
         tempList <- list()
         tempList[[survivalObjectType]] <- list(
           x = getData(),
-          times = NULL,
+          times = times(),
           timeScale = input$time_scale,
-          splitStrata = TRUE,
+          splitStrata = input$split_strata,
           header = input$header,
           type = "gt",
-          groupColumn = NULL,
+          groupColumn = input$groupColumn,
           .options = list()
         )
         addObject(tempList)
@@ -351,27 +318,19 @@ cohortSurvivalServer <- function(id, uploaded_files) {
     })
 
     observeEvent(input$add_plot, {
-      if (nrow(getData()) > 0) {
-        if (nrow(getData()) > 0 && id == "single_event") {
-          cumulativeFailure <- TRUE
-        } else if (nrow(getData()) > 0 && id == "competing_risk") {
-          cumulativeFailure <- TRUE
-        }
-
         survivalObjectType <- paste0(id, " - Plot")
         tempList <- list()
         tempList[[survivalObjectType]] <- list(result = getData(),
-                                               x = "time",
-                                               xscale = "years",
+                                               x = input$x_axis,
+                                               xscale = input$time_scale,
                                                ylim = c(0, NA),
-                                               cumulativeFailure = cumulativeFailure,
-                                               ribbon = TRUE,
-                                               facet = "cdm_name",
-                                               colour = "strata_name",
-                                               colourName = NULL
-          )
+                                               cumulativeFailure = input$cumulative_failure,
+                                               ribbon = input$ribbon,
+                                               facet = input$facet,
+                                               colour = input$colour,
+                                               riskTable = input$risk_table,
+                                               riskInterval = as.numeric(input$risk_interval))
         addObject(tempList)
-      }
     })
 
     return(addObject)
