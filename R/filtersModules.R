@@ -243,3 +243,50 @@ plotPopulationFiltersIncPrevUI <- function(id, uploaded_files) {
                     shinycssloaders::withSpinner(plotOutput(ns("summarisedPopulationPlot")))))
   )
 }
+
+plotFiltersSurvivalUI <- function(id, uploaded_files) {
+  ns <- NS(id)
+  tagList(
+    fluidRow(
+      column(4,
+             pickerInput(inputId = ns("x_axis"),
+                         label = "X Axis",
+                         choices = c("time"),
+                         selected = c("time"),
+                         multiple = FALSE)),
+      column(4,
+             pickerInput(inputId = ns("facet"),
+                         label = "Facet",
+                         choices = c("cdm_name"),
+                         selected = c("cdm_name"),
+                         multiple = TRUE)),
+      column(4,
+             pickerInput(inputId = ns("colour"),
+                         label = "Colour",
+                         choices = c("strata_name"),
+                         selected = c("strata_name"),
+                         multiple = TRUE))
+    ),
+    fluidRow(
+      column(3,
+             checkboxInput(inputId = ns("ribbon"),
+                           label = "Ribbon",
+                           value = FALSE,
+                           width = NULL)),
+      column(3,
+             checkboxInput(inputId = ns("risk_table"),
+                           label = "Risk Table",
+                           value = FALSE,
+                           width = NULL)),
+    ),
+    fluidRow(
+      column(3,
+             actionButton(ns("add_plot"), "Add plot to report"))
+    ),
+    fluidRow(
+      createDownloadPlotUI(ns)
+    ),
+    fluidRow(column(12,
+                    shinycssloaders::withSpinner(plotOutput(ns("summarisedPlot")))))
+  )
+}
