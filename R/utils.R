@@ -223,21 +223,23 @@ createDataTable <- function(data, tableName = "result") {
                 class = "display")
 }
 
-analysisNamesSum <- function(settingsData) {
+analysisNamesAvailable <- function(settingsData) {
   # settingsData <- settings(uploaded_filesList)
-  analysisNamesSum <- settingsData %>%
+  result_types_available <- settingsData %>%
     pull(result_type) %>%
     unique()
 
-  if ("survival" %in% analysisNamesSum) {
-    survivalAnalysisType <- settingsData %>%
-      dplyr::filter(result_type == "survival") %>%
-      pull(analysis_type) %>%
-      unique()
-    analysisNamesSum <- analysisNamesSum[-which(analysisNamesSum == "survival")]
-    analysisNamesSum <- c(analysisNamesSum, survivalAnalysisType)
-  }
-  return(analysisNamesSum)
+  result_types_available <- result_types_available[grepl("incidence|incidence_attrition|incidence_attrition|prevalence|prevalence_attrition|summarise_large_scale_characteristics|summarise_characteristics", result_types_available)]
+
+  analysis_types_available <- settingsData %>%
+    pull(analysis_type) %>%
+    unique()
+
+  analysis_types_available <- analysis_types_available[grepl("single_event|competing_risk", analysis_types_available)]
+
+  items_available <- c(result_types_available, analysis_types_available)
+
+  return(items_available)
 }
 
 getSummarisedData <- function(uploadedData, type_result = "summarise_characteristics") {

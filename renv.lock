@@ -45,7 +45,7 @@
     },
     "CDMConnector": {
       "Package": "CDMConnector",
-      "Version": "1.5.0",
+      "Version": "1.7.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -55,7 +55,6 @@
         "cli",
         "dbplyr",
         "dplyr",
-        "fs",
         "generics",
         "glue",
         "jsonlite",
@@ -69,10 +68,9 @@
         "stringr",
         "tidyr",
         "tidyselect",
-        "waldo",
         "withr"
       ],
-      "Hash": "2bae94aed83da2007c938f3d2fa1a48f"
+      "Hash": "5233515358b0c45cd01e0d19573f0709"
     },
     "CodelistGenerator": {
       "Package": "CodelistGenerator",
@@ -104,7 +102,7 @@
     },
     "CohortCharacteristics": {
       "Package": "CohortCharacteristics",
-      "Version": "0.3.0",
+      "Version": "0.4.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -122,11 +120,11 @@
         "tidyr",
         "visOmopResults"
       ],
-      "Hash": "8de8f791d0442c9f457c4ef0d3840832"
+      "Hash": "d729272fbcce172fe82007b6fd6b6060"
     },
     "CohortSurvival": {
       "Package": "CohortSurvival",
-      "Version": "0.5.1",
+      "Version": "0.6.2",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -136,20 +134,20 @@
         "broom",
         "checkmate",
         "cli",
+        "clock",
         "dbplyr",
         "dplyr",
-        "lubridate",
+        "lifecycle",
         "magrittr",
         "omopgenerics",
+        "purrr",
         "rlang",
-        "scales",
         "stringr",
         "survival",
         "tibble",
-        "tidyr",
-        "visOmopResults"
+        "tidyr"
       ],
-      "Hash": "170cd3475c7ecd44db42e230b3342795"
+      "Hash": "4788e9c4add5dd12405c51b5eca2ddc8"
     },
     "DBI": {
       "Package": "DBI",
@@ -181,29 +179,25 @@
     },
     "IncidencePrevalence": {
       "Package": "IncidencePrevalence",
-      "Version": "0.8.1",
+      "Version": "1.0.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "CDMConnector",
         "PatientProfiles",
         "R",
-        "checkmate",
         "cli",
         "clock",
-        "dbplyr",
         "dplyr",
         "glue",
-        "lubridate",
         "magrittr",
         "omopgenerics",
         "purrr",
         "rlang",
         "stringr",
-        "tidyr",
-        "visOmopResults"
+        "tidyr"
       ],
-      "Hash": "80b89941badc8728c8754d2e9d51c6e2"
+      "Hash": "27f8a09bfe99508356f64a430a590fae"
     },
     "MASS": {
       "Package": "MASS",
@@ -265,7 +259,7 @@
     },
     "PatientProfiles": {
       "Package": "PatientProfiles",
-      "Version": "1.2.1",
+      "Version": "1.2.3",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -274,15 +268,13 @@
         "cli",
         "dplyr",
         "lifecycle",
-        "magrittr",
         "omopgenerics",
         "purrr",
         "rlang",
         "stringr",
-        "tidyr",
-        "visOmopResults"
+        "tidyr"
       ],
-      "Hash": "bf97970a94e0d39281f3744c15785892"
+      "Hash": "4f2cb7324f2d1d4f04a4aeb52fc6a200"
     },
     "R6": {
       "Package": "R6",
@@ -593,14 +585,14 @@
     },
     "cli": {
       "Package": "cli",
-      "Version": "3.6.3",
+      "Version": "3.6.4",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "utils"
       ],
-      "Hash": "b21916dd77a27642b447374a5d30ecf3"
+      "Hash": "491c34d3d9dd0d2fe13d9f278bb90795"
     },
     "clipr": {
       "Package": "clipr",
@@ -1659,7 +1651,7 @@
     },
     "omopgenerics": {
       "Package": "omopgenerics",
-      "Version": "0.3.1",
+      "Version": "1.0.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1667,6 +1659,7 @@
         "cli",
         "dbplyr",
         "dplyr",
+        "generics",
         "glue",
         "lifecycle",
         "methods",
@@ -1677,7 +1670,7 @@
         "tidyr",
         "vctrs"
       ],
-      "Hash": "c17db6329c631b9010951ad112341ba3"
+      "Hash": "6c8044c0e4d07e43ea1cf2d73e6404ce"
     },
     "openssl": {
       "Package": "openssl",
@@ -2300,7 +2293,7 @@
     },
     "survival": {
       "Package": "survival",
-      "Version": "3.5-7",
+      "Version": "3.8-3",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -2312,7 +2305,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "b8e943d262c3da0b0febd3e04517c197"
+      "Hash": "fe42836742a4f065b3f3f5de81fccab9"
     },
     "sys": {
       "Package": "sys",
@@ -2563,7 +2556,7 @@
     },
     "visOmopResults": {
       "Package": "visOmopResults",
-      "Version": "0.4.0",
+      "Version": "1.0.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -2571,14 +2564,13 @@
         "dplyr",
         "generics",
         "glue",
-        "lifecycle",
         "omopgenerics",
         "purrr",
         "rlang",
         "stringr",
         "tidyr"
       ],
-      "Hash": "6c41fbd15141fb7d729ee868b4a2ce99"
+      "Hash": "4a6d832d0cf4775f7a3f865982b92231"
     },
     "vroom": {
       "Package": "vroom",

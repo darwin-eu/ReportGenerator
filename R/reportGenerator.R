@@ -20,10 +20,9 @@
 #'
 #' @param logger optional logger object
 #'
-#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer flextable waldo readr yaml TreatmentPatterns PatientProfiles ggplot2
+#' @import dplyr shiny shinydashboard shinyWidgets shinycssloaders officer ggplot2 flextable waldo readr yaml TreatmentPatterns PatientProfiles ggplot2
 #' @importFrom sortable bucket_list add_rank_list sortable_options
 #' @importFrom utils read.csv tail unzip
-#' @importFrom ggplot2 ggsave aes geom_bar theme_minimal theme axis.text.x element_text
 #' @importFrom gto body_add_gt
 #' @importFrom here here
 #' @importFrom TreatmentPatterns createSankeyDiagram
@@ -177,7 +176,7 @@ reportGenerator <- function(logger = NULL) {
       }
 
       req(settingsData())
-      items <- analysisNamesSum(settingsData = settingsData())
+      items <- analysisNamesAvailable(settingsData = settingsData())
       if (!is.null(uploadedData()$other_result)) {
         items <- c(items, names(uploadedData()$other_result))
       }
@@ -196,24 +195,20 @@ reportGenerator <- function(logger = NULL) {
           visOmopResults::filterSettings(result_type == "prevalence_attrition")
       }
       if ("summarise_characteristics" %in% items) {
-        uploaded_files$summarise_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                                                      type_result = "summarise_characteristics")
+        uploaded_files$summarise_characteristics <- uploadedData()$summarised_result %>%
+          visOmopResults::filterSettings(result_type == "summarise_characteristics")
       }
       if ("summarise_large_scale_characteristics" %in% items) {
-        uploaded_files$summarise_large_scale_characteristics <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                                                                  type_result = "summarise_large_scale_characteristics")
+        uploaded_files$summarise_large_scale_characteristics <- uploadedData()$summarised_result %>%
+          visOmopResults::filterSettings(result_type == "summarise_large_scale_characteristics")
       }
       if ("single_event" %in% items) {
-        single_event_data <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                           type_result = "survival") %>%
+        uploaded_files$single_event <- uploadedData()$summarised_result %>%
           visOmopResults::filterSettings(analysis_type == "single_event")
-        uploaded_files$single_event <- single_event_data
       }
       if ("competing_risk" %in% items) {
-        competing_risk_data <- getSummarisedData(uploadedData = uploadedData()$summarised_result,
-                                                 type_result = "survival") %>%
+        uploaded_files$competing_risk <- uploadedData()$summarised_result %>%
           visOmopResults::filterSettings(analysis_type == "competing_risk")
-        uploaded_files$competing_risk <- competing_risk_data
       }
       if ("TreatmentPatterns" %in% items) {
         uploaded_files$treatment_pathways <- uploadedData()$other_result$TreatmentPatterns$treatmentPathways
