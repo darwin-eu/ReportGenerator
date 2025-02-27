@@ -1,3 +1,19 @@
+# Analysis sum
+
+test_that("Analysis Sum", {
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
+                             pattern = "zip",
+                             full.names = TRUE)[1]
+  data_joined <- joinDatabases(fileDataPath)
+  settingsData <- settings(data_joined$summarised_result)
+
+  items <- analysisNamesAvailable(settingsData = settingsData)
+
+  expect_equal(items, c("incidence", "incidence_attrition", "summarise_large_scale_characteristics",
+                        "prevalence", "prevalence_attrition", "summarise_characteristics",
+                        "competing_risk", "single_event"))
+})
+
 # IncidencePrevalence
 test_that("getSummarisedData summarise_characteristics", {
   fileDataPath <- list.files(test_path("studies", "summarised_zip"),
@@ -185,4 +201,5 @@ test_that("PatientProfiles LSC", {
   menuList <- getItemsList(items)
   expect_equal(menuList, "Summarised Large Scale Characteristics")
 })
+
 
