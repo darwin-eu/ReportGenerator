@@ -32,16 +32,6 @@ cohortSurvivalUI <- function(id, uploaded_files) {
                  multiple = TRUE
                )
         ),
-        # column(4,
-        #        pickerInput(
-        #          inputId = ns("result_id"),
-        #          label = "Result Id",
-        #          choices = resultIdOptions,
-        #          selected = resultIdOptions,
-        #          options = pickerOptions,
-        #          multiple = TRUE
-        #        )
-        # ),
         column(4,
                pickerInput(
                  inputId = ns("group_name"),
@@ -125,30 +115,6 @@ cohortSurvivalUI <- function(id, uploaded_files) {
                )
         ),
         ),
-
-
-
-      #   column(4,
-      #          pickerInput(
-      #            inputId = ns("outcome"),
-      #            label = "Outcome",
-      #            choices = outcomeOptions,
-      #            selected = outcomeOptions,
-      #            options = pickerOptions,
-      #            multiple = TRUE
-      #          )
-      #   ),
-      #   column(4,
-      #          pickerInput(
-      #            inputId = ns("eventgap"),
-      #            label = "Event Gap",
-      #            choices = eventgapOptions,
-      #            selected = eventgapOptions[1],
-      #            options = pickerOptions,
-      #            multiple = TRUE
-      #          )
-      #   )
-      # ),
       tags$br(),
       tabsetPanel(type = "tabs",
                   tabPanel("Table",
@@ -246,7 +212,7 @@ cohortSurvivalServer <- function(id, uploaded_files) {
                                    ribbon = input$ribbon,
                                    facet = input$facet,
                                    colour = input$colour,
-                                   riskTable = input$risk_table, # input$risk_table,
+                                   riskTable = input$risk_table,
                                    riskInterval = as.numeric(input$risk_interval))
       })
 
