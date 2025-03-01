@@ -4,7 +4,7 @@ pathwaysUI <- function(id, uploaded_files) {
   cdm_name <- unique(uploaded_files$cdm_name)
   sex <- unique(uploaded_files$sex)
   age <- unique(uploaded_files$age)
-  indexYear <- unique(uploaded_files$indexYear)
+  indexYear <- unique(uploaded_files$index_year)
 
   tagList(
     fluidRow(
@@ -58,14 +58,16 @@ pathwaysServer <- function(id, uploaded_files) {
         dplyr::filter(cdm_name == input$cdm_name,
                       sex == input$sex,
                       age == input$age,
-                      indexYear == input$indexYear)
+                      index_year == input$indexYear)
     })
 
     # Sunburst
 
     output$previewSunburst <- renderPlot({
       if (nrow(pathwaysData()) > 0) {
-        sunburstPathways(pathwaysData())
+        TreatmentPatterns::createSunburstPlot(pathwaysData(),
+                                              groupCombinations = FALSE)
+        # sunburstPathways(pathwaysData())
       }
     })
 

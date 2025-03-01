@@ -207,10 +207,10 @@ getFileType <- function(fileDataPath) {
 
 getDatabaseName <- function(filesLocation) {
   # Assign the databaseName in case there is a metadata file from TreatmentPatterns
-  metadata <- filesLocation[stringr::str_detect(filesLocation, "metadata")]
+  metadata <- filesLocation[stringr::str_detect(filesLocation, "cdm_source_info")]
   if (!identical(metadata, character(0))) {
     databaseName <- readr::read_csv(metadata, show_col_types = FALSE) %>%
-      pull(cdmSourceName) %>%
+      pull(cdm_source_name) %>%
       unique()
     return(databaseName)
   }

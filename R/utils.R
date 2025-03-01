@@ -131,7 +131,7 @@ exportResults <- function(resultList,
 
     if ("summarised_result" %in% classWorkingResult) {
       omopgenerics::exportSummarisedResult(workingResult, fileName = fileName, path = tempDir)
-    } else if (workingName == "treatmentPathways" | workingName == "metadata" | workingName == "summaryStatsTherapyDuration" | workingName == "incidence_attrition" | workingName == "prevalence_point_attrition" | workingName == "prevalence_period_attrition") {
+    } else if (workingName == "treatment_pathways" | workingName == "metadata" | workingName == "cdm_source_info" | workingName == "summary_event_duration" | workingName == "incidence_attrition" | workingName == "prevalence_point_attrition" | workingName == "prevalence_period_attrition") {
       utils::write.csv(workingResult,
                        file = file.path(
                          tempDir,
@@ -240,21 +240,6 @@ analysisNamesAvailable <- function(settingsData) {
   items_available <- c(result_types_available, analysis_types_available)
 
   return(items_available)
-}
-
-getSummarisedData <- function(uploadedData, type_result = "summarise_characteristics") {
-
-  result_ids <- settings(uploadedData) %>%
-    dplyr::filter(result_type == type_result) %>%
-    pull(result_id)
-
-  summarised_result <- uploadedData %>%
-    dplyr::filter(result_id %in% result_ids)
-
-  attr(summarised_result, "settings") <- settings(summarised_result) %>%
-    dplyr::filter(result_id %in% result_ids)
-
-  return(summarised_result)
 }
 
 sunburstPathways <- function(pathwaysData) {
