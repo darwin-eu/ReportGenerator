@@ -78,9 +78,10 @@ generateMockData <- function(databaseName = c("CHUBX",
                                                     "summarise_large_scale_characteristics" = summarise_large_scale_characteristics),
                      "CohortSurvival" = list("single_event" = cohortSurvivalData$single_event,
                                              "competing_risk" = cohortSurvivalData$competing_risk),
-                     "TreatmentPatterns" = list("treatmentPathways" = treatmentPathwaysData$treatmentPathways,
+                     "TreatmentPatterns" = list("treatment_pathways" = treatmentPathwaysData$treatment_pathways,
+                                                "cdm_source_info" = treatmentPathwaysData$cdm_source_info,
                                                 "metadata" = treatmentPathwaysData$metadata,
-                                                "summaryStatsTherapyDuration" = treatmentPathwaysData$summaryStatsTherapyDuration)
+                                                "summary_event_duration" = treatmentPathwaysData$summary_event_duration)
     )
 
     # Insert database name
@@ -99,9 +100,10 @@ generateMockData <- function(databaseName = c("CHUBX",
     dataList[["CohortCharacteristics"]][["summarise_large_scale_characteristics"]] <- resultListCC$summarise_large_scale_characteristics
     dataList[["CohortSurvival"]][["single_event"]] <- resultListCS$single_event
     dataList[["CohortSurvival"]][["competing_risk"]] <- resultListCS$competing_risk
-    dataList[["TreatmentPatterns"]][["treatmentPathways"]] <- resultListTP$treatmentPathways
+    dataList[["TreatmentPatterns"]][["treatment_pathways"]] <- resultListTP$treatment_pathways
+    dataList[["TreatmentPatterns"]][["cdm_source_info"]] <- resultListTP$cdm_source_info
     dataList[["TreatmentPatterns"]][["metadata"]] <- resultListTP$metadata
-    dataList[["TreatmentPatterns"]][["summaryStatsTherapyDuration"]] <- resultListTP$summaryStatsTherapyDuration
+    dataList[["TreatmentPatterns"]][["summary_event_duration"]] <- resultListTP$summary_event_duration
 
     exportResults(resultList = dataList,
                   zipName = paste0("mock_data_", dbName),

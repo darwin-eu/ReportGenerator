@@ -4,7 +4,7 @@ pathwaysUI <- function(id, uploaded_files) {
   cdm_name <- unique(uploaded_files$cdm_name)
   sex <- unique(uploaded_files$sex)
   age <- unique(uploaded_files$age)
-  indexYear <- unique(uploaded_files$indexYear)
+  indexYear <- unique(uploaded_files$index_year)
 
   tagList(
     fluidRow(
@@ -37,11 +37,11 @@ pathwaysUI <- function(id, uploaded_files) {
     fluidRow(
       tabsetPanel(type = "tabs",
                   tabPanel("Sunburst", br(),
-                           fluidRow(column(6, actionButton(ns("lockSunburst"), "Add plot to the report")),
+                           fluidRow(column(6, actionButton(ns("add_sunburst"), "Add plot to the report")),
                                     column(6, downloadButton(ns("downloadSunburst"), "Download Plot"))),
                            plotOutput(ns("previewSunburst"))),
                   tabPanel("Sankey", br(),
-                           fluidRow(column(6, actionButton(ns("lockSankey"), "Add diagram to the report")),
+                           fluidRow(column(6, actionButton(ns("add_sankey"), "Add diagram to the report")),
                                     column(6, downloadButton(ns("downloadSankey"), "Download Plot"))),
                            uiOutput(ns("previewSankey"))))
     )
@@ -58,14 +58,16 @@ pathwaysServer <- function(id, uploaded_files) {
         dplyr::filter(cdm_name == input$cdm_name,
                       sex == input$sex,
                       age == input$age,
-                      indexYear == input$indexYear)
+                      index_year == input$indexYear)
     })
 
     # Sunburst
 
     output$previewSunburst <- renderPlot({
       if (nrow(pathwaysData()) > 0) {
-        sunburstPathways(pathwaysData())
+        TreatmentPatterns::createSunburstPlot(pathwaysData(),
+                                              groupCombinations = FALSE)
+        # sunburstPathways(pathwaysData())
       }
     })
 
@@ -115,13 +117,41 @@ pathwaysServer <- function(id, uploaded_files) {
 
     addObject <- reactiveVal()
 
-    observeEvent(input$lockSunburst, {
-        addObject(
-          list(`Sunburst Plot - TreatmentPatterns` = list(pathwaysData = pathwaysData()))
-        )
-      })
+    ## For the GGPLOT2 version of the sunburst plot
 
-    observeEvent(input$lockSankey, {
+    # observeEvent(input$add_sunburst, {
+    #     addObject(
+    #       list(`Sunburst Plot - TreatmentPatterns` = list(pathwaysData(),
+    #                                                       groupCombinations = FALSE))
+    #     )
+    #   })
+
+    ## For the HTML version of the sunburst plot
+
+    observeEvent(input$add_sunburst, {
+      outputFile <- here::here("sunburstDiagram.html")
+      treatmentPathways <- pathwaysData()
+      if (nrow(treatmentPathways) > 0) {
+        outputSunburst <- TreatmentPatterns::createSunburstPlot(
+          treatmentPathways = treatmentPathways,
+          groupCombinations = TRUE,
+        )
+        htmlwidgets::saveWidget(outputSunburst, outputFile)
+        sunburstPNG <- tempfile(pattern = "sunburstDiagram", fileext = ".png")
+        webshot2::webshot(
+          url = outputFile,
+          file = sunburstPNG,
+          vwidth = 1200,
+          vheight = 1200)
+        sunburstPNG <- normalizePath(sunburstPNG)
+        addObject(
+          list(`Sunburst Plot - TreatmentPatterns` = list(treatmentPathways = pathwaysData(),
+                                                          groupCombinations = TRUE,
+                                                          fileImage = sunburstPNG)))
+      }
+    })
+
+    observeEvent(input$add_sankey, {
       outputFile <- here::here("sankeyDiagram.html")
 
       treatmentPathways <- pathwaysData()
@@ -139,7 +169,7 @@ pathwaysServer <- function(id, uploaded_files) {
           vheight = 1200)
         sankeyPNG <- normalizePath(sankeyPNG)
         addObject(
-          list(`Sankey Diagram - TreatmentPatterns` = list(treatmentPathways = treatmentPathways,
+          list(`Sankey Diagram - TreatmentPatterns` = list(treatmentPathways = pathwaysData(),
                                                            groupCombinations = TRUE,
                                                            fileImage = sankeyPNG)))
       }

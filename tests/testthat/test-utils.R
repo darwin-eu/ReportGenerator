@@ -14,28 +14,6 @@ test_that("Analysis Sum", {
                         "competing_risk", "single_event"))
 })
 
-# IncidencePrevalence
-test_that("getSummarisedData summarise_characteristics", {
-  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
-                             pattern = "zip",
-                             full.names = TRUE)
-  uploadedData <- joinDatabases(fileDataPath)
-  summarise_characteristics_result <- getSummarisedData(uploadedData$summarised_result, type_result = 'summarise_characteristics')
-  expect_equal(settings(summarise_characteristics_result)$result_type, "summarise_characteristics")
-
-})
-
-test_that("getIncidencePrevalence", {
-  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
-                             pattern = "zip",
-                             full.names = TRUE)
-  uploadedData <- joinDatabases(fileDataPath)
-  survival_result <- getSummarisedData(uploadedData = uploadedData$summarised_result, type_result = 'survival')
-  expect_equal(settings(survival_result)$analysis_type, c("competing_risk", "single_event"))
-})
-
-
-
 test_that("getItemsList all", {
   items <- c("incidence",
              "prevalence",

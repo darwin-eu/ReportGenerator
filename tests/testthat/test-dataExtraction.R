@@ -200,7 +200,7 @@ test_that("Loading multiple csv files whole study", {
 
 test_that("loadFileData iteration per result id", {
   data <- list()
-  filesLocation <- testthat::test_path("studies", "summarised_csv", "treatmentPathways.csv")
+  filesLocation <- testthat::test_path("studies", "summarised_csv", "CHUBX_treatment_pathways_2025_03_01.csv")
   assertFileExists(filesLocation)
   configData <- yaml.load_file(system.file("config",
                                            "variablesConfig.yaml",
