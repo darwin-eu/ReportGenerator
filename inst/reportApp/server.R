@@ -44,14 +44,29 @@ function(input, output, session) {
 
   # 2.Assign Data
 
-  # Table w/ attrition data from Inc/Prev
+  # Attrition table
 
+  incidenceAttritionTable <- attritionServer(id = "Incidence Attrition",
+                                             uploadedFiles = reactive(uploadedFiles$incidence_attrition))
 
-  attritionServer(id = "Incidence Attrition",
-                  uploadedFiles = reactive(uploadedFiles$incidence_attrition))
+  observe({
+    for (key in names(incidenceAttritionTable())) {
+      randomId <- getRandomId()
+      dataReport[["objects"]][[randomId]] <- incidenceAttritionTable()
+    }
+  }) %>%
+    bindEvent(incidenceAttritionTable())
 
-  attritionServer(id = "Prevalence Attrition",
-                  uploadedFiles = reactive(uploadedFiles$prevalence_attrition))
+  prevalenceAttritionTable <- attritionServer(id = "Prevalence Attrition",
+                                              uploadedFiles = reactive(uploadedFiles$prevalence_attrition))
+
+  observe({
+    for (key in names(prevalenceAttritionTable())) {
+      randomId <- getRandomId()
+      dataReport[["objects"]][[randomId]] <- prevalenceAttritionTable()
+    }
+  }) %>%
+    bindEvent(prevalenceAttritionTable())
 
   # Incidence Modules
 
@@ -81,7 +96,7 @@ function(input, output, session) {
 
   # Characteristics Modules
   dataCharacteristics <- characteristicsServer("characteristics",
-                                               reactive(uploadedFiles$summarised_characteristics))
+                                               reactive(uploadedFiles$summarise_characteristics))
 
   observe({
     for (key in names(dataCharacteristics())) {
@@ -91,8 +106,8 @@ function(input, output, session) {
   }) %>%
     bindEvent(dataCharacteristics())
 
-  dataLSC <- characteristicsServer(id = "lsc",
-                                   reactive(uploadedFiles$summarised_large_scale_characteristics))
+  dataLSC <- largeScaleServer(id = "lsc",
+                              reactive(uploadedFiles$summarise_large_scale_characteristics))
 
   observe({
     for (key in names(dataLSC())) {
@@ -126,7 +141,7 @@ function(input, output, session) {
 
   # Treatment Patterns Interactive Plots
 
-  dataPatterns <- patternsServer("Treatment Pathways",
+  dataPatterns <- pathwaysServer("Treatment Pathways",
                                  reactive(uploadedFiles$treatment_pathways))
 
   observe({
@@ -137,8 +152,8 @@ function(input, output, session) {
   }) %>%
     bindEvent(dataPatterns())
 
-
   # Data Report Preview
+
   objectsListPreview <- reactive({
     if (is.null(dataReport$objects)) {
       return("None")
@@ -159,6 +174,11 @@ function(input, output, session) {
     }
   })
 
+  output$monitorReportItems <- renderPrint({
+    reportItems <- rev(reactiveValuesToList(do.call(reactiveValues, dataReport$objects)))
+    reportItems
+  })
+
   output$dataReportMenu <- renderDT({
     dataReportFrame <- objectsListPreview()
     if (inherits(dataReportFrame, "data.frame")) {
@@ -172,10 +192,14 @@ function(input, output, session) {
       "generatedReport.docx"
     },
     content = function(file) {
+      shinycssloaders::showPageSpinner()
       shinyjs::disable("generateReport")
       # Load template and generate report
       shinyjs::html("reportOutput", "<br>Generating report", add = TRUE)
-      reportDocx <- read_docx(path = file.path(getwd(), "config", "DARWIN_EU_Study_Report.docx"))
+      reportDocx <- read_docx(path = system.file("templates",
+                                                 "word",
+                                                 "DARWIN_EU_Study_Report.docx",
+                                                 package = "ReportGenerator"))
       reportItems <- list()
       if (!is.null(dataReport$objects)) {
         reportItems <- rev(reactiveValuesToList(do.call(reactiveValues, dataReport$objects)))
@@ -183,8 +207,10 @@ function(input, output, session) {
       generateReport(reportDocx,
                      reportItems,
                      file,
-                     logger)
+                     logger,
+                     reportApp = TRUE)
       shinyjs::enable("generateReport")
+      shinycssloaders::hidePageSpinner()
     }
   )
 }

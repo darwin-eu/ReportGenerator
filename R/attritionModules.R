@@ -1,48 +1,47 @@
-attritionUI <- function(id, uploadedFiles) {
+attritionUI <- function(id, uploaded_files) {
   ns <- NS(id)
   tagList(
     fluidRow(
       column(4,
              pickerInput(inputId = ns("cdm_name"),
                          label = "Database",
-                         choices = unique(uploadedFiles$cdm_name),
+                         choices = unique(uploaded_files$cdm_name),
                          multiple = FALSE)
       ),
       column(4,
              pickerInput(inputId = ns("denominator_sex"),
                          label = "Sex",
-                         choices = unique(settings(uploadedFiles)$denominator_sex),
-                         selected = unique(settings(uploadedFiles)$denominator_sex),
+                         choices = unique(settings(uploaded_files)$denominator_sex),
+                         selected = unique(settings(uploaded_files)$denominator_sex),
                          multiple = FALSE,
                          list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
       ),
       column(4,
              pickerInput(inputId = ns("denominator_age_group"),
                          label = "Age Group",
-                         choices = unique(settings(uploadedFiles)$denominator_age_group),
-                         selected = unique(settings(uploadedFiles)$denominator_age_group),
+                         choices = unique(settings(uploaded_files)$denominator_age_group),
+                         selected = unique(settings(uploaded_files)$denominator_age_group),
                          multiple = FALSE,
                          list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      )
-      # ,
-      # column(4,
-      #        pickerInput(inputId = ns("header"),
-      #                    label = "Header",
-      #                    choices = names(uploadedFiles),
-      #                    selected = names(uploadedFiles)[1],
-      #                    multiple = TRUE)),
-      # column(4,
-      #        pickerInput(inputId = ns("groupColumn"),
-      #                    label = "Group Column",
-      #                    choices = names(uploadedFiles),
-      #                    selected = names(uploadedFiles)[1],
-      #                    multiple = TRUE)),
-      # column(4,
-      #        pickerInput(inputId = ns("settingsColumns"),
-      #                    label = "Settings Columns",
-      #                    choices = colnames(settings(uploadedFiles)),
-      #                    selected = colnames(settings(uploadedFiles))[1],
-      #                    multiple = TRUE))
+      ),
+      column(4,
+             pickerInput(inputId = ns("header"),
+                         label = "Header",
+                         choices = names(uploaded_files),
+                         selected = c("cdm_name", "variable_name"),
+                         multiple = TRUE)),
+      column(4,
+             pickerInput(inputId = ns("groupColumn"),
+                         label = "Group Column",
+                         choices = names(uploaded_files),
+                         selected = c("group_level"),
+                         multiple = TRUE)),
+      column(4,
+             pickerInput(inputId = ns("settingsColumn"),
+                         label = "Settings Columns",
+                         choices = colnames(settings(uploaded_files)),
+                         selected = c("result_type"),
+                         multiple = TRUE))
     ),
     fluidRow(createAddItemToReportUI(ns("lockAttrition"))),
     fluidRow(
@@ -51,17 +50,19 @@ attritionUI <- function(id, uploadedFiles) {
 }
 
 
-attritionServer <- function(id, uploadedFiles) {
+attritionServer <- function(id, uploaded_files) {
 
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     summarised_result <- reactive({
-      uploadedFiles() %>%
+      uploaded_files() %>%
         dplyr::filter(cdm_name %in% input$cdm_name) %>%
         visOmopResults::filterSettings(denominator_sex %in% input$denominator_sex,
                                        denominator_age_group %in% input$denominator_age_group)
     })
+
+    addObject <- reactiveVal()
 
     if (id == "Incidence Attrition") {
       output$attritionTable <- gt::render_gt({
@@ -69,36 +70,49 @@ attritionServer <- function(id, uploadedFiles) {
         tableIncidenceAttrition(
           result = summarised_result(),
           type = "gt",
-          # header = input$header,
-          # groupColumn = input$groupColumn,
-          # settingsColumns = input$settingsColumns,
+          header = input$header,
+          groupColumn = input$groupColumn,
+          settingsColumn = input$settingsColumn,
           hide = "estimate_name"
         )
       })
+
+      observeEvent(input$lockAttrition, {
+        addObject(
+          list("Incidence Attrition - Table" = list(result = summarised_result(),
+                                                    type = "gt",
+                                                    header = input$header,
+                                                    groupColumn = input$groupColumn,
+                                                    settingsColumn = input$settingsColumn,
+                                                    hide = "estimate_name"))
+        )
+      })
+
     } else if (id == "Prevalence Attrition") {
       output$attritionTable <- gt::render_gt({
         req(summarised_result())
         tablePrevalenceAttrition(
           result = summarised_result(),
           type = "gt",
-          header = input$header,
-          groupColumn = input$groupColumn,
-          settingsColumns = input$settingsColumns,
+          header = NULL, # input$header,
+          groupColumn = NULL, # input$groupColumn,
+          settingsColumn = NULL, # input$settingsColumn,
           hide = "estimate_name"
         )
       })
+
+      observeEvent(input$lockAttrition, {
+        addObject(
+          list("Prevalence Attrition - Table" = list(result = summarised_result(),
+                                                     type = "gt",
+                                                     header = NULL, # input$header,
+                                                     groupColumn = NULL, # input$groupColumn,
+                                                     settingsColumn = NULL, # input$settingsColumn,
+                                                     hide = "estimate_name"))
+        )
+      })
+
     }
-    # addObject <- reactiveVal()
-    #
-    # observeEvent(input$lockAttrition, {
-    #   addObject(
-    #     list(`Cohort Attrition - Table` = list(cohortAttrition = attritionResult()
-    #                                            # ,
-    #                                            # caption = input$captionCharacteristics
-    #                                            ))
-    #   )
-    # })
-    #
-    # addObject
+    return(addObject)
   })
 }

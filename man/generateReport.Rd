@@ -4,7 +4,7 @@
 \alias{generateReport}
 \title{Generate report}
 \usage{
-generateReport(reportDocx, dataReportList, fileName, logger)
+generateReport(reportDocx, dataReportList, fileName, logger, reportApp = FALSE)
 }
 \arguments{
 \item{reportDocx}{the report document}
@@ -14,6 +14,8 @@ generateReport(reportDocx, dataReportList, fileName, logger)
 \item{fileName}{the name of the report file}
 
 \item{logger}{logger object}
+
+\item{reportApp}{If TRUE, it will pull the menuConfig yaml file from the reportApp folder.}
 }
 \value{
 NULL, the report is written to given file

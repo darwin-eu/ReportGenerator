@@ -207,10 +207,10 @@ getFileType <- function(fileDataPath) {
 
 getDatabaseName <- function(filesLocation) {
   # Assign the databaseName in case there is a metadata file from TreatmentPatterns
-  metadata <- filesLocation[stringr::str_detect(filesLocation, "metadata")]
+  metadata <- filesLocation[stringr::str_detect(filesLocation, "cdm_source_info")]
   if (!identical(metadata, character(0))) {
     databaseName <- readr::read_csv(metadata, show_col_types = FALSE) %>%
-      pull(cdmSourceName) %>%
+      pull(cdm_source_name) %>%
       unique()
     return(databaseName)
   }
@@ -527,57 +527,3 @@ dataCleanAttrition <- function(attrition) {
     return(attrition)
   }
 }
-
-
-
-#' #' `testData()` extracts data from zip results and saves it in .rda format
-#' #' @param testFilesIP testthat dir location of the test files with version number of folder (internal use).
-#' #' @param testFilesTP testthat dir of treatment pattern files
-#' #' @param testFilesPP testthat dir of patient profiles files
-#' #' @param testFilesCS testthat dir of cohort survival files
-#' #'
-#' #' @importFrom usethis use_data
-#' #'
-#' #' @return sysdata.rda instruction
-#' testData <- function(testFilesIP = testthat::test_path("IP", "0.6.0", "zip"),
-#'                      testFilesTP = testthat::test_path("TP", "2.5.2", "csv", "CHUBX"),
-#'                      testFilesPP = testthat::test_path("PP", "0.5.1", "zip"),
-#'                      testFilesCS = testthat::test_path("CS", "0.2.5", "zip")) {
-#'   checkmate::assertDirectoryExists(testFilesIP)
-#'   checkmate::assertDirectoryExists(testFilesTP)
-#'   checkmate::assertDirectoryExists(testFilesPP)
-#'   checkmate::assertDirectoryExists(testFilesCS)
-#'   uploadedFilesIP <- list.files(testFilesIP,
-#'                                 pattern = ".zip",
-#'                                 full.names = TRUE,
-#'                                 recursive = TRUE)
-#'   treatmentPathways_test <- read_csv(file.path(testFilesTP, "treatmentPathways.csv"),
-#'                                      show_col_types = FALSE)
-#'   uploadedFilesPP <- list.files(testFilesPP,
-#'                                 pattern = ".zip",
-#'                                 full.names = TRUE,
-#'                                 recursive = TRUE)
-#'   uploadedFilesCS <- list.files(testFilesCS,
-#'                                 pattern = ".zip",
-#'                                 full.names = TRUE,
-#'                                 recursive = TRUE)
-#'   checkmate::assertFileExists(uploadedFilesIP)
-#'   checkmate::assertFileExists(uploadedFilesPP[1])
-#'   checkmate::assertFileExists(uploadedFilesCS[1])
-#'   checkmate::assertTibble(treatmentPathways_test)
-#'   outputDir <- file.path(tempdir(), "dataLocation")
-#'   dir.create(outputDir)
-#'
-#'   # Extract
-#'   testData <- joinDatabases(fileDataPath  = uploadedFilesIP,
-#'                            outputDir = outputDir)$IncidencePrevalence
-#'   testData[["treatmentPathways_test"]] <- treatmentPathways_test
-#'   testDataPP <- joinDatabases(fileDataPath  = uploadedFilesPP,
-#'                              outputDir = outputDir)$PatientProfiles
-#'   testDataCS <- joinDatabases(fileDataPath  = uploadedFilesCS,
-#'                              outputDir = outputDir)$CohortSurvival
-#'
-#'   testData <- c(testData, testDataPP, testDataCS)
-#'   unlink(outputDir, recursive = TRUE)
-#'   return(testData)
-#' }

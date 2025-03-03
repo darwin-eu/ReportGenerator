@@ -4,7 +4,7 @@
 \alias{tableAttrition}
 \title{Generates automatic text paragraph for Table Incidence Attrition}
 \usage{
-tableAttrition(attritionData)
+tableAttrition(attrition_data)
 }
 \arguments{
 \item{attritionData}{Data frame with incidence attrition data}

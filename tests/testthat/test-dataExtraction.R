@@ -41,7 +41,7 @@ test_that("Complete sequence of functions inside joinDatabases ZIP", {
 
   summarised_result <- omopgenerics::importSummarisedResult(csv_list$summarised_result_list)
 
-  uploadedFiles <- summarised_result
+  uploaded_files <- summarised_result
 
 })
 
@@ -49,9 +49,9 @@ test_that("Loading 1 zip files whole study", {
   fileDataPath <- list.files(test_path("studies", "summarised_zip"), pattern = "zip", full.names = TRUE)
   # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ipci2.zip"
   # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\p3-c1-019-results-ipci.zip"
-  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath[1])
-  expect_equal(length(uploadedFiles), 2)
-  expect_type(uploadedFiles, "list")
+  uploaded_files <- joinDatabases(fileDataPath = fileDataPath[1])
+  expect_equal(length(uploaded_files), 2)
+  expect_type(uploaded_files, "list")
 })
 
 test_that("Loading multiple zip files whole study", {
@@ -193,15 +193,14 @@ test_that("processCSV() in a loop", {
 
 test_that("Loading multiple csv files whole study", {
   fileDataPath <- list.files(testthat::test_path("studies", "summarised_csv"), pattern = "csv", full.names = TRUE)
-  # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\ipci2\\ipci2\\suicide_characterization_results.csv"
-  uploadedFiles <- joinDatabases(fileDataPath = fileDataPath)
-  expect_equal(length(uploadedFiles), 2)
-  expect_type(uploadedFiles, "list")
+  uploaded_files <- joinDatabases(fileDataPath = fileDataPath)
+  expect_equal(length(uploaded_files), 2)
+  expect_type(uploaded_files, "list")
 })
 
 test_that("loadFileData iteration per result id", {
   data <- list()
-  filesLocation <- testthat::test_path("studies", "summarised_csv", "treatmentPathways.csv")
+  filesLocation <- testthat::test_path("studies", "summarised_csv", "CHUBX_treatment_pathways_2025_03_01.csv")
   assertFileExists(filesLocation)
   configData <- yaml.load_file(system.file("config",
                                            "variablesConfig.yaml",

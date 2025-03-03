@@ -13,11 +13,13 @@ IncidencePrevalence:
 TreatmentPatterns:
   treatmentPathways:
     names:
-    - path
+    - pathway
     - freq
-    - sex
     - age
-    - indexYear
+    - sex
+    - index_year
+    - analysis_id
+    - target_cohort_id
 cohortAttrition:
   cohortAttrition:
     names:

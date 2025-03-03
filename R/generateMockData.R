@@ -78,9 +78,10 @@ generateMockData <- function(databaseName = c("CHUBX",
                                                     "summarise_large_scale_characteristics" = summarise_large_scale_characteristics),
                      "CohortSurvival" = list("single_event" = cohortSurvivalData$single_event,
                                              "competing_risk" = cohortSurvivalData$competing_risk),
-                     "TreatmentPatterns" = list("treatmentPathways" = treatmentPathwaysData$treatmentPathways,
+                     "TreatmentPatterns" = list("treatment_pathways" = treatmentPathwaysData$treatment_pathways,
+                                                "cdm_source_info" = treatmentPathwaysData$cdm_source_info,
                                                 "metadata" = treatmentPathwaysData$metadata,
-                                                "summaryStatsTherapyDuration" = treatmentPathwaysData$summaryStatsTherapyDuration)
+                                                "summary_event_duration" = treatmentPathwaysData$summary_event_duration)
     )
 
     # Insert database name
@@ -99,9 +100,10 @@ generateMockData <- function(databaseName = c("CHUBX",
     dataList[["CohortCharacteristics"]][["summarise_large_scale_characteristics"]] <- resultListCC$summarise_large_scale_characteristics
     dataList[["CohortSurvival"]][["single_event"]] <- resultListCS$single_event
     dataList[["CohortSurvival"]][["competing_risk"]] <- resultListCS$competing_risk
-    dataList[["TreatmentPatterns"]][["treatmentPathways"]] <- resultListTP$treatmentPathways
+    dataList[["TreatmentPatterns"]][["treatment_pathways"]] <- resultListTP$treatment_pathways
+    dataList[["TreatmentPatterns"]][["cdm_source_info"]] <- resultListTP$cdm_source_info
     dataList[["TreatmentPatterns"]][["metadata"]] <- resultListTP$metadata
-    dataList[["TreatmentPatterns"]][["summaryStatsTherapyDuration"]] <- resultListTP$summaryStatsTherapyDuration
+    dataList[["TreatmentPatterns"]][["summary_event_duration"]] <- resultListTP$summary_event_duration
 
     exportResults(resultList = dataList,
                   zipName = paste0("mock_data_", dbName),
@@ -145,10 +147,10 @@ getIncidencePrevalenceMock <- function(sampleSize) {
 
   sampleSize <- 1000
 
-  cdm <- IncidencePrevalence::mockIncidencePrevalenceRef(sampleSize = sampleSize,
-                                                         outPre = 0.3,
-                                                         minOutcomeDays = 365,
-                                                         maxOutcomeDays = 3650)
+  cdm <- IncidencePrevalence::mockIncidencePrevalence(sampleSize = sampleSize,
+                                                      outPre = 0.3,
+                                                      minOutcomeDays = 365,
+                                                      maxOutcomeDays = 3650)
 
   # Denominator data
   cdm <- IncidencePrevalence::generateDenominatorCohortSet(
@@ -170,8 +172,7 @@ getIncidencePrevalenceMock <- function(sampleSize) {
     interval = "years",
     repeatedEvents = TRUE,
     outcomeWashout = 180,
-    completeDatabaseIntervals = TRUE,
-    minCellCount = 5
+    completeDatabaseIntervals = TRUE
   )
 
   # incidence_attrition <- IncidencePrevalence::attrition(incidence_estimates)
@@ -189,8 +190,7 @@ getIncidencePrevalenceMock <- function(sampleSize) {
     outcomeTable = "outcome",
     interval = "years",
     completeDatabaseIntervals = TRUE,
-    fullContribution = TRUE,
-    minCellCount = 5
+    fullContribution = TRUE
   )
 
   # # Attrition data
@@ -204,8 +204,7 @@ getIncidencePrevalenceMock <- function(sampleSize) {
     denominatorTable = "denominator",
     outcomeTable = "outcome",
     interval = "years",
-    timePoint = "start",
-    minCellCount = 5
+    timePoint = "start"
   )
   # # Attrition data
   # prevalence_point_attrition <- prevalencePoint |>
@@ -229,13 +228,13 @@ getCharacteristicsResult <- function() {
   # darwin-eu-dev/CohortCharacteristics
 
   con <- DBI::dbConnect(duckdb::duckdb(),
-                        dbdir = CDMConnector::eunomia_dir()
+                        dbdir = CDMConnector::eunomiaDir()
   )
 
-  cdm <- CDMConnector::cdm_from_con(con,
-                                    cdm_schem = "main",
-                                    write_schema = "main",
-                                    cdm_name = "Eunomia"
+  cdm <- CDMConnector::cdmFromCon(con,
+                                  cdmSchema = "main",
+                                  writeSchema = "main",
+                                  cdmName  = "Eunomia"
   )
 
   meds_cs <- getDrugIngredientCodes(
@@ -290,12 +289,12 @@ getLargeScaleCharacteristicsResult <- function() {
   # darwin-eu-dev/CohortCharacteristics
 
   con <- DBI::dbConnect(duckdb::duckdb(),
-                        dbdir = CDMConnector::eunomia_dir()
+                        dbdir = CDMConnector::eunomiaDir()
   )
 
-  cdm <- CDMConnector::cdm_from_con(con,
-                                    cdm_schem = "main",
-                                    write_schema = "main"
+  cdm <- CDMConnector::cdmFromCon(con,
+                                    cdmSchem = "main",
+                                    writeSchema = "main"
   )
 
   cdm <- generateConceptCohortSet(
@@ -333,7 +332,7 @@ getTreatmentPathways <- function() {
 
   con <- DBI::dbConnect(
     drv = duckdb::duckdb(),
-    dbdir = CDMConnector::eunomia_dir()
+    dbdir = CDMConnector::eunomiaDir()
   )
 
   cdm <- CDMConnector::cdmFromCon(

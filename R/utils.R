@@ -35,7 +35,8 @@ getItemsList <- function(items) {
       result <- rbind(result, i)
     }
   }
-  result <- unlist(result)
+  result <- unlist(result) %>%
+    unique()
   return(result)
 }
 
@@ -47,11 +48,13 @@ getItemsList <- function(items) {
 #' @param input Declare the type of value such as "title" to look up in the yml file.
 #' @param output Expected value from the yml file such as the "function" to evaluate.
 #' @param inputValue The actual value in character to look up.
+#' @param reportApp If TRUE, it will pull the menuConfig yaml file from the reportApp folder.
 #'
 #' @return a dataframe with the properties of the items
 getItemConfig <- function(input = NULL,
                           output = NULL,
-                          inputValue = NULL) {
+                          inputValue = NULL,
+                          reportApp = FALSE) {
 
   checkmate::assertSetEqual(length(input), 1)
   checkmate::assertSetEqual(length(output), 1)
@@ -60,12 +63,16 @@ getItemConfig <- function(input = NULL,
   checkmate::assertCharacter(output)
   checkmate::assertCharacter(inputValue)
 
-  menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
-  functionText <- lapply(menuData, function(menuData, title) {
-    if (menuData[[input]] == inputValue) {
+  if (!reportApp) {
+    menuData <- yaml.load_file(system.file("config", "menuConfig.yaml", package = "ReportGenerator"))
+  } else {
+    menuData <- yaml.load_file(here::here("config", "menuConfig.yaml"))
+  }
+  functionText <- lapply(menuData, function(menuData, type) {
+    if (any(inputValue %in% menuData[[input]])) {
       menuData[[output]]
     }
-  }, title = title)
+  }, type = type)
   result <- list()
   for (i in functionText) {
     if (!is.null(i)) {
@@ -73,115 +80,10 @@ getItemConfig <- function(input = NULL,
     }
   }
   result <- unlist(result)
+  if (is.null(result)) {
+    cli::cli_alert_danger("No item found in the menuConfig.yaml file.")
+  }
   return(result)
-}
-
-#' Adds the given type to the current previewItem string.
-#'
-#' @param previewItemString string representing the previewItem
-#' @param previewItemType preview item type
-#'
-#' @return the updated preview item string
-addPreviewItemType <- function(previewItemString, previewItemType) {
-
-  result <- previewItemString
-  if (is.null(previewItemType)) {
-    previewItemType <- "Facet by outcome"
-  }
-  if (previewItemType == "Facet by outcome") {
-    facet <- "facet = 'outcome_cohort_name'"
-    colour <- "colour = 'cdm_name'"
-  } else if (previewItemType == "Facet by database, colour by strata_name"){
-    facet <- "facet = 'cdm_name'"
-    colour <- "colour = 'strata_name'"
-  } else if (previewItemType == "Facet by database"){
-    facet <- "facet = 'cdm_name'"
-    colour <- "colour = 'outcome_cohort_name'"
-  }
-  result <- gsub("colour", colour, previewItemString)
-  result <- gsub("facet", facet, result)
-  return(result)
-}
-
-#' Adds the given type to the current previewItem string, by sex
-#'
-#' @param previewItemString string representing the previewItem
-#' @param previewItemType preview item type
-#'
-#' @return the updated preview item string
-addPreviewItemTypeSex <- function(previewItemString, previewItemType) {
-
-  result <- previewItemString
-  if (is.null(previewItemType)) {
-    previewItemType <- "Facet by outcome"
-  }
-
-  if (previewItemType == "Facet by outcome") {
-    facet <- "facet = 'outcome_cohort_name'"
-    colour <- "colour = 'denominator_sex'"
-  } else if (previewItemType == "Facet by database"){
-    facet <- "facet = 'cdm_name'"
-    colour <- "colour = 'denominator_sex'"
-  }
-  result <- gsub("colour", colour, previewItemString)
-  result <- gsub("facet", facet, result)
-  return(result)
-}
-
-#' Adds the given type to the current previewItem string, by sex
-#'
-#' @param previewItemString string representing the previewItem
-#' @param previewItemType preview item type
-#'
-#' @return the updated preview item string
-addPreviewItemTypeAge <- function(previewItemString, previewItemType) {
-
-  result <- previewItemString
-  if (is.null(previewItemType)) {
-    previewItemType <- "Facet by outcome"
-  }
-  if (previewItemType == "Facet by outcome") {
-    facet <- "facet = 'outcome_cohort_name'"
-    colour <- "colour = 'denominator_age_group'"
-  } else if (previewItemType == "Facet by database"){
-    facet <- "facet = 'cdm_name'"
-    colour <- "colour = 'denominator_age_group'"
-  }
-  result <- gsub("colour", colour, previewItemString)
-  result <- gsub("facet", facet, result)
-  return(result)
-}
-
-#' Adds the given ribbon to the current previewItem string.
-#'
-#' @param previewItemString string representing the previewItem
-#' @param ribbon ribbon value
-#'
-#' @return the updated preview item string
-addPreviewItemRibbon <- function(previewItemString, ribbon) {
-  ribbonStr <- paste0("ribbon = ", ribbon)
-  return(gsub("ribbon", ribbonStr, previewItemString))
-}
-
-#' Adds plot options to the current previewItem string.
-#'
-#' @param previewItemString string representing the previewItem
-#' @param showCI if confidence interval should be shown
-#' @param stackPlots if subplots should be stacked (on top of each other) or not
-#'
-#' @return the updated preview item string
-addPlotOptions <- function(previewItemString, showCI, stackPlots) {
-  optionsStr <- "options = list("
-  showCI <- as.logical(showCI)
-  stackPlots <- as.logical(stackPlots)
-  if (!showCI) {
-    optionsStr <- paste0(optionsStr, "hideConfidenceInterval = TRUE")
-  }
-  if (stackPlots) {
-    optionsStr <- paste0(optionsStr, ifelse(!showCI, ",", ""), "facetNcols = 1")
-  }
-  optionsStr <- paste0(optionsStr, ")")
-  return(gsub("options", optionsStr, previewItemString))
 }
 
 exportResults <- function(resultList,
@@ -229,7 +131,7 @@ exportResults <- function(resultList,
 
     if ("summarised_result" %in% classWorkingResult) {
       omopgenerics::exportSummarisedResult(workingResult, fileName = fileName, path = tempDir)
-    } else if (workingName == "treatmentPathways" | workingName == "metadata" | workingName == "summaryStatsTherapyDuration" | workingName == "incidence_attrition" | workingName == "prevalence_point_attrition" | workingName == "prevalence_period_attrition") {
+    } else if (workingName == "treatment_pathways" | workingName == "metadata" | workingName == "cdm_source_info" | workingName == "summary_event_duration" | workingName == "incidence_attrition" | workingName == "prevalence_point_attrition" | workingName == "prevalence_period_attrition") {
       utils::write.csv(workingResult,
                        file = file.path(
                          tempDir,
@@ -288,15 +190,15 @@ createDownloadTableUI <- function(ns) {
                             shiny::br(), downloadButton(ns("downloadSurvivalTable"), "Download Plot"))))
 }
 
-createDownloadPlotUI <- function(ns) {
+createDownloadPlotUI <- function(ns, type = "download_plot") {
   tagList(column(2, div("height:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-                 div(style = "display: inline-block;margin-top:5px", textInput(ns("plotHeight"), "", 10, width = "50px"))),
+                 div(style = "display: inline-block;margin-top:5px", textInput(ns(paste0(type, "_height")), "", 10, width = "50px"))),
           column(2, div("width:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-                 div(style = "display: inline-block;margin-top:5px", textInput(ns("plotWidth"), "", 20, width = "50px"))),
+                 div(style = "display: inline-block;margin-top:5px", textInput(ns(paste0(type, "_width")), "", 20, width = "50px"))),
           column(2, div("dpi:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-                 div(style = "display: inline-block;margin-top:5px", textInput(ns("plotDpi"), "", 300, width = "50px"))),
+                 div(style = "display: inline-block;margin-top:5px", textInput(ns(paste0(type, "_dpi")), "", 300, width = "50px"))),
           column(2, tagList(shiny::HTML("<label class = 'control-label'>&#8205;</label>"),
-                            shiny::br(), downloadButton(ns("downloadFigure"), "Download Plot"))))
+                            shiny::br(), downloadButton(ns(type), "Download Plot"))))
 }
 
 createDataTable <- function(data, tableName = "result") {
@@ -321,34 +223,72 @@ createDataTable <- function(data, tableName = "result") {
                 class = "display")
 }
 
-analysisNamesSum <- function(settingsData) {
-  # settingsData <- settings(uploadedFilesList)
-  analysisNamesSum <- settingsData %>%
+analysisNamesAvailable <- function(settingsData) {
+  # settingsData <- settings(uploaded_filesList)
+  result_types_available <- settingsData %>%
     pull(result_type) %>%
     unique()
 
-  if ("survival" %in% analysisNamesSum) {
-    survivalAnalysisType <- settingsData %>%
-      dplyr::filter(result_type == "survival") %>%
-      pull(analysis_type) %>%
-      unique()
-    analysisNamesSum <- analysisNamesSum[-which(analysisNamesSum == "survival")]
-    analysisNamesSum <- c(analysisNamesSum, survivalAnalysisType)
-  }
-  return(analysisNamesSum)
+  result_types_available <- result_types_available[grepl("incidence|incidence_attrition|incidence_attrition|prevalence|prevalence_attrition|summarise_large_scale_characteristics|summarise_characteristics", result_types_available)]
+
+  analysis_types_available <- settingsData %>%
+    pull(analysis_type) %>%
+    unique()
+
+  analysis_types_available <- analysis_types_available[grepl("single_event|competing_risk", analysis_types_available)]
+
+  items_available <- c(result_types_available, analysis_types_available)
+
+  return(items_available)
 }
 
-getSummarisedData <- function(uploadedData, type_result = "summarise_characteristics") {
+sunburstPathways <- function(pathwaysData) {
 
-  result_ids <- settings(uploadedData) %>%
-    dplyr::filter(result_type == type_result) %>%
-    pull(result_id)
+  data_all <- pathwaysData %>% mutate(freq = as.numeric(freq))
 
-  summarised_result <- uploadedData %>%
-    dplyr::filter(result_id %in% result_ids)
+  data_split <- data_all %>%
+    separate(path, into = c("level1", "level2"), sep = "/", fill = "right", extra = "merge") %>%
+    mutate(level2 = if_else(is.na(level2), level1, level2))
 
-  attr(summarised_result, "settings") <- settings(summarised_result) %>%
-    dplyr::filter(result_id %in% result_ids)
+  ring_inner <- data_split %>%
+    group_by(cdm_name, level1) %>%
+    summarise(freq = sum(freq), .groups = "drop") %>%
+    mutate(level1 = forcats::fct_inorder(level1)) %>%
+    arrange(cdm_name, level1) %>%
+    group_by(cdm_name) %>%
+    mutate(prop = freq / sum(freq),
+           start = lag(cumsum(prop), default = 0),
+           stop = cumsum(prop)) %>%
+    ungroup()
 
-  return(summarised_result)
+  ring_outer <- data_split %>%
+    group_by(cdm_name, level1, level2) %>%
+    summarise(freq = sum(freq), .groups = "drop") %>%
+    group_by(cdm_name, level1) %>%
+    mutate(prop_within = freq / sum(freq),
+           cum_within = cumsum(prop_within),
+           cum_within_prev = lag(cum_within, default = 0)) %>%
+    ungroup() %>%
+    left_join(ring_inner %>% select(cdm_name, level1, start, stop),
+              by = c("cdm_name", "level1")) %>%
+    mutate(outer_start = start + cum_within_prev * (stop - start),
+           outer_stop = start + cum_within * (stop - start))
+
+  ggplot2::ggplot() +
+    ggplot2::geom_rect(data = ring_outer,
+                       ggplot2::aes(xmin = outer_start, xmax = outer_stop,
+                  ymin = 1, ymax = 20, fill = level2),
+              color = "white") +
+    ggplot2::geom_rect(data = ring_inner,
+                       ggplot2::aes(xmin = start, xmax = stop,
+                  ymin = -20, ymax = 0, fill = level1),
+              color = "white") +
+    ggplot2::coord_polar(theta = "x") +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(axis.text  = ggplot2::element_blank(),
+          panel.grid = ggplot2::element_blank(),
+          legend.position = "right") +
+    ggplot2::ylim(-40, 30) +
+    ggplot2::labs(fill = "Category") +
+    ggplot2::facet_wrap(~ cdm_name, ncol = 2)
 }
