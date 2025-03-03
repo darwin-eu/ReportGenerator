@@ -228,13 +228,13 @@ getCharacteristicsResult <- function() {
   # darwin-eu-dev/CohortCharacteristics
 
   con <- DBI::dbConnect(duckdb::duckdb(),
-                        dbdir = CDMConnector::eunomia_dir()
+                        dbdir = CDMConnector::eunomiaDir()
   )
 
-  cdm <- CDMConnector::cdm_from_con(con,
-                                    cdm_schem = "main",
-                                    write_schema = "main",
-                                    cdm_name = "Eunomia"
+  cdm <- CDMConnector::cdmFromCon(con,
+                                  cdmSchema = "main",
+                                  writeSchema = "main",
+                                  cdmName  = "Eunomia"
   )
 
   meds_cs <- getDrugIngredientCodes(
@@ -289,12 +289,12 @@ getLargeScaleCharacteristicsResult <- function() {
   # darwin-eu-dev/CohortCharacteristics
 
   con <- DBI::dbConnect(duckdb::duckdb(),
-                        dbdir = CDMConnector::eunomia_dir()
+                        dbdir = CDMConnector::eunomiaDir()
   )
 
-  cdm <- CDMConnector::cdm_from_con(con,
-                                    cdm_schem = "main",
-                                    write_schema = "main"
+  cdm <- CDMConnector::cdmFromCon(con,
+                                    cdmSchem = "main",
+                                    writeSchema = "main"
   )
 
   cdm <- generateConceptCohortSet(
@@ -332,7 +332,7 @@ getTreatmentPathways <- function() {
 
   con <- DBI::dbConnect(
     drv = duckdb::duckdb(),
-    dbdir = CDMConnector::eunomia_dir()
+    dbdir = CDMConnector::eunomiaDir()
   )
 
   cdm <- CDMConnector::cdmFromCon(
