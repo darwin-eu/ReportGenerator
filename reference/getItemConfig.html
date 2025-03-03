@@ -9,7 +9,7 @@ and filtered by the files that have been uploaded."><meta property="og:image" co
 
     <a class="navbar-brand me-2" href="../index.html">ReportGenerator</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.21.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.22.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +30,7 @@ and filtered by the files that have been uploaded."><meta property="og:image" co
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Checks items available for ReportGenerator</h1>
-      <small class="dont-index">Source: <a href="https://github.com/darwin-eu-dev/ReportGenerator/blob/v1.21.0/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/darwin-eu-dev/ReportGenerator/blob/main/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>getItemConfig.Rd</code></div>
     </div>
 
@@ -41,7 +41,12 @@ and filtered by the files that have been uploaded.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getItemConfig</span><span class="op">(</span>input <span class="op">=</span> <span class="cn">NULL</span>, output <span class="op">=</span> <span class="cn">NULL</span>, inputValue <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getItemConfig</span><span class="op">(</span></span>
+<span>  input <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  output <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  inputValue <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  reportApp <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -58,6 +63,10 @@ and filtered by the files that have been uploaded.</p>
 
 <dt id="arg-inputvalue">inputValue<a class="anchor" aria-label="anchor" href="#arg-inputvalue"></a></dt>
 <dd><p>The actual value in character to look up.</p></dd>
+
+
+<dt id="arg-reportapp">reportApp<a class="anchor" aria-label="anchor" href="#arg-reportapp"></a></dt>
+<dd><p>If TRUE, it will pull the menuConfig yaml file from the reportApp folder.</p></dd>
 
 </dl></div>
     <div class="section level2">

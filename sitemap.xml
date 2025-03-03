@@ -4,11 +4,6 @@
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/authors.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/index.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/news/index.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/addPlotOptions.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/addPreviewItemRibbon.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/addPreviewItemType.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/addPreviewItemTypeAge.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/addPreviewItemTypeSex.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/autoCaptionCharac.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/dataCleanAttrition.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/extractCSV.html</loc></url>
@@ -21,14 +16,7 @@
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/loadFileData.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/processCSV.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/reportGenerator.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/table1Att.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/table1Inc.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/table1NumPar.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/table1aAutText.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/table2IncOver.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/table3IncYear.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/table4IncAge.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/table5IncSex.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/tableAttrition.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/unzipFiles.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/ReportGenerator/reference/variablesConfigAttrition.html</loc></url>

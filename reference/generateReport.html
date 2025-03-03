@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ReportGenerator</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.21.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.22.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,7 +28,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Generate report</h1>
-      <small class="dont-index">Source: <a href="https://github.com/darwin-eu-dev/ReportGenerator/blob/v1.21.0/R/generateReport.R" class="external-link"><code>R/generateReport.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/darwin-eu-dev/ReportGenerator/blob/main/R/generateReport.R" class="external-link"><code>R/generateReport.R</code></a></small>
       <div class="d-none name"><code>generateReport.Rd</code></div>
     </div>
 
@@ -38,7 +38,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">generateReport</span><span class="op">(</span><span class="va">reportDocx</span>, <span class="va">dataReportList</span>, <span class="va">fileName</span>, <span class="va">logger</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">generateReport</span><span class="op">(</span><span class="va">reportDocx</span>, <span class="va">dataReportList</span>, <span class="va">fileName</span>, <span class="va">logger</span>, reportApp <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -59,6 +59,10 @@
 
 <dt id="arg-logger">logger<a class="anchor" aria-label="anchor" href="#arg-logger"></a></dt>
 <dd><p>logger object</p></dd>
+
+
+<dt id="arg-reportapp">reportApp<a class="anchor" aria-label="anchor" href="#arg-reportapp"></a></dt>
+<dd><p>If TRUE, it will pull the menuConfig yaml file from the reportApp folder.</p></dd>
 
 </dl></div>
     <div class="section level2">
