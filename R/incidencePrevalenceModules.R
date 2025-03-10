@@ -64,7 +64,7 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
     # Add object
     addObject <- reactiveVal()
 
-    ### OBJECTS C
+    ### OBJECTS CREATION
     ## Creates specific tables and plots for IncPrev
     ## Observe functions to add them to addObject
 
