@@ -1,6 +1,5 @@
 mainFiltersLscUI <- function(id, uploaded_files) {
   ns <- NS(id)
-  captionText <- "Table 2. Baseline characteristics of new user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
   settingsLSC <- settings(uploaded_files)
   # result_id_table_name <- paste(settingsLSC$result_id, settingsLSC$table_name, sep = " - ")
   tagList(
@@ -76,19 +75,13 @@ mainFiltersLscUI <- function(id, uploaded_files) {
                          multiple = TRUE,
                          list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
       ),
-     ),
-    fluidRow(
-      column(12,
-             createCaptionInput(inputId = ns("captionCharacteristics"),
-                                value = captionText,
-                                height = "80px")
-      ),
-    ),
+     )
     )
 }
 
 tableFiltersLscUI <- function(id, uploaded_files) {
   ns <- NS(id)
+  captionText <- "Table 2. Baseline characteristics of new user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
   tagList(
     fluidRow(
       column(6,
@@ -107,12 +100,18 @@ tableFiltersLscUI <- function(id, uploaded_files) {
       ),
     fluidRow(
       createAddItemToReportUI(ns("add_table")),
-      column(2, numericInput(ns("topConcepts"), "Top n", 10, min = 1, max = 100))
-      ),
+      column(4, downloadButton(ns("downloadTable"), "Download Table"))
+    ),
     fluidRow(
-      column(3,
-             downloadButton(ns("downloadTable"), "Download Table"))
+      column(4, numericInput(ns("topConcepts"), "Top n", 10, min = 1, max = 100))
+    ),
+    fluidRow(
+      column(12,
+             createCaptionInput(inputId = ns("captionCharacteristics"),
+                                value = captionText,
+                                height = "80px")
       ),
+    ),
     fluidRow(
       column(12,
              shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTable"))))

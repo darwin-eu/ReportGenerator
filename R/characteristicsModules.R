@@ -83,7 +83,6 @@ characteristicsUI <- function(id, uploaded_files) {
                uiOutput(outputId = ns("captionInput"))
         ),
       ),
-      fluidRow(createAddItemToReportUI(ns(lockName))),
       tags$br(),
       fluidRow(
         column(12,
@@ -106,7 +105,10 @@ characteristicsUI <- function(id, uploaded_files) {
                                                   multiple = TRUE)
                                       )
                                ),
-                             fluidRow(column(6, downloadButton(ns("downloadCharacteristicsTable"), "Download Table"))),
+                             fluidRow(
+                               createAddItemToReportUI(ns(lockName)),
+                               column(4, downloadButton(ns("downloadCharacteristicsTable"), "Download Table"))
+                               ),
                              column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
                     )
@@ -175,7 +177,8 @@ characteristicsServer <- function(id, uploaded_files) {
                                                          type = "gt",
                                                          header = input$header,
                                                          groupColumn = input$groupColumn,
-                                                         hide = character())))
+                                                         hide = character(),
+                                                         caption = input$captionCharacteristics)))
       })
 
     addObject
