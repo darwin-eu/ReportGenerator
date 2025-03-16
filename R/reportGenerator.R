@@ -33,6 +33,7 @@
 #' @importFrom cli cli_progress_step
 #' @importFrom glue glue
 #' @importFrom forcats fct_inorder
+#' @importFrom stringr str_replace_all str_to_title
 #' @export
 reportGenerator <- function(logger = NULL) {
 
@@ -404,9 +405,11 @@ reportGenerator <- function(logger = NULL) {
         return("None")
       } else {
         dataReportList <- reactiveValuesToList(do.call(reactiveValues, dataReport$objects))
-        result <- data.frame(name = character(0), caption = character(0))
+        result <- data.frame(`Result Type` = character(0), caption = character(0))
         for (i in seq(1:length(dataReportList))) {
-          name <- names(dataReportList[[i]])
+          name <- names(dataReportList[[i]]) %>%
+            stringr::str_replace_all("_", " ") %>%
+            stringr::str_to_title()
           reportItem <- dataReportList[[i]][[name]]
           caption <- ""
           if ("caption" %in% names(reportItem)) {
@@ -449,10 +452,10 @@ reportGenerator <- function(logger = NULL) {
         if (!is.null(dataReport$objects)) {
           reportItems <- rev(reactiveValuesToList(do.call(reactiveValues, dataReport$objects)))
         }
-        generateReport(reportDocx,
-                       reportItems,
-                       file,
-                       logger,
+        generateReport(reportDocx = reportDocx,
+                       dataReportList = reportItems,
+                       fileName = file,
+                       logger = logger,
                        reportApp = FALSE)
         shinyjs::enable("generateReport")
         shinycssloaders::hidePageSpinner()

@@ -150,7 +150,8 @@ largeScaleServer <- function(id, uploaded_files) {
                                                                      type = "gt",
                                                                      header = input$header,
                                                                      groupColumn = input$groupColumn,
-                                                                     hide = character()))
+                                                                     hide = character(),
+                                                                     caption = input$captionCharacteristics))
       )
     })
     addObject
