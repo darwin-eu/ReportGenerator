@@ -1,5 +1,6 @@
 attritionUI <- function(id, uploaded_files) {
   ns <- NS(id)
+  captionText <- "Table. New user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
   tagList(
     fluidRow(
       column(4,
@@ -44,6 +45,14 @@ attritionUI <- function(id, uploaded_files) {
                          multiple = TRUE))
     ),
     fluidRow(createAddItemToReportUI(ns("lockAttrition"))),
+    tags$br(),
+    fluidRow(
+      column(12,
+             createCaptionInput(inputId = ns("captionAttrition"),
+                                value = captionText,
+                                height = "80px")
+      ),
+    ),
     fluidRow(
       tabPanel("Data", br(), column(12, gt::gt_output(ns("attritionTable")))))
   )
@@ -84,7 +93,8 @@ attritionServer <- function(id, uploaded_files) {
                                                     header = input$header,
                                                     groupColumn = input$groupColumn,
                                                     settingsColumn = input$settingsColumn,
-                                                    hide = "estimate_name"))
+                                                    hide = "estimate_name",
+                                                    caption = input$captionAttrition))
         )
       })
 
@@ -108,7 +118,8 @@ attritionServer <- function(id, uploaded_files) {
                                                      header = NULL, # input$header,
                                                      groupColumn = NULL, # input$groupColumn,
                                                      settingsColumn = NULL, # input$settingsColumn,
-                                                     hide = "estimate_name"))
+                                                     hide = "estimate_name",
+                                                     caption = input$captionAttrition))
         )
       })
 

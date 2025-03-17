@@ -46,6 +46,8 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger, reportA
                      height = 3,
                      width = 7)
         body_add(reportDocx,
+                 value = dataReportList[[i]][[1]][["caption"]])
+        body_add(reportDocx,
                  value = titleText,
                  style = "heading 1")
       } else {
@@ -81,8 +83,8 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger, reportA
                     width = plotDim[["width"]],
                     height = plotDim[["height"]],
                     style = "Normal")
-        # body_add(reportDocx,
-        #          value = dataReportList[[i]][[1]][["caption"]])
+        body_add(reportDocx,
+                 value = dataReportList[[i]][[1]][["caption"]])
         body_add(reportDocx,
                  value = titleText,
                  style = "heading 1")

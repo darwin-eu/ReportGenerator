@@ -55,6 +55,9 @@ plotFiltersSurvivalUI <- function(id, uploaded_files) {
     fluidRow(
       createDownloadPlotUI(ns)
     ),
+    tags$br(),
+    uiOutput(outputId = ns("caption_plot")),
+    tags$br(),
     fluidRow(column(12,
                     shinycssloaders::withSpinner(plotOutput(ns("summarisedPlot")))))
   )
@@ -90,8 +93,9 @@ tableFiltersSurvivalUI <- function(id, uploaded_files) {
                            value = TRUE,
                            width = NULL)),
     ),
-    uiOutput(outputId = ns("caption_table")),
     fluidRow(createAddItemToReportUI(ns("add_table"))),
+    tags$br(),
+    uiOutput(outputId = ns("caption_table")),
     tags$br(),
     fluidRow(column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTable")))))
     )

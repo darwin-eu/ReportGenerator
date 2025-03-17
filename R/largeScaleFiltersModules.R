@@ -102,6 +102,7 @@ tableFiltersLscUI <- function(id, uploaded_files) {
       createAddItemToReportUI(ns("add_table")),
       column(4, downloadButton(ns("downloadTable"), "Download Table"))
     ),
+    tags$br(),
     fluidRow(
       column(4, numericInput(ns("topConcepts"), "Top n", 10, min = 1, max = 100))
     ),

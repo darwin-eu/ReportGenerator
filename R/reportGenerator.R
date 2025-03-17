@@ -407,7 +407,8 @@ reportGenerator <- function(logger = NULL) {
         dataReportList <- reactiveValuesToList(do.call(reactiveValues, dataReport$objects))
         result <- data.frame(`Result Type` = character(0), caption = character(0))
         for (i in seq(1:length(dataReportList))) {
-          name <- names(dataReportList[[i]]) %>%
+          name <- names(dataReportList[[i]])
+          name_normalised <- name %>%
             stringr::str_replace_all("_", " ") %>%
             stringr::str_to_title()
           reportItem <- dataReportList[[i]][[name]]
@@ -416,7 +417,7 @@ reportGenerator <- function(logger = NULL) {
             caption <- reportItem$caption
           }
           caption <- ifelse(is.null(caption), "", caption)
-          result <- rbind(result, data.frame(name = name, caption = caption))
+          result <- rbind(result, data.frame(name = name_normalised, caption = reportItem$caption))
         }
         return(result)
       }

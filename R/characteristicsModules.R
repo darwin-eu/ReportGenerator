@@ -78,11 +78,6 @@ characteristicsUI <- function(id, uploaded_files) {
                            list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
         )
       ),
-      fluidRow(
-        column(12,
-               uiOutput(outputId = ns("captionInput"))
-        ),
-      ),
       tags$br(),
       fluidRow(
         column(12,
@@ -109,6 +104,12 @@ characteristicsUI <- function(id, uploaded_files) {
                                createAddItemToReportUI(ns(lockName)),
                                column(4, downloadButton(ns("downloadCharacteristicsTable"), "Download Table"))
                                ),
+                             tags$br(),
+                             fluidRow(
+                               column(12,
+                                      uiOutput(outputId = ns("captionInput"))
+                               ),
+                             ),
                              column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTableGt"))))),
                     tabPanel("Data", br(), column(12, DT::dataTableOutput(ns("summarisedTable"))))
                     )
