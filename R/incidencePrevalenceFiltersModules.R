@@ -80,6 +80,7 @@ mainFiltersIncPrevUI <- function(id, uploaded_files) {
 
 tableFiltersIncPrevUI <- function(id, uploaded_files) {
   ns <- NS(id)
+  captionText <- "Table. New user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
   tagList(
     fluidRow(
       column(3,
@@ -118,6 +119,14 @@ tableFiltersIncPrevUI <- function(id, uploaded_files) {
       column(3,
              downloadButton(ns("downloadTable"), "Download Table"))
     ),
+    tags$br(),
+    fluidRow(
+      column(12,
+             createCaptionInput(inputId = ns("captionTable"),
+                                value = captionText,
+                                height = "80px")
+      ),
+    ),
     fluidRow(
       column(12,
              shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTable"))))
@@ -127,6 +136,7 @@ tableFiltersIncPrevUI <- function(id, uploaded_files) {
 
 plotFiltersIncPrevUI <- function(id, uploaded_files) {
   ns <- NS(id)
+  captionText <- "Figure. Plot of new user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
   tagList(
     fluidRow(
       column(4,
@@ -184,6 +194,14 @@ plotFiltersIncPrevUI <- function(id, uploaded_files) {
     fluidRow(
       createDownloadPlotUI(ns)
     ),
+    tags$br(),
+    fluidRow(
+      column(12,
+             createCaptionInput(inputId = ns("captionPlot"),
+                                value = captionText,
+                                height = "80px")
+      ),
+    ),
     fluidRow(column(12,
                     shinycssloaders::withSpinner(plotOutput(ns("summarisedPlot")))))
   )
@@ -193,6 +211,8 @@ plotPopulationFiltersIncPrevUI <- function(id, uploaded_files) {
   ns <- NS(id)
 
   inc_prev_label <- tolower(id)
+  # Describe in caption text what kind of object is being plotted
+  captionText <- "Figure. Plot of new user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
 
   tagList(
     fluidRow(
@@ -238,6 +258,14 @@ plotPopulationFiltersIncPrevUI <- function(id, uploaded_files) {
     ),
     fluidRow(
       createDownloadPlotUI(ns, type = "download_population_plot")
+    ),
+    tags$br(),
+    fluidRow(
+      column(12,
+             createCaptionInput(inputId = ns("captionPopulationPlot"),
+                                value = captionText,
+                                height = "80px")
+      ),
     ),
     fluidRow(column(12,
                     shinycssloaders::withSpinner(plotOutput(ns("summarisedPopulationPlot")))))

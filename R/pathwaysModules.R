@@ -31,20 +31,40 @@ pathwaysUI <- function(id, uploaded_files) {
                          label = "Index year",
                          choices = indexYear,
                          selected = indexYear[1],
-                         multiple = TRUE))
-    ),
+                         multiple = TRUE)),
     tags$br(),
     fluidRow(
+      column(12,
       tabsetPanel(type = "tabs",
-                  tabPanel("Sunburst", br(),
-                           fluidRow(column(6, actionButton(ns("add_sunburst"), "Add plot to the report")),
-                                    column(6, downloadButton(ns("downloadSunburst"), "Download Plot"))),
-                           plotOutput(ns("previewSunburst"))),
-                  tabPanel("Sankey", br(),
+                  tabPanel("Sunburst",
+                           tags$br(),
+                           fluidRow(
+                             column(6, actionButton(ns("add_sunburst"), "Add plot to the report")),
+                             column(6, downloadButton(ns("downloadSunburst"), "Download Plot"))
+                             ),
+                           tags$br(),
+                           fluidRow(
+                             column(12, createCaptionInput(inputId = ns("captionSunburst"), value = "Figure. Sunburst plot"))
+                             ),
+                           tags$br(),
+                           fluidRow(
+                             column(12, plotOutput(ns("previewSunburst"))))
+                           ),
+                  tabPanel("Sankey",
+                           tags$br(),
                            fluidRow(column(6, actionButton(ns("add_sankey"), "Add diagram to the report")),
                                     column(6, downloadButton(ns("downloadSankey"), "Download Plot"))),
-                           uiOutput(ns("previewSankey"))))
+                           tags$br(),
+                           fluidRow(
+                             column(12, createCaptionInput(inputId = ns("captionSankey"), value = "Figure. Sankey diagram"))
+                           ),
+                           fluidRow(
+                             column(12, uiOutput(ns("previewSankey"))))
+                  )
+                  )
     )
+    )
+  )
   )
 }
 
@@ -147,7 +167,8 @@ pathwaysServer <- function(id, uploaded_files) {
         addObject(
           list(`Sunburst Plot - TreatmentPatterns` = list(treatmentPathways = pathwaysData(),
                                                           groupCombinations = TRUE,
-                                                          fileImage = sunburstPNG)))
+                                                          fileImage = sunburstPNG,
+                                                          caption = input$captionSunburst)))
       }
     })
 
@@ -171,7 +192,8 @@ pathwaysServer <- function(id, uploaded_files) {
         addObject(
           list(`Sankey Diagram - TreatmentPatterns` = list(treatmentPathways = pathwaysData(),
                                                            groupCombinations = TRUE,
-                                                           fileImage = sankeyPNG)))
+                                                           fileImage = sankeyPNG,
+                                                           caption = input$captionSankey)))
       }
     })
     return(addObject)

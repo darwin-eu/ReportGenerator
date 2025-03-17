@@ -269,16 +269,15 @@ cohortSurvivalServer <- function(id, uploaded_files) {
       if (nrow(getData()) > 0) {
         survivalObjectType <- paste0(id, " - Table")
         tempList <- list()
-        tempList[[survivalObjectType]] <- list(
-          x = getData(),
-          times = times(),
-          timeScale = input$time_scale,
-          splitStrata = input$split_strata,
-          header = input$header,
-          type = "gt",
-          groupColumn = input$groupColumn,
-          .options = list()
-        )
+        tempList[[survivalObjectType]] <- list(x = getData(),
+                                               times = times(),
+                                               timeScale = input$time_scale,
+                                               splitStrata = input$split_strata,
+                                               header = input$header,
+                                               type = "gt",
+                                               groupColumn = input$groupColumn,
+                                               .options = list(),
+                                               caption = input$captionSurvivalEstimateTable)
         addObject(tempList)
       }
     })
@@ -295,7 +294,8 @@ cohortSurvivalServer <- function(id, uploaded_files) {
                                                facet = input$facet,
                                                colour = input$colour,
                                                riskTable = input$risk_table,
-                                               riskInterval = as.numeric(input$risk_interval))
+                                               riskInterval = as.numeric(input$risk_interval),
+                                               caption = input$captionSurvivalEstimatePlot)
         addObject(tempList)
     })
 
