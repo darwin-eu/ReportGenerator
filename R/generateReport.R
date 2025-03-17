@@ -40,7 +40,7 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger, reportA
       # Get the function to generate and print in report
       titleText <- names(dataReportList[[i]])
 
-      if (titleText == "Sankey Diagram - TreatmentPatterns" | titleText == "Sunburst Plot - TreatmentPatterns") {
+      if (titleText == "Sankey Diagram - TreatmentPatterns") {
         body_add_img(x = reportDocx,
                      src = dataReportList[[i]][[1]][["fileImage"]],
                      height = 3,

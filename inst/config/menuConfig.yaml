@@ -52,7 +52,7 @@ plotPrevalencePopulation:
     - prevalence
 sunburstPathways:
   title: "Treatment Pathways"
-  function: "sunburstPathways"
+  function: "ggSunburst"
   object:
     Sunburst Plot - TreatmentPatterns
   type:
@@ -107,3 +107,4 @@ plotSurvivalCompeting:
     - competing_risk - Plot
   type:
     - competing_risk
+
