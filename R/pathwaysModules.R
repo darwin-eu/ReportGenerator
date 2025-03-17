@@ -74,6 +74,7 @@ pathwaysServer <- function(id, uploaded_files) {
 
     pathwaysData <- reactive({
       treatmentPathways <- uploaded_files()
+      treatmentPathways$freq <- as.numeric(treatmentPathways$freq)
       treatmentPathways %>%
         dplyr::filter(cdm_name == input$cdm_name,
                       sex == input$sex,
@@ -83,12 +84,19 @@ pathwaysServer <- function(id, uploaded_files) {
 
     # Sunburst
 
-    output$previewSunburst <- renderPlot({
+    # Sunburst Plot
+    sunburst_plot <- reactive({
       if (nrow(pathwaysData()) > 0) {
-        TreatmentPatterns::createSunburstPlot(pathwaysData(),
-                                              groupCombinations = FALSE)
-        # sunburstPathways(pathwaysData())
+
+        ggSunburst(treatmentPathways = pathwaysData(),
+                   groupCombinations = FALSE,
+                   unit = "percent")
       }
+    })
+
+    output$previewSunburst <- renderPlot({
+      req(sunburst_plot())
+      sunburst_plot()
     })
 
     # Sankey
@@ -149,25 +157,25 @@ pathwaysServer <- function(id, uploaded_files) {
     ## For the HTML version of the sunburst plot
 
     observeEvent(input$add_sunburst, {
-      outputFile <- here::here("sunburstDiagram.html")
+      # outputFile <- here::here("sunburstDiagram.html")
       treatmentPathways <- pathwaysData()
       if (nrow(treatmentPathways) > 0) {
-        outputSunburst <- TreatmentPatterns::createSunburstPlot(
-          treatmentPathways = treatmentPathways,
-          groupCombinations = TRUE,
-        )
-        htmlwidgets::saveWidget(outputSunburst, outputFile)
-        sunburstPNG <- tempfile(pattern = "sunburstDiagram", fileext = ".png")
-        webshot2::webshot(
-          url = outputFile,
-          file = sunburstPNG,
-          vwidth = 1200,
-          vheight = 1200)
-        sunburstPNG <- normalizePath(sunburstPNG)
+        # outputSunburst <- TreatmentPatterns::createSunburstPlot(
+        #   treatmentPathways = treatmentPathways,
+        #   groupCombinations = TRUE,
+        # )
+        # htmlwidgets::saveWidget(outputSunburst, outputFile)
+        # sunburstPNG <- tempfile(pattern = "sunburstDiagram", fileext = ".png")
+        # webshot2::webshot(
+        #   url = outputFile,
+        #   file = sunburstPNG,
+        #   vwidth = 1200,
+        #   vheight = 1200)
+        # sunburstPNG <- normalizePath(sunburstPNG)
         addObject(
           list(`Sunburst Plot - TreatmentPatterns` = list(treatmentPathways = pathwaysData(),
                                                           groupCombinations = TRUE,
-                                                          fileImage = sunburstPNG,
+                                                          unit = "percent",
                                                           caption = input$captionSunburst)))
       }
     })

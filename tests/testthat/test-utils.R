@@ -145,11 +145,11 @@ test_that("getItemConfig for getting a function", {
   expect_equal(expression, c("plotSurvival"))
 
   # TreatmentPatterns
-  # inputValue <- "TreatmentPatterns"
-  # expression <- getItemConfig(input = input,
-  #                             output = output,
-  #                             inputValue = inputValue)
-  # expect_equal(expression, c("CohortSurvival::plotSurvival(survivalEstimate, facet, colour)"))
+  inputValue <- "Sunburst Plot - TreatmentPatterns"
+  expression <- getItemConfig(input = input,
+                              output = output,
+                              inputValue = inputValue)
+  expect_equal(expression, c("ggSunburst"))
 
 })
 
