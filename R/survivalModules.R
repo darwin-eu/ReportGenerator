@@ -191,7 +191,7 @@ cohortSurvivalServer <- function(id, uploaded_files) {
         CohortSurvival::tableSurvival(getData(),
                                       times = times(),
                                       timeScale = input$time_scale,
-                                      splitStrata = input$split_strata,
+                                      # splitStrata = input$split_strata,
                                       header = input$header,
                                       type = "gt",
                                       groupColumn = input$groupColumn,
@@ -205,9 +205,9 @@ cohortSurvivalServer <- function(id, uploaded_files) {
 
     summarised_plot <- reactive({
       CohortSurvival::plotSurvival(result = getData(),
-                                   x = input$x_axis,
-                                   xscale = input$time_scale,
-                                   ylim = c(0, NA),
+                                   # x = input$x_axis,
+                                   # xscale = input$time_scale,
+                                   # ylim = c(0, NA),
                                    cumulativeFailure = input$cumulative_failure,
                                    ribbon = input$ribbon,
                                    facet = input$facet,
