@@ -6,14 +6,18 @@ plotFiltersSurvivalUI <- function(id, uploaded_files) {
     cumulativeFailureOption <- FALSE
   }
 
+  # We have to filter "reason"
+  strata_column <- testData$CohortSurvival$single_event %>% omopgenerics::strataColumns()
+  strata_column <- strata_column[!grepl("reason", strata_column)]
+
   tagList(
     fluidRow(
-      column(4,
-             pickerInput(inputId = ns("x_axis"),
-                         label = "X Axis",
-                         choices = c("time"),
-                         selected = c("time"),
-                         multiple = FALSE)),
+      # column(4,
+      #        pickerInput(inputId = ns("x_axis"),
+      #                    label = "X Axis",
+      #                    choices = c("time"),
+      #                    selected = c("time"),
+      #                    multiple = FALSE)),
       column(4,
              pickerInput(inputId = ns("facet"),
                          label = "Facet",
@@ -23,8 +27,8 @@ plotFiltersSurvivalUI <- function(id, uploaded_files) {
       column(4,
              pickerInput(inputId = ns("colour"),
                          label = "Colour",
-                         choices = c("strata_name"),
-                         selected = c("strata_name"),
+                         choices = strata_column,
+                         selected = strata_column[1],
                          multiple = TRUE)),
     ),
     fluidRow(
@@ -38,11 +42,11 @@ plotFiltersSurvivalUI <- function(id, uploaded_files) {
                            label = "Ribbon",
                            value = FALSE,
                            width = NULL)),
-      column(2,
-             checkboxInput(inputId = ns("risk_table"),
-                           label = "Risk Table",
-                           value = FALSE,
-                           width = NULL)),
+      # column(2,
+      #        checkboxInput(inputId = ns("risk_table"),
+      #                      label = "Risk Table",
+      #                      value = FALSE,
+      #                      width = NULL)),
       column(3,
              textInput(ns("risk_interval"),
                        label = "Risk Interval",
@@ -86,13 +90,13 @@ tableFiltersSurvivalUI <- function(id, uploaded_files) {
                          selected = c("group"),
                          multiple = TRUE)),
     ),
-    fluidRow(
-      column(2,
-             checkboxInput(inputId = ns("split_strata"),
-                           label = "Split Strata",
-                           value = TRUE,
-                           width = NULL)),
-    ),
+    # fluidRow(
+    #   column(2,
+    #          checkboxInput(inputId = ns("split_strata"),
+    #                        label = "Split Strata",
+    #                        value = TRUE,
+    #                        width = NULL)),
+    # ),
     fluidRow(createAddItemToReportUI(ns("add_table"))),
     tags$br(),
     uiOutput(outputId = ns("caption_table")),

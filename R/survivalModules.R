@@ -142,7 +142,8 @@ cohortSurvivalServer <- function(id, uploaded_files) {
                  strata_level %in% input$strata_level,
                  variable_name %in% input$variable_name,
                  variable_level %in% input$variable_level,
-                 estimate_type %in% input$estimate_type)
+                 estimate_type %in% input$estimate_type
+                 )
       }
 
     })
@@ -191,7 +192,6 @@ cohortSurvivalServer <- function(id, uploaded_files) {
         CohortSurvival::tableSurvival(getData(),
                                       times = times(),
                                       timeScale = input$time_scale,
-                                      # splitStrata = input$split_strata,
                                       header = input$header,
                                       type = "gt",
                                       groupColumn = input$groupColumn,
@@ -212,7 +212,7 @@ cohortSurvivalServer <- function(id, uploaded_files) {
                                    ribbon = input$ribbon,
                                    facet = input$facet,
                                    colour = input$colour,
-                                   riskTable = input$risk_table,
+                                   riskTable = FALSE, #input$risk_table,
                                    riskInterval = as.numeric(input$risk_interval))
       })
 
@@ -272,7 +272,6 @@ cohortSurvivalServer <- function(id, uploaded_files) {
         tempList[[survivalObjectType]] <- list(x = getData(),
                                                times = times(),
                                                timeScale = input$time_scale,
-                                               splitStrata = input$split_strata,
                                                header = input$header,
                                                type = "gt",
                                                groupColumn = input$groupColumn,
@@ -286,14 +285,14 @@ cohortSurvivalServer <- function(id, uploaded_files) {
         survivalObjectType <- paste0(id, " - Plot")
         tempList <- list()
         tempList[[survivalObjectType]] <- list(result = getData(),
-                                               x = input$x_axis,
-                                               xscale = input$time_scale,
-                                               ylim = c(0, NA),
-                                               cumulativeFailure = input$cumulative_failure,
+                                               # x = input$x_axis,
+                                               # xscale = input$time_scale,
+                                               # ylim = c(0, NA),
                                                ribbon = input$ribbon,
                                                facet = input$facet,
                                                colour = input$colour,
-                                               riskTable = input$risk_table,
+                                               cumulativeFailure = input$cumulative_failure,
+                                               riskTable = FALSE,
                                                riskInterval = as.numeric(input$risk_interval),
                                                caption = input$captionSurvivalEstimatePlot)
         addObject(tempList)
