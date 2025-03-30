@@ -1,14 +1,14 @@
 # ReportGenerator 1.23.0
 
-* Captions now in all sections. 
+* Captions now works in all sections. 
 
-* ggSunburst function included for the reports. 
+* Integrated ggSunburst function included for the reports. 
 
 * Works with IncidencePrevalence v1.1.0, CohortCharacteristics v0.4.0, CohortSurvival v1.0.0, and TreatmentPatterns v3.0.0.
 
 # ReportGenerator 1.22.0
 
-* Updated to the latest version of IncidencePrevalence v1.1.0, CohortCharacteristics v0.4.0, CohortSurvival v0.6.2, and TreatmentPatterns v3.0.
+* Updated to the latest version of IncidencePrevalence v1.1.0, CohortCharacteristics v0.4.0, CohortSurvival v0.6.2, and TreatmentPatterns v3.0.1.
 
 # ReportGenerator 1.21.0
 
