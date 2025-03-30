@@ -3,7 +3,7 @@ test_that("tableIncidenceStyle", {
   reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_incidence_table_plot.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
-  incidence_data <- dataReportList$nqhz$incidence_table$result
+  incidence_data <- dataReportList$Vdmj$incidence_table$result
 
   # library(IncidencePrevalence)
   #
