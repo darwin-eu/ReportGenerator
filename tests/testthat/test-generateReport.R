@@ -1,3 +1,30 @@
+test_that("Ommit captions when assigning the dataReportList arguments to the variable", {
+
+  # Setting dataReportList for the test
+  reportDocx <- read_docx(path = system.file("templates", "word", "DARWIN_EU_Study_Report.docx", package = "ReportGenerator"))
+  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_large_scale_table_plot_w_caption.rds")
+  reportItems <- read_rds(reportItemsPath)
+  dataReportList <- reportItems$reportItems
+
+  # Example
+
+  i <- 1
+  titleText <- titleText <- names(dataReportList[[i]])
+
+  expression <- getItemConfig(input = "object",
+                              output = "function",
+                              inputValue = titleText,
+                              reportApp = FALSE)
+
+  dataReportList[[i]][[titleText]]
+  arguments <- dataReportList[[i]][[titleText]][setdiff(names(dataReportList[[i]][[titleText]]), "caption")]
+  object <- do.call(expression, args = arguments)
+
+  expect_s3_class(object, c("gt_tbl", "list"))
+
+  # unlink(testdir, recursive = TRUE)
+})
+
 test_that("Generate Report incidence_plot and incidence_table", {
   reportDocx <- read_docx(path = system.file("templates", "word", "DARWIN_EU_Study_Report.docx", package = "ReportGenerator"))
   reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_incidence_table_plot.rds")
@@ -94,7 +121,7 @@ test_that("Generate Report large_scale_characteristics", {
                                              "word",
                                              "DARWIN_EU_Study_Report.docx",
                                              package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_large_scale_table_plot.rds")
+  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_large_scale_table_plot_w_caption.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
   testdir <- file.path(tempdir(), "reportItems")
@@ -146,51 +173,14 @@ test_that("Generate report survival single_event plot", {
   unlink(testdir, recursive = TRUE)
 })
 
-test_that("Generate report survival competing_risk table", {
-  reportDocx <- read_docx(path = system.file("templates",
-                                             "word",
-                                             "DARWIN_EU_Study_Report.docx",
-                                             package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_survival_competing_table.rds")
-  reportItems <- read_rds(reportItemsPath)
-  dataReportList <- reportItems$reportItems
-  testdir <- file.path(tempdir(), "reportItems")
-  dir.create(testdir)
-  fileName <-  file.path(testdir, "report.docx")
-  logger <- log4r::logger()
-  testthat::expect_no_error(generateReport(reportDocx,
-                                           dataReportList,
-                                           fileName,
-                                           logger))
-  unlink(testdir, recursive = TRUE)
-})
+# TODO: Test after fix in CohortSurvival for competing table
 
-test_that("Generate report survival competing_risk plot", {
-  reportDocx <- read_docx(path = system.file("templates",
-                                             "word",
-                                             "DARWIN_EU_Study_Report.docx",
-                                             package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_survival_competing_plot.rds")
-  reportItems <- read_rds(reportItemsPath)
-  dataReportList <- reportItems$reportItems
-  testdir <- file.path(tempdir(), "reportItems")
-  dir.create(testdir)
-  fileName <-  file.path(testdir, "report.docx")
-  logger <- log4r::logger()
-  testthat::expect_no_error(generateReport(reportDocx,
-                                           dataReportList,
-                                           fileName,
-                                           logger))
-  unlink(testdir, recursive = TRUE)
-})
-
-# This test works only when the GGPlot versions of the visualisations gets implemented
-# test_that("Generate report TreatmentPatterns Sunburst chart", {
+# test_that("Generate report survival competing_risk table", {
 #   reportDocx <- read_docx(path = system.file("templates",
 #                                              "word",
 #                                              "DARWIN_EU_Study_Report.docx",
 #                                              package = "ReportGenerator"))
-#   reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_pathways_sunburst.rds")
+#   reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_survival_competing_table.rds")
 #   reportItems <- read_rds(reportItemsPath)
 #   dataReportList <- reportItems$reportItems
 #   testdir <- file.path(tempdir(), "reportItems")
@@ -203,3 +193,42 @@ test_that("Generate report survival competing_risk plot", {
 #                                            logger))
 #   unlink(testdir, recursive = TRUE)
 # })
+#
+# test_that("Generate report survival competing_risk plot", {
+#   reportDocx <- read_docx(path = system.file("templates",
+#                                              "word",
+#                                              "DARWIN_EU_Study_Report.docx",
+#                                              package = "ReportGenerator"))
+#   reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_survival_competing_plot.rds")
+#   reportItems <- read_rds(reportItemsPath)
+#   dataReportList <- reportItems$reportItems
+#   testdir <- file.path(tempdir(), "reportItems")
+#   dir.create(testdir)
+#   fileName <-  file.path(testdir, "report.docx")
+#   logger <- log4r::logger()
+#   testthat::expect_no_error(generateReport(reportDocx,
+#                                            dataReportList,
+#                                            fileName,
+#                                            logger))
+#   unlink(testdir, recursive = TRUE)
+# })
+
+# This test works only when the GGPlot versions of the visualisations gets implemented
+test_that("Generate report TreatmentPatterns Sunburst chart", {
+  reportDocx <- read_docx(path = system.file("templates",
+                                             "word",
+                                             "DARWIN_EU_Study_Report.docx",
+                                             package = "ReportGenerator"))
+  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_pathways_sunburst.rds")
+  reportItems <- read_rds(reportItemsPath)
+  dataReportList <- reportItems$reportItems
+  testdir <- file.path(tempdir(), "reportItems")
+  dir.create(testdir)
+  fileName <-  file.path(testdir, "report.docx")
+  logger <- log4r::logger()
+  testthat::expect_no_error(generateReport(reportDocx,
+                                           dataReportList,
+                                           fileName,
+                                           logger))
+  unlink(testdir, recursive = TRUE)
+})

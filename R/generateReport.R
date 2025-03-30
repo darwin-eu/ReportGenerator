@@ -40,11 +40,13 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger, reportA
       # Get the function to generate and print in report
       titleText <- names(dataReportList[[i]])
 
-      if (titleText == "Sankey Diagram - TreatmentPatterns" | titleText == "Sunburst Plot - TreatmentPatterns") {
+      if (titleText == "Sankey Diagram - TreatmentPatterns") {
         body_add_img(x = reportDocx,
                      src = dataReportList[[i]][[1]][["fileImage"]],
                      height = 3,
                      width = 7)
+        body_add(reportDocx,
+                 value = dataReportList[[i]][[1]][["caption"]])
         body_add(reportDocx,
                  value = titleText,
                  style = "heading 1")
@@ -55,8 +57,8 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger, reportA
                                     inputValue = titleText,
                                     reportApp = reportApp)
 
-        # Save function as an object
-        arguments <- dataReportList[[i]][[titleText]]
+        # Save function as an objectç
+        arguments <- dataReportList[[i]][[titleText]][setdiff(names(dataReportList[[i]][[titleText]]), "caption")]
         object <- do.call(expression, args = arguments)
 
 
@@ -65,8 +67,8 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger, reportA
           log4r::info(logger, glue::glue("Generating GT table object"))
           body_end_section_landscape(reportDocx)
           body_add_gt(reportDocx, value = object)
-          # body_add(reportDocx,
-          #          value = dataReportList[[i]][[1]][["caption"]])
+          body_add(reportDocx,
+                   value = dataReportList[[i]][[1]][["caption"]])
           body_add(reportDocx,
                    value = titleText,
                    style = "heading 1")
@@ -81,8 +83,8 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger, reportA
                     width = plotDim[["width"]],
                     height = plotDim[["height"]],
                     style = "Normal")
-        # body_add(reportDocx,
-        #          value = dataReportList[[i]][[1]][["caption"]])
+        body_add(reportDocx,
+                 value = dataReportList[[i]][[1]][["caption"]])
         body_add(reportDocx,
                  value = titleText,
                  style = "heading 1")

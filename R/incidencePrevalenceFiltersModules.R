@@ -80,6 +80,7 @@ mainFiltersIncPrevUI <- function(id, uploaded_files) {
 
 tableFiltersIncPrevUI <- function(id, uploaded_files) {
   ns <- NS(id)
+  captionText <- "Table. New user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
   tagList(
     fluidRow(
       column(3,
@@ -118,6 +119,14 @@ tableFiltersIncPrevUI <- function(id, uploaded_files) {
       column(3,
              downloadButton(ns("downloadTable"), "Download Table"))
     ),
+    tags$br(),
+    fluidRow(
+      column(12,
+             createCaptionInput(inputId = ns("captionTable"),
+                                value = captionText,
+                                height = "80px")
+      ),
+    ),
     fluidRow(
       column(12,
              shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTable"))))
@@ -127,6 +136,7 @@ tableFiltersIncPrevUI <- function(id, uploaded_files) {
 
 plotFiltersIncPrevUI <- function(id, uploaded_files) {
   ns <- NS(id)
+  captionText <- "Figure. Plot of new user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
   tagList(
     fluidRow(
       column(4,
@@ -175,14 +185,22 @@ plotFiltersIncPrevUI <- function(id, uploaded_files) {
              checkboxInput(inputId = ns("ribbon"),
                            label = "Ribbon",
                            value = FALSE,
-                         width = NULL))
+                           width = NULL))
     ),
     fluidRow(
       column(3,
              actionButton(ns("add_plot"), "Add plot to report"))
-      ),
+    ),
     fluidRow(
       createDownloadPlotUI(ns)
+    ),
+    tags$br(),
+    fluidRow(
+      column(12,
+             createCaptionInput(inputId = ns("captionPlot"),
+                                value = captionText,
+                                height = "80px")
+      ),
     ),
     fluidRow(column(12,
                     shinycssloaders::withSpinner(plotOutput(ns("summarisedPlot")))))
@@ -193,6 +211,8 @@ plotPopulationFiltersIncPrevUI <- function(id, uploaded_files) {
   ns <- NS(id)
 
   inc_prev_label <- tolower(id)
+  # Describe in caption text what kind of object is being plotted
+  captionText <- "Figure. Plot of new user/s of different medicines at the time of treatment initiation, including pre-specified indication/s"
 
   tagList(
     fluidRow(
@@ -239,106 +259,15 @@ plotPopulationFiltersIncPrevUI <- function(id, uploaded_files) {
     fluidRow(
       createDownloadPlotUI(ns, type = "download_population_plot")
     ),
+    tags$br(),
+    fluidRow(
+      column(12,
+             createCaptionInput(inputId = ns("captionPopulationPlot"),
+                                value = captionText,
+                                height = "80px")
+      ),
+    ),
     fluidRow(column(12,
                     shinycssloaders::withSpinner(plotOutput(ns("summarisedPopulationPlot")))))
   )
-}
-
-plotFiltersSurvivalUI <- function(id, uploaded_files) {
-  ns <- NS(id)
-  if (id == "competing_risk") {
-    cumulativeFailureOption <- TRUE
-  } else {
-    cumulativeFailureOption <- FALSE
-  }
-
-  tagList(
-    fluidRow(
-      column(4,
-             pickerInput(inputId = ns("x_axis"),
-                         label = "X Axis",
-                         choices = c("time"),
-                         selected = c("time"),
-                         multiple = FALSE)),
-      column(4,
-             pickerInput(inputId = ns("facet"),
-                         label = "Facet",
-                         choices = c("cdm_name"),
-                         selected = c("cdm_name"),
-                         multiple = TRUE)),
-      column(4,
-             pickerInput(inputId = ns("colour"),
-                         label = "Colour",
-                         choices = c("strata_name"),
-                         selected = c("strata_name"),
-                         multiple = TRUE)),
-    ),
-    fluidRow(
-      column(2,
-             checkboxInput(inputId = ns("cumulative_failure"),
-                           label = "Cumulative Failure",
-                           value = cumulativeFailureOption,
-                           width = NULL)),
-      column(2,
-             checkboxInput(inputId = ns("ribbon"),
-                           label = "Ribbon",
-                           value = FALSE,
-                           width = NULL)),
-      column(2,
-             checkboxInput(inputId = ns("risk_table"),
-                           label = "Risk Table",
-                           value = FALSE,
-                           width = NULL)),
-      column(3,
-             textInput(ns("risk_interval"),
-                       label = "Risk Interval",
-                       value = "30"))
-    ),
-    fluidRow(
-      column(3,
-             actionButton(ns("add_plot"), "Add plot to report"))
-    ),
-    fluidRow(
-      createDownloadPlotUI(ns)
-    ),
-    fluidRow(column(12,
-                    shinycssloaders::withSpinner(plotOutput(ns("summarisedPlot")))))
-  )
-}
-
-tableFiltersSurvivalUI <- function(id, uploaded_files) {
-  ns <- NS(id)
-  tagList(
-    fluidRow(
-      column(6,
-             pickerInput(inputId = ns("header"),
-                         label = "Header",
-                         choices = c("cdm_name",
-                                     "group",
-                                     "strata",
-                                     "additional",
-                                     "variable",
-                                     "estimate",
-                                     "settings"),
-                        selected = c("cdm_name", "estimate"),
-                        multiple = TRUE)),
-      column(6,
-             pickerInput(inputId = ns("groupColumn"),
-                         label = "Group",
-                         choices = c("group", "strata"),
-                         selected = c("group"),
-                         multiple = TRUE)),
-    ),
-    fluidRow(
-      column(2,
-             checkboxInput(inputId = ns("split_strata"),
-                           label = "Split Strata",
-                           value = TRUE,
-                           width = NULL)),
-    ),
-    uiOutput(outputId = ns("caption_table")),
-    fluidRow(createAddItemToReportUI(ns("add_table"))),
-    tags$br(),
-    fluidRow(column(12, shinycssloaders::withSpinner(gt::gt_output(ns("summarisedTable")))))
-    )
 }

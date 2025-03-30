@@ -64,7 +64,7 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
     # Add object
     addObject <- reactiveVal()
 
-    ### OBJECTS C
+    ### OBJECTS CREATION
     ## Creates specific tables and plots for IncPrev
     ## Observe functions to add them to addObject
 
@@ -77,7 +77,11 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                             header = input$header,
                                             groupColumn = input$groupColumn,
                                             settingsColumn = input$settingsColumn,
-                                            hide = input$hide)
+                                            hide = input$hide,
+                                            .options = list(style = list(
+                                              "header" = list(gt::cell_text(weight = "bold"),
+                                                              gt::cell_fill(color = "orange"))),
+                                              caption = "Hello World!"))
       })
 
       # PLOT
@@ -122,7 +126,11 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                       groupColumn = input$groupColumn,
                                       settingsColumn = input$settingsColumn,
                                       hide = input$hide,
-                                      .options = list())))
+                                      .options = list(style = list(
+                                        "header" = list(gt::cell_text(weight = "bold"),
+                                                        gt::cell_fill(color = "orange"))),
+                                        caption = "Hello World!"),
+                                      caption = input$captionTable)))
       })
 
       # Add plot
@@ -137,7 +145,8 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                      ymin = "incidence_100000_pys_95CI_lower",
                                      ymax = "incidence_100000_pys_95CI_upper",
                                      facet = input$facet,
-                                     colour = input$colour)))
+                                     colour = input$colour,
+                                     caption = input$captionPlot)))
       })
 
       # Add population plot
@@ -147,7 +156,8 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                                 x = input$x_axis,
                                                 y = input$y_axis,
                                                 facet = input$facet,
-                                                colour = input$colour)))
+                                                colour = input$colour,
+                                                caption = input$captionPopulationPlot)))
       })
 
     } else if (id == "Prevalence") {
@@ -204,7 +214,8 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                        header = input$header,
                                        groupColumn = input$groupColumn,
                                        settingsColumn = input$settingsColumn,
-                                       hide = input$hide)))
+                                       hide = input$hide,
+                                       caption = input$captionTable)))
       })
 
       # Add plot
@@ -219,7 +230,8 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                       ymin = "prevalence_95CI_lower",
                                       ymax = "prevalence_95CI_upper",
                                       facet = input$facet,
-                                      colour = input$colour)))
+                                      colour = input$colour,
+                                      caption = input$captionPlot)))
       })
 
       # Add population plot
@@ -229,7 +241,8 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                                  x = input$x_axis,
                                                  y = input$y_axis,
                                                  facet = input$facet,
-                                                 colour = input$colour)))
+                                                 colour = input$colour,
+                                                 caption = input$captionPopulationPlot)))
       })
 
     }
