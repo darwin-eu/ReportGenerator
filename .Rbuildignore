@@ -50,3 +50,5 @@ app.R
 ^TASKS\.R$
 ^log\.txt$
 ^reportGeneratorApp$
+^doc$
+^Meta$

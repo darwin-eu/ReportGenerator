@@ -51,3 +51,6 @@ reportApp
 renv/
 .Rprofile
 deprecated/
+inst/doc
+/doc/
+/Meta/
