@@ -57,40 +57,18 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger, reportA
                                     inputValue = titleText,
                                     reportApp = reportApp)
 
-        # Save function as an objectç
+        dataReportListInternal <- dataReportList[[i]]
+
+        # Save function as an variable
         arguments <- dataReportList[[i]][[titleText]][setdiff(names(dataReportList[[i]][[titleText]]), "caption")]
         object <- do.call(expression, args = arguments)
 
-
-        # Check class of every function and add it to the word report accordingly
-        if ("gt_tbl" %in% class(object)) {
-          log4r::info(logger, glue::glue("Generating GT table object"))
-          body_end_section_landscape(reportDocx)
-          body_add_gt(reportDocx, value = object)
-          body_add(reportDocx,
-                   value = dataReportList[[i]][[1]][["caption"]])
-          body_add(reportDocx,
-                   value = titleText,
-                   style = "heading 1")
-          body_end_section_portrait(reportDocx)
-
-      } else if ("ggplot" %in% class(object)) {
-        log4r::info(logger, glue::glue("Generating ggplot object"))
-        body_end_section_landscape(reportDocx)
-        plotDim <- getGGPlotDimensions()
-        body_add_gg(x = reportDocx,
-                    value = object,
-                    width = plotDim[["width"]],
-                    height = plotDim[["height"]],
-                    style = "Normal")
-        body_add(reportDocx,
-                 value = dataReportList[[i]][[1]][["caption"]])
-        body_add(reportDocx,
-                 value = titleText,
-                 style = "heading 1")
-        body_end_section_portrait(reportDocx)
-
-      }
+        # Generic dispatch to add either a table or a figure into the reportDocx object
+        reportDocx <- print_items(object = object,
+                                  reportDocx = reportDocx,
+                                  titleText = titleText,
+                                  dataReportListInternal = dataReportListInternal,
+                                  logger = logger)
 
       }
 
@@ -107,4 +85,58 @@ generateReport <- function(reportDocx, dataReportList, fileName, logger, reportA
 
 getGGPlotDimensions <- function() {
   return(list("width" = 10.5, "height" = 4.75))
+}
+
+# Generic function
+print_items <- function(object, ...) {
+  if (inherits(object, "ggplot")) {
+    return(print_items.ggplot(object, ...))
+  } else if (inherits(object, "gt_tbl")) {
+    return(print_items.gt_tbl(object, ...))
+  }
+}
+
+# Method for class "data.frame"
+print_items.gt_tbl <- function(object,
+                               reportDocx,
+                               titleText,
+                               dataReportListInternal,
+                               logger, ...) {
+
+  log4r::info(logger, glue::glue("Generating GT table object"))
+  body_end_section_landscape(reportDocx)
+  body_add_gt(reportDocx, value = object)
+  body_add(reportDocx,
+           value = dataReportListInternal[[1]][["caption"]])
+  body_add(reportDocx,
+           value = titleText,
+           style = "heading 1")
+  body_end_section_portrait(reportDocx)
+  return(reportDocx)
+}
+
+# Method for class "numeric"
+print_items.ggplot <- function(object,
+                               reportDocx,
+                               titleText,
+                               dataReportListInternal,
+                               logger,
+                               ...) {
+
+  log4r::info(logger, glue::glue("Generating ggplot object"))
+  body_end_section_landscape(reportDocx)
+  plotDim <- getGGPlotDimensions()
+  body_add_gg(x = reportDocx,
+              value = object,
+              width = plotDim[["width"]],
+              height = plotDim[["height"]],
+              style = "Normal")
+  body_add(reportDocx,
+           value = dataReportListInternal[[1]][["caption"]])
+  body_add(reportDocx,
+           value = titleText,
+           style = "heading 1")
+  body_end_section_portrait(reportDocx)
+
+  return(reportDocx)
 }
