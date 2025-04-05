@@ -78,10 +78,8 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                             groupColumn = input$groupColumn,
                                             settingsColumn = input$settingsColumn,
                                             hide = input$hide,
-                                            .options = list(style = list(
-                                              "header" = list(gt::cell_text(weight = "bold"),
-                                                              gt::cell_fill(color = "orange"))),
-                                              caption = "Hello World!"))
+                                            .options = list(style = getDarwinStyle(),
+                                                            caption = NULL))
       })
 
       # PLOT
@@ -126,10 +124,8 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                       groupColumn = input$groupColumn,
                                       settingsColumn = input$settingsColumn,
                                       hide = input$hide,
-                                      .options = list(style = list(
-                                        "header" = list(gt::cell_text(weight = "bold"),
-                                                        gt::cell_fill(color = "orange"))),
-                                        caption = "Hello World!"),
+                                      .options = list(style = getDarwinStyle(),
+                                                      caption = "Hello World!"),
                                       caption = input$captionTable)))
       })
 
@@ -171,7 +167,8 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                              groupColumn = input$groupColumn,
                                              settingsColumn = input$settingsColumn,
                                              hide = input$hide,
-                                             .options = list())
+                                             .options = list(style = getDarwinStyle(),
+                                                             caption = NULL))
       })
 
       # PLOT
@@ -215,6 +212,8 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                        groupColumn = input$groupColumn,
                                        settingsColumn = input$settingsColumn,
                                        hide = input$hide,
+                                       .options = list(style = getDarwinStyle(),
+                                                       caption = NULL),
                                        caption = input$captionTable)))
       })
 

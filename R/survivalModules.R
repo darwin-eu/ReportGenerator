@@ -195,7 +195,8 @@ cohortSurvivalServer <- function(id, uploaded_files) {
                                       header = input$header,
                                       type = "gt",
                                       groupColumn = input$groupColumn,
-                                      .options = list()
+                                      .options = list(style = getDarwinStyle(),
+                                                      caption = NULL)
                                       )
       })
 

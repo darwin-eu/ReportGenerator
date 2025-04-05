@@ -292,3 +292,30 @@ sunburstPathways <- function(pathwaysData) {
     ggplot2::labs(fill = "Category") +
     ggplot2::facet_wrap(~ cdm_name, ncol = 2)
 }
+getDarwinStyle <- function() {
+  style <- list(header = list(gt::cell_fill(color = "#003399"),
+                              gt::cell_text(weight = "bold",
+                                            align = "center")),
+                header_name = list(gt::cell_fill(color = "#003399"),
+                                   gt::cell_text(weight = "bold",
+                                                 color = "white",
+                                                 align = "center")),
+                header_level = list(gt::cell_fill(color = "#003399"),
+                                    gt::cell_text(color = "white",
+                                                  weight = "bold",
+                                                  align = "center")),
+                column_name = list(gt::cell_fill(color = "#003399"),
+                                   gt::cell_text(weight = "bold",
+                                                 color = "white",
+                                                 align = "center")),
+                group_label = list(gt::cell_fill(color = "#e9e9e9"),
+                                   gt::cell_text(weight = "bold")),
+                title = list(gt::cell_text(weight = "bold",
+                                           size = 15,
+                                           align = "center")),
+                subtitle = list(gt::cell_text(weight = "bold",
+                                              size = 12,
+                                              align = "center")),
+                body = list())
+  return(style)
+}
