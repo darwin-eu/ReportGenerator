@@ -1,3 +1,32 @@
+test_that("Pedriatic patients", {
+  # fileDataPath <- list.files(test_path("studies", "summarised_zip"), pattern = "zip", full.names = TRUE)
+  fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\meeting\\erasmus\\HIV\\Results_TestData_P3C1020ARTPaediatricHIV_20250409.zip"
+  uploaded_files <- joinDatabases(fileDataPath = fileDataPath)
+  uploadedFilesIncidence <- uploaded_files$summarised_result %>%
+    visOmopResults::filterSettings(result_type == "incidence")
+  uploadedFilesIncidenceAttrition <- uploaded_files$summarised_result %>%
+    visOmopResults::filterSettings(result_type == "incidence_atttrition")
+
+
+  uploadedFilesIncidence %>% settings() %>% View()
+  uploadedFilesIncidence %>% View()
+  uploadedFilesIncidence %>% omopgenerics::filterAdditional(analysis_interval == "years")
+  omopgenerics::additionalColumns(uploadedFilesIncidence)
+  omopgenerics::splitAdditional(uploadedFilesIncidence)
+  tableIncidence(result = uploadedFilesIncidence,
+                 header = c("cdm_name"),
+                 groupColumn = NULL,
+                 settingsColumn = NULL,
+                 hide = NULL,
+                 .options = list(style = getDarwinStyle(),
+                                 caption = NULL)
+  )
+
+
+  expect_equal(length(uploaded_files), 2)
+  expect_type(uploaded_files, "list")
+})
+
 test_that("tableIncidenceStyle", {
 
   reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_incidence_table_plot.rds")
@@ -5,45 +34,10 @@ test_that("tableIncidenceStyle", {
   dataReportList <- reportItems$reportItems
   incidence_data <- dataReportList$Vdmj$incidence_table$result
 
-  # library(IncidencePrevalence)
-  #
-  # sampleSize <- 1000
-  #
-  # cdm <- IncidencePrevalence::mockIncidencePrevalence(sampleSize = sampleSize,
-  #                                                     outPre = 0.3,
-  #                                                     minOutcomeDays = 365,
-  #                                                     maxOutcomeDays = 3650)
-  #
-  # # Denominator data
-  # cdm <- IncidencePrevalence::generateDenominatorCohortSet(
-  #   cdm = cdm,
-  #   name = "denominator",
-  #   cohortDateRange = c(as.Date("2008-01-01"), as.Date("2018-01-01")),
-  #   ageGroup = list(
-  #     c(0, 64),
-  #     c(65, 100)
-  #   ),
-  #   sex = c("Male", "Female", "Both"),
-  #   daysPriorObservation = 180
-  # )
-  #
-  # # Incidence data
-  # incidence_data <- IncidencePrevalence::estimateIncidence(
-  #   cdm = cdm,
-  #   denominatorTable = "denominator",
-  #   outcomeTable = "outcome",
-  #   interval = "years",
-  #   repeatedEvents = TRUE,
-  #   outcomeWashout = 180,
-  #   completeDatabaseIntervals = TRUE
-  # )
-
-
-  tableIncidence(incidence_data,
-                  .options = list(style = list("header" = list(gt::cell_text(weight = "bold"),
-                                                               gt::cell_fill(color = "blue"))),
-                                  caption = "Figure 1. XXXXX")
-                  )
+  expect_no_error(IncidencePrevalence::tableIncidence(result = incidence_data,
+                                                      .options = list(style = getDarwinStyle(),
+                                                                      caption = NULL)
+  ))
 
 })
 
