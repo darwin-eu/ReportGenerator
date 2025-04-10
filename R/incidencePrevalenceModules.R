@@ -53,12 +53,12 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
         cdm_name %in% input$cdm_name,
         group_level %in% input$group_level,
         strata_level %in% input$strata_level) %>%
-        visOmopResults::filterSettings(
+        omopgenerics::filterSettings(
           # analysis_type %in% input$analysis_type,
           denominator_target_cohort_name %in% input$denominator_target_cohort_name,
           denominator_sex %in% input$denominator_sex,
           denominator_age_group %in% input$denominator_age_group,
-          denominator_time_at_risk %in% input$denominator_time_at_risk)
+          denominator_time_at_risk %in% input$denominator_time_at_risk) %>% omopgenerics::filterAdditional(analysis_interval == input$analysis_interval)
     })
 
     # Add object
@@ -79,7 +79,8 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                             settingsColumn = input$settingsColumn,
                                             hide = input$hide,
                                             .options = list(style = getDarwinStyle(),
-                                                            caption = NULL))
+                                                            caption = NULL)
+                                            )
       })
 
       # PLOT
@@ -168,7 +169,8 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                              settingsColumn = input$settingsColumn,
                                              hide = input$hide,
                                              .options = list(style = getDarwinStyle(),
-                                                             caption = NULL))
+                                                             caption = NULL)
+                                             )
       })
 
       # PLOT
@@ -212,8 +214,8 @@ incidencePrevalenceServer <- function(id, uploaded_files) {
                                        groupColumn = input$groupColumn,
                                        settingsColumn = input$settingsColumn,
                                        hide = input$hide,
-                                       .options = list(style = getDarwinStyle(),
-                                                       caption = NULL),
+                                       # .options = list(style = getDarwinStyle(),
+                                       #                 caption = NULL),
                                        caption = input$captionTable)))
       })
 

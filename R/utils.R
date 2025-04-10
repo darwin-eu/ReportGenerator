@@ -231,11 +231,21 @@ analysisNamesAvailable <- function(settingsData) {
 
   result_types_available <- result_types_available[grepl("incidence|incidence_attrition|incidence_attrition|prevalence|prevalence_attrition|summarise_large_scale_characteristics|summarise_characteristics", result_types_available)]
 
-  analysis_types_available <- settingsData %>%
-    pull(analysis_type) %>%
-    unique()
+  if ("analysis_type" %in% colnames(settingsData)) {
 
-  analysis_types_available <- analysis_types_available[grepl("single_event|competing_risk", analysis_types_available)]
+    analysis_types_available <- settingsData %>%
+      pull(analysis_type) %>%
+      unique()
+
+    analysis_types_available <- analysis_types_available[grepl("single_event|competing_risk", analysis_types_available)]
+
+  } else {
+
+    analysis_types_available <- c()
+
+  }
+
+
 
   items_available <- c(result_types_available, analysis_types_available)
 
