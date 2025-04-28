@@ -85,20 +85,29 @@ characteristicsUI <- function(id, uploaded_files) {
                     tabPanel("Table",
                              br(),
                              fluidRow(
-                               column(6,
+                               column(4,
                                       pickerInput(inputId = ns("header"),
                                                   label = "Header",
                                                   choices = c("cdm_name", "cohort_name", "strata", "window_name"),
                                                   selected = c("cdm_name", "cohort_name"),
                                                   multiple = TRUE)
                                       ),
-                               column(6,
+                               column(4,
                                       pickerInput(inputId = ns("groupColumn"),
                                                   label = "Group Column",
                                                   choices = names(uploaded_files),
                                                   selected = c("variable_name"),
                                                   multiple = TRUE)
-                                      )
+                                      ),
+                               column(4,
+                                      pickerInput(inputId = ns("hideColumn"),
+                                                  label = "Hide Column",
+                                                  choices = c(omopgenerics::additionalColumns(uploaded_files), omopgenerics::settingsColumns(uploaded_files), "Age Group", "Sex", "Quarter", "Year"),
+                                                  selected = c(omopgenerics::additionalColumns(uploaded_files), omopgenerics::settingsColumns(uploaded_files)),
+                                                  multiple = TRUE)
+                               )
+
+
                                ),
                              fluidRow(
                                createAddItemToReportUI(ns(lockName)),
@@ -143,7 +152,7 @@ characteristicsServer <- function(id, uploaded_files) {
                                                     type = "gt",
                                                     header = input$header,
                                                     groupColumn = input$groupColumn,
-                                                    hide = character())
+                                                    hide = input$hideColumn)
       })
 
       output$summarisedTableGt <- gt::render_gt({
