@@ -19,17 +19,17 @@ function(input, output, session) {
 
   # 1. Load data
   # ReactiveValues
-  uploadedFiles <- readRDS(here::here("results", "uploadedFiles.rds"))
+  uploaded_files <- readRDS(here::here("results", "uploaded_files.rds"))
   dataReport <- reactiveValues(objects = NULL)
   # dataReport$objects <- sessionItems$reportItems
 
   # Item preview
   # Item preview
   itemsList <- list()
-  for (i in 1:length(uploadedFiles)) {
+  for (i in 1:length(uploaded_files)) {
     # i <- 1
-    if (!is.null(uploadedFiles[[i]])) {
-      item <- names(uploadedFiles[i])
+    if (!is.null(uploaded_files[[i]])) {
+      item <- names(uploaded_files[i])
       itemsList <- c(itemsList, getItemsList(item)) %>% unlist()
     }
   }
@@ -38,7 +38,7 @@ function(input, output, session) {
   output$navPanelPreview <- renderUI({
     previewPanels <- lapply(itemsList,
                             tabPanelSelection,
-                            uploadedFiles = uploadedFiles)
+                            uploaded_files = uploaded_files)
     do.call(navlistPanel, c(previewPanels, list(widths = c(3, 9))))
   })
 
@@ -47,7 +47,7 @@ function(input, output, session) {
   # Attrition table
 
   incidenceAttritionTable <- attritionServer(id = "Incidence Attrition",
-                                             uploadedFiles = reactive(uploadedFiles$incidence_attrition))
+                                             uploaded_files = reactive(uploaded_files$incidence_attrition))
 
   observe({
     for (key in names(incidenceAttritionTable())) {
@@ -58,7 +58,7 @@ function(input, output, session) {
     bindEvent(incidenceAttritionTable())
 
   prevalenceAttritionTable <- attritionServer(id = "Prevalence Attrition",
-                                              uploadedFiles = reactive(uploadedFiles$prevalence_attrition))
+                                              uploaded_files = reactive(uploaded_files$prevalence_attrition))
 
   observe({
     for (key in names(prevalenceAttritionTable())) {
@@ -72,7 +72,7 @@ function(input, output, session) {
 
   # Incidence
 
-  dataIncidence <- incidenceServer(id = "Incidence", reactive(uploadedFiles$incidence))
+  dataIncidence <- incidencePrevalenceServer(id = "Incidence", reactive(uploaded_files$incidence))
 
   observe({
     for (key in names(dataIncidence())) {
@@ -84,7 +84,7 @@ function(input, output, session) {
 
   # Prevalence Modules
 
-  dataPrevalence <- prevalenceServer(id = "Prevalence", reactive(uploadedFiles$prevalence))
+  dataPrevalence <- incidencePrevalenceServer(id = "Prevalence", reactive(uploaded_files$prevalence))
 
   observe({
     for (key in names(dataPrevalence())) {
@@ -96,7 +96,7 @@ function(input, output, session) {
 
   # Characteristics Modules
   dataCharacteristics <- characteristicsServer("characteristics",
-                                               reactive(uploadedFiles$summarise_characteristics))
+                                               reactive(uploaded_files$summarise_characteristics))
 
   observe({
     for (key in names(dataCharacteristics())) {
@@ -107,7 +107,7 @@ function(input, output, session) {
     bindEvent(dataCharacteristics())
 
   dataLSC <- largeScaleServer(id = "lsc",
-                              reactive(uploadedFiles$summarise_large_scale_characteristics))
+                              reactive(uploaded_files$summarise_large_scale_characteristics))
 
   observe({
     for (key in names(dataLSC())) {
@@ -119,7 +119,7 @@ function(input, output, session) {
 
   # Cohort Survival Modules
 
-  dataSingleEvent <- cohortSurvivalServer("single_event", reactive(uploadedFiles$single_event))
+  dataSingleEvent <- cohortSurvivalServer("single_event", reactive(uploaded_files$single_event))
 
   observe({
     for (key in names(dataSingleEvent())) {
@@ -129,7 +129,7 @@ function(input, output, session) {
   }) %>%
     bindEvent(dataSingleEvent())
 
-  dataCompetingRisk <- cohortSurvivalServer("competing_risk", reactive(uploadedFiles$competing_risk))
+  dataCompetingRisk <- cohortSurvivalServer("competing_risk", reactive(uploaded_files$competing_risk))
 
   observe({
     for (key in names(dataCompetingRisk())) {
@@ -142,7 +142,7 @@ function(input, output, session) {
   # Treatment Patterns Interactive Plots
 
   dataPatterns <- pathwaysServer("Treatment Pathways",
-                                 reactive(uploadedFiles$treatment_pathways))
+                                 reactive(uploaded_files$treatment_pathways))
 
   observe({
     for (key in names(dataPatterns())) {

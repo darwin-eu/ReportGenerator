@@ -8,8 +8,8 @@ test_that("Pedriatic patients", {
     visOmopResults::filterSettings(result_type == "incidence_atttrition")
 
 
-  uploadedFilesIncidence %>% settings() %>% View()
-  uploadedFilesIncidence %>% View()
+  # uploadedFilesIncidence %>% settings() %>% View()
+  # uploadedFilesIncidence %>% View()
   uploadedFilesIncidence %>% omopgenerics::filterAdditional(analysis_interval == "years")
   omopgenerics::additionalColumns(uploadedFilesIncidence)
   omopgenerics::splitAdditional(uploadedFilesIncidence)
