@@ -1,6 +1,6 @@
 test_that("Pedriatic patients", {
-  # fileDataPath <- list.files(test_path("studies", "summarised_zip"), pattern = "zip", full.names = TRUE)
-  fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\meeting\\erasmus\\HIV\\Results_TestData_P3C1020ARTPaediatricHIV_20250409.zip"
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"), pattern = "zip", full.names = TRUE)
+  # fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\meeting\\erasmus\\HIV\\Results_TestData_P3C1020ARTPaediatricHIV_20250409.zip"
   uploaded_files <- joinDatabases(fileDataPath = fileDataPath)
   uploadedFilesIncidence <- uploaded_files$summarised_result %>%
     visOmopResults::filterSettings(result_type == "incidence")
