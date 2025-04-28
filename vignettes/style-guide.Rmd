@@ -1,0 +1,27 @@
+---
+title: "DARWIN EU Reports Style Guide"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Style Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(ReportGenerator)
+
+testData <- readRDS("testData.rds")
+
+
+```
+
+```{r}
+
+testData$IncidencePrevalence
+
+```

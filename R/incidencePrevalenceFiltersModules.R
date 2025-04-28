@@ -1,5 +1,19 @@
 mainFiltersIncPrevUI <- function(id, uploaded_files) {
   ns <- NS(id)
+
+  uploaded_files_additional <- omopgenerics::splitAdditional(uploaded_files)
+
+  colnames_additional <- uploaded_files_additional %>% colnames()
+
+  if ("analysis_interval" %in% colnames_additional) {
+    analysis_interval_switch <- TRUE
+    analysis_interval_option <- uploaded_files_additional %>%
+      pull(analysis_interval) %>%
+      unique()
+  } else {
+    analysis_interval_switch <- FALSE
+  }
+
   tagList(
     fluidRow(
       column(4,
@@ -73,7 +87,17 @@ mainFiltersIncPrevUI <- function(id, uploaded_files) {
                          selected = unique(settings(uploaded_files)$analysis_type[3]),
                          multiple = FALSE,
                          list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
-      )
+      ),
+      if (analysis_interval_switch) {
+        column(4,
+               pickerInput(inputId = ns("analysis_interval"),
+                           label = "Analysis Interval",
+                           choices = analysis_interval_option,
+                           selected = analysis_interval_option[1],
+                           multiple = TRUE,
+                           list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))
+        )
+      }
     )
   )
 }
@@ -92,13 +116,14 @@ tableFiltersIncPrevUI <- function(id, uploaded_files) {
                                      "incidence_start_date",
                                      "incidence_end_date",
                                      "estimate_name"),,
-                         selected = c("estimate_name"),
+                         selected = c("cdm_name",
+                                      "estimate_name"),
                          multiple = TRUE)),
       column(3,
              pickerInput(inputId = ns("groupColumn"),
                          label = "Group Column",
                          choices = c("cdm_name", "outcome_cohort_name"),
-                         selected = c("cdm_name", "outcome_cohort_name"),
+                         selected = c("outcome_cohort_name"),
                          multiple = TRUE)),
       column(3,
              pickerInput(inputId = ns("settingsColumn"),
@@ -110,7 +135,7 @@ tableFiltersIncPrevUI <- function(id, uploaded_files) {
              pickerInput(inputId = ns("hide"),
                          label = "Hide Columns",
                          choices = c("denominator_cohort_name", "analysis_interval"),
-                         selected = c("denominator_cohort_name", "analysis_interval"),
+                         selected = c(),
                          multiple = TRUE))
     ),
     fluidRow(

@@ -1,33 +1,73 @@
-test_that("Ommit captions when assigning the dataReportList arguments to the variable", {
+test_that("Checks that print items works with a gt_tbl object", {
 
   # Setting dataReportList for the test
   reportDocx <- read_docx(path = system.file("templates", "word", "DARWIN_EU_Study_Report.docx", package = "ReportGenerator"))
   reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_large_scale_table_plot_w_caption.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
-
+  logger <- log4r::logger()
   # Example
-
   i <- 1
   titleText <- titleText <- names(dataReportList[[i]])
-
   expression <- getItemConfig(input = "object",
                               output = "function",
                               inputValue = titleText,
                               reportApp = FALSE)
-
   dataReportList[[i]][[titleText]]
   arguments <- dataReportList[[i]][[titleText]][setdiff(names(dataReportList[[i]][[titleText]]), "caption")]
   object <- do.call(expression, args = arguments)
-
   expect_s3_class(object, c("gt_tbl", "list"))
+  dataReportListInternal <- dataReportList[[i]]
+
+  # Generic dispatch to add either a table or a figure into the reportDocx object
+  expect_no_error(print_items(object = object,
+                              reportDocx = reportDocx,
+                              titleText = titleText,
+                              dataReportListInternal = dataReportListInternal,
+                              logger = logger))
+
+  # unlink(testdir, recursive = TRUE)
+})
+
+test_that("Checks that print items works with a ggplot object", {
+
+  # Setting dataReportList for the test
+  reportDocx <- read_docx(path = system.file("templates", "word", "DARWIN_EU_Study_Report.docx", package = "ReportGenerator"))
+  reportItemsPath <- testthat::test_path("studies",
+                                         "generate_report_test",
+                                         "reportI_items_test_survival_single_plot.rds")
+  reportItems <- read_rds(reportItemsPath)
+  dataReportList <- reportItems$reportItems
+  logger <- log4r::logger()
+
+  # Example
+  i <- 1
+  titleText <- titleText <- names(dataReportList[[i]])
+  expression <- getItemConfig(input = "object",
+                              output = "function",
+                              inputValue = titleText,
+                              reportApp = FALSE)
+  dataReportList[[i]][[titleText]]
+  arguments <- dataReportList[[i]][[titleText]][setdiff(names(dataReportList[[i]][[titleText]]), "caption")]
+  object <- do.call(expression, args = arguments)
+  expect_s3_class(object, c("gg", "ggplot"))
+  dataReportListInternal <- dataReportList[[i]]
+
+  # Generic dispatch to add either a table or a figure into the reportDocx object
+  expect_no_error(print_items(object = object,
+                              reportDocx = reportDocx,
+                              titleText = titleText,
+                              dataReportListInternal = dataReportListInternal,
+                              logger = logger))
 
   # unlink(testdir, recursive = TRUE)
 })
 
 test_that("Generate Report incidence_plot and incidence_table", {
   reportDocx <- read_docx(path = system.file("templates", "word", "DARWIN_EU_Study_Report.docx", package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_incidence_table_plot.rds")
+  reportItemsPath <- testthat::test_path("studies",
+                                         "generate_report_test",
+                                         "reportI_items_test_incidence_table_plot.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
   testdir <- file.path(tempdir(), "reportItems")
@@ -44,7 +84,9 @@ test_that("Generate Report incidence_plot and incidence_table", {
 
 test_that("Generate Report prevalence_plot and prevalence_table", {
   reportDocx <- read_docx(path = system.file("templates", "word", "DARWIN_EU_Study_Report.docx", package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_prevalence_table_plot.rds")
+  reportItemsPath <- testthat::test_path("studies",
+                                         "generate_report_test",
+                                         "reportI_items_test_prevalence_table_plot.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
   testdir <- file.path(tempdir(), "reportItems")
@@ -64,7 +106,9 @@ test_that("Generate report incidence attrition", {
                                              "word",
                                              "DARWIN_EU_Study_Report.docx",
                                              package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_incidence_attrition.rds")
+  reportItemsPath <- testthat::test_path("studies",
+                                         "generate_report_test",
+                                         "reportI_items_test_incidence_attrition.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
   testdir <- file.path(tempdir(), "reportItems")
@@ -83,7 +127,9 @@ test_that("Generate report prevalence attrition", {
                                              "word",
                                              "DARWIN_EU_Study_Report.docx",
                                              package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_prevalence_attrition.rds")
+  reportItemsPath <- testthat::test_path("studies",
+                                         "generate_report_test",
+                                         "reportI_items_test_prevalence_attrition.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
   testdir <- file.path(tempdir(), "reportItems")
@@ -102,7 +148,9 @@ test_that("Generate Report summarise_characteristics", {
                                              "word",
                                              "DARWIN_EU_Study_Report.docx",
                                              package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_cohort_characteristics_table_plot.rds")
+  reportItemsPath <- testthat::test_path("studies",
+                                         "generate_report_test",
+                                         "reportI_items_test_cohort_characteristics_table_plot.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
   testdir <- file.path(tempdir(), "reportItems")
@@ -121,7 +169,9 @@ test_that("Generate Report large_scale_characteristics", {
                                              "word",
                                              "DARWIN_EU_Study_Report.docx",
                                              package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_large_scale_table_plot_w_caption.rds")
+  reportItemsPath <- testthat::test_path("studies",
+                                         "generate_report_test",
+                                         "reportI_items_test_large_scale_table_plot_w_caption.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
   testdir <- file.path(tempdir(), "reportItems")
@@ -140,7 +190,9 @@ test_that("Generate report survival single_event table", {
                                              "word",
                                              "DARWIN_EU_Study_Report.docx",
                                              package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_survival_single_table.rds")
+  reportItemsPath <- testthat::test_path("studies",
+                                         "generate_report_test",
+                                         "reportI_items_test_survival_single_table.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
   testdir <- file.path(tempdir(), "reportItems")
@@ -159,7 +211,9 @@ test_that("Generate report survival single_event plot", {
                                              "word",
                                              "DARWIN_EU_Study_Report.docx",
                                              package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_survival_single_plot.rds")
+  reportItemsPath <- testthat::test_path("studies",
+                                         "generate_report_test",
+                                         "reportI_items_test_survival_single_plot.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
   testdir <- file.path(tempdir(), "reportItems")
@@ -219,7 +273,9 @@ test_that("Generate report TreatmentPatterns Sunburst chart", {
                                              "word",
                                              "DARWIN_EU_Study_Report.docx",
                                              package = "ReportGenerator"))
-  reportItemsPath <- testthat::test_path("studies", "generate_report_test", "reportI_items_test_pathways_sunburst.rds")
+  reportItemsPath <- testthat::test_path("studies",
+                                         "generate_report_test",
+                                         "reportI_items_test_pathways_sunburst.rds")
   reportItems <- read_rds(reportItemsPath)
   dataReportList <- reportItems$reportItems
   testdir <- file.path(tempdir(), "reportItems")

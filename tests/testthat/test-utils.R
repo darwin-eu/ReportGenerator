@@ -4,6 +4,9 @@ test_that("Analysis Sum", {
   fileDataPath <- list.files(test_path("studies", "summarised_zip"),
                              pattern = "zip",
                              full.names = TRUE)[1]
+
+  # fileDataPath <- list.files("~/Documents/darwin-docs/studyPackages/Thromboembolic/P3C3005TEandcancer/results", full.names = TRUE)
+
   data_joined <- joinDatabases(fileDataPath)
   settingsData <- settings(data_joined$summarised_result)
 
@@ -13,6 +16,17 @@ test_that("Analysis Sum", {
                         "prevalence", "prevalence_attrition", "summarise_characteristics",
                         "competing_risk", "single_event"))
 })
+
+# test_that("Analysis Type not found", {
+#   fileDataPath <- "~/Documents/darwin-docs/packages/darwin-dev/ReportGenerator/results/meeting/erasmus/P3-C1-019-Suicide/p3-c1-019-2_Study_results.zip"
+#
+#   data_joined <- joinDatabases(fileDataPath)
+#   settingsData <- settings(data_joined$summarised_result)
+#
+#   items <- analysisNamesAvailable(settingsData = settingsData)
+#
+#   expect_equal(items, c("summarise_characteristics", "incidence", "incidence_attrition" ))
+# })
 
 test_that("getItemsList all", {
   items <- c("incidence",

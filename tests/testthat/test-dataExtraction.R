@@ -1,3 +1,11 @@
+# test_that("Pedriatic patients", {
+#   # fileDataPath <- list.files(test_path("studies", "summarised_zip"), pattern = "zip", full.names = TRUE)
+#   fileDataPath <- "C:\\Users\\cbarboza\\Documents\\darwin-docs\\packages\\darwin-dev\\ReportGenerator\\results\\meeting\\erasmus\\hiv\\Results_INGEF_P3C1020ARTPaediatricHIV_20250409.zip"
+#   uploaded_files <- joinDatabases(fileDataPath = fileDataPath)
+#   expect_equal(length(uploaded_files), 2)
+#   expect_type(uploaded_files, "list")
+# })
+
 test_that("Complete sequence of functions inside joinDatabases ZIP", {
 
   fileDataPath <- list.files(test_path("studies", "summarised_zip"),

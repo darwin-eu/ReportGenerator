@@ -25,11 +25,9 @@ test_that("tableSurvival works", {
 
   expect_no_error(tableSurvival(uploaded_files$single_event))
 
-  # TODO: Uncomment this test if cs issue with competing risk is solved
+  uploaded_files$competing_risk <- uploadedData$summarised_result %>%
+    visOmopResults::filterSettings(analysis_type == "competing_risk")
 
-  # uploaded_files$competing_risk <- uploadedData$summarised_result %>%
-  #   visOmopResults::filterSettings(analysis_type == "competing_risk")
-  #
-  # expect_no_error(tableSurvival(uploaded_files$competing_risk))
+  expect_no_error(tableSurvival(uploaded_files$competing_risk))
 
 })

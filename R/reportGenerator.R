@@ -453,6 +453,7 @@ reportGenerator <- function(logger = NULL) {
         if (!is.null(dataReport$objects)) {
           reportItems <- rev(reactiveValuesToList(do.call(reactiveValues, dataReport$objects)))
         }
+        # Generates report iterating through the reportItems
         generateReport(reportDocx = reportDocx,
                        dataReportList = reportItems,
                        fileName = file,
