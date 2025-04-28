@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   style-guide: style-guide.html
-last_built: 2025-04-28T09:58Z
+last_built: 2025-04-28T10:04Z
 urls:
   reference: https://darwin-eu-dev.github.io/ReportGenerator/reference
   article: https://darwin-eu-dev.github.io/ReportGenerator/articles
