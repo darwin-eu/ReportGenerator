@@ -4,7 +4,7 @@
 
 * Fixed bug related to "analysis type".
 
-* Currently working with the following DARWIN EU analytical packages:
+* Currently working with the following DARWIN EU analytic packages:
   * CohortCharacteristics   [0.5.1]
   * CohortSurvival          [1.0.1]
   * IncidencePrevalence     [1.2.0]
@@ -18,7 +18,11 @@
 * Captions now work in all sections.
 * Integrated ggSunburst function included for the reports. 
 
-* Works with IncidencePrevalence v1.1.0, CohortCharacteristics v0.4.0, CohortSurvival v1.0.0, and TreatmentPatterns v3.0.0.
+* Currently working with the following DARWIN EU analytic packages:
+  * CohortCharacteristics   [0.4.0]
+  * CohortSurvival          [1.0.0]
+  * IncidencePrevalence     [1.1.0]
+  * TreatmentPatterns       [3.0.0]
 
 # ReportGenerator 1.22.0
 
