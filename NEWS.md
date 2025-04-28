@@ -6,13 +6,13 @@
 
 * Currently working with the following DARWIN EU analytical packages:
 
-- CohortCharacteristics   [0.4.0 -> 0.5.1]
-- CohortSurvival          [0.6.2 -> 1.0.1]
-- IncidencePrevalence     [1.1.0 -> 1.2.0]
-- omopgenerics            [1.1.0 -> 1.1.1]
-- PatientProfiles         [1.3.0 -> 1.3.1]
-- TreatmentPatterns       [3.0.0 -> 3.0.1]
-- visOmopResults          [1.0.0 -> 1.0.2]
+CohortCharacteristics   [0.4.0 -> 0.5.1]
+CohortSurvival          [0.6.2 -> 1.0.1]
+IncidencePrevalence     [1.1.0 -> 1.2.0]
+omopgenerics            [1.1.0 -> 1.1.1]
+PatientProfiles         [1.3.0 -> 1.3.1]
+TreatmentPatterns       [3.0.0 -> 3.0.1]
+visOmopResults          [1.0.0 -> 1.0.2]
 
 # ReportGenerator 1.23.0
 
