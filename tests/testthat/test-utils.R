@@ -1,11 +1,11 @@
 # Analysis sum
 
 test_that("Analysis Sum", {
-  # fileDataPath <- list.files(test_path("studies", "summarised_zip"),
-  #                            pattern = "zip",
-  #                            full.names = TRUE)[1]
+  fileDataPath <- list.files(test_path("studies", "summarised_zip"),
+                             pattern = "zip",
+                             full.names = TRUE)[1]
 
-  fileDataPath <- list.files("~/Documents/darwin-docs/studyPackages/Thromboembolic/P3C3005TEandcancer/results", full.names = TRUE)
+  # fileDataPath <- list.files("~/Documents/darwin-docs/studyPackages/Thromboembolic/P3C3005TEandcancer/results", full.names = TRUE)
 
   data_joined <- joinDatabases(fileDataPath)
   settingsData <- settings(data_joined$summarised_result)

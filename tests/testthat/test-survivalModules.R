@@ -31,30 +31,3 @@ test_that("tableSurvival works", {
   expect_no_error(tableSurvival(uploaded_files$competing_risk))
 
 })
-
-test_that("tableSurvival style works", {
-
-  result_single_event <- testData$CohortSurvival$single_event
-
-
-  # header_style_list <- list(gt::cell_fill(color = "#C8C8C8"),
-  #                           gt::cell_text(align = "center",
-  #                                         weight = "bold"))
-  #
-  # styleName <- list("header" = header_style_list, "body" = list())
-
-  # visOmopResults:::gtStyleInternal(styleName = styleName)
-
-
-  CohortSurvival::tableSurvival(x = result_single_event,
-                                .options = list(style = getDarwinStyle(),
-                                                caption = NULL))
-
-  debugonce(visOmopResults:::validateStyle)
-  debugonce(visOmopResults:::gtStyleInternal)
-
-  tableSurvival(x = result_single_event)
-
-  expect_no_error()
-
-})
