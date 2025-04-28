@@ -1,3 +1,9 @@
+# ReportGenerator 1.24.0
+
+* Updated style on some tables.
+
+* Fixed bug related to "analysis type".
+
 # ReportGenerator 1.23.0
 
 * Captions now work in all sections.
