@@ -1,8 +1,9 @@
 pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
-articles: {}
-last_built: 2025-04-07T07:32Z
+articles:
+  style-guide: style-guide.html
+last_built: 2025-04-28T09:58Z
 urls:
   reference: https://darwin-eu-dev.github.io/ReportGenerator/reference
   article: https://darwin-eu-dev.github.io/ReportGenerator/articles
